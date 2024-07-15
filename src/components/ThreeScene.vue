@@ -1,16 +1,22 @@
 <template>
-    <div id="container" ref="container"></div>
-  </template>
-  
-  <script>
+  <div id="container" ref="container">
+    <SocialIcons />
+  </div>
+</template>
+
+<script>
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
+import SocialIcons from './SocialIcons.vue';
 
 export default {
   name: 'ThreeScene',
+  components: {
+    SocialIcons
+  },
   mounted() {
     const mount = this.$refs.container;
 
@@ -87,7 +93,7 @@ export default {
     composer.addPass(new RenderPass(scene, camera));
     const vignettePass = new ShaderPass(VignetteShader);
     vignettePass.uniforms['offset'].value = 1.0;
-    vignettePass.uniforms['darkness'].value = 2.5;
+    vignettePass.uniforms['darkness'].value = 3.5;
     composer.addPass(vignettePass);
 
     // Handle window resize
@@ -129,5 +135,6 @@ export default {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    position: relative;
   }
   </style>
