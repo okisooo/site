@@ -2,12 +2,12 @@
   "name": "site",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "serve": "vue-cli-service serve",
-  "build": "vue-cli-service build",
-  "lint": "vue-cli-service lint",
-  "deploy": "vue-cli-service build && gh-pages -d dist"
-},
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "deploy": "vue-cli-service build && gh-pages -d dist"
+  },
   "dependencies": {
     "core-js": "^3.8.3",
     "three": "^0.166.1",
