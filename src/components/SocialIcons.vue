@@ -44,4 +44,12 @@
     color: gray;
     transform: translateY(-10px) scale(1.2);
   }
+  
+  /* Disable hover effect for touch devices */
+  @media (hover: none) {
+    #social-icons a:hover {
+      color: black;
+      transform: none;
+    }
+  }
   </style>
