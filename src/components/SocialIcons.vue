@@ -25,24 +25,31 @@
   </script>
   
   <style>
-  #social-icons {
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-  }
   #social-icons a {
-    color: black;
+    color: #0000FF; /* Default blue */
     font-size: 60px;
     text-decoration: none;
     transition: transform 0.3s ease, color 0.3s ease;
     text-shadow: 1px 1px 2px white, -1px -1px 2px white;
   }
   #social-icons a:hover {
-    color: gray;
+    color: #1E90FF; /* Dodger blue */
     transform: translateY(-10px) scale(1.2);
+  }
+  #social-icons a:nth-child(1) {
+    color: #0000FF; /* Blue */
+  }
+  #social-icons a:nth-child(2) {
+    color: #4169E1; /* Royal blue */
+  }
+  #social-icons a:nth-child(3) {
+    color: #4682B4; /* Steel blue */
+  }
+  #social-icons a:nth-child(4) {
+    color: #5F9EA0; /* Cadet blue */
+  }
+  #social-icons a:nth-child(5) {
+    color: #6495ED; /* Cornflower blue */
   }
   
   /* Disable hover effect for touch devices */
