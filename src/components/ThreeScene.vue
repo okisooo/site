@@ -36,12 +36,12 @@ export default {
       }
     `;
     const fragmentShader = `
-  varying vec3 vWorldPosition;
-  void main() {
-    float mixValue = (vWorldPosition.y + 1.0) / 2.0;
-    gl_FragColor = vec4(vec3(0.0, 0.5, 0.5) * mixValue, 1.0); // Teal gradient
-  }
-`;
+      varying vec3 vWorldPosition;
+      void main() {
+        float mixValue = (vWorldPosition.y + 1.0) / 2.0;
+        gl_FragColor = vec4(vec3(mixValue), 1.0); // Black and white gradient
+      }
+    `;
     const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader
@@ -59,7 +59,7 @@ export default {
     // Wireframe
     const edges1 = new THREE.EdgesGeometry(boxGeometry);
     const edges2 = new THREE.EdgesGeometry(boxGeometry);
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xADD8E6 }); // White wireframe
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff }); // White wireframe
     const wireframe1 = new THREE.LineSegments(edges1, lineMaterial);
     const wireframe2 = new THREE.LineSegments(edges2, lineMaterial);
     box1.add(wireframe1);
@@ -79,7 +79,7 @@ export default {
       groundMesh.position.z = -groundSegmentLength * i + overlap * i;
       scene.add(groundMesh);
       groundMeshes.push(groundMesh);
-      const groundWireframeMaterial = new THREE.LineBasicMaterial({ color: 0xADD8E6 }); // White wireframe
+      const groundWireframeMaterial = new THREE.LineBasicMaterial({ color: 0xffffff }); // White wireframe
       const groundWireframe = new THREE.LineSegments(new THREE.WireframeGeometry(groundGeometry), groundWireframeMaterial);
       groundWireframe.rotation.x = -Math.PI / 2;
       groundWireframe.position.y = -2;
