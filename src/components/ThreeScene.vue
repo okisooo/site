@@ -29,33 +29,78 @@ export default {
     mount.appendChild(renderer.domElement);
     // Shader Material for Gradient
     const vertexShader = `
-      varying vec3 vWorldPosition;
-      void main() {
-        vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
-    const fragmentShader = `
-      varying vec3 vWorldPosition;
-      void main() {
-        float mixValue = (vWorldPosition.y + 1.0) / 2.0;
-        gl_FragColor = vec4(vec3(mixValue), 1.0); // Black and white gradient
-      }
-    `;
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader
-    });
+  varying vec3 vWorldPosition;
+  void main() {
+    vWorldPosition = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const fragmentShader = `
+  uniform vec3 color1;
+  uniform vec3 color2;
+  varying vec3 vWorldPosition;
+  void main() {
+    float mixValue = (vWorldPosition.y + 1.0) / 2.0;
+    gl_FragColor = vec4(mix(color1, color2, mixValue), 1.0);
+  }
+`;
+const uniforms = {
+  color1: { value: new THREE.Color(0x00ff00) }, // Initial color1
+  color2: { value: new THREE.Color(0xff0000) }  // Initial color2
+};
+
+const material = new THREE.ShaderMaterial({
+  uniforms: uniforms,
+  vertexShader: vertexShader,
+  fragmentShader: fragmentShader
+});
+
     // Create "X" shape geometry
     const boxGeometry = new THREE.BoxGeometry(1, 3, 1);
-    const box1 = new THREE.Mesh(boxGeometry, material);
-    const box2 = new THREE.Mesh(boxGeometry, material);
-    box1.rotation.z = Math.PI / 4;
-    box2.rotation.z = -Math.PI / 4;
-    const xGroup = new THREE.Group();
-    xGroup.add(box1);
-    xGroup.add(box2);
-    scene.add(xGroup);
+const box1 = new THREE.Mesh(boxGeometry, material);
+const box2 = new THREE.Mesh(boxGeometry, material);
+box1.rotation.z = Math.PI / 4;
+box2.rotation.z = -Math.PI / 4;
+const xGroup = new THREE.Group();
+xGroup.add(box1);
+xGroup.add(box2);
+xGroup.scale.set(1, 1, 1);
+scene.add(xGroup);
+
+const colors = [
+  { color1: new THREE.Color(0x00ff00), color2: new THREE.Color(0xff0000) }, // Green to Red
+  { color1: new THREE.Color(0xff00ff), color2: new THREE.Color(0x0000ff) }, // Pink to Blue
+  { color1: new THREE.Color(0xffff00), color2: new THREE.Color(0x00ffff) }  // Yellow to Cyan
+];
+
+let currentColorIndex = 0;
+
+function updateGradientColors() {
+  currentColorIndex = (currentColorIndex + 1) % colors.length;
+  const nextColors = colors[currentColorIndex];
+
+  // Animate the transition
+  const duration = 4000; // 4 seconds
+  const startTime = performance.now();
+
+  function animateTransition() {
+    const elapsedTime = performance.now() - startTime;
+    const t = Math.min(elapsedTime / duration, 1); // Normalize to [0, 1]
+
+    uniforms.color1.value.lerpColors(uniforms.color1.value, nextColors.color1, t);
+    uniforms.color2.value.lerpColors(uniforms.color2.value, nextColors.color2, t);
+
+    if (t < 1) {
+      requestAnimationFrame(animateTransition);
+    }
+  }
+
+  animateTransition();
+}
+setInterval(updateGradientColors, 4000); // Update every 4 seconds
+
+
     // Wireframe
     const edges1 = new THREE.EdgesGeometry(boxGeometry);
     const edges2 = new THREE.EdgesGeometry(boxGeometry);
