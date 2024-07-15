@@ -58,15 +58,6 @@ export default {
     const wireframe = new THREE.LineSegments(edges, lineMaterial);
     cube.add(wireframe);
 
-    // Point Light
-    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-    pointLight.position.set(10, 10, 10);
-    scene.add(pointLight);
-
-    // Ambient Light
-    const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
-    scene.add(ambientLight);
-
     // Ground
     const groundGeometry = new THREE.PlaneGeometry(100, 100, 50, 50); // Add segments for more lines
     const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }); // Black color
