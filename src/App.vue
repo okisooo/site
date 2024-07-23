@@ -1,19 +1,16 @@
 <template>
   <div id="app">
     <ThreeScene />
-    <SpotifyRelease albumId="5KkaHNaU8hPkXNi20ruDL9" :width="400" :height="400"  />
   </div>
 </template>
 
 <script>
 import ThreeScene from './components/ThreeScene.vue'
-import SpotifyRelease from './components/SpotifyRelease.vue';
 
 export default {
   name: 'App',
   components: {
-    ThreeScene,
-    SpotifyRelease
+    ThreeScene
   }
 }
 </script>
