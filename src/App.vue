@@ -2,7 +2,7 @@
   <div id="app">
     <ThreeScene />
     <div id="spotify-player">
-      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/76FpBihfLyLYSZm0GcyPSg?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe class="spotify-embed" src="https://open.spotify.com/embed/track/76FpBihfLyLYSZm0GcyPSg?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
   </div>
 </template>
@@ -43,5 +43,20 @@ html, body {
   width: 300px; /* Adjust the width as needed */
   height: 352px; /* Adjust the height as needed */
   margin: 10px;
+}
+.spotify-embed {
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Add these media queries for mobile devices */
+@media (max-width: 768px) {
+  #spotify-player {
+    top: 0;
+    bottom: auto;
+    width: 300px; /* Adjust the width for mobile */
+    height: 200px; /* Adjust the height for mobile */
+  }
 }
 </style>
