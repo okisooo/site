@@ -6,12 +6,6 @@
     <a href="https://twitter.com/okisooo_" target="_blank" rel="noopener noreferrer">
       <i class="fab fa-twitter"></i>
     </a>
-    <a href="https://instagram.com/okisooo_" target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://discord.gg/oxo" target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-discord"></i>
-    </a>
     <a href="https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=2e66970ec68a4baa" target="_blank" rel="noopener noreferrer">
       <i class="fab fa-spotify"></i>
     </a>
