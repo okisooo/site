@@ -29,7 +29,7 @@ export default {
     camera.position.z = 5;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     mount.appendChild(renderer.domElement);
 
@@ -48,7 +48,6 @@ export default {
       varying vec3 vWorldPosition;
       
       void main() {
-        // Use a smoother interpolation function
         float t = smoothstep(-1.5, 1.5, vWorldPosition.y);
         gl_FragColor = vec4(mix(color1, color2, t), 1.0);
       }
@@ -76,25 +75,13 @@ export default {
     xGroup.add(box1);
     xGroup.add(box2);
     xGroup.scale.set(1, 1, 1);
-    scene.add(xGroup);
-
-    function getRandomColor() {
-      return new THREE.Color(Math.random(), Math.random(), Math.random());
-    }
-
-    const colors = Array.from({ length: 7 }, () => ({
-      color1: getRandomColor(),
-      color2: getRandomColor()
-    }));
-
-    let currentColorIndex = 0;
 
     // Ground
     const groundGeometry = new THREE.PlaneGeometry(100, 100, 50, 50); // Add segments for more lines
     const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }); // Black color
     const groundMeshes = [];
     const groundWireframes = [];
-    const numGroundSegments = 3;
+    const numGroundSegments = 2; // Reduce the number of segments
     const groundSegmentLength = 100;
     const overlap = 1; // Increase overlap to ensure no gaps
 
@@ -106,16 +93,35 @@ export default {
       groundMesh.rotation.x = -Math.PI / 2;
       groundMesh.position.y = -2;
       groundMesh.position.z = -groundSegmentLength * i + overlap * i;
-      scene.add(groundMesh);
       groundMeshes.push(groundMesh);
 
       const groundWireframe = new THREE.LineSegments(new THREE.WireframeGeometry(groundGeometry), groundWireframeMaterial);
       groundWireframe.rotation.x = -Math.PI / 2;
       groundWireframe.position.y = -2;
       groundWireframe.position.z = -groundSegmentLength * i + overlap * i;
-      scene.add(groundWireframe);
       groundWireframes.push(groundWireframe);
     }
+
+    // Add components to the scene gradually
+    setTimeout(() => {
+      scene.add(xGroup);
+    }, 500); // Add "X" shape after 500ms
+
+    setTimeout(() => {
+      groundMeshes.forEach(mesh => scene.add(mesh));
+      groundWireframes.forEach(wireframe => scene.add(wireframe));
+    }, 1000); // Add ground after 1000ms
+
+    function getRandomColor() {
+      return new THREE.Color(Math.random(), Math.random(), Math.random());
+    }
+
+    const colors = Array.from({ length: 7 }, () => ({
+      color1: getRandomColor(),
+      color2: getRandomColor()
+    }));
+
+    let currentColorIndex = 0;
 
     function updateGradientColors() {
       currentColorIndex = (currentColorIndex + 1) % colors.length;
