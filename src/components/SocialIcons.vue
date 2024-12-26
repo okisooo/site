@@ -12,6 +12,9 @@
     <a href="https://www.youtube.com/@okiso7" target="_blank" rel="noopener noreferrer">
       <i class="fab fa-youtube"></i>
     </a>
+    <a href="https://instagram.com/okisooo_" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-instagram"></i>
+    </a>
   </div>
 </template>
 
