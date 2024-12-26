@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-// Import your existing components
 import Home from '../views/Home.vue'
-// ... import other components as needed
 
 const routes = [
   {
@@ -10,13 +7,10 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  // ... your other routes
-
-  // Redirect /releases to the external releases link
   {
     path: '/releases',
     beforeEnter() {
-      window.location.href = 'https://external-link.com/releases'; // Replace with your actual releases URL
+      window.location.href = 'https://distrokid.com/dashboard/album/?albumuuid=6CD90D9D-3A93-49E9-81A0EA277C878265'; // Replace with your actual releases URL
     }
   }
 ]
