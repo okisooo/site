@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import ThreeScene from '../components/ThreeScene.vue'
 
 const routes = [
@@ -6,16 +6,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: ThreeScene
-  },
-  {
-    path: '/releases',
-    redirect: () => {
-      window.location.href = 'https://distrokid.com/hyperfollow/okiso/thunder-feat-hatsune-miku'
-    }
   }
+  // Remove the /releases route
 ]
 
 export default createRouter({
-  history: createWebHistory('/site/'),
+  history: createWebHashHistory(),
   routes
 })
