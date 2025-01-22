@@ -6,6 +6,10 @@
 
 <script>
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
 import SocialIcons from './SocialIcons.vue';
 
 export default {
@@ -22,21 +26,12 @@ export default {
 
     // Camera
     const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-    camera.position.z = 8; // Increase from 5 to 8
+    camera.position.z = 5;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ 
-    canvas: document.createElement('canvas'),
-    antialias: false,
-    powerPreference: "low-power",
-    precision: "lowp",
-    depth: false,
-    stencil: false,
-    alpha: false // Disable alpha channel
-});
-
-    mount.appendChild(renderer.domElement);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(mount.clientWidth, mount.clientHeight);
+    mount.appendChild(renderer.domElement);
 
     // Shader Material for Gradient
     const vertexShader = `
@@ -64,64 +59,48 @@ export default {
     };
 
     const material = new THREE.ShaderMaterial({
-    uniforms: uniforms,
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
-    side: THREE.DoubleSide,
-    transparent: true,
-    depthWrite: true,
-    depthTest: true
-});
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      side: THREE.DoubleSide // Ensure the material is visible from both sides
+    });
 
     // Create "X" shape geometry
-const boxGeometry = new THREE.BoxGeometry(1, 3, 1); // Increased from (1, 3, 1)
-const box1 = new THREE.Mesh(boxGeometry, material);
-const box2 = new THREE.Mesh(boxGeometry, material);
-box1.rotation.z = Math.PI / 4;
-box2.rotation.z = -Math.PI / 4;
-const xGroup = new THREE.Group();
-xGroup.add(box1);
-xGroup.add(box2);
-xGroup.position.z = 3; // Move further forward (increased from 2)
-xGroup.position.y = 0; // Adjust Y position if needed
-xGroup.scale.set(1, 1, 1); // Make it slightly larger
+    const boxGeometry = new THREE.BoxGeometry(1, 3, 1);
+    const box1 = new THREE.Mesh(boxGeometry, material);
+    const box2 = new THREE.Mesh(boxGeometry, material);
+    box1.rotation.z = Math.PI / 4;
+    box2.rotation.z = -Math.PI / 4;
+    const xGroup = new THREE.Group();
+    xGroup.add(box1);
+    xGroup.add(box2);
+    xGroup.scale.set(1, 1, 1);
 
     // Ground
-    const groundGeometry = new THREE.PlaneGeometry(100, 100, 15, 15);
-const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-const groundMeshes = [];
-const groundWireframes = [];
-const numGroundSegments = 1; 
-const groundSegmentLength = 100;
-const groundSpacing = groundSegmentLength; 
-
+    const groundGeometry = new THREE.PlaneGeometry(100, 100, 50, 50); // Add segments for more lines
+    const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }); // Black color
+    const groundMeshes = [];
+    const groundWireframes = [];
+    const numGroundSegments = 2; // Reduce the number of segments
+    const groundSegmentLength = 100;
+    const overlap = 1; // Increase overlap to ensure no gaps
 
     // Create a single wireframe material that we'll update
     const groundWireframeMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
 
     for (let i = 0; i < numGroundSegments; i++) {
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-    const groundWireframe = new THREE.LineSegments(
-        new THREE.WireframeGeometry(groundGeometry), 
-        groundWireframeMaterial
-    );
-    
-    // Set initial positions with proper spacing
-    groundMesh.rotation.x = -Math.PI / 2;
-    groundWireframe.rotation.x = -Math.PI / 2;
-    
-    groundMesh.position.y = -4;
-    groundWireframe.position.y = -4;
-    
-    // Position segments one after another
-    groundMesh.position.z = i * groundSpacing;
-    groundWireframe.position.z = i * groundSpacing;
-    
-    groundMeshes.push(groundMesh);
-    groundWireframes.push(groundWireframe);
-    scene.add(groundMesh);
-    scene.add(groundWireframe);
-}
+      const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+      groundMesh.rotation.x = -Math.PI / 2;
+      groundMesh.position.y = -2;
+      groundMesh.position.z = -groundSegmentLength * i + overlap * i;
+      groundMeshes.push(groundMesh);
+
+      const groundWireframe = new THREE.LineSegments(new THREE.WireframeGeometry(groundGeometry), groundWireframeMaterial);
+      groundWireframe.rotation.x = -Math.PI / 2;
+      groundWireframe.position.y = -2;
+      groundWireframe.position.z = -groundSegmentLength * i + overlap * i;
+      groundWireframes.push(groundWireframe);
+    }
 
     // Add components to the scene gradually
     setTimeout(() => {
@@ -167,7 +146,7 @@ const groundSpacing = groundSegmentLength;
       animateTransition();
     }
 
-    setInterval(updateGradientColors, 8000); // Change from 4000 to 8000ms
+    setInterval(updateGradientColors, 4000); // Update every 4 seconds
 
     // Wireframe for X shape
     const edges1 = new THREE.EdgesGeometry(boxGeometry);
@@ -178,54 +157,44 @@ const groundSpacing = groundSegmentLength;
     box1.add(wireframe1);
     box2.add(wireframe2);
 
+    // Post-processing
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const vignettePass = new ShaderPass(VignetteShader);
+    vignettePass.uniforms['offset'].value = 1.0;
+    vignettePass.uniforms['darkness'].value = 3.5;
+    composer.addPass(vignettePass);
 
     // Handle window resize
     const handleResize = () => {
       camera.aspect = mount.clientWidth / mount.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(mount.clientWidth, mount.clientHeight);
+      composer.setSize(mount.clientWidth, mount.clientHeight);
     };
     window.addEventListener('resize', handleResize);
     handleResize(); // Call initially to set the correct size
 
-    const targetFPS = 30;
-    const frameInterval = 1000 / targetFPS;
-    let lastFrameTime = 0;
-
     // Animation
-    const animate = function (currentTime) {
-    requestAnimationFrame(animate);
-    
-    const deltaTime = currentTime - lastFrameTime;
-    if (deltaTime < frameInterval) return;
-    
-    lastFrameTime = currentTime - (deltaTime % frameInterval);
-
-    // Reduce rotation calculations
-    xGroup.rotation.x = (xGroup.rotation.x + 0.008) % (Math.PI * 2);
-    xGroup.rotation.y = (xGroup.rotation.y + 0.008) % (Math.PI * 2);
-    
-    // Single ground segment movement
-    const groundMesh = groundMeshes[0];
-    const wireframe = groundWireframes[0];
-    
-    groundMesh.position.z += 0.05;
-    wireframe.position.z += 0.05;
-    
-    if (groundMesh.position.z >= groundSpacing) {
-        groundMesh.position.z = 0;
-        wireframe.position.z = 0;
-    }
-    
-    renderer.render(scene, camera);
-};
-
-animate(performance.now());
-
+    const animate = function () {
+      requestAnimationFrame(animate);
+      xGroup.rotation.x += 0.01;
+      xGroup.rotation.y += 0.01;
+      // Move the ground segments forward
+      groundMeshes.forEach((groundMesh, index) => {
+        groundMesh.position.z += 0.1;
+        groundWireframes[index].position.z += 0.1;
+        // Reset ground position to create a looping effect
+        if (groundMesh.position.z > groundSegmentLength - overlap) {
+          groundMesh.position.z = -groundSegmentLength * (numGroundSegments - 1) + overlap * (numGroundSegments - 1);
+          groundWireframes[index].position.z = -groundSegmentLength * (numGroundSegments - 1) + overlap * (numGroundSegments - 1);
+        }
+      });
+      composer.render();
+    };
+    animate();
+  }
 }
-
-};
-  
 </script>
 
 <style scoped>
