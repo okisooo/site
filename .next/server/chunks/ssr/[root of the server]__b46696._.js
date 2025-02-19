@@ -810,7 +810,7 @@ function Iridescence({ color = [
         const renderer = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$core$2f$Renderer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Renderer"]();
         const gl = renderer.gl;
         gl.clearColor(1, 1, 1, 1);
-        let program;
+        const program;
         function resize() {
             const scale = 1;
             renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
