@@ -15,11 +15,9 @@ jobs:
 
       # Add working directory for npm commands
       - name: Install dependencies
-        working-directory: ./okiso-site
         run: npm ci
 
       - name: Build project
-        working-directory: ./okiso-site
         run: npm run build
 
       - name: Deploy to GitHub Pages
