@@ -14,7 +14,6 @@ jobs:
         with:
           node-version: 18
 
-      # Add working directory for npm commands
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
@@ -25,4 +24,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./okiso-site/out
+          publish_dir: ./out
