@@ -16,32 +16,32 @@ const dockItems = [
   {
     icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'Spotify',
-    onClick: () => window.open("https://open.spotify.com/user/your-spotify-id", "_blank")
+    onClick: () => window.open("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97", "_blank")
   },
   {
     icon: <FaInstagram size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'Instagram',
-    onClick: () => window.open("https://instagram.com/your-username", "_blank")
+    onClick: () => window.open("https://www.instagram.com/okisooo_/", "_blank")
   },
   {
     icon: <FaGithub size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'GitHub',
-    onClick: () => window.open("https://github.com/your-username", "_blank")
+    onClick: () => window.open("https://github.com/okisooo", "_blank")
   },
   {
     icon: <FaTwitter size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'X',
-    onClick: () => window.open("https://twitter.com/your-username", "_blank")
+    onClick: () => window.open("https://x.com/okisooo_", "_blank")
   },
   {
     icon: <FaYoutube size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'YouTube',
-    onClick: () => window.open("https://www.youtube.com/channel/your-channel", "_blank")
+    onClick: () => window.open("https://www.youtube.com/@okiso7", "_blank")
   },
   {
     icon: <FaDiscord size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'Discord',
-    onClick: () => window.open("https://discord.com/invite/your-invite", "_blank")
+    onClick: () => window.open("https://discord.gg/chill", "_blank")
   }
 ];
 

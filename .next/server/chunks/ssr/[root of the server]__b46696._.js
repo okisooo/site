@@ -932,7 +932,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'Spotify',
-        onClick: ()=>window.open("https://open.spotify.com/user/your-spotify-id", "_blank")
+        onClick: ()=>window.open("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97", "_blank")
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FaInstagram"], {
@@ -944,7 +944,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'Instagram',
-        onClick: ()=>window.open("https://instagram.com/your-username", "_blank")
+        onClick: ()=>window.open("https://www.instagram.com/okisooo_/", "_blank")
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FaGithub"], {
@@ -956,7 +956,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'GitHub',
-        onClick: ()=>window.open("https://github.com/your-username", "_blank")
+        onClick: ()=>window.open("https://github.com/okisooo", "_blank")
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FaTwitter"], {
@@ -968,7 +968,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'X',
-        onClick: ()=>window.open("https://twitter.com/your-username", "_blank")
+        onClick: ()=>window.open("https://x.com/okisooo_", "_blank")
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FaYoutube"], {
@@ -980,7 +980,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'YouTube',
-        onClick: ()=>window.open("https://www.youtube.com/channel/your-channel", "_blank")
+        onClick: ()=>window.open("https://www.youtube.com/@okiso7", "_blank")
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FaDiscord"], {
@@ -992,7 +992,7 @@ const dockItems = [
             columnNumber: 11
         }, this),
         label: 'Discord',
-        onClick: ()=>window.open("https://discord.com/invite/your-invite", "_blank")
+        onClick: ()=>window.open("https://discord.gg/chill", "_blank")
     }
 ];
 function Home() {
