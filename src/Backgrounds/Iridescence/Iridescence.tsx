@@ -74,8 +74,9 @@ export default function Iridescence({
     const renderer = new Renderer();
     const gl = renderer.gl;
     gl.clearColor(1, 1, 1, 1);
-
-    
+  
+    let program: Program | undefined;
+  
     function resize() {
       const scale = 1;
       renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
@@ -83,15 +84,16 @@ export default function Iridescence({
         program.uniforms.uResolution.value = new Color(
           gl.canvas.width,
           gl.canvas.height,
-          gl.canvas.width / gl.canvas.height,
+          gl.canvas.width / gl.canvas.height
         );
       }
     }
+  
     window.addEventListener("resize", resize, false);
     resize();
-
+  
     const geometry = new Triangle(gl);
-    const program = new Program(gl, {
+    program = new Program(gl, {
       vertex: vertexShader,
       fragment: fragmentShader,
       uniforms: {
@@ -101,7 +103,7 @@ export default function Iridescence({
           value: new Color(
             gl.canvas.width,
             gl.canvas.height,
-            gl.canvas.width / gl.canvas.height,
+            gl.canvas.width / gl.canvas.height
           ),
         },
         uMouse: {
@@ -111,30 +113,30 @@ export default function Iridescence({
         uSpeed: { value: speed },
       },
     });
-
+  
     const mesh = new Mesh(gl, { geometry, program });
     let animateId: number;
-
+  
     function update(t: number) {
       animateId = requestAnimationFrame(update);
-      program.uniforms.uTime.value = t * 0.001;
+      program!.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
     }
     animateId = requestAnimationFrame(update);
     ctn.appendChild(gl.canvas);
-
+  
     function handleMouseMove(e: MouseEvent) {
       const rect = ctn.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1.0 - (e.clientY - rect.top) / rect.height;
       mousePos.current = { x, y };
-      program.uniforms.uMouse.value[0] = x;
-      program.uniforms.uMouse.value[1] = y;
+      program!.uniforms.uMouse.value[0] = x;
+      program!.uniforms.uMouse.value[1] = y;
     }
     if (mouseReact) {
       ctn.addEventListener("mousemove", handleMouseMove);
     }
-
+  
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
@@ -146,5 +148,5 @@ export default function Iridescence({
     };
   }, [color, speed, amplitude, mouseReact]);
 
-  return <div ref={ctnDom} className="w-full h-full" {...rest} />;
+  return <div ref={ctnDom} className="w-full h-full absolute top-0 left-0 z-0" {...rest} />;
 }
