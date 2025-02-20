@@ -11,7 +11,7 @@ import {
   FaYoutube,
   FaDiscord
 } from 'react-icons/fa';
-
+import Head from 'next/head';
 const dockItems = [
   {
     icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
@@ -45,8 +45,13 @@ const dockItems = [
   }
 ];
 
+
 export default function Home() {
   return (
+    <>
+      <Head>
+        <title>My New Tab Title</title>
+      </Head>
     <div className="w-full h-screen relative">
       {/* Render background behind your content */}
       <Iridescence />
@@ -74,5 +79,6 @@ export default function Home() {
   </div>
       </div>
     </div>
+    </>
   );
 }

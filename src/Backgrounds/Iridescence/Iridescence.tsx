@@ -74,8 +74,8 @@ export default function Iridescence({
     const renderer = new Renderer();
     const gl = renderer.gl;
     gl.clearColor(1, 1, 1, 1);
-  
-    const program: Program | undefined;
+    
+    let program: Program; // declare program first
   
     function resize() {
       const scale = 1;
@@ -88,9 +88,8 @@ export default function Iridescence({
         );
       }
     }
-  
+    
     window.addEventListener("resize", resize, false);
-    resize();
   
     const geometry = new Triangle(gl);
     program = new Program(gl, {
@@ -116,27 +115,28 @@ export default function Iridescence({
   
     const mesh = new Mesh(gl, { geometry, program });
     let animateId: number;
-  
+    
     function update(t: number) {
       animateId = requestAnimationFrame(update);
-      program!.uniforms.uTime.value = t * 0.001;
+      program.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
     }
     animateId = requestAnimationFrame(update);
+    resize();
     ctn.appendChild(gl.canvas);
-  
+    
     function handleMouseMove(e: MouseEvent) {
       const rect = ctn.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1.0 - (e.clientY - rect.top) / rect.height;
       mousePos.current = { x, y };
-      program!.uniforms.uMouse.value[0] = x;
-      program!.uniforms.uMouse.value[1] = y;
+      program.uniforms.uMouse.value[0] = x;
+      program.uniforms.uMouse.value[1] = y;
     }
     if (mouseReact) {
       ctn.addEventListener("mousemove", handleMouseMove);
     }
-  
+    
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
