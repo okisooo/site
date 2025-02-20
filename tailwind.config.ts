@@ -5,6 +5,7 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/Components/**/*.{js,ts,jsx,tsx,mdx}", // Add this line
   ],
   safelist: [
     "text-white",
@@ -25,12 +26,6 @@ export default {
     "border-2",
     "pb-2",
     "px-4",
-    // Preserve any classes that might be computed dynamically by Dock:
-    { pattern: /^dock-/ },
-    { pattern: /^hover:/ },
-    { pattern: /^active:/ },
-    // If you use arbitrary values like w-[50px] or similar:
-    { pattern: /^\[.*\]$/ },
   ],
   theme: {
     extend: {
