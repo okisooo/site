@@ -25,7 +25,12 @@ export default {
     "border-2",
     "pb-2",
     "px-4",
-    // ...add any additional classes used dynamically in your Dock here
+    // Preserve any classes that might be computed dynamically by Dock:
+    { pattern: /^dock-/ },
+    { pattern: /^hover:/ },
+    { pattern: /^active:/ },
+    // If you use arbitrary values like w-[50px] or similar:
+    { pattern: /^\[.*\]$/ },
   ],
   theme: {
     extend: {
