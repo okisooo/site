@@ -863,17 +863,14 @@ function Iridescence({ color = [
             const renderer = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$core$2f$Renderer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Renderer"]();
             const gl = renderer.gl;
             gl.clearColor(1, 1, 1, 1);
-            let program; // declare program first
             function resize() {
                 const scale = 1;
                 renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
-                if (program) {
-                    program.uniforms.uResolution.value = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$math$2f$Color$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Color"](gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height);
-                }
+                program.uniforms.uResolution.value = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$math$2f$Color$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Color"](gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height);
             }
             window.addEventListener("resize", resize, false);
             const geometry = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$extras$2f$Triangle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Triangle"](gl);
-            program = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$core$2f$Program$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Program"](gl, {
+            const program = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ogl$2f$src$2f$core$2f$Program$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Program"](gl, {
                 vertex: vertexShader,
                 fragment: fragmentShader,
                 uniforms: {
@@ -953,7 +950,7 @@ function Iridescence({ color = [
         ...rest
     }, void 0, false, {
         fileName: "[project]/src/Backgrounds/Iridescence/Iridescence.tsx",
-        lineNumber: 151,
+        lineNumber: 146,
         columnNumber: 10
     }, this);
 }
