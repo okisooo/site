@@ -12,7 +12,20 @@ export default {
     "transition-colors",
     "absolute",
     "relative",
-    // etc.
+    "bottom-2",
+    "left-1/2",
+    "transform",
+    "-translate-x-1/2",
+    "flex",
+    "items-end",
+    "w-fit",
+    "gap-4",
+    "rounded-2xl",
+    "border-neutral-700",
+    "border-2",
+    "pb-2",
+    "px-4",
+    // ...add any additional classes used dynamically in your Dock here
   ],
   theme: {
     extend: {
