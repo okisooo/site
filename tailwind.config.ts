@@ -6,6 +6,15 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    // add all dynamic classes used by your Dock component here
+    "text-white",
+    "hover:text-white/80",
+    "transition-colors",
+    "absolute",
+    "relative",
+    // etc.
+  ],
   theme: {
     extend: {
       colors: {
