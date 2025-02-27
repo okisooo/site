@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
 import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
@@ -46,33 +47,39 @@ const dockItems = [
 
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="w-full h-screen relative">
-      {/* Render background behind your content */}
       <Iridescence />
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
         <ASCIIText
           text="オキソ"
           enableWaves={true}
-          asciiFontSize={7}
-          textFontSize={200}
+          asciiFontSize={isMobile ? 4 : 7}
+          textFontSize={isMobile ? 100 : 200}
           textColor="#ffffff"
-          planeBaseHeight={8}
+          planeBaseHeight={isMobile ? 4 : 8}
         />
       </div>
-      {/* Render dock */}
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 pointer-events-auto z-20">
-  <div className="px-6 py-3 relative">
-    <Dock
-      items={dockItems}
-      panelHeight={68}
-      baseItemSize={50}
-      magnification={70}
-      spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-      distance={200}
-    />
-  </div>
+        <div className="px-6 py-3 relative">
+          <Dock
+            items={dockItems}
+            panelHeight={isMobile ? 50 : 68}
+            baseItemSize={isMobile ? 40 : 50}
+            magnification={isMobile ? 50 : 70}
+            spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
+            distance={isMobile ? 150 : 200}
+          />
+        </div>
       </div>
     </div>
   );
-}
