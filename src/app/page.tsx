@@ -73,7 +73,7 @@ export default function Home() {
         <div className="px-6 py-3 relative">
           <Dock
             items={dockItems}
-            panelHeight={isMobile ? 50 : 68}
+            panelHeight={isMobile ? 59 : 68}
             baseItemSize={isMobile ? 40 : 50}
             magnification={isMobile ? 50 : 70}
             spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
@@ -83,3 +83,4 @@ export default function Home() {
       </div>
     </div>
   );
+}
