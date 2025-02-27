@@ -15,6 +15,16 @@ export const metadata = {
   title: "オキソ | Vocaloid Artist",
   description:
     "The official portfolio of Vocaloid Artist Okiso featuring music, art, and links to social media.",
+  keywords: [
+    "vocaloid",
+    "Okiso",
+    "vocaloid artist",
+    "music",
+    "digital art",
+    "Japanese music",
+    "vocal synth",
+    "vocal performance"
+  ],
   openGraph: {
     title: "オキソ | Vocaloid Artist",
     description:
@@ -50,7 +60,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <header className="sr-only">
+          <h1>オキソ | Vocaloid Artist</h1>
+          <nav>
+            {/* Your navigation links here */}
+          </nav>
+        </header>
+        <main>{children}</main>
+        <footer className="sr-only">
+          <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+        </footer>
       </body>
     </html>
   );
