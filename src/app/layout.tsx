@@ -61,6 +61,7 @@ export default function RootLayout({
 <head>
   <meta charSet="UTF-8" />
   <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="canonical" href="https://okiso.net" />
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
     "@context": "https://schema.org",
     "@type": "MusicGroup",
