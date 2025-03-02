@@ -61,24 +61,38 @@ export default function RootLayout({
 <head>
   <meta charSet="UTF-8" />
   <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#000000" />
   <link rel="canonical" href="https://okiso.net" />
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "OKISO",
-    "alternateName": "オキソ",
-    "url": "https://okiso.net",
-    "image": "https://i.imgur.com/pM8llz7.gif",
-    "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
-    "sameAs": [
-      "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
-      "https://www.instagram.com/okisooo_/",
-      "https://github.com/okisooo",
-      "https://x.com/okisooo_",
-      "https://www.youtube.com/@okiso7",
-      "https://discord.gg/chill"
-    ]
-  })}} />
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "OKISO",
+  "alternateName": "オキソ",
+  "url": "https://okiso.net",
+  "image": "https://i.imgur.com/pM8llz7.gif",
+  "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
+  "sameAs": [
+    "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
+    "https://www.instagram.com/okisooo_/",
+    "https://github.com/okisooo",
+    "https://x.com/okisooo_",
+    "https://www.youtube.com/@okiso7",
+    "https://discord.gg/chill"
+  ],
+  "makesOffer": {
+    "@type": "Offer",
+    "itemOffered": {
+      "@type": "MusicAlbum",
+      "name": "Your Latest Album",
+      "byArtist": {
+        "@type": "MusicGroup",
+        "name": "OKISO"
+      }
+    }
+  }
+})}} />
 </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
