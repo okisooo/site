@@ -12,18 +12,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "オキソ | Vocaloid Artist",
-  description:
-    "The official portfolio of Vocaloid Artist Okiso featuring music, art, and links to social media.",
+  title: "OKISO | Official Website - Vocaloid Artist and Music Producer",
+  description: "OKISO - Official website of Vocaloid artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Japanese vocaloid music featuring original compositions.",
   keywords: [
-    "vocaloid",
-    "Okiso",
-    "vocaloid artist",
-    "music",
-    "digital art",
-    "Japanese music",
-    "vocal synth",
-    "vocal performance"
+    "OKISO", 
+    "okiso", 
+    "オキソ", 
+    "vocaloid artist", 
+    "vocaloid producer",
+    "music producer",
+    "electronic music",
+    "Japanese vocaloid",
+    "OKISO official",
+    "OKISO music"
   ],
   openGraph: {
     title: "オキソ | Vocaloid Artist",
@@ -57,10 +58,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <meta charSet="UTF-8" />
-        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-      </head>
+<head>
+  <meta charSet="UTF-8" />
+  <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "MusicGroup",
+    "name": "OKISO",
+    "alternateName": "オキソ",
+    "url": "https://okiso.net",
+    "image": "https://i.imgur.com/pM8llz7.gif",
+    "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
+    "sameAs": [
+      "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
+      "https://www.instagram.com/okisooo_/",
+      "https://github.com/okisooo",
+      "https://x.com/okisooo_",
+      "https://www.youtube.com/@okiso7",
+      "https://discord.gg/chill"
+    ]
+  })}} />
+</head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

@@ -68,6 +68,11 @@ export default function Home() {
           textColor="#ffffff"
           planeBaseHeight={isMobile ? 4 : 8}
         />
+      <div className="sr-only">
+        <h1>OKISO - Official Website</h1>
+        <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
+        <p>Explore OKISOs latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
+      </div>
       </div>
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 pointer-events-auto z-20">
         <div className="px-6 py-3 relative">
