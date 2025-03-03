@@ -22,7 +22,6 @@ export default function ReleasesPage() {
             width="100%" 
             height="352" 
             frameBorder="0" 
-            allowTransparency={true} 
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
             loading="lazy"
             title="OKISO Spotify Profile"
@@ -37,7 +36,6 @@ export default function ReleasesPage() {
             width="100%" 
             height="152" 
             frameBorder="0" 
-            allowTransparency={true} 
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
             loading="lazy"
             title="OKISO Featured Track"
