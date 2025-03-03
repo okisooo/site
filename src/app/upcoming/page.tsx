@@ -3,15 +3,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 
 export default function UpcomingPage() {
     return (
       <div className="min-h-screen w-full relative overflow-hidden bg-black text-white p-3 sm:p-6">
-        {/* Position the Iridescence to fill the entire viewport */}
-        <div className="absolute inset-0 w-full h-full">
-          <Iridescence mouseReact={false} />
-        </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-8 pt-4 sm:pt-8 [text-shadow:rgb(0,0,0)_1px_0_10px] [-webkit-text-stroke:0.5px_rgba(0,0,0,0.3)]">
             OKISO Upcoming Releases

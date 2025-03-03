@@ -1,8 +1,5 @@
-/*
-	jsrepo 1.38.0
-	Installed from https://reactbits.dev/ts/tailwind/
-	2-19-2025
-*/
+// src/Backgrounds/Iridescence/Iridescence.tsx
+"use client";
 
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
