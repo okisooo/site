@@ -1,4 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,7 +48,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "オキソ | Vocaloid Artist",
     description:
-      "Discover Vocaloid Artist Okiso’s portfolio with music, art, and social media links.",
+      "Discover Vocaloid Artist Okiso's portfolio with music, art, and social media links.",
     images: ["https://i.imgur.com/pM8llz7.gif"]
   }
 };
@@ -58,55 +60,77 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-<head>
-  <meta charSet="UTF-8" />
-  <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="canonical" href="https://okiso.net" />
-  <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "MusicGroup",
-  "name": "OKISO",
-  "alternateName": "オキソ",
-  "url": "https://okiso.net",
-  "image": "https://i.imgur.com/pM8llz7.gif",
-  "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
-  "sameAs": [
-    "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
-    "https://www.instagram.com/okisooo_/",
-    "https://github.com/okisooo",
-    "https://x.com/okisooo_",
-    "https://www.youtube.com/@okiso7",
-    "https://discord.gg/chill"
-  ],
-  "makesOffer": {
-    "@type": "Offer",
-    "itemOffered": {
-      "@type": "MusicAlbum",
-      "name": "Your Latest Album",
-      "byArtist": {
-        "@type": "MusicGroup",
-        "name": "OKISO"
-      }
-    }
-  }
-})}} />
-</head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <header className="sr-only">
-          <h1>オキソ | Vocaloid Artist</h1>
-          <nav>
-            {/* Your navigation links here */}
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer className="sr-only">
-          <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-        </footer>
+      <head>
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#000000" />
+        <link rel="canonical" href="https://okiso.net" />
+        <script 
+          type="application/ld+json" 
+          dangerouslySetInnerHTML={{ 
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MusicGroup",
+              "name": "OKISO",
+              "alternateName": "オキソ",
+              "url": "https://okiso.net",
+              "image": "https://i.imgur.com/pM8llz7.gif",
+              "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
+              "sameAs": [
+                "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
+                "https://www.instagram.com/okisooo_/",
+                "https://github.com/okisooo",
+                "https://x.com/okisooo_",
+                "https://www.youtube.com/@okiso7",
+                "https://discord.gg/chill"
+              ],
+              "makesOffer": {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "MusicAlbum",
+                  "name": "Your Latest Album",
+                  "byArtist": {
+                    "@type": "MusicGroup",
+                    "name": "OKISO"
+                  }
+                }
+              }
+            })
+          }} 
+        />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <div className="min-h-screen w-full relative overflow-hidden bg-black">
+          <div className="absolute inset-0 w-full h-full">
+            <Iridescence mouseReact={false} />
+          </div>
+          <div className="relative z-10">
+            <header className="sr-only">
+              <h1>オキソ | Vocaloid Artist</h1>
+              <nav>
+                {/* Your navigation links here */}
+                </nav>
+            </header>
+            <main>{children}</main>
+            <footer className="sr-only">
+              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+            </footer>
+          </div>
+        </div>
+      </body>
+    </html>
+  );
+}
+              </nav>
+            </header>
+            <main>{children}</main>
+            <footer className="sr-only">
+              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+            </footer>
+          </div>
+        </div>
       </body>
     </html>
   );
