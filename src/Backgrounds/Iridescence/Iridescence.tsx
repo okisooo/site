@@ -55,7 +55,7 @@ interface IridescenceProps {
   mouseReact?: boolean;
 }
 
-export default memo(function Iridescence({
+function IridescenceComponent({
   color = [1, 1, 1],
   speed = 1.0,
   amplitude = 0.1,
@@ -64,15 +64,23 @@ export default memo(function Iridescence({
 }: IridescenceProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0.5, y: 0.5 });
+  const rendererRef = useRef<Renderer | null>(null);
+  const initialized = useRef(false);
 
   useEffect(() => {
     if (!ctnDom.current) return;
+    if (initialized.current) return;
+    
+    initialized.current = true;
     const ctn = ctnDom.current;
+    
+    // Create renderer only once
     const renderer = new Renderer();
+    rendererRef.current = renderer;
+    
     const gl = renderer.gl;
     gl.clearColor(1, 1, 1, 1);
     
- 
     function resize() {
       const scale = 1;
       renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
@@ -113,6 +121,7 @@ export default memo(function Iridescence({
       program.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
     }
+    
     animateId = requestAnimationFrame(update);
     resize();
     ctn.appendChild(gl.canvas);
@@ -125,20 +134,27 @@ export default memo(function Iridescence({
       program.uniforms.uMouse.value[0] = x;
       program.uniforms.uMouse.value[1] = y;
     }
+    
     if (mouseReact) {
       ctn.addEventListener("mousemove", handleMouseMove);
     }
     
     return () => {
+      // Don't dispose resources on unmount to keep them for next navigation
+      // Just pause the animation to save CPU
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
+      
       if (mouseReact) {
         ctn.removeEventListener("mousemove", handleMouseMove);
       }
-      ctn.removeChild(gl.canvas);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      
+      // Keep the canvas in the DOM
+      // Don't dispose WebGL context
     };
   }, [color, speed, amplitude, mouseReact]);
 
   return <div ref={ctnDom} className="w-full h-full absolute top-0 left-0 z-0" {...rest} />;
-});
+}
+
+export default memo(IridescenceComponent);
