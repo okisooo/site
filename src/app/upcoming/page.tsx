@@ -6,8 +6,8 @@ import Image from 'next/image';
 
 export default function UpcomingPage() {
     return (
-      <div className="min-h-screen w-full relative overflow-hidden bg-black text-white p-3 sm:p-6">
-        <div className="max-w-4xl mx-auto relative z-10">
+<div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
+<div className="max-w-4xl mx-auto relative z-10">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-8 pt-4 sm:pt-8 [text-shadow:rgb(0,0,0)_1px_0_10px] [-webkit-text-stroke:0.5px_rgba(0,0,0,0.3)]">
             OKISO Upcoming Releases
           </h1>

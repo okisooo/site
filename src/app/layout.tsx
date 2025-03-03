@@ -1,6 +1,6 @@
+// src/app/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
-import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
-
+import IridescenceWrapper from '@/Components/IridescenceWrapper';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -103,27 +103,11 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="min-h-screen w-full relative overflow-hidden bg-black">
-          <div className="absolute inset-0 w-full h-full">
-            <Iridescence mouseReact={false} />
-          </div>
+          <IridescenceWrapper />
           <div className="relative z-10">
             <header className="sr-only">
               <h1>オキソ | Vocaloid Artist</h1>
-              <nav>
-                {/* Your navigation links here */}
-                </nav>
-            </header>
-            <main>{children}</main>
-            <footer className="sr-only">
-              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-            </footer>
-          </div>
-        </div>
-      </body>
-    </html>
-  );
-}
-              </nav>
+              <nav>{/* Your navigation links */}</nav>
             </header>
             <main>{children}</main>
             <footer className="sr-only">
