@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
 import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
+import Link from 'next/link';
 import {
   FaSpotify,
   FaInstagram,
@@ -12,6 +13,8 @@ import {
   FaYoutube,
   FaDiscord
 } from 'react-icons/fa';
+import { MdLibraryMusic, MdUpcoming } from 'react-icons/md';
+
 const dockItems = [
   {
     icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
@@ -60,6 +63,20 @@ export default function Home() {
     <div className="w-full h-screen relative">
       <Iridescence />
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
+        {/* Navigation buttons - left side */}
+        <div className="absolute left-8 md:left-12 z-20 transform -translate-y-1/2 top-1/2">
+          <Link 
+            href="/upcoming" 
+            className="flex flex-col items-center justify-center group"
+          >
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
+              <MdUpcoming className="h-6 w-6 text-white" />
+            </div>
+            <span className="mt-2 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">Upcoming</span>
+          </Link>
+        </div>
+        
+        {/* Existing ASCII Text element */}
         <ASCIIText
           text="オキソ"
           enableWaves={true}
@@ -68,11 +85,25 @@ export default function Home() {
           textColor="#ffffff"
           planeBaseHeight={isMobile ? 4 : 8}
         />
-      <div className="sr-only">
-        <h1>OKISO - Official Website</h1>
-        <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
-        <p>Explore OKISOs latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
-      </div>
+        
+        {/* Navigation buttons - right side */}
+        <div className="absolute right-8 md:right-12 z-20 transform -translate-y-1/2 top-1/2">
+          <Link 
+            href="/releases" 
+            className="flex flex-col items-center justify-center group"
+          >
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
+              <MdLibraryMusic className="h-6 w-6 text-white" />
+            </div>
+            <span className="mt-2 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">Releases</span>
+          </Link>
+        </div>
+        
+        <div className="sr-only">
+          <h1>OKISO - Official Website</h1>
+          <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
+          <p>Explore OKISOs latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
+        </div>
       </div>
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 pointer-events-auto z-20">
         <div className="px-6 py-3 relative">
