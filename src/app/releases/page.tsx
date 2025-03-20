@@ -48,7 +48,7 @@ export default function ReleasesPage() {
           </h2>
           <div className={`w-full ${isMobile ? 'h-[180px]' : 'h-[152px]'}`}>
             <iframe 
-              src="https://open.spotify.com/embed/track/0AfViJ0ogCGfWkukMop215?utm_source=generator" 
+              src="https://open.spotify.com/embed/album/3tQfs4MH0zc8bVk9Inv2hT?utm_source=generator" 
               width="100%" 
               height="100%" 
               className="rounded-lg"
