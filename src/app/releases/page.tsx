@@ -19,12 +19,13 @@ export default function ReleasesPage() {
   return (
     <div className="min-h-screen w-full relative overflow-hidden text-white p-2 sm:p-4 lg:px-8 xl:px-16">
       {/* Background with adjusted properties for better contrast */}
-      <Iridescence 
-        className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]" 
-        color={[0.8, 0.8, 0.8]} 
-        speed={0.7} 
-        amplitude={0.08} 
-      />
+      <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
+        <Iridescence
+          color={[0.8, 0.8, 0.8]} 
+          speed={0.7} 
+          amplitude={0.08} 
+        />
+      </div>
       
       {/* Semi-transparent overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30 z-0"></div>
