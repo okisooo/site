@@ -38,7 +38,7 @@ export default function ReleasesPage() {
             OKISO Music Releases
           </h1>
           <p className="text-lg sm:text-xl text-shadow-md text-gray-200 max-w-2xl mx-auto">
-            Explore OKISO's music catalog. Listen to the latest releases.
+            Explore OKISO&apos;s music catalog. Listen to the latest releases.
           </p>
         </header>
 
@@ -172,7 +172,7 @@ export default function ReleasesPage() {
               >
                 <Image 
                   src="https://i.scdn.co/image/ab67616d0000b27354026378bb902db4497abeca"
-                  alt="TEARS IN HEAVEN '99 artwork"
+                  alt="TEARS IN HEAVEN &apos;99 artwork"
                   className="rounded-md shadow-lg"
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -183,7 +183,7 @@ export default function ReleasesPage() {
                   </svg>
                 </div>
               </a>
-              <h4 className="font-semibold text-shadow-sm mt-2">TEARS IN HEAVEN '99</h4>
+              <h4 className="font-semibold text-shadow-sm mt-2">TEARS IN HEAVEN &apos;99</h4>
               <p className="text-sm text-gray-300 text-shadow-sm mb-2">2025</p>
               <a 
                 href="https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A?si=Pvch5L8DTaODoaJLM2DsVg" 
