@@ -48,7 +48,7 @@ export default function UpcomingPage() {
             <div className="w-full md:w-2/3 mt-4 md:mt-0">
               <h3 className="text-xl font-semibold mb-2 text-shadow-md">ETUDE</h3>
               <p className="text-gray-200 mb-4 text-shadow-sm">
-                ETUDE is our latest experimental sound exploration, featuring collaborations with artists from across Europe.
+                Her voice is ETUDE.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
