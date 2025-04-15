@@ -2,20 +2,45 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ContentCard from '@/Components/ContentCard';
 import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 
 export default function ReleasesPage() {
   const [isMobile, setIsMobile] = useState(false);
+  const [showScrollButtons, setShowScrollButtons] = useState(false);
+  const releasesContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+      checkScrollable();
+    };
+    
+    const checkScrollable = () => {
+      if (releasesContainerRef.current) {
+        const { scrollWidth, clientWidth } = releasesContainerRef.current;
+        setShowScrollButtons(scrollWidth > clientWidth);
+      }
+    };
+    
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   
+  const scrollReleasesLeft = () => {
+    if (releasesContainerRef.current) {
+      releasesContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+  
+  const scrollReleasesRight = () => {
+    if (releasesContainerRef.current) {
+      releasesContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen w-full relative overflow-auto text-white p-2 sm:p-3">
       {/* Background with adjusted properties for better contrast */}
@@ -90,149 +115,177 @@ export default function ReleasesPage() {
         </ContentCard>
         
         <ContentCard title="Featured Releases" className="mb-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-            {/* Release Item - FANTASIA */}
-            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10">
-              <a 
-                href="https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d0000b273bcecbdb53ef1b1311a9923a8"
-                  alt="FANTASIA album artwork"
-                  className="rounded-md shadow-lg"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <div className="relative">
+            {showScrollButtons && (
+              <>
+                <button 
+                  onClick={scrollReleasesLeft} 
+                  className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+                  aria-label="Scroll left"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={scrollReleasesRight} 
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+                  aria-label="Scroll right"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                  </svg>
+                </button>
+              </>
+            )}
+            <div 
+              className="flex flex-nowrap overflow-x-auto pb-4 scrollbar-hide gap-3" 
+              ref={releasesContainerRef}
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {/* Release Item - FANTASIA */}
+              <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
+                <a 
+                  href="https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                >
+                  <Image 
+                    src="https://i.scdn.co/image/ab67616d0000b273bcecbdb53ef1b1311a9923a8"
+                    alt="FANTASIA album artwork"
+                    className="rounded-md shadow-lg"
+                    fill
+                    sizes="(max-width: 640px) 180px, 220px"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                  </div>
+                </a>
+                <h4 className="font-semibold text-shadow-sm mt-1 text-sm">FANTASIA</h4>
+                <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
+                <a 
+                  href="https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN" 
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
                   </svg>
-                </div>
-              </a>
-              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">FANTASIA</h4>
-              <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
-              <a 
-                href="https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN" 
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                </svg>
-                Listen on Spotify
-              </a>
-            </div>
-            
-            {/* Release Item 1 */}
-            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10">
-              <a 
-                href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d0000b273c57d3a982f75a7b9f10a010a"
-                  alt="Meet The Princess artwork"
-                  className="rounded-md shadow-lg"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  Listen on Spotify
+                </a>
+              </div>
+              
+              {/* Meet The Princess */}
+              <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
+                <a 
+                  href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                >
+                  <Image 
+                    src="https://i.scdn.co/image/ab67616d0000b273c57d3a982f75a7b9f10a010a"
+                    alt="Meet The Princess artwork"
+                    className="rounded-md shadow-lg"
+                    fill
+                    sizes="(max-width: 640px) 180px, 220px"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                  </div>
+                </a>
+                <h4 className="font-semibold text-shadow-sm mt-1 text-sm">Meet The Princess</h4>
+                <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
+                <a 
+                  href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ" 
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
                   </svg>
-                </div>
-              </a>
-              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">Meet The Princess</h4>
-              <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
-              <a 
-                href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ" 
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                </svg>
-                Listen on Spotify
-              </a>
-            </div>
-            
-            {/* Release Item 2 */}
-            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10">
-              <a 
-                href="https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT?si=B0unYMY5QJe55mBiR1mZCg" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d0000b273dc00169cce2210cf91300f23"
-                  alt="SHUT OFF artwork"
-                  className="rounded-md shadow-lg"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  Listen on Spotify
+                </a>
+              </div>
+              
+              {/* SHUT OFF */}
+              <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
+                <a 
+                  href="https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT?si=B0unYMY5QJe55mBiR1mZCg" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                >
+                  <Image 
+                    src="https://i.scdn.co/image/ab67616d0000b273dc00169cce2210cf91300f23"
+                    alt="SHUT OFF artwork"
+                    className="rounded-md shadow-lg"
+                    fill
+                    sizes="(max-width: 640px) 180px, 220px"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                  </div>
+                </a>
+                <h4 className="font-semibold text-shadow-sm mt-1 text-sm">SHUT OFF</h4>
+                <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
+                <a 
+                  href="https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT?si=B0unYMY5QJe55mBiR1mZCg" 
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
                   </svg>
-                </div>
-              </a>
-              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">SHUT OFF</h4>
-              <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
-              <a 
-                href="https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT?si=B0unYMY5QJe55mBiR1mZCg" 
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                </svg>
-                Listen on Spotify
-              </a>
-            </div>
-            
-            {/* Release Item 3 */}
-            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10">
-              <a 
-                href="https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A?si=Pvch5L8DTaODoaJLM2DsVg" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d0000b27354026378bb902db4497abeca"
-                  alt="TEARS IN HEAVEN &apos;99 artwork"
-                  className="rounded-md shadow-lg"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  Listen on Spotify
+                </a>
+              </div>
+              
+              {/* TEARS IN HEAVEN '99 */}
+              <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
+                <a 
+                  href="https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A?si=Pvch5L8DTaODoaJLM2DsVg" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                >
+                  <Image 
+                    src="https://i.scdn.co/image/ab67616d0000b27354026378bb902db4497abeca"
+                    alt="TEARS IN HEAVEN &apos;99 artwork"
+                    className="rounded-md shadow-lg"
+                    fill
+                    sizes="(max-width: 640px) 180px, 220px"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                  </div>
+                </a>
+                <h4 className="font-semibold text-shadow-sm mt-1 text-sm">TEARS IN HEAVEN &apos;99</h4>
+                <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
+                <a 
+                  href="https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A?si=Pvch5L8DTaODoaJLM2DsVg" 
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
                   </svg>
-                </div>
-              </a>
-              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">TEARS IN HEAVEN &apos;99</h4>
-              <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
-              <a 
-                href="https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A?si=Pvch5L8DTaODoaJLM2DsVg" 
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                </svg>
-                Listen on Spotify
-              </a>
+                  Listen on Spotify
+                </a>
+              </div>
             </div>
           </div>
         </ContentCard>
