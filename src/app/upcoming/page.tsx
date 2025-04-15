@@ -31,13 +31,13 @@ export default function UpcomingPage() {
           </p>
         </header>
 
-        <ContentCard title="Latest Release: ETUDE">
+        <ContentCard title="Latest Release: FANTASIA & ETUDE">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full md:w-1/3">
               <div className="relative aspect-square">
                 <Image 
-                  src="https://i.scdn.co/image/ab67616d00001e02f5f30c6f3950a9e12c96287e"
-                  alt="ETUDE album artwork"
+                  src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c"
+                  alt="FANTASIA & ETUDE album artwork"
                   className="rounded-md shadow-lg"
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -46,14 +46,14 @@ export default function UpcomingPage() {
               </div>
             </div>
             <div className="w-full md:w-2/3 mt-4 md:mt-0">
-              <h3 className="text-xl font-semibold mb-2 text-shadow-md">ETUDE</h3>
+              <h3 className="text-xl font-semibold mb-2 text-shadow-md">FANTASIA & ETUDE</h3>
               <p className="text-gray-200 mb-4 text-shadow-sm">
-                Her voice is ETUDE.
+                A collaboration with Miku and GUMI.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
                   <h4 className="font-semibold text-shadow-sm mb-1">Release Date</h4>
-                  <p>April 7, 2025</p>
+                  <p>April 25, 2025</p>
                 </div>
                 <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
                   <h4 className="font-semibold text-shadow-sm mb-1">Platforms</h4>
