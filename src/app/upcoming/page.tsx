@@ -1,10 +1,46 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useRef, useEffect } from 'react';
 import ContentCard from '@/Components/ContentCard';
 import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 
 export default function UpcomingPage() {
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Function to check scroll position and update arrow visibility
+  const updateArrowVisibility = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      // Show left arrow only if we've scrolled to the right
+      setShowLeftArrow(scrollLeft > 0);
+      // Show right arrow only if there's more content to scroll right
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+    }
+  };
+  
+  // Set up initial arrow visibility and window resize handler
+  useEffect(() => {
+    updateArrowVisibility();
+    window.addEventListener('resize', updateArrowVisibility);
+    return () => window.removeEventListener('resize', updateArrowVisibility);
+  }, []);
+  
+  // Scroll functions
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+  
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
     <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
@@ -31,69 +67,104 @@ export default function UpcomingPage() {
           </p>
         </header>
 
-        <ContentCard title="Upcoming Release: FANTASIA & ETUDE">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="w-full md:w-1/3">
-              <div className="relative aspect-square">
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c"
-                  alt="FANTASIA & ETUDE album artwork"
-                  className="rounded-md shadow-lg"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="w-full md:w-2/3 mt-4 md:mt-0">
-              <h3 className="text-xl font-semibold mb-2 text-shadow-md">FANTASIA & ETUDE</h3>
-              <p className="text-gray-200 mb-4 text-shadow-sm">
-                A collaboration with Miku and GUMI.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
-                  <h4 className="font-semibold text-shadow-sm mb-1">Release Date</h4>
-                  <p>April 25, 2025</p>
-                </div>
-                <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
-                  <h4 className="font-semibold text-shadow-sm mb-1">Platforms</h4>
-                  <p>Spotify, Apple Music + more</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ContentCard>
-        
-        <ContentCard title="Pre-save">
-          <div className="backdrop-blur-card bg-white/5 p-5 rounded-lg border border-white/10 mb-4">
-            <div className="flex items-center gap-4">
-              <div className="relative w-20 h-20 flex-shrink-0">
-                <Image 
-                  src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c" 
-                  alt="FANTASIA & ETUDE artwork" 
-                  fill 
-                  className="object-cover rounded" 
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-shadow-md">FANTASIA & ETUDE</h3>
-                <p className="text-gray-300 text-shadow-sm">Release: April 25, 2025</p>
-              </div>
-            </div>
-          </div>
+        <div className="relative">
+          {/* Scroll Arrows - only shown when needed */}
+          {showLeftArrow && (
+            <button 
+              onClick={scrollLeft} 
+              className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+              aria-label="Scroll left"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+              </svg>
+            </button>
+          )}
           
-          <a 
-            href="https://open.spotify.com/prerelease/5ooNsbKExoJTr7m8AY1zND?si=e992928df9954d46"
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#1DB954] hover:bg-[#1ed760] rounded-full text-black font-medium transition-colors"
+          {showRightArrow && (
+            <button 
+              onClick={scrollRight} 
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+              aria-label="Scroll right"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+              </svg>
+            </button>
+          )}
+          
+          {/* Scrollable content area */}
+          <div 
+            ref={scrollContainerRef} 
+            className="overflow-x-auto scrollbar-hide"
+            onScroll={updateArrowVisibility}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-            </svg>
-            Pre-save on Spotify
-          </a>
-        </ContentCard>
+            <ContentCard title="Upcoming Release: FANTASIA & ETUDE">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/3">
+                  <div className="relative aspect-square">
+                    <Image 
+                      src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c"
+                      alt="FANTASIA & ETUDE album artwork"
+                      className="rounded-md shadow-lg"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      priority
+                    />
+                  </div>
+                </div>
+                <div className="w-full md:w-2/3 mt-4 md:mt-0">
+                  <h3 className="text-xl font-semibold mb-2 text-shadow-md">FANTASIA & ETUDE</h3>
+                  <p className="text-gray-200 mb-4 text-shadow-sm">
+                    A collaboration with Miku and GUMI.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
+                      <h4 className="font-semibold text-shadow-sm mb-1">Release Date</h4>
+                      <p>April 25, 2025</p>
+                    </div>
+                    <div className="backdrop-blur-card bg-white/5 p-3 rounded-lg border border-white/10">
+                      <h4 className="font-semibold text-shadow-sm mb-1">Platforms</h4>
+                      <p>Spotify, Apple Music + more</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ContentCard>
+            
+            <ContentCard title="Pre-save">
+              <div className="backdrop-blur-card bg-white/5 p-5 rounded-lg border border-white/10 mb-4">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-20 h-20 flex-shrink-0">
+                    <Image 
+                      src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c" 
+                      alt="FANTASIA & ETUDE artwork" 
+                      fill 
+                      className="object-cover rounded" 
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-shadow-md">FANTASIA & ETUDE</h3>
+                    <p className="text-gray-300 text-shadow-sm">Release: April 25, 2025</p>
+                  </div>
+                </div>
+              </div>
+              
+              <a 
+                href="https://open.spotify.com/prerelease/5ooNsbKExoJTr7m8AY1zND?si=e992928df9954d46"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-[#1DB954] hover:bg-[#1ed760] rounded-full text-black font-medium transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                </svg>
+                Pre-save on Spotify
+              </a>
+            </ContentCard>
+          </div>
+        </div>
         
         {/* Back to Home button with fixed position */}
         <div className="fixed bottom-6 left-6 z-20">

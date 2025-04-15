@@ -169,6 +169,9 @@ export default function Dock({
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
   const isHovered = useMotionValue(0);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
 
   const maxHeight = useMemo(
     () => Math.max(dockHeight, magnification + magnification / 2 + 4),
@@ -177,41 +180,100 @@ export default function Dock({
   const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
   const height = useSpring(heightRow, spring);
 
+  // Update arrow visibility based on scroll position
+  const updateArrowVisibility = () => {
+    if (dockRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = dockRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+    }
+  };
+
+  // Set initial arrow visibility and listen for resize
+  useEffect(() => {
+    updateArrowVisibility();
+    window.addEventListener('resize', updateArrowVisibility);
+    return () => window.removeEventListener('resize', updateArrowVisibility);
+  }, []);
+
+  // Scroll functions
+  const scrollLeft = () => {
+    if (dockRef.current) {
+      dockRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (dockRef.current) {
+      dockRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
+
   return (
     <motion.div
       style={{ height, scrollbarWidth: "none" }}
       className="mx-2 flex max-w-full items-center"
     >
-      <motion.div
-        onMouseMove={({ pageX }) => {
-          isHovered.set(1);
-          mouseX.set(pageX);
-        }}
-        onMouseLeave={() => {
-          isHovered.set(0);
-          mouseX.set(Infinity);
-        }}
-        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border-neutral-700 border-2 pb-2 px-4`}
-        style={{ height: panelHeight }}
-        role="toolbar"
-        aria-label="Application dock"
-      >
-        {items.map((item, index) => (
-          <DockItem
-            key={index}
-            onClick={item.onClick}
-            className={item.className}
-            mouseX={mouseX}
-            spring={spring}
-            distance={distance}
-            magnification={magnification}
-            baseItemSize={baseItemSize}
+      <div className="relative w-full">
+        {/* Left scroll arrow - only shown when scrolled right */}
+        {showLeftArrow && (
+          <button 
+            onClick={scrollLeft} 
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-1 rounded-full z-20 shadow-lg w-6 h-6 flex items-center justify-center transition-colors"
+            aria-label="Scroll left"
           >
-            <DockIcon>{item.icon}</DockIcon>
-            <DockLabel>{item.label}</DockLabel>
-          </DockItem>
-        ))}
-      </motion.div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </button>
+        )}
+
+        {/* Right scroll arrow - only shown when more content available */}
+        {showRightArrow && (
+          <button 
+            onClick={scrollRight} 
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-1 rounded-full z-20 shadow-lg w-6 h-6 flex items-center justify-center transition-colors"
+            aria-label="Scroll right"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+          </button>
+        )}
+
+        <motion.div
+          ref={dockRef}
+          onMouseMove={({ pageX }) => {
+            isHovered.set(1);
+            mouseX.set(pageX);
+          }}
+          onMouseLeave={() => {
+            isHovered.set(0);
+            mouseX.set(Infinity);
+          }}
+          onScroll={updateArrowVisibility}
+          className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border-neutral-700 border-2 pb-2 px-4 overflow-x-auto scrollbar-hide`}
+          style={{ height: panelHeight, scrollbarWidth: "none", msOverflowStyle: "none" }}
+          role="toolbar"
+          aria-label="Application dock"
+        >
+          {items.map((item, index) => (
+            <DockItem
+              key={index}
+              onClick={item.onClick}
+              className={item.className}
+              mouseX={mouseX}
+              spring={spring}
+              distance={distance}
+              magnification={magnification}
+              baseItemSize={baseItemSize}
+            >
+              <DockIcon>{item.icon}</DockIcon>
+              <DockLabel>{item.label}</DockLabel>
+            </DockItem>
+          ))}
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
