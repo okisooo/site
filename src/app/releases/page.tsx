@@ -158,28 +158,36 @@ export default function ReleasesPage() {
         
         <ContentCard title="Featured Releases" className="mb-3">
           <div className="relative">
-            {/* Update arrow visibility conditions */}
+            {/* Update arrow visibility conditions and add vignette effect */}
             {showLeftArrow && (
-              <button 
-                onClick={scrollReleasesLeft} 
-                className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
-                aria-label="Scroll left"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                </svg>
-              </button>
+              <>
+                {/* Left side vignette gradient */}
+                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/40 to-transparent z-[5] pointer-events-none rounded-l-lg"></div>
+                <button 
+                  onClick={scrollReleasesLeft} 
+                  className="absolute left-1 top-[calc(50%-16px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors backdrop-blur-sm"
+                  aria-label="Scroll left"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                  </svg>
+                </button>
+              </>
             )}
             {showRightArrow && (
-              <button 
-                onClick={scrollReleasesRight} 
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
-                aria-label="Scroll right"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                </svg>
-              </button>
+              <>
+                {/* Right side vignette gradient */}
+                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/40 to-transparent z-[5] pointer-events-none rounded-r-lg"></div>
+                <button 
+                  onClick={scrollReleasesRight} 
+                  className="absolute right-1 top-[calc(50%-16px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors backdrop-blur-sm"
+                  aria-label="Scroll right"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                  </svg>
+                </button>
+              </>
             )}
             
             {/* Add onScroll handler to the container */}
