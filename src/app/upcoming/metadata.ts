@@ -2,14 +2,16 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OKISO | ETUDE | Latest Release",
+  title: "OKISO | FANTASIA & ETUDE | Upcoming Release",
   description:
-    "ETUDE - Her voice is ETUDE. OKISO's Miku album is now available on Spotify.",
+    "FANTASIA & ETUDE - A collaboration with Miku and GUMI, releasing April 25, 2025. Pre-save OKISO's upcoming album now.",
   keywords: [
+    "OKISO upcoming",
     "OKISO new music",
-    "ETUDE album",
+    "FANTASIA & ETUDE",
     "Miku collaboration",
+    "GUMI collaboration",
     "vocaloid releases",
-    "OKISO Spotify",
+    "OKISO pre-save",
   ],
 };
