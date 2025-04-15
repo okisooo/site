@@ -6,50 +6,85 @@ import ContentCard from '@/Components/ContentCard';
 import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 
 export default function UpcomingPage() {
+  // Set both arrows to hidden by default
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
-  // Function to check scroll position and update arrow visibility
+  // Function to check scroll position and update arrow visibility with strict edge detection
   const updateArrowVisibility = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      // Show left arrow only if we've scrolled to the right
-      setShowLeftArrow(scrollLeft > 0);
-      // Show right arrow only if there's more content to scroll right
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    
+    // First check if scrolling is even possible
+    if (scrollWidth <= clientWidth) {
+      setShowLeftArrow(false);
+      setShowRightArrow(false);
+      return;
     }
+    
+    // Calculate if we're at the left or right edge
+    // Add small buffer (1px) to account for rounding errors
+    const atLeftEdge = scrollLeft <= 1;
+    const atRightEdge = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
+    
+    // Update arrow visibility
+    setShowLeftArrow(!atLeftEdge);
+    setShowRightArrow(!atRightEdge);
   };
   
-  // Set up initial arrow visibility and window resize handler
   useEffect(() => {
-    updateArrowVisibility();
+    // Run initial check after component mounts
+    const initialCheck = () => updateArrowVisibility();
+    
+    // Check multiple times to ensure accurate measurement after layout/images load
+    const timers = [
+      setTimeout(initialCheck, 0),
+      setTimeout(initialCheck, 100),
+      setTimeout(initialCheck, 500),
+      setTimeout(initialCheck, 1000)
+    ];
+    
+    // Add event listeners
     window.addEventListener('resize', updateArrowVisibility);
-    return () => window.removeEventListener('resize', updateArrowVisibility);
+    window.addEventListener('load', updateArrowVisibility);
+    
+    // Cleanup
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener('resize', updateArrowVisibility);
+      window.removeEventListener('load', updateArrowVisibility);
+    };
   }, []);
   
-  // Scroll functions
+  // Scroll functions with visibility update
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      // Update arrows after animation completes
+      setTimeout(updateArrowVisibility, 500);
     }
   };
   
   const scrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      // Update arrows after animation completes
+      setTimeout(updateArrowVisibility, 500);
     }
   };
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
-    <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
-      <Iridescence
-        color={[0.8, 0.8, 0.8]} 
-        speed={0.7} 
-        amplitude={0.08} 
-      />
-    </div>
+      <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
+        <Iridescence
+          color={[0.8, 0.8, 0.8]} 
+          speed={0.7} 
+          amplitude={0.08} 
+        />
+      </div>
       
       {/* Semi-transparent overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30 z-0"></div>
@@ -68,7 +103,7 @@ export default function UpcomingPage() {
         </header>
 
         <div className="relative">
-          {/* Scroll Arrows - only shown when needed */}
+          {/* Left scroll arrow */}
           {showLeftArrow && (
             <button 
               onClick={scrollLeft} 
@@ -81,6 +116,7 @@ export default function UpcomingPage() {
             </button>
           )}
           
+          {/* Right scroll arrow */}
           {showRightArrow && (
             <button 
               onClick={scrollRight} 
@@ -93,7 +129,7 @@ export default function UpcomingPage() {
             </button>
           )}
           
-          {/* Scrollable content area */}
+          {/* Scrollable content area with improved scroll event handling */}
           <div 
             ref={scrollContainerRef} 
             className="overflow-x-auto scrollbar-hide"
@@ -111,6 +147,7 @@ export default function UpcomingPage() {
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
                       priority
+                      onLoad={updateArrowVisibility}
                     />
                   </div>
                 </div>
@@ -141,7 +178,8 @@ export default function UpcomingPage() {
                       src="https://i.scdn.co/image/ab67616d00001e02a9831ffdbe8eb29678d1e88c" 
                       alt="FANTASIA & ETUDE artwork" 
                       fill 
-                      className="object-cover rounded" 
+                      className="object-cover rounded"
+                      onLoad={updateArrowVisibility}
                     />
                   </div>
                   <div>

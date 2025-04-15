@@ -8,36 +8,78 @@ import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 
 export default function ReleasesPage() {
   const [isMobile, setIsMobile] = useState(false);
-  const [showScrollButtons, setShowScrollButtons] = useState(false);
+  // Replace showScrollButtons with separate left and right arrow visibility
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
   const releasesContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Function to check scroll position and update arrow visibility
+  const updateArrowVisibility = () => {
+    if (!releasesContainerRef.current) return;
+    
+    const container = releasesContainerRef.current;
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    
+    // First check if scrolling is even possible
+    if (scrollWidth <= clientWidth) {
+      setShowLeftArrow(false);
+      setShowRightArrow(false);
+      return;
+    }
+    
+    // Calculate if we're at the left or right edge
+    // Add small buffer (1px) to account for rounding errors
+    const atLeftEdge = scrollLeft <= 1;
+    const atRightEdge = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
+    
+    // Update arrow visibility
+    setShowLeftArrow(!atLeftEdge);
+    setShowRightArrow(!atRightEdge);
+  };
   
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 640);
-      checkScrollable();
+      updateArrowVisibility(); // Update arrows on resize
     };
     
-    const checkScrollable = () => {
-      if (releasesContainerRef.current) {
-        const { scrollWidth, clientWidth } = releasesContainerRef.current;
-        setShowScrollButtons(scrollWidth > clientWidth);
-      }
-    };
+    // Run initial check after component mounts
+    const initialCheck = () => updateArrowVisibility();
+    
+    // Check multiple times to ensure accurate measurement after layout/images load
+    const timers = [
+      setTimeout(initialCheck, 0),
+      setTimeout(initialCheck, 100),
+      setTimeout(initialCheck, 500),
+      setTimeout(initialCheck, 1000)
+    ];
     
     handleResize();
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("load", updateArrowVisibility);
+    
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("load", updateArrowVisibility);
+    };
   }, []);
   
   const scrollReleasesLeft = () => {
     if (releasesContainerRef.current) {
-      releasesContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      // Reduce speed by using smaller scroll amount and longer duration
+      releasesContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+      // Update arrows after animation completes
+      setTimeout(updateArrowVisibility, 800);
     }
   };
   
   const scrollReleasesRight = () => {
     if (releasesContainerRef.current) {
-      releasesContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      // Reduce speed by using smaller scroll amount and longer duration
+      releasesContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      // Update arrows after animation completes
+      setTimeout(updateArrowVisibility, 800);
     }
   };
 
@@ -116,31 +158,35 @@ export default function ReleasesPage() {
         
         <ContentCard title="Featured Releases" className="mb-3">
           <div className="relative">
-            {showScrollButtons && (
-              <>
-                <button 
-                  onClick={scrollReleasesLeft} 
-                  className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
-                  aria-label="Scroll left"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                  </svg>
-                </button>
-                <button 
-                  onClick={scrollReleasesRight} 
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
-                  aria-label="Scroll right"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                  </svg>
-                </button>
-              </>
+            {/* Update arrow visibility conditions */}
+            {showLeftArrow && (
+              <button 
+                onClick={scrollReleasesLeft} 
+                className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+                aria-label="Scroll left"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+              </button>
             )}
+            {showRightArrow && (
+              <button 
+                onClick={scrollReleasesRight} 
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors"
+                aria-label="Scroll right"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+              </button>
+            )}
+            
+            {/* Add onScroll handler to the container */}
             <div 
               className="flex flex-nowrap overflow-x-auto pb-4 scrollbar-hide gap-3" 
               ref={releasesContainerRef}
+              onScroll={updateArrowVisibility}
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {/* Release Item - FANTASIA */}
