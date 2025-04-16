@@ -44,7 +44,7 @@ const dockItems = [
   {
     icon: <FaDiscord size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'Discord',
-    onClick: () => window.open("https://discord.gg/chill", "_blank")
+    onClick: () => window.open("https://discord.gg/okiso", "_blank")
   }
 ];
 
