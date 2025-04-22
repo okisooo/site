@@ -84,7 +84,8 @@ export default function RootLayout({
                 "https://github.com/okisooo",
                 "https://x.com/okisooo_",
                 "https://www.youtube.com/@okiso7",
-                "https://discord.gg/chill"
+                "https://discord.gg/okiso",
+                "https://okiso.bandcamp.com/"
               ],
               "makesOffer": {
                 "@type": "Offer",
