@@ -49,6 +49,11 @@ const dockItems = [
     onClick: () => window.open("https://okiso.bandcamp.com/", "_blank")
   },
   {
+    icon: <FaApple size={24} className="text-white hover:text-white/80 transition-colors" />,
+    label: 'Apple Music',
+    onClick: () => window.open("https://music.apple.com/us/artist/okiso/1542837884", "_blank") // Assuming this is the correct artist link
+  },
+  {
     icon: <FaDiscord size={24} className="text-white hover:text-white/80 transition-colors" />,
     label: 'Discord',
     onClick: () => window.open("https://discord.gg/okiso", "_blank")

@@ -80,7 +80,7 @@ export default function ReleasesPage() {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-auto text-white p-2 sm:p-3">
+    <div className="min-h-screen w-full relative overflow-hidden text-white p-2 sm:p-3">
       {/* Background with adjusted properties for better contrast */}
       <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
         <Iridescence
