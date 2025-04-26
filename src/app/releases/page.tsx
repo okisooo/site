@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import ContentCard from '@/Components/ContentCard';
-import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
+import IridescenceWrapper from '@/Components/IridescenceWrapper';
 
 export default function ReleasesPage() {
   // Replace showScrollButtons with separate left and right arrow visibility
@@ -39,26 +39,26 @@ export default function ReleasesPage() {
   useEffect(() => {
     const handleResize = () => updateArrowVisibility();
      
-     // Run initial check after component mounts
+    // Run initial check after component mounts
     const initialCheck = () => updateArrowVisibility();
      
-     // Check multiple times to ensure accurate measurement after layout/images load
-     const timers = [
-       setTimeout(initialCheck, 0),
-       setTimeout(initialCheck, 100),
-       setTimeout(initialCheck, 500),
-       setTimeout(initialCheck, 1000)
-     ];
+    // Check multiple times to ensure accurate measurement after layout/images load
+    const timers = [
+      setTimeout(initialCheck, 0),
+      setTimeout(initialCheck, 100),
+      setTimeout(initialCheck, 500),
+      setTimeout(initialCheck, 1000)
+    ];
      
     handleResize();
-     window.addEventListener("resize", handleResize);
-     window.addEventListener("load", updateArrowVisibility);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("load", updateArrowVisibility);
      
-     return () => {
-       timers.forEach(clearTimeout);
-       window.removeEventListener("resize", handleResize);
-       window.removeEventListener("load", updateArrowVisibility);
-     };
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("load", updateArrowVisibility);
+    };
   }, []);
   
   const scrollReleasesLeft = () => {
@@ -81,14 +81,8 @@ export default function ReleasesPage() {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden text-white p-2 sm:p-3">
-      {/* Background with adjusted properties for better contrast */}
-      <div className="fixed top-0 left-0 w-[100vw] h-[100vh] overflow-hidden z-[-1]">
-        <Iridescence
-          color={[0.8, 0.8, 0.8]} 
-          speed={0.7} 
-          amplitude={0.08} 
-        />
-      </div>
+      {/* Use the IridescenceWrapper for consistent background */}
+      <IridescenceWrapper />
       
       {/* Semi-transparent overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30 z-0"></div>

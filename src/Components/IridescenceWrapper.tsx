@@ -6,7 +6,7 @@ import { memo } from "react";
 
 function IridescenceWrapperComponent() {
   return (
-    <div className="absolute inset-0 w-full h-full">
+    <div className="fixed inset-0 w-[100vw] h-[100vh] overflow-hidden" style={{ zIndex: -10 }}>
       <Iridescence mouseReact={false} />
     </div>
   );
