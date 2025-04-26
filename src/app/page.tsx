@@ -12,7 +12,8 @@ import {
   FaTwitter,
   FaYoutube,
   FaDiscord,
-  FaBandcamp
+  FaBandcamp,
+  FaApple
 } from 'react-icons/fa';
 import { MdLibraryMusic, MdUpcoming } from 'react-icons/md';
 
