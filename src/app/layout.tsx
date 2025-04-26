@@ -91,7 +91,7 @@ export default function RootLayout({
                 "@type": "Offer",
                 "itemOffered": {
                   "@type": "MusicAlbum",
-                  "name": "Your Latest Album",
+                  "name": "FANTASIA & ETUDE",
                   "byArtist": {
                     "@type": "MusicGroup",
                     "name": "OKISO"
