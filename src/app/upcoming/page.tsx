@@ -36,9 +36,8 @@ export default function UpcomingPage() {
             <div className="flex-1">
               <h2 className="text-3xl font-bold text-shadow-lg mb-3">RESURRECTION</h2>
               <div className="mb-6">
-                <span className="inline-block bg-green-600 text-white text-sm font-medium px-3 py-1 rounded-full mb-3">Coming Soon</span>
-                <p className="text-xl text-shadow-md mb-4">
-                  The next evolution of OKISO's sound is approaching.
+                <span className="inline-block bg-green-600 text-white text-sm font-medium px-3 py-1 rounded-full mb-3">Coming Soon</span>                <p className="text-xl text-shadow-md mb-4">
+                  The next evolution of OKISO&apos;s sound is approaching.
                 </p>
                 <p className="text-gray-200 text-shadow-sm mb-6">
                   Experience the rebirth through sound with the upcoming RESURRECTION album.
