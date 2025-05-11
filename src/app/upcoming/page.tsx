@@ -8,13 +8,13 @@ export default function UpcomingPage() {
     <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
       {/* Use IridescenceWrapper for consistent background */}
       <IridescenceWrapper />
-      
+
       {/* Semi-transparent overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30 z-0"></div>
-          
+
       {/* Vignette effect overlay */}
       <div className="absolute inset-0 bg-vignette z-[1] pointer-events-none"></div>
-      
+
       <div className="max-w-4xl mx-auto relative z-10">
         <header className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-bold text-shadow-lg mb-4">
@@ -33,11 +33,11 @@ export default function UpcomingPage() {
             </p>
           </div>
         </ContentCard>
-        
+
         {/* Back to Home button with fixed position */}
         <div className="fixed bottom-6 left-6 z-20">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-4 py-2 rounded-full inline-flex items-center text-base min-h-[44px] text-shadow-sm border border-white/10 shadow-lg"
           >
             ← Back to home
