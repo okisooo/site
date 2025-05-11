@@ -154,10 +154,9 @@ export default function ReleasesPage() {
           {showLeftArrow && (
             <>
               {/* Left side vignette gradient */}
-              <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/40 to-transparent z-[5] pointer-events-none rounded-l-lg"></div>
-              <button
+              <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/40 to-transparent z-[5] pointer-events-none rounded-l-lg"></div>              <button
                 onClick={scrollReleasesLeft}
-                className="absolute left-1 top-[calc(50%-16px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors backdrop-blur-sm"
+                className="absolute left-1 top-[calc(50%-22px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation"
                 aria-label="Scroll left"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -172,7 +171,7 @@ export default function ReleasesPage() {
               <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/40 to-transparent z-[5] pointer-events-none rounded-r-lg"></div>
               <button
                 onClick={scrollReleasesRight}
-                className="absolute right-1 top-[calc(50%-16px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-8 h-8 flex items-center justify-center transition-colors backdrop-blur-sm"
+                className="absolute right-1 top-[calc(50%-22px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation"
                 aria-label="Scroll right"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -182,15 +181,18 @@ export default function ReleasesPage() {
             </>
           )}
 
-          {/* Add onScroll handler to the container */}
-          <div
-            className="flex flex-nowrap overflow-x-auto pb-4 scrollbar-hide gap-3"
+          {/* Add onScroll handler to the container */}          <div
+            className="flex flex-nowrap overflow-x-auto pb-4 scrollbar-hide gap-2 sm:gap-3 -mx-2 px-2"
             ref={releasesContainerRef}
             onScroll={updateArrowVisibility}
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
           >
             {/* Release Item - FANTASIA */}
-            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
+            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[160px] sm:w-[180px] md:w-[220px]">
               <a
                 href="https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN"
                 target="_blank"
@@ -333,14 +335,14 @@ export default function ReleasesPage() {
               </a>
             </div>
           </div>
-        </div>
-      </ContentCard>
+        </div>      </ContentCard>
 
       {/* Back to Home button with improved positioning */}
-      <div className="fixed bottom-4 left-4 z-20">
+      <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-20">
         <Link
           href="/"
-          className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-3 py-1.5 rounded-full inline-flex items-center text-sm min-h-[36px] text-shadow-sm border border-white/10 shadow-lg"
+          className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-3 sm:px-4 py-1.5 sm:py-2 rounded-full inline-flex items-center text-xs sm:text-sm min-h-[36px] sm:min-h-[44px] text-shadow-sm border border-white/10 shadow-lg touch-manipulation"
+          aria-label="Back to home page"
         >
           ← Back to home
         </Link>

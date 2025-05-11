@@ -1,7 +1,7 @@
 /*
-	jsrepo 1.38.0
-	Installed from https://reactbits.dev/ts/tailwind/
-	2-19-2025
+  jsrepo 1.38.0
+  Installed from https://reactbits.dev/ts/tailwind/
+  2-19-2025
 */
 
 "use client";
@@ -84,7 +84,6 @@ function DockItem({
     [baseItemSize, magnification, baseItemSize],
   );
   const size = useSpring(targetSize, spring);
-
   return (
     <motion.div
       ref={ref}
@@ -94,10 +93,29 @@ function DockItem({
       }}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
-      onFocus={() => isHovered.set(1)}
-      onBlur={() => isHovered.set(0)}
-      onClick={onClick}
-      className={`relative inline-flex items-center justify-center rounded-full bg-[#060606] border-neutral-700 border-2 shadow-md ${className}`}
+      onFocus={() => isHovered.set(1)} onBlur={() => isHovered.set(0)}
+      onTouchStart={() => isHovered.set(1)}
+      onTouchEnd={(e) => {
+        // For touch devices, we handle the click during touch end
+        isHovered.set(0);
+        if (onClick) {
+          // Use a flag to prevent double-triggering with onClick
+          (e.currentTarget as any)._touchHandled = true;
+          setTimeout(() => {
+            onClick();
+          }, 10);
+        }
+      }}
+      onClick={(e) => {
+        // Only execute onClick if it wasn't handled by touch
+        const target = e.currentTarget as any;
+        if (onClick && !target._touchHandled) {
+          onClick();
+        }
+        // Reset the flag
+        target._touchHandled = false;
+      }}
+      className={`relative inline-flex items-center justify-center rounded-full bg-[#060606] border-neutral-700 border-2 shadow-md touch-manipulation ${className}`}
       tabIndex={0}
       role="button"
       aria-haspopup="true"
@@ -128,12 +146,11 @@ function DockLabel({ children, className = "", ...rest }: DockLabelProps) {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 0 }}
+        <motion.div initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: -10 }}
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
-          className={`${className} absolute -top-6 left-1/2 w-fit whitespace-pre rounded-md border border-neutral-700 bg-[#060606] px-2 py-0.5 text-xs text-white`}
+          className={`${className} absolute -top-8 sm:-top-6 left-1/2 w-fit whitespace-pre rounded-md border border-neutral-700 bg-[#060606] px-2 py-1 text-xs text-white backdrop-blur-sm shadow-md`}
           role="tooltip"
           style={{ x: "-50%" }}
         >
@@ -176,22 +193,32 @@ export default function Dock({
   );
   const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
   const height = useSpring(heightRow, spring);
-
   return (
     <motion.div
       style={{ height, scrollbarWidth: "none" }}
-      className="mx-2 flex max-w-full items-center"
+      className="mx-auto sm:mx-2 flex max-w-full items-center"
     >
-      <motion.div
-        onMouseMove={({ pageX }) => {
+      <motion.div onMouseMove={({ pageX }) => {
+        isHovered.set(1);
+        mouseX.set(pageX);
+      }} onTouchMove={(e) => {
+        const { touches } = e;
+        if (touches.length > 0) {
           isHovered.set(1);
-          mouseX.set(pageX);
-        }}
+          mouseX.set(touches[0].pageX);
+        }
+        // Prevent default to avoid scrolling issues on iOS
+        e.preventDefault();
+      }}
         onMouseLeave={() => {
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
-        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border-neutral-700 border-2 pb-2 px-4`}
+        onTouchEnd={(e) => {
+          isHovered.set(0);
+          mouseX.set(Infinity);
+        }}
+        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-1 sm:gap-4 rounded-2xl border-neutral-700 border-2 pb-2 px-2 sm:px-4`}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Application dock"

@@ -63,10 +63,38 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
         <link rel="canonical" href="https://okiso.net" />
+        {/* Script to prevent double navigation on touch devices */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                window._navInProgress = false;
+                
+                // Helper to detect mobile devices
+                window.isMobileDevice = function() {
+                  return (
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                    (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /Macintosh/.test(navigator.userAgent))
+                  );
+                };
+                
+                // Handle touch events consistently
+                if (window.isMobileDevice()) {
+                  document.addEventListener('touchstart', function(e) {
+                    if (e.target && e.target.tagName === 'A') {
+                      e.target._touchStarted = true;
+                    }
+                  }, { passive: true });
+                }
+              })();
+            `
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -102,19 +130,20 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>        <div className="min-h-screen w-full relative overflow-hidden">
-        <WavesWrapper />
-        <div className="relative z-[1]">
-          <header className="sr-only">
-            <h1>オキソ | Vocaloid Artist</h1>
-            <nav>{/* Your navigation links */}</nav>
-          </header>
-          <main>{children}</main>
-          <footer className="sr-only">
-            <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-          </footer>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <div className="min-h-screen w-full relative overflow-hidden">
+          <WavesWrapper />
+          <div className="relative z-[1]">
+            <header className="sr-only">
+              <h1>オキソ | Vocaloid Artist</h1>
+              <nav>{/* Your navigation links */}</nav>
+            </header>
+            <main>{children}</main>
+            <footer className="sr-only">
+              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+            </footer>
+          </div>
         </div>
-      </div>
       </body>
     </html>
   );

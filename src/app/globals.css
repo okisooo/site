@@ -27,7 +27,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Text shadow utilities */
@@ -54,4 +54,92 @@ body {
   background: radial-gradient(circle,
       transparent 40%,
       rgba(0, 0, 0, 0.3) 100%);
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+
+  /* Better touch targets for mobile */
+  a,
+  button {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    touch-action: manipulation;
+  }
+
+  /* Better mobile scrolling */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+
+  /* Improved text readability on mobile */
+  h1,
+  h2,
+  h3,
+  h4 {
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Disable double-tap-to-zoom on mobile */
+  * {
+    touch-action: manipulation;
+  }
+
+  /* Prevent ghost clicks and delay after tapping */
+  a[href],
+  button,
+  [role="button"] {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Fix for hover states on mobile */
+  .hover-mobile-visible {
+    opacity: 1 !important;
+  }
+
+  /* Improve navigation link hit area */
+  .nav-link-mobile {
+    position: relative;
+  }
+
+  .nav-link-mobile::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    z-index: -1;
+  }
+}
+
+/* Hide scrollbars but maintain functionality */
+.scrollbar-hide {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* Touch-friendly scrolling */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+/* Improved mobile interactions */
+.touch-manipulation {
+  touch-action: manipulation;
 }
