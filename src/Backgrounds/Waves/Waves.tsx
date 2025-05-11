@@ -1,5 +1,5 @@
 /*
-	Installed from https://reactbits.dev/ts/tailwind/
+  Installed from https://reactbits.dev/ts/tailwind/
 */
 
 import React, { useRef, useEffect, CSSProperties } from "react";
@@ -427,6 +427,8 @@ const Waves: React.FC<WavesProps> = ({
       style={{
         backgroundColor,
         ...style,
+        width: '100vw',
+        height: '100vh'
       }}
       className={`absolute top-0 left-0 w-full h-full overflow-hidden ${className}`}
     >
@@ -438,7 +440,7 @@ const Waves: React.FC<WavesProps> = ({
           willChange: "transform",
         }}
       />
-      <canvas ref={canvasRef} className="block w-full h-full" />
+      <canvas ref={canvasRef} className="block w-full h-full" style={{ display: 'block' }} />
     </div>
   );
 };

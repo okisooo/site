@@ -1,18 +1,12 @@
-"import Link from 'next/link';
-import Image from 'next/image';
-import ContentCard from '@/Components/ContentCard';
-import UpcomingBalatroWrapper from '../../Components/UpcomingBalatroWrapper';client";
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import ContentCard from '@/Components/ContentCard';
-import UpcomingBalatroWrapper from '../../../Components/UpcomingBalatroWrapper';
 
 export default function UpcomingPage() {
   return (
-    <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">      {/* Use Balatro background with white theme for RESURRECTION album */}
-      <UpcomingBalatroWrapper />      {/* Lighter semi-transparent overlay - reduced opacity for the white background */}
-      <div className="absolute inset-0 bg-black/20 z-0"></div>
-
+    <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
       {/* Vignette effect overlay */}
       <div className="absolute inset-0 bg-vignette z-[1] pointer-events-none"></div>
 
@@ -26,10 +20,9 @@ export default function UpcomingPage() {
           </p>
         </header>        <ContentCard>
           <div className="flex flex-col lg:flex-row items-center gap-8 py-8 px-4">
-            {/* Album Cover */}
-            <div className="w-full max-w-[300px] aspect-square relative rounded-lg overflow-hidden shadow-2xl">
+            {/* Album Cover */}            <div className="w-full max-w-[300px] aspect-square relative rounded-lg overflow-hidden shadow-2xl">
               <a href="https://open.spotify.com/prerelease/0MAU5F8CQeuBQ4bC9N3SDi?si=4dde829272c14f12" target="_blank" rel="noopener noreferrer">                <Image
-                src="/images/resurrection-cover.jpg"
+                src="https://i.scdn.co/image/ab67616d00001e029899e44696d9069ad2953a4d"
                 alt="RESURRECTION Album Cover"
                 width={300}
                 height={300}

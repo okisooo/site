@@ -101,20 +101,20 @@ export default function RootLayout({
             })
           }}
         />
-      </head>      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="min-h-screen w-full relative overflow-hidden bg-black">
-          <WavesWrapper />
-          <div className="relative z-10">
-            <header className="sr-only">
-              <h1>オキソ | Vocaloid Artist</h1>
-              <nav>{/* Your navigation links */}</nav>
-            </header>
-            <main>{children}</main>
-            <footer className="sr-only">
-              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-            </footer>
-          </div>
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>        <div className="min-h-screen w-full relative overflow-hidden">
+        <WavesWrapper />
+        <div className="relative z-[1]">
+          <header className="sr-only">
+            <h1>オキソ | Vocaloid Artist</h1>
+            <nav>{/* Your navigation links */}</nav>
+          </header>
+          <main>{children}</main>
+          <footer className="sr-only">
+            <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+          </footer>
         </div>
+      </div>
       </body>
     </html>
   );

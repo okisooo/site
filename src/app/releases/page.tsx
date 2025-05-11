@@ -76,11 +76,7 @@ export default function ReleasesPage() {
       // Update arrows after animation completes
       setTimeout(updateArrowVisibility, 800);
     }
-  };
-  return (<div className="min-h-screen w-full relative overflow-hidden text-white p-2 sm:p-3">
-    {/* Semi-transparent overlay for better text readability */}
-    <div className="absolute inset-0 bg-black/30 z-0"></div>
-
+  }; return (<div className="min-h-screen w-full relative overflow-hidden text-white p-2 sm:p-3">
     {/* Vignette effect overlay */}
     <div className="absolute inset-0 bg-vignette z-[1] pointer-events-none"></div>
 

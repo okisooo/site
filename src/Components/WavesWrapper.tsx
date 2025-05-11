@@ -5,19 +5,19 @@ import { memo } from "react";
 
 function WavesWrapperComponent() {
     return (
-        <div className="fixed inset-0 w-[100vw] h-[100vh] overflow-hidden" style={{ zIndex: -10 }}>
+        <div className="fixed inset-0 w-[100vw] h-[100vh] overflow-hidden" style={{ zIndex: 0 }}>
             <Waves
-                lineColor="rgba(255, 255, 255, 0.3)"
+                lineColor="#fff"
                 backgroundColor="rgb(0, 0, 0)"
-                waveSpeedX={0.015}
+                waveSpeedX={0.02}
                 waveSpeedY={0.01}
                 waveAmpX={40}
-                waveAmpY={30}
-                friction={0.95}
+                waveAmpY={20}
+                friction={0.9}
                 tension={0.01}
-                maxCursorMove={80}
-                xGap={32}
-                yGap={32}
+                maxCursorMove={120}
+                xGap={12}
+                yGap={36}
             />
         </div>
     );
