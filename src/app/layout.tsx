@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
-import IridescenceWrapper from '@/Components/IridescenceWrapper';
+import WavesWrapper from '@/Components/WavesWrapper';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,10 +17,10 @@ export const metadata = {
   title: "OKISO | Official Website - Vocaloid Artist and Music Producer",
   description: "OKISO - Official website of Vocaloid artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Japanese vocaloid music featuring original compositions.",
   keywords: [
-    "OKISO", 
-    "okiso", 
-    "オキソ", 
-    "vocaloid artist", 
+    "OKISO",
+    "okiso",
+    "オキソ",
+    "vocaloid artist",
     "vocaloid producer",
     "music producer",
     "electronic music",
@@ -67,9 +67,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
         <link rel="canonical" href="https://okiso.net" />
-        <script 
-          type="application/ld+json" 
-          dangerouslySetInnerHTML={{ 
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "MusicGroup",
@@ -99,12 +99,11 @@ export default function RootLayout({
                 }
               }
             })
-          }} 
+          }}
         />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      </head>      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="min-h-screen w-full relative overflow-hidden bg-black">
-          <IridescenceWrapper />
+          <WavesWrapper />
           <div className="relative z-10">
             <header className="sr-only">
               <h1>オキソ | Vocaloid Artist</h1>

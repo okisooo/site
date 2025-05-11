@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
-import Iridescence from '@/Backgrounds/Iridescence/Iridescence';
 import Link from 'next/link';
 import {
   FaSpotify,
@@ -69,16 +68,13 @@ export default function Home() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return (
+  }, []); return (
     <div className="w-full h-screen relative">
-      <Iridescence />
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
         {/* Navigation buttons - left side */}
         <div className="absolute left-8 md:left-12 z-20 transform -translate-y-1/2 top-1/2">
-          <Link 
-            href="/upcoming" 
+          <Link
+            href="/upcoming"
             className="flex flex-col items-center justify-center group"
           >
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
@@ -87,7 +83,7 @@ export default function Home() {
             <span className="mt-2 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">Upcoming</span>
           </Link>
         </div>
-        
+
         {/* Existing ASCII Text element */}
         <ASCIIText
           text="オキソ"
@@ -97,11 +93,11 @@ export default function Home() {
           textColor="#ffffff"
           planeBaseHeight={isMobile ? 4 : 8}
         />
-        
+
         {/* Navigation buttons - right side */}
         <div className="absolute right-8 md:right-12 z-20 transform -translate-y-1/2 top-1/2">
-          <Link 
-            href="/releases" 
+          <Link
+            href="/releases"
             className="flex flex-col items-center justify-center group"
           >
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
@@ -110,7 +106,7 @@ export default function Home() {
             <span className="mt-2 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">Releases</span>
           </Link>
         </div>
-        
+
         <div className="sr-only">
           <h1>OKISO - Official Website</h1>
           <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
