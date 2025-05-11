@@ -40,8 +40,7 @@ export default function UpcomingPage() {
                   The next evolution of OKISO&apos;s sound is approaching.
                 </p>
                 <p className="text-gray-200 text-shadow-sm mb-6">
-                  Experience the rebirth through sound with the upcoming RESURRECTION album.
-                  A journey through atmospheric landscapes and dynamic rhythms that pushes boundaries.
+                  Experience rebirth.
                 </p>
               </div>
 
