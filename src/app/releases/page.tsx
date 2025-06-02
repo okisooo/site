@@ -150,7 +150,7 @@ export default function ReleasesPage() {
           {/* Update arrow visibility conditions and add vignette effect */}          {showLeftArrow && (
             <>
               {/* Left side vignette gradient */}
-              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-gray-900/60 via-gray-900/30 to-transparent z-[5] pointer-events-none rounded-l-lg"></div>              <button
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/5 via-white/2 to-transparent z-[5] pointer-events-none rounded-l-lg backdrop-blur-sm"></div>              <button
                 onClick={scrollReleasesLeft}
                 className="absolute left-1 top-[calc(50%-22px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation"
                 aria-label="Scroll left"
@@ -163,7 +163,7 @@ export default function ReleasesPage() {
           )}          {showRightArrow && (
             <>
               {/* Right side vignette gradient */}
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-900/60 via-gray-900/30 to-transparent z-[5] pointer-events-none rounded-r-lg"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/5 via-white/2 to-transparent z-[5] pointer-events-none rounded-r-lg backdrop-blur-sm"></div>
               <button
                 onClick={scrollReleasesRight}
                 className="absolute right-1 top-[calc(50%-22px)] transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full z-10 shadow-lg w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation"
