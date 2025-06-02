@@ -115,7 +115,7 @@ export default function ReleasesPage() {
           <div className="w-full md:w-2/3 flex flex-col justify-center">
             <h3 className="text-lg md:text-xl font-semibold mb-1 text-shadow-md">RESURRECTION</h3>
             <p className="text-gray-200 mb-2 text-shadow-sm text-sm">
-              The next evolution of OKISO&apos;s sound. Released June 2, 2025.
+              The next evolution of OKISO&apos;s sound. Released May 25, 2025.
             </p>
 
             <div className="mt-2 flex flex-wrap gap-2">
