@@ -258,19 +258,17 @@ export default function ReleasesPage() {
                 </svg>
                 Listen on Spotify
               </a>
-            </div>
-
-            {/* Meet The Princess */}
+            </div>            {/* ETUDE */}
             <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[180px] sm:w-[220px]">
               <a
-                href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ"
+                href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block relative aspect-square transition-transform hover:scale-[1.02]"
               >
                 <Image
-                  src="https://i.scdn.co/image/ab67616d0000b273c57d3a982f75a7b9f10a010a"
-                  alt="Meet The Princess artwork"
+                  src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/c7/35/b2c73583-ee06-57f8-0b9b-c08423293429/artwork.jpg/600x600bf-60.jpg"
+                  alt="ETUDE album artwork"
                   className="rounded-md shadow-lg"
                   fill
                   sizes="(max-width: 640px) 180px, 220px"
@@ -281,10 +279,10 @@ export default function ReleasesPage() {
                   </svg>
                 </div>
               </a>
-              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">Meet The Princess</h4>
+              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">ETUDE</h4>
               <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
               <a
-                href="https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC?si=RUsbEW2uSX-OMO-999PFKQ"
+                href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
