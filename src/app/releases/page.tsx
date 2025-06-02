@@ -88,20 +88,18 @@ export default function ReleasesPage() {
         <p className="text-sm sm:text-base md:text-lg text-shadow-md text-gray-200 mb-4 max-w-2xl mx-auto">
           Explore OKISO&apos;s music catalog. Listen to the latest releases.
         </p>
-      </header>
-
-      <ContentCard title="Latest Release" className="mb-3">
+      </header>      <ContentCard title="Latest Release" className="mb-3">
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <div className="w-full md:w-1/3 max-w-[250px] mx-auto">
             <a
-              href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
+              href="https://open.spotify.com/album/0MAU5F8CQeuBQ4bC9N3SDi"
               target="_blank"
               rel="noopener noreferrer"
               className="block relative aspect-square transition-transform hover:scale-[1.02]"
             >
               <Image
-                src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/c7/35/b2c73583-ee06-57f8-0b9b-c08423293429/artwork.jpg/600x600bf-60.jpg"
-                alt="FANTASIA & ETUDE album artwork"
+                src="https://i.scdn.co/image/ab67616d00001e029899e44696d9069ad2953a4d"
+                alt="RESURRECTION album artwork"
                 className="rounded-md shadow-lg"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
@@ -115,14 +113,14 @@ export default function ReleasesPage() {
             </a>
           </div>
           <div className="w-full md:w-2/3 flex flex-col justify-center">
-            <h3 className="text-lg md:text-xl font-semibold mb-1 text-shadow-md">FANTASIA & ETUDE</h3>
+            <h3 className="text-lg md:text-xl font-semibold mb-1 text-shadow-md">RESURRECTION</h3>
             <p className="text-gray-200 mb-2 text-shadow-sm text-sm">
-              A collaboration with Miku and GUMI. Released April 25, 2025.
+              The next evolution of OKISO&apos;s sound. Released June 2, 2025.
             </p>
 
             <div className="mt-2 flex flex-wrap gap-2">
               <a
-                href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
+                href="https://open.spotify.com/album/0MAU5F8CQeuBQ4bC9N3SDi"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1DB954] hover:bg-[#1ed760] rounded-full text-black text-sm font-medium transition-colors"
@@ -133,7 +131,7 @@ export default function ReleasesPage() {
                 Spotify
               </a>
               <a
-                href="https://music.apple.com/us/album/fantasia-etude/1808732861"
+                href="https://music.apple.com/us/album/resurrection/1808732861"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-full text-white text-sm font-medium transition-colors backdrop-blur-sm"
@@ -191,6 +189,42 @@ export default function ReleasesPage() {
               WebkitOverflowScrolling: 'touch'
             }}
           >
+            {/* Release Item - FANTASIA & ETUDE */}
+            <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[160px] sm:w-[180px] md:w-[220px]">
+              <a
+                href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative aspect-square transition-transform hover:scale-[1.02]"
+              >
+                <Image
+                  src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/c7/35/b2c73583-ee06-57f8-0b9b-c08423293429/artwork.jpg/600x600bf-60.jpg"
+                  alt="FANTASIA & ETUDE album artwork"
+                  className="rounded-md shadow-lg"
+                  fill
+                  sizes="(max-width: 640px) 180px, 220px"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-md">
+                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                  </svg>
+                </div>
+              </a>
+              <h4 className="font-semibold text-shadow-sm mt-1 text-sm">FANTASIA & ETUDE</h4>
+              <p className="text-xs text-gray-300 text-shadow-sm mb-1">2025</p>
+              <a
+                href="https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-400 hover:text-green-300 text-xs flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-.959 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                </svg>
+                Listen on Spotify
+              </a>
+            </div>
+
             {/* Release Item - FANTASIA */}
             <div className="backdrop-blur-card bg-white/5 p-2 sm:p-3 rounded-lg border border-white/10 flex-shrink-0 w-[160px] sm:w-[180px] md:w-[220px]">
               <a

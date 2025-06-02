@@ -16,19 +16,28 @@ import {
 } from 'react-icons/fa';
 import { MdLibraryMusic, MdUpcoming } from 'react-icons/md';
 
+// Type declaration for window extensions
+declare global {
+  interface Window {
+    _linkClicked?: boolean;
+    _navInProgress?: boolean;
+    isMobileDevice?: () => boolean;
+  }
+}
+
 // Helper function to prevent multiple rapid clicks on external links
 const safeExternalLink = (url: string) => {
   return () => {
     // Prevent multiple clicks
-    if ((window as any)._linkClicked) return;
-    (window as any)._linkClicked = true;
+    if (window._linkClicked) return;
+    window._linkClicked = true;
 
     // Open the link
     window.open(url, "_blank");
 
     // Reset after a delay
     setTimeout(() => {
-      (window as any)._linkClicked = false;
+      window._linkClicked = false;
     }, 500);
   };
 };
@@ -36,13 +45,7 @@ const safeExternalLink = (url: string) => {
 const dockItems = [{
   icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'Spotify',
-  onClick: () => {
-    // Prevent multiple clicks
-    if ((window as any)._linkClicked) return;
-    (window as any)._linkClicked = true;
-    setTimeout(() => { (window as any)._linkClicked = false; }, 500);
-    window.open("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97", "_blank");
-  }
+  onClick: safeExternalLink("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97")
 }, {
   icon: <FaInstagram size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'Instagram',
@@ -92,18 +95,17 @@ export default function Home() {
         <div className="absolute left-4 sm:left-8 md:left-12 z-20 transform -translate-y-1/2 top-1/2">          <Link
           href="/upcoming"
           prefetch={true}
-          className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
-          onClick={(e) => {
+          className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile" onClick={(e) => {
             // Use this to track if we have a navigation in progress
-            if ((window as any)._navInProgress) {
+            if (window._navInProgress) {
               e.preventDefault();
               return false;
             }
 
             // For mobile devices, add a small delay to prevent double navigation
-            if ((window as any).isMobileDevice?.()) {
+            if (window.isMobileDevice?.()) {
               e.preventDefault();
-              (window as any)._navInProgress = true;
+              window._navInProgress = true;
 
               // Navigate programmatically after a small delay
               setTimeout(() => {
@@ -112,16 +114,16 @@ export default function Home() {
 
               // Reset navigation state after a longer period
               setTimeout(() => {
-                (window as any)._navInProgress = false;
+                window._navInProgress = false;
               }, 300);
 
               return false;
             }
 
             // For non-mobile, set the flag but allow normal navigation
-            (window as any)._navInProgress = true;
+            window._navInProgress = true;
             setTimeout(() => {
-              (window as any)._navInProgress = false;
+              window._navInProgress = false;
             }, 300);
           }}
         >
@@ -144,18 +146,17 @@ export default function Home() {
           <Link
             href="/releases"
             prefetch={true}
-            className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
-            onClick={(e) => {
+            className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile" onClick={(e) => {
               // Use this to track if we have a navigation in progress
-              if ((window as any)._navInProgress) {
+              if (window._navInProgress) {
                 e.preventDefault();
                 return false;
               }
 
               // For mobile devices, add a small delay to prevent double navigation
-              if ((window as any).isMobileDevice?.()) {
+              if (window.isMobileDevice?.()) {
                 e.preventDefault();
-                (window as any)._navInProgress = true;
+                window._navInProgress = true;
 
                 // Navigate programmatically after a small delay
                 setTimeout(() => {
@@ -164,16 +165,16 @@ export default function Home() {
 
                 // Reset navigation state after a longer period
                 setTimeout(() => {
-                  (window as any)._navInProgress = false;
+                  window._navInProgress = false;
                 }, 300);
 
                 return false;
               }
 
               // For non-mobile, set the flag but allow normal navigation
-              (window as any)._navInProgress = true;
+              window._navInProgress = true;
               setTimeout(() => {
-                (window as any)._navInProgress = false;
+                window._navInProgress = false;
               }, 300);
             }}
           >
@@ -186,7 +187,7 @@ export default function Home() {
         <div className="sr-only">
           <h1>OKISO - Official Website</h1>
           <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
-          <p>Explore OKISO's latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
+          <p>Explore OKISO&apos;s latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
         </div>
       </div>
 

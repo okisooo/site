@@ -97,10 +97,9 @@ function DockItem({
       onTouchStart={() => isHovered.set(1)}
       onTouchEnd={(e) => {
         // For touch devices, we handle the click during touch end
-        isHovered.set(0);
-        if (onClick) {
+        isHovered.set(0); if (onClick) {
           // Use a flag to prevent double-triggering with onClick
-          (e.currentTarget as any)._touchHandled = true;
+          (e.currentTarget as HTMLDivElement & { _touchHandled?: boolean })._touchHandled = true;
           setTimeout(() => {
             onClick();
           }, 10);
@@ -108,7 +107,7 @@ function DockItem({
       }}
       onClick={(e) => {
         // Only execute onClick if it wasn't handled by touch
-        const target = e.currentTarget as any;
+        const target = e.currentTarget as HTMLDivElement & { _touchHandled?: boolean };
         if (onClick && !target._touchHandled) {
           onClick();
         }
@@ -213,8 +212,7 @@ export default function Dock({
         onMouseLeave={() => {
           isHovered.set(0);
           mouseX.set(Infinity);
-        }}
-        onTouchEnd={(e) => {
+        }} onTouchEnd={() => {
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
