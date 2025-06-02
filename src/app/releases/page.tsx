@@ -265,9 +265,8 @@ export default function ReleasesPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image
-                  src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/c7/35/b2c73583-ee06-57f8-0b9b-c08423293429/artwork.jpg/600x600bf-60.jpg"
+              >                <Image
+                  src="https://i.scdn.co/image/ab67616d0000b2737029fe56be8fdd1093453b71"
                   alt="ETUDE album artwork"
                   className="rounded-md shadow-lg"
                   fill
