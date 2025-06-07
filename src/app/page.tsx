@@ -12,7 +12,8 @@ import {
   FaYoutube,
   FaDiscord,
   FaBandcamp,
-  FaApple
+  FaApple,
+  FaTwitch
 } from 'react-icons/fa';
 import { MdLibraryMusic, MdUpcoming } from 'react-icons/md';
 
@@ -62,6 +63,10 @@ const dockItems = [{
   icon: <FaYoutube size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'YouTube',
   onClick: safeExternalLink("https://www.youtube.com/@okiso7")
+}, {
+  icon: <FaTwitch size={24} className="text-white hover:text-white/80 transition-colors" />,
+  label: 'Twitch',
+  onClick: safeExternalLink("https://twitch.tv/okiso7")
 }, {
   icon: <FaBandcamp size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'Bandcamp',
