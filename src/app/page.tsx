@@ -7,6 +7,7 @@ import Link from 'next/link';
 import {
   FaSpotify,
   FaInstagram,
+  FaFacebook,
   FaGithub,
   FaTwitter,
   FaYoutube,
@@ -51,6 +52,10 @@ const dockItems = [{
   icon: <FaInstagram size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'Instagram',
   onClick: safeExternalLink("https://www.instagram.com/okisooo_/")
+}, {
+  icon: <FaFacebook size={24} className="text-white hover:text-white/80 transition-colors" />,
+  label: 'Facebook',
+  onClick: safeExternalLink("https://www.facebook.com/people/OKISO-%E3%82%AA%E3%82%AD%E3%82%BD/61577364628178/")
 }, {
   icon: <FaGithub size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'GitHub',
