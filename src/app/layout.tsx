@@ -1,6 +1,7 @@
 // src/app/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
 import WavesWrapper from '@/Components/WavesWrapper';
+import SwipeContainer from '@/Components/SwipeContainer/SwipeContainer';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -131,14 +132,18 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="min-h-screen w-full relative overflow-hidden">
+        <div className="min-h-screen w-full relative">
           <WavesWrapper />
           <div className="relative z-[1]">
             <header className="sr-only">
               <h1>オキソ | Vocaloid Artist</h1>
               <nav>{/* Your navigation links */}</nav>
             </header>
-            <main>{children}</main>
+            <main className="relative h-full">
+              <SwipeContainer>
+                {children}
+              </SwipeContainer>
+            </main>
             <footer className="sr-only">
               <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
             </footer>

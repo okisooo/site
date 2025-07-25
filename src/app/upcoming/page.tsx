@@ -1,11 +1,75 @@
 "use client";
 
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 
 export default function UpcomingPage() {
+  const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const minSwipeDistance = 50;
+
+  const smoothNavigate = (to: string, delay: number = 150) => {
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
+    document.body.style.cursor = 'wait';
+
+    setTimeout(() => {
+      router.push(to);
+      setTimeout(() => {
+        setIsTransitioning(false);
+        document.body.style.cursor = 'default';
+      }, 100);
+    }, delay);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (isTransitioning) return;
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (isTransitioning) return;
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd || isTransitioning) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && isMobile) {
+      // Swipe left -> go to releases
+      smoothNavigate("/releases");
+    }
+    if (isRightSwipe && isMobile) {
+      // Swipe right -> go back to home
+      smoothNavigate("/");
+    }
+  };
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="min-h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
+    <div
+      className="min-h-screen w-full relative overflow-y-auto overflow-x-hidden text-white p-3 sm:p-6"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Vignette effect overlay */}
       <div className="absolute inset-0 bg-vignette z-[1] pointer-events-none"></div>
 
@@ -35,16 +99,7 @@ export default function UpcomingPage() {
               </p>
             </div>
           </div>
-        </ContentCard>{/* Back to Home button with fixed position */}
-        <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-20">
-          <Link
-            href="/"
-            className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-3 sm:px-4 py-1.5 sm:py-2 rounded-full inline-flex items-center text-sm sm:text-base min-h-[36px] sm:min-h-[44px] text-shadow-sm border border-white/10 shadow-lg"
-            aria-label="Back to home page"
-          >
-            ← Back to home
-          </Link>
-        </div>
+        </ContentCard>
       </div>
     </div>
   );

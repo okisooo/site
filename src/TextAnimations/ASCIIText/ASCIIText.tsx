@@ -333,6 +333,9 @@ class CanvAscii {
   filter!: AsciiFilter;
   center!: { x: number; y: number };
   animationFrameId: number = 0;
+  lastFrameTime: number = 0;
+  targetFPS: number = 30; // Limit to 30 FPS instead of 60
+  isPaused: boolean = false;
 
   constructor(
     {
@@ -453,11 +456,47 @@ class CanvAscii {
   }
 
   animate() {
-    const animateFrame = () => {
+    const animateFrame = (currentTime: number = 0) => {
       this.animationFrameId = requestAnimationFrame(animateFrame);
+      
+      // Skip rendering if paused
+      if (this.isPaused) {
+        return;
+      }
+      
+      // Frame rate limiting
+      const frameInterval = 1000 / this.targetFPS;
+      if (currentTime - this.lastFrameTime < frameInterval) {
+        return;
+      }
+      this.lastFrameTime = currentTime;
+      
+      // Check if page is visible and element is in viewport
+      if (document.hidden || !this.isInViewport()) {
+        return;
+      }
+      
       this.render();
     };
     animateFrame();
+  }
+
+  pause() {
+    this.isPaused = true;
+  }
+
+  resume() {
+    this.isPaused = false;
+  }
+
+  isInViewport(): boolean {
+    const rect = this.container.getBoundingClientRect();
+    return (
+      rect.top < window.innerHeight &&
+      rect.bottom > 0 &&
+      rect.left < window.innerWidth &&
+      rect.right > 0
+    );
   }
 
   render() {
@@ -562,8 +601,29 @@ export default function ASCIIText({
     });
     ro.observe(containerRef.current);
 
+    // Add visibility change listener for performance
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        asciiRef.current?.pause();
+      } else {
+        asciiRef.current?.resume();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Add focus/blur listeners
+    const handleFocus = () => asciiRef.current?.resume();
+    const handleBlur = () => asciiRef.current?.pause();
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+
     return () => {
       ro.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
       if (asciiRef.current) {
         asciiRef.current.dispose();
       }
