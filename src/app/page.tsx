@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
+import GooeyNav from '@/Components/GooeyNav/GooeyNav';
 import {
   FaSpotify,
   FaInstagram,
@@ -114,94 +115,119 @@ export default function Home() {
     };
   }, []);
 
-  return (
-    <div className="w-full h-screen relative overflow-hidden bg-black">
-      {/* Navigation buttons - left side with better mobile spacing */}
-      <div className="absolute left-2 sm:left-8 md:left-12 z-20 top-1/2 transform -translate-y-1/2">
-        <button
-          onClick={() => router.push("/upcoming")}
-          className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
-          style={isMobile ? { minWidth: 72, minHeight: 72, marginBottom: 16 } : {}}
-        >
-          <div className={`rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30 ${isMobile ? 'w-16 h-16' : 'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16'}`}>
-            <MdUpcoming className={isMobile ? "h-7 w-7 text-white" : "h-5 w-5 sm:h-6 sm:w-6 text-white"} />
-          </div>
-          <span className="mt-2 text-sm font-medium text-white opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
-            Upcoming
-            {isMobile && <div className="text-[11px] opacity-60 mt-0.5">← swipe</div>}
-          </span>
-        </button>
-      </div>
+  // Navigation items for GooeyNav
+  const navItems = [
+    { label: 'Upcoming', href: '/upcoming' },
+    { label: 'Home', href: '/' },
+    { label: 'Releases', href: '/releases' }
+  ];
+  // Determine active index based on current path
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const activeIndex = navItems.findIndex(item => item.href === currentPath);
 
-      {/* Centered ASCII Text element */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative" style={isMobile ? { width: '90vw', height: '38vh', maxWidth: 420, maxHeight: 320 } : { width: '1000px', height: '700px' }}>
-          <ASCIIText
-            text="オキソ"
-            enableWaves={true}
-            asciiFontSize={isMobile ? 5.5 : 8}
-            textFontSize={isMobile ? 140 : 250}
-            textColor="#ffffff"
-            planeBaseHeight={isMobile ? 5 : 8}
+  // Navigation handler for GooeyNav
+  const handleNavClick = (href: string) => {
+    if (href !== currentPath) {
+      router.push(href);
+    }
+  };
+
+  return (
+    <div className="w-full h-screen min-h-0 relative overflow-hidden bg-transparent">
+      <style>{`
+        body.home-page {
+          overflow: hidden !important;
+          overscroll-behavior-y: none;
+          touch-action: pan-x;
+        }
+        html, body {
+          height: 100vh !important;
+          min-height: 0 !important;
+        }
+      `}</style>
+      {/* GooeyNav at top for desktop, at bottom for mobile */}
+      <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
+        <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
+          <GooeyNav
+            items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
+            initialActiveIndex={activeIndex >= 0 ? activeIndex : 1}
+            animationTime={600}
+            particleCount={15}
+            particleDistances={[90, 10]}
+            particleR={100}
+            timeVariance={300}
+            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
           />
         </div>
       </div>
-
-      {/* Navigation buttons - right side with better mobile spacing */}
-      <div className="absolute right-2 sm:right-8 md:right-12 z-20 top-1/2 transform -translate-y-1/2">
-        <button
-          onClick={() => router.push("/releases")}
-          className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
-          style={isMobile ? { minWidth: 72, minHeight: 72, marginBottom: 16 } : {}}
-        >
-          <div className={`rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30 ${isMobile ? 'w-16 h-16' : 'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16'}`}>
-            <MdLibraryMusic className={isMobile ? "h-7 w-7 text-white" : "h-5 w-5 sm:h-6 sm:w-6 text-white"} />
-          </div>
-          <span className="mt-2 text-sm font-medium text-white opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
-            Releases
-            {isMobile && <div className="text-[11px] opacity-60 mt-0.5">swipe →</div>}
-          </span>
-        </button>
-      </div>
-
-      <div className="sr-only">
-        <h1>OKISO - Official Website</h1>
-        <p>Welcome to the official website of OKISO (オキソ), a Vocaloid artist and music producer. OKISO creates original electronic music and Japanese vocaloid compositions.</p>
-        <p>Explore OKISO&apos;s latest music releases, connect on social media platforms including Spotify, Instagram, Twitter, YouTube, and join the Discord community.</p>
-      </div>
-
-      {/* Dock container - scrollable on mobile to fit all icons */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 pointer-events-auto">
-        <div className="flex justify-center w-full pb-3 sm:pb-4 pt-2">
-          <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
-            {isMobile ? (
-              // Mobile: Scrollable dock with all items, larger icons and spacing
-              <div className="overflow-x-auto scrollbar-hide touch-scroll px-2" style={{ paddingBottom: 8 }}>
-                <div className="flex justify-center" style={{ minWidth: '100vw' }}>
-                  <Dock
-                    items={allDockItems}
-                    panelHeight={54}
-                    baseItemSize={36}
-                    magnification={48}
-                    spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-                    distance={70}
-                  />
-                </div>
-              </div>
-            ) : (
-              // Desktop: Normal dock with all items
-              <Dock
-                items={allDockItems}
-                panelHeight={68}
-                baseItemSize={50}
-                magnification={70}
-                spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-                distance={200}
+      {/* Prevent scroll bleed from scaled background */}
+      {isMobile ? (
+        <div className="flex flex-col h-full min-h-0 px-4 pb-8 overflow-hidden">
+          {/* ASCIIText logo centered vertically for mobile */}
+          <div className="w-full flex justify-center mt-[-25] mb-0" style={{ position: 'relative', top: 0 }}>
+            <div style={{ width: 420, height: 400 }}>
+              <ASCIIText
+                text="オキソ"
+                enableWaves={true}
+                asciiFontSize={6}
+                textFontSize={90}
+                textColor="#fff"
+                planeBaseHeight={5}
               />
-            )}
+            </div>
+          </div>
+
+          {/* Spacer to push content to bottom */}
+          <div className="flex-grow" />
+
+          {/* Social icons as grid */}
+          <div className="grid grid-cols-3 gap-4 w-full max-w-xs mx-auto mt-2">
+            {allDockItems.map((item, idx) => (
+              <button
+                key={item.label}
+                aria-label={item.label}
+                onClick={item.onClick}
+                className="flex flex-col items-center justify-center bg-gray-800/70 rounded-lg p-3 hover:bg-gray-700/90 transition"
+              >
+                {item.icon}
+                <span className="text-[11px] text-white mt-1 opacity-70">{item.label}</span>
+              </button>
+            ))}
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Centered ASCII Text element */}
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="relative" style={{ width: '1000px', height: '700px' }}>
+              <ASCIIText
+                text="オキソ"
+                enableWaves={true}
+                asciiFontSize={8}
+                textFontSize={250}
+                textColor="#ffffff"
+                planeBaseHeight={8}
+              />
+            </div>
+          </div>
+
+          {/* Dock container - scrollable on mobile to fit all icons */}
+          <div className="fixed bottom-0 left-0 right-0 z-20 pointer-events-auto">
+            <div className="flex justify-center w-full pb-3 sm:pb-4 pt-2">
+              <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
+                <Dock
+                  items={allDockItems}
+                  panelHeight={68}
+                  baseItemSize={50}
+                  magnification={70}
+                  spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
+                  distance={200}
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
