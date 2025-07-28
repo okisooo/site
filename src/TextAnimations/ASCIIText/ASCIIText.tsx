@@ -1,7 +1,7 @@
 /*
-	jsrepo 1.38.0
-	Installed from https://reactbits.dev/ts/tailwind/
-	2-19-2025
+  jsrepo 1.38.0
+  Installed from https://reactbits.dev/ts/tailwind/
+  2-19-2025
 */
 
 import { useRef, useEffect } from "react";
@@ -458,24 +458,24 @@ class CanvAscii {
   animate() {
     const animateFrame = (currentTime: number = 0) => {
       this.animationFrameId = requestAnimationFrame(animateFrame);
-      
+
       // Skip rendering if paused
       if (this.isPaused) {
         return;
       }
-      
+
       // Frame rate limiting
       const frameInterval = 1000 / this.targetFPS;
       if (currentTime - this.lastFrameTime < frameInterval) {
         return;
       }
       this.lastFrameTime = currentTime;
-      
+
       // Check if page is visible and element is in viewport
       if (document.hidden || !this.isInViewport()) {
         return;
       }
-      
+
       this.render();
     };
     animateFrame();

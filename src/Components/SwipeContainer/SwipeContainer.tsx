@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 interface SwipeContainerProps {
@@ -71,7 +71,6 @@ export default function SwipeContainer({ children }: SwipeContainerProps) {
         setIsDragging(false);
         const deltaX = currentX - startX;
         const threshold = window.innerWidth * 0.25; // 25% of screen width
-        const velocity = Math.abs(deltaX) / 100; // Simple velocity calculation
 
         let targetPage: string | null = null;
 

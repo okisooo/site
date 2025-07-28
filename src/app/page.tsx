@@ -44,33 +44,6 @@ const safeExternalLink = (url: string) => {
   };
 };
 
-// Primary social links for mobile (most important ones)
-const primaryDockItems = [{
-  icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Spotify',
-  onClick: safeExternalLink("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97")
-}, {
-  icon: <FaInstagram size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Instagram',
-  onClick: safeExternalLink("https://www.instagram.com/okisooo_/")
-}, {
-  icon: <FaYoutube size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'YouTube',
-  onClick: safeExternalLink("https://www.youtube.com/@okiso7")
-}, {
-  icon: <FaTwitter size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'X',
-  onClick: safeExternalLink("https://x.com/okisooo_")
-}, {
-  icon: <FaDiscord size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Discord',
-  onClick: safeExternalLink("https://discord.gg/okiso")
-}, {
-  icon: <FaBandcamp size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Bandcamp',
-  onClick: safeExternalLink("https://okiso.bandcamp.com/")
-}];
-
 // Full social links for desktop
 const allDockItems = [{
   icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
@@ -121,7 +94,6 @@ const allDockItems = [{
   label: 'VGen',
   onClick: safeExternalLink("https://vgen.co/okiso")
 }];
-
 
 export default function Home() {
   const router = useRouter();
