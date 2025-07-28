@@ -115,33 +115,34 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full h-screen relative overflow-hidden">
+    <div className="w-full h-screen relative overflow-hidden bg-black">
       {/* Navigation buttons - left side with better mobile spacing */}
       <div className="absolute left-2 sm:left-8 md:left-12 z-20 top-1/2 transform -translate-y-1/2">
         <button
           onClick={() => router.push("/upcoming")}
           className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
+          style={isMobile ? { minWidth: 72, minHeight: 72, marginBottom: 16 } : {}}
         >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
-            <MdUpcoming className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+          <div className={`rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30 ${isMobile ? 'w-16 h-16' : 'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16'}`}>
+            <MdUpcoming className={isMobile ? "h-7 w-7 text-white" : "h-5 w-5 sm:h-6 sm:w-6 text-white"} />
           </div>
-          <span className="mt-1 sm:mt-2 text-xs font-medium text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
+          <span className="mt-2 text-sm font-medium text-white opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
             Upcoming
-            {isMobile && <div className="text-[10px] opacity-60 mt-0.5">← swipe</div>}
+            {isMobile && <div className="text-[11px] opacity-60 mt-0.5">← swipe</div>}
           </span>
         </button>
       </div>
 
       {/* Centered ASCII Text element */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative" style={{ width: isMobile ? '400px' : '1000px', height: isMobile ? '350px' : '700px' }}>
+        <div className="relative" style={isMobile ? { width: '90vw', height: '38vh', maxWidth: 420, maxHeight: 320 } : { width: '1000px', height: '700px' }}>
           <ASCIIText
             text="オキソ"
             enableWaves={true}
-            asciiFontSize={isMobile ? 4.5 : 8}
-            textFontSize={isMobile ? 120 : 250}
+            asciiFontSize={isMobile ? 5.5 : 8}
+            textFontSize={isMobile ? 140 : 250}
             textColor="#ffffff"
-            planeBaseHeight={isMobile ? 4 : 8}
+            planeBaseHeight={isMobile ? 5 : 8}
           />
         </div>
       </div>
@@ -151,13 +152,14 @@ export default function Home() {
         <button
           onClick={() => router.push("/releases")}
           className="flex flex-col items-center justify-center group touch-manipulation nav-link-mobile"
+          style={isMobile ? { minWidth: 72, minHeight: 72, marginBottom: 16 } : {}}
         >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30">
-            <MdLibraryMusic className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+          <div className={`rounded-full bg-gray-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-gray-800/60 transition-all duration-300 group-hover:scale-110 border border-gray-700/30 ${isMobile ? 'w-16 h-16' : 'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16'}`}>
+            <MdLibraryMusic className={isMobile ? "h-7 w-7 text-white" : "h-5 w-5 sm:h-6 sm:w-6 text-white"} />
           </div>
-          <span className="mt-1 sm:mt-2 text-xs font-medium text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
+          <span className="mt-2 text-sm font-medium text-white opacity-100 transition-opacity duration-300 [text-shadow:rgb(0,0,0)_0_0_3px]">
             Releases
-            {isMobile && <div className="text-[10px] opacity-60 mt-0.5">swipe →</div>}
+            {isMobile && <div className="text-[11px] opacity-60 mt-0.5">swipe →</div>}
           </span>
         </button>
       </div>
@@ -173,16 +175,16 @@ export default function Home() {
         <div className="flex justify-center w-full pb-3 sm:pb-4 pt-2">
           <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
             {isMobile ? (
-              // Mobile: Scrollable dock with all items
-              <div className="overflow-x-auto scrollbar-hide touch-scroll px-4">
+              // Mobile: Scrollable dock with all items, larger icons and spacing
+              <div className="overflow-x-auto scrollbar-hide touch-scroll px-2" style={{ paddingBottom: 8 }}>
                 <div className="flex justify-center" style={{ minWidth: '100vw' }}>
                   <Dock
                     items={allDockItems}
-                    panelHeight={44}
-                    baseItemSize={28}
-                    magnification={38}
+                    panelHeight={54}
+                    baseItemSize={36}
+                    magnification={48}
                     spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-                    distance={60}
+                    distance={70}
                   />
                 </div>
               </div>
