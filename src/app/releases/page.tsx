@@ -128,21 +128,29 @@ export default function ReleasesPage() {
     }
   ];
 
+  // Navigation items for GooeyNav
   const navItems = [
-    { label: 'Home', href: '/' },
     { label: 'Upcoming', href: '/upcoming' },
+    { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
   ];
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const activeIndex = navItems.findIndex(item => item.href === currentPath);
+  // Determine active index based on current path (client only)
+  const [activeIndex, setActiveIndex] = useState(1);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      const idx = navItems.findIndex(item => item.href === currentPath);
+      setActiveIndex(idx >= 0 ? idx : 1);
+    }
+  }, [navItems]);
   const handleNavClick = (href: string) => {
-    if (href !== currentPath) {
+    if (typeof window !== 'undefined' && href !== window.location.pathname) {
       router.push(href);
     }
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden text-white p-1 sm:p-3">
+    <div className="h-screen w-full relative overflow-hidden text-white p-1 sm:p-3" style={!isMobile ? { paddingTop: '70px' } : {}}>
       <div className="absolute top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
       <div className="max-w-4xl mx-auto relative z-10 h-full flex flex-col">
         <header className="mb-2 text-center">
@@ -235,7 +243,7 @@ export default function ReleasesPage() {
           <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
             <GooeyNav
               items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
-              initialActiveIndex={activeIndex >= 0 ? activeIndex : 1}
+              initialActiveIndex={activeIndex}
               animationTime={600}
               particleCount={15}
               particleDistances={[90, 10]}
