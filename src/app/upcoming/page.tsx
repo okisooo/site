@@ -92,12 +92,13 @@ export default function UpcomingPage() {
   }, []);
 
   const navItems = [
-    { label: 'Home', href: '/' },
     { label: 'Upcoming', href: '/upcoming' },
+    { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
   ];
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const activeIndex = navItems.findIndex(item => item.href === currentPath);
+  let activeIndex = navItems.findIndex(item => item.href === currentPath);
+  if (activeIndex === -1) activeIndex = 0; // Default to 'Upcoming' if not found
   const handleNavClick = (href: string) => {
     if (href !== currentPath) {
       router.push(href);
@@ -152,7 +153,7 @@ export default function UpcomingPage() {
         <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
           <GooeyNav
             items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
-            initialActiveIndex={activeIndex >= 0 ? activeIndex : 1}
+            initialActiveIndex={activeIndex}
             animationTime={600}
             particleCount={15}
             particleDistances={[90, 10]}

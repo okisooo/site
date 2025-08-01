@@ -135,14 +135,9 @@ export default function ReleasesPage() {
     { label: 'Releases', href: '/releases' }
   ];
   // Determine active index based on current path (client only)
-  const [activeIndex, setActiveIndex] = useState(1);
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      const idx = navItems.findIndex(item => item.href === currentPath);
-      setActiveIndex(idx >= 0 ? idx : 1);
-    }
-  }, [navItems]);
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  let activeIndex = navItems.findIndex(item => item.href === currentPath);
+  if (activeIndex === -1) activeIndex = 2; // Default to 'Releases' if not found
   const handleNavClick = (href: string) => {
     if (typeof window !== 'undefined' && href !== window.location.pathname) {
       router.push(href);
