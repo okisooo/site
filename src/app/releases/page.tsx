@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
 
