@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
@@ -229,10 +229,7 @@ const staticReleases: Release[] = [
 
 export default function ReleasesPage() {
   const router = useRouter();
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [initialActiveIndex, setInitialActiveIndex] = useState(2);
   const [showAllReleases, setShowAllReleases] = useState(false);
   const releasesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -244,71 +241,14 @@ export default function ReleasesPage() {
   const latestRelease = releases[0] || null;
   const hasMoreReleases = releases.length > initialDisplayCount;
 
-  const updateArrowVisibility = () => {
-    if (!releasesContainerRef.current) return;
-
-    const container = releasesContainerRef.current;
-    const { scrollLeft, scrollWidth, clientWidth } = container;
-
-    if (scrollWidth <= clientWidth) {
-      setShowLeftArrow(false);
-      setShowRightArrow(false);
-      return;
-    }
-
-    const atLeftEdge = scrollLeft <= 1;
-    const atRightEdge = Math.abs(scrollWidth - clientWidth - scrollLeft) <= 1;
-
-    setShowLeftArrow(!atLeftEdge);
-    setShowRightArrow(!atRightEdge);
-  };
-
   useEffect(() => {
     const handleResize = () => {
-      updateArrowVisibility();
       setIsMobile(window.innerWidth < 640);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    const handleResize = () => updateArrowVisibility();
-
-    const initialCheck = () => updateArrowVisibility();
-
-    const timers = [
-      setTimeout(initialCheck, 0),
-      setTimeout(initialCheck, 100),
-      setTimeout(initialCheck, 500),
-      setTimeout(initialCheck, 1000)
-    ];
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("load", updateArrowVisibility);
-
-    return () => {
-      timers.forEach(clearTimeout);
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("load", updateArrowVisibility);
-    };
-  }, []);
-
-  const scrollReleasesLeft = () => {
-    if (releasesContainerRef.current) {
-      releasesContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-      setTimeout(updateArrowVisibility, 800);
-    }
-  };
-
-  const scrollReleasesRight = () => {
-    if (releasesContainerRef.current) {
-      releasesContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-      setTimeout(updateArrowVisibility, 800);
-    }
-  };
 
   useEffect(() => {
     document.body.classList.add('releases-page');
@@ -351,26 +291,14 @@ export default function ReleasesPage() {
   }, [isMobile]);
 
   // Navigation items for GooeyNav
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: 'Upcoming', href: '/upcoming' },
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
-  ];
+  ], []);
 
-  // Determine active index based on current path
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const activeIndex = navItems.findIndex(item => item.href === currentPath);
-
-  useEffect(() => {
-    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
-    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 2); // Default to 'Releases' if not found
-  }, [navItems]);
-
-  const handleNavClick = (href: string) => {
-    if (typeof window !== 'undefined' && href !== window.location.pathname) {
-      router.push(href);
-    }
-  };
+  // Set to 2 since this is the releases page (third item in navItems array)
+  const initialActiveIndex = 2;
 
   return (
     <>
@@ -437,7 +365,7 @@ export default function ReleasesPage() {
           </ContentCard>
           <ContentCard title="Featured Releases" className={`${isMobile ? 'mb-2' : 'mb-4'}`}>
             <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-2 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
-              {featuredReleases.map((release: Release, idx: number) => (
+              {featuredReleases.map((release: Release) => (
                 <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}>
                   <a
                     href={release.link}
@@ -468,7 +396,7 @@ export default function ReleasesPage() {
           <ContentCard title="Full Catalog" className={`${isMobile ? 'flex-1 min-h-0' : ''}`}>
             <div className={`${isMobile ? 'h-full flex flex-col' : ''}`}>
               <div className={`grid gap-2 ${isMobile ? 'grid-cols-3 flex-1 overflow-y-auto pb-4' : 'grid-cols-4 md:grid-cols-6 lg:grid-cols-8'}`}>
-                {catalogReleases.map((release: Release, idx: number) => (
+                {catalogReleases.map((release: Release) => (
                   <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 ${isMobile ? 'flex-shrink-0' : ''}`}>
                     <a
                       href={release.link}
@@ -541,7 +469,7 @@ export default function ReleasesPage() {
               }}
             />
             <GooeyNav
-              items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
+              items={navItems}
               initialActiveIndex={initialActiveIndex}
               animationTime={600}
               particleCount={15}

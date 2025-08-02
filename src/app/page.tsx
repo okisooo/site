@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
@@ -17,7 +17,6 @@ import {
   FaApple,
   FaTwitch
 } from 'react-icons/fa';
-import { MdLibraryMusic, MdUpcoming } from 'react-icons/md';
 
 // Type declaration for window extensions
 declare global {
@@ -99,7 +98,6 @@ const allDockItems = [{
 export default function Home() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
-  const [initialActiveIndex, setInitialActiveIndex] = useState(1);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 640);
@@ -117,27 +115,14 @@ export default function Home() {
   }, []);
 
   // Navigation items for GooeyNav
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: 'Upcoming', href: '/upcoming' },
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
-  ];
+  ], []);
 
-  // Determine active index based on current path
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const activeIndex = navItems.findIndex(item => item.href === currentPath);
-
-  useEffect(() => {
-    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
-    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 1); // Default to 'Home' if not found
-  }, [navItems]);
-
-  // Navigation handler for GooeyNav
-  const handleNavClick = (href: string) => {
-    if (href !== currentPath) {
-      router.push(href);
-    }
-  };
+  // Set to 1 since this is the home page (second item in navItems array)
+  const initialActiveIndex = 1;
 
   return (
     <div className="w-full h-screen min-h-0 relative overflow-hidden bg-transparent">
@@ -170,7 +155,7 @@ export default function Home() {
             boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)'
           }} />
           <GooeyNav
-            items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
+            items={navItems}
             initialActiveIndex={initialActiveIndex}
             animationTime={600}
             particleCount={15}
@@ -203,7 +188,7 @@ export default function Home() {
 
           {/* Social icons as grid - positioned higher to avoid GooeyNav overlap */}
           <div className="grid grid-cols-3 gap-4 w-full max-w-xs mx-auto mb-8">
-            {allDockItems.map((item, idx) => (
+            {allDockItems.map((item) => (
               <button
                 key={item.label}
                 aria-label={item.label}

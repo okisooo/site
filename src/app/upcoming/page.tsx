@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
@@ -8,55 +8,6 @@ import GooeyNav from '@/Components/GooeyNav/GooeyNav';
 export default function UpcomingPage() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [initialActiveIndex, setInitialActiveIndex] = useState(0);
-
-  const minSwipeDistance = 50;
-
-  const smoothNavigate = (to: string, delay: number = 150) => {
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-    document.body.style.cursor = 'wait';
-
-    setTimeout(() => {
-      router.push(to);
-      setTimeout(() => {
-        setIsTransitioning(false);
-        document.body.style.cursor = 'default';
-      }, 100);
-    }, delay);
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (isTransitioning) return;
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (isTransitioning) return;
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || isTransitioning) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe && isMobile) {
-      // Swipe left -> go to releases
-      smoothNavigate("/releases");
-    }
-    if (isRightSwipe && isMobile) {
-      // Swipe right -> go back to home
-      smoothNavigate("/");
-    }
-  };
 
   useEffect(() => {
     document.body.classList.add('upcoming-page');
@@ -92,26 +43,14 @@ export default function UpcomingPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: 'Upcoming', href: '/upcoming' },
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
-  ];
+  ], []);
 
-  // Determine active index based on current path
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const activeIndex = navItems.findIndex(item => item.href === currentPath);
-
-  useEffect(() => {
-    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
-    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 0); // Default to 'Upcoming' if not found
-  }, [navItems]);
-
-  const handleNavClick = (href: string) => {
-    if (href !== currentPath) {
-      router.push(href);
-    }
-  };
+  // Set to 0 since this is the upcoming page (first item in navItems array)
+  const initialActiveIndex = 0;
 
   return (
     <div className="min-h-screen w-full relative text-white" style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 80px 12px' }}>
