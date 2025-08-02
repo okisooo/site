@@ -5,7 +5,227 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
-import { useSpotifyReleases } from '@/hooks/useSpotifyReleases';
+
+interface Release {
+  title: string;
+  year: string;
+  img: string;
+  link: string;
+  releaseDate: string;
+  albumType: string;
+}
+
+// Static fallback data (will be displayed immediately)
+const staticReleases: Release[] = [
+  {
+    title: 'Ochame Kinou (GUMI COVER)',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273335a9f91d4294cb9a3de7af6',
+    link: 'https://open.spotify.com/album/1iQHinMs6TsTGr0QYq2TGD',
+    releaseDate: '2025-07-18',
+    albumType: 'single'
+  },
+  {
+    title: 'MIKU MIKU HATSUNE',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2735aebb8c70854419cedef0ed7',
+    link: 'https://open.spotify.com/album/5g9YnaSj8JgyxgnfgG3Yz5',
+    releaseDate: '2025-06-01',
+    albumType: 'single'
+  },
+  {
+    title: 'RESURRECTION',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273778a4f44c3e5b63f663f87da',
+    link: 'https://open.spotify.com/album/15AGWT0YohTDzF5gPCzgw3',
+    releaseDate: '2025-05-25',
+    albumType: 'album'
+  },
+  {
+    title: 'My Dearest',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273478a688a5711326af2e76340',
+    link: 'https://open.spotify.com/album/3gZf6iZobBpU0qk0Ynf9sR',
+    releaseDate: '2025-05-01',
+    albumType: 'single'
+  },
+  {
+    title: 'FANTASIA & ETUDE',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273f9828b8b052d94e53344ee27',
+    link: 'https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q',
+    releaseDate: '2025-04-25',
+    albumType: 'album'
+  },
+  {
+    title: 'voidroid',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273236c5e927ae8bac15ed1eaa9',
+    link: 'https://open.spotify.com/album/4NEgkpLoPck8FGujMpa4na',
+    releaseDate: '2025-04-15',
+    albumType: 'single'
+  },
+  {
+    title: 'ETUDE',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273d801af2d510e722d0444a16f',
+    link: 'https://open.spotify.com/album/4raTOoWiHkOwYH7CQFzAcC',
+    releaseDate: '2025-04-07',
+    albumType: 'album'
+  },
+  {
+    title: 'HELLO, WORLD.',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273b1a3e2b49011da734655b332',
+    link: 'https://open.spotify.com/album/3WBZF8QXXRebLD0cud4KTQ',
+    releaseDate: '2025-03-25',
+    albumType: 'single'
+  },
+  {
+    title: 'Meet The Princess',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b27359b538de2a62ef053fa5b1d9',
+    link: 'https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT',
+    releaseDate: '2025-03-18',
+    albumType: 'single'
+  },
+  {
+    title: 'SHUT OFF',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273dc00169cce2210cf91300f23',
+    link: 'https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC',
+    releaseDate: '2025-03-15',
+    albumType: 'single'
+  },
+  {
+    title: 'FANTASIA',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2734bcdda5555ac77a5b56c91b2',
+    link: 'https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN',
+    releaseDate: '2025-03-10',
+    albumType: 'album'
+  },
+  {
+    title: 'ANOTHER LIFE (Remix)',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2735b92ae95eadfbefaf385ea77',
+    link: 'https://open.spotify.com/album/7uIGVdqJrhTWRyVJfB8bo6',
+    releaseDate: '2025-03-03',
+    albumType: 'single'
+  },
+  {
+    title: 'PRECIOUS YOU',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2731156adf59d5b284d12c56528',
+    link: 'https://open.spotify.com/album/74Gn18pzYvHn1ZWIjEs1mI',
+    releaseDate: '2025-02-25',
+    albumType: 'single'
+  },
+  {
+    title: 'TEARS IN HEAVEN \'99',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2731f8adc60c1973e5802981328',
+    link: 'https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A',
+    releaseDate: '2025-02-17',
+    albumType: 'single'
+  },
+  {
+    title: 'MANGO BOBA',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273e152bb5d2bac32afccf48a15',
+    link: 'https://open.spotify.com/album/6vU5gaWqNZKNl3V9pkjsEI',
+    releaseDate: '2025-02-13',
+    albumType: 'single'
+  },
+  {
+    title: 'FEAR',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b2739f8274c0b455534d9cec18e8',
+    link: 'https://open.spotify.com/album/20BzwSTaHHb6CDKhGzWHiQ',
+    releaseDate: '2025-02-13',
+    albumType: 'single'
+  },
+  {
+    title: 'DESTINY',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b27349289071e915ad4461fcc64f',
+    link: 'https://open.spotify.com/album/2pttuX0SUW3BC8JHjVn2S0',
+    releaseDate: '2025-02-07',
+    albumType: 'single'
+  },
+  {
+    title: 'REVOLUTION',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b27311579e9278b6f267402f2fbb',
+    link: 'https://open.spotify.com/album/1nQYgQ3t6OvbI61a72h9bX',
+    releaseDate: '2025-01-25',
+    albumType: 'album'
+  },
+  {
+    title: 'IN YOUR PRESENCE',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273995e8c74b3d6fba40e778fea',
+    link: 'https://open.spotify.com/album/72PR4fh7pB0VDoUenr26uK',
+    releaseDate: '2025-01-24',
+    albumType: 'single'
+  },
+  {
+    title: 'MACHINE GUN',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273088ad60eaf2a9a2ade1a0d0e',
+    link: 'https://open.spotify.com/album/74fSXSvQZlYItgFeWBOWIE',
+    releaseDate: '2025-01-17',
+    albumType: 'single'
+  },
+  {
+    title: 'REVENGE',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273e0933b795ce1b3b560d9030f',
+    link: 'https://open.spotify.com/album/3dhdyjSH3EG8YMFaHdmBw0',
+    releaseDate: '2025-01-07',
+    albumType: 'single'
+  },
+  {
+    title: 'FLY',
+    year: '2025',
+    img: 'https://i.scdn.co/image/ab67616d0000b273b7f60acc50ae9a73f7c9866d',
+    link: 'https://open.spotify.com/album/3sMC9TVo5SHEpGV0WuyYJm',
+    releaseDate: '2025-01-03',
+    albumType: 'single'
+  },
+  {
+    title: 'THUNDER',
+    year: '2024',
+    img: 'https://i.scdn.co/image/ab67616d0000b2739a062382d005e2c2ab7c8eca',
+    link: 'https://open.spotify.com/album/5Debz7V0TMizIqlRCnQtad',
+    releaseDate: '2024-12-26',
+    albumType: 'single'
+  },
+  {
+    title: 'PRIDE',
+    year: '2024',
+    img: 'https://i.scdn.co/image/ab67616d0000b2730f1ea24dde1d5e0309e89320',
+    link: 'https://open.spotify.com/album/1K4cNRy6VPwaVV6VgE6Cbx',
+    releaseDate: '2024-12-15',
+    albumType: 'single'
+  },
+  {
+    title: 'Watashi Wa Dare',
+    year: '2024',
+    img: 'https://i.scdn.co/image/ab67616d0000b273a4211bf75310a57151b03a11',
+    link: 'https://open.spotify.com/album/4ZnFA6BezUO6Sd3EBRrten',
+    releaseDate: '2024-03-26',
+    albumType: 'single'
+  },
+  {
+    title: 'Star Trail',
+    year: '2024',
+    img: 'https://i.scdn.co/image/ab67616d0000b27348e563a92f362bad3e12b062',
+    link: 'https://open.spotify.com/album/13zLY9ytK7dqXJTPH3bvSv',
+    releaseDate: '2024-03-18',
+    albumType: 'single'
+  }
+];
 
 export default function ReleasesPage() {
   const router = useRouter();
@@ -13,17 +233,16 @@ export default function ReleasesPage() {
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [initialActiveIndex, setInitialActiveIndex] = useState(2);
+  const [showAllReleases, setShowAllReleases] = useState(false);
   const releasesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Use Spotify API hook
-  const {
-    releases,
-    loading,
-    error,
-    getFeaturedReleases,
-    getLatestRelease,
-    getCatalogReleases
-  } = useSpotifyReleases();
+  // Use static data (always available, fast loading)
+  const releases = staticReleases;
+  const featuredReleases = releases.slice(0, 3);
+  const initialDisplayCount = isMobile ? 12 : 16; // Show more on desktop
+  const catalogReleases = showAllReleases ? releases : releases.slice(0, initialDisplayCount);
+  const latestRelease = releases[0] || null;
+  const hasMoreReleases = releases.length > initialDisplayCount;
 
   const updateArrowVisibility = () => {
     if (!releasesContainerRef.current) return;
@@ -131,11 +350,6 @@ export default function ReleasesPage() {
     };
   }, [isMobile]);
 
-  // Get dynamic data from Spotify API
-  const featuredReleases = getFeaturedReleases(3);
-  const catalogReleases = getCatalogReleases();
-  const latestRelease = getLatestRelease();
-
   // Navigation items for GooeyNav
   const navItems = [
     { label: 'Upcoming', href: '/upcoming' },
@@ -219,17 +433,13 @@ export default function ReleasesPage() {
               </div>
             ) : (
               <div className="text-center py-8">
-                {loading ? (
-                  <p className="text-gray-400">Loading latest release...</p>
-                ) : (
-                  <p className="text-gray-400">No releases found</p>
-                )}
+                <p className="text-gray-400">No releases found</p>
               </div>
             )}
           </ContentCard>
           <ContentCard title="Featured Releases" className={`${isMobile ? 'mb-2' : 'mb-4'}`}>
             <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-2 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
-              {featuredReleases.map((release, idx) => (
+              {featuredReleases.map((release: Release, idx: number) => (
                 <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}>
                   <a
                     href={release.link}
@@ -245,25 +455,23 @@ export default function ReleasesPage() {
                       sizes={isMobile ? "110px" : "160px"}
                     />
                   </a>
-                  <h4 className={`font-semibold text-shadow-sm mt-1 text-center ${isMobile ? 'text-xs' : 'text-sm'}`}>{release.title}</h4>
-                  <p className={`text-gray-300 text-shadow-sm mb-1 text-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}>{release.year}</p>
-                  <a
-                    href={release.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`text-green-400 hover:text-green-300 flex items-center gap-1 justify-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}
-                  >
-                    Listen
-                  </a>
+                  <div className="mt-1 px-1">
+                    <p className={`font-medium truncate text-shadow-sm ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                      {release.title}
+                    </p>
+                    <p className={`text-gray-300 text-shadow-sm ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                      {release.year}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
           </ContentCard>
-          <ContentCard title="Catalog" className={`${isMobile ? 'flex-1 min-h-0' : 'mb-6'}`}>
-            <div className={`${isMobile ? 'h-full overflow-y-auto scrollbar-hide' : ''}`}>
-              <div className={`grid gap-2 pb-2 ${isMobile ? 'grid-cols-3' : 'grid-cols-4 md:grid-cols-5 gap-3 pb-4'}`}>
-                {catalogReleases.map((release, idx) => (
-                  <div key={idx} className={`bg-white/5 p-1 rounded-lg border border-white/10 ${isMobile ? '' : 'p-2'}`}>
+          <ContentCard title="Full Catalog" className={`${isMobile ? 'flex-1 min-h-0' : ''}`}>
+            <div className={`${isMobile ? 'h-full flex flex-col' : ''}`}>
+              <div className={`grid gap-2 ${isMobile ? 'grid-cols-3 flex-1 overflow-y-auto pb-4' : 'grid-cols-4 md:grid-cols-6 lg:grid-cols-8'}`}>
+                {catalogReleases.map((release: Release, idx: number) => (
+                  <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 ${isMobile ? 'flex-shrink-0' : ''}`}>
                     <a
                       href={release.link}
                       target="_blank"
@@ -275,28 +483,59 @@ export default function ReleasesPage() {
                         alt={release.title + ' album artwork'}
                         className="rounded-md shadow"
                         fill
-                        sizes={isMobile ? "110px" : "160px"}
+                        sizes={isMobile ? "100px" : "150px"}
                       />
                     </a>
-                    <h4 className={`font-semibold text-shadow-sm mt-1 text-center ${isMobile ? 'text-xs' : 'text-sm'}`}>{release.title}</h4>
-                    <p className={`text-gray-300 text-shadow-sm mb-1 text-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}>{release.year}</p>
-                    <a
-                      href={release.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`text-green-400 hover:text-green-300 flex items-center gap-1 justify-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}
-                    >
-                      Listen
-                    </a>
+                    <div className="mt-1 px-1">
+                      <p className={`font-medium truncate text-shadow-sm ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                        {release.title}
+                      </p>
+                      <p className={`text-gray-300 text-shadow-sm ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                        {release.year}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
+              {/* Show More Button */}
+              {hasMoreReleases && !showAllReleases && (
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => setShowAllReleases(true)}
+                    className={`bg-white/10 hover:bg-white/20 rounded-full text-white font-medium transition-colors backdrop-blur-sm border border-white/20 ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3 text-base'}`}
+                  >
+                    Show More ({releases.length - initialDisplayCount} more releases)
+                  </button>
+                </div>
+              )}
+              {/* Show Less Button */}
+              {showAllReleases && hasMoreReleases && (
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => setShowAllReleases(false)}
+                    className={`bg-white/10 hover:bg-white/20 rounded-full text-white font-medium transition-colors backdrop-blur-sm border border-white/20 ${isMobile ? 'px-4 py-2 text-sm' : 'px-6 py-3 text-base'}`}
+                  >
+                    Show Less
+                  </button>
+                </div>
+              )}
             </div>
           </ContentCard>
         </div>
-        {/* GooeyNav - positioned differently for mobile vs desktop */}
-        <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { paddingTop: '18px' } : {}}>
-          <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
+        {/* GooeyNav at top for desktop, at bottom for mobile */}
+        <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
+          <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
+            <GooeyNav
+              items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
+              initialActiveIndex={initialActiveIndex}
+              animationTime={600}
+              particleCount={15}
+              particleDistances={[90, 10]}
+              particleR={100}
+              timeVariance={300}
+              colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+            />
+          </div>
         </div>
       </div>
     </>
