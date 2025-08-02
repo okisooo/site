@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
 
 export default function UpcomingPage() {
-  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

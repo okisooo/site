@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
@@ -96,7 +95,6 @@ const allDockItems = [{
 }];
 
 export default function Home() {
-  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

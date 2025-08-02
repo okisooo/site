@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
 
@@ -228,10 +227,8 @@ const staticReleases: Release[] = [
 ];
 
 export default function ReleasesPage() {
-  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [showAllReleases, setShowAllReleases] = useState(false);
-  const releasesContainerRef = useRef<HTMLDivElement>(null);
 
   // Use static data (always available, fast loading)
   const releases = staticReleases;

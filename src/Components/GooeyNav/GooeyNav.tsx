@@ -52,7 +52,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     d: [number, number],
     r: number,
   ) => {
-    let rotate = noise(r / 10);
+            const rotate = noise(r / 10);
     const rotateValue = rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10;
     return {
       start: getXY(d[0], particleCount - i, particleCount),
