@@ -1,5 +1,5 @@
 /*
-	Installed from https://reactbits.dev/ts/tailwind/
+  Installed from https://reactbits.dev/ts/tailwind/
 */
 
 import React, { useRef, useEffect, useState } from "react";
@@ -92,7 +92,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
         setTimeout(() => {
           try {
             element.removeChild(particle);
-          } catch {}
+          } catch { }
         }, t);
       }, 30);
     }
@@ -202,7 +202,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             inset: -75px;
             z-index: -2;
-            background: black;
+            background: transparent;
           }
           .effect.filter::after {
             content: "";
@@ -327,9 +327,8 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`rounded-full relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white ${
-                  activeIndex === index ? "active" : ""
-                }`}
+                className={`rounded-full relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white ${activeIndex === index ? "active" : ""
+                  }`}
               >
                 <a
                   href={item.href}

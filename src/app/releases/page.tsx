@@ -5,13 +5,25 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from "next/navigation";
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
+import { useSpotifyReleases } from '@/hooks/useSpotifyReleases';
 
 export default function ReleasesPage() {
   const router = useRouter();
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [initialActiveIndex, setInitialActiveIndex] = useState(2);
   const releasesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Use Spotify API hook
+  const {
+    releases,
+    loading,
+    error,
+    getFeaturedReleases,
+    getLatestRelease,
+    getCatalogReleases
+  } = useSpotifyReleases();
 
   const updateArrowVisibility = () => {
     if (!releasesContainerRef.current) return;
@@ -81,16 +93,29 @@ export default function ReleasesPage() {
 
   useEffect(() => {
     document.body.classList.add('releases-page');
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100vh';
-    document.documentElement.style.height = '100vh';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100vw';
-    document.body.style.top = '0';
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.bottom = '0';
+
+    if (isMobile) {
+      // Only apply fixed positioning and overflow hidden on mobile
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+      document.documentElement.style.height = '100vh';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100vw';
+      document.body.style.top = '0';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.bottom = '0';
+    } else {
+      // Ensure desktop can scroll
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      document.body.style.height = 'auto';
+      document.documentElement.style.height = 'auto';
+      document.body.style.position = 'static';
+      document.body.style.width = 'auto';
+    }
+
     return () => {
       document.body.classList.remove('releases-page');
       document.documentElement.style.overflow = '';
@@ -104,29 +129,12 @@ export default function ReleasesPage() {
       document.body.style.right = '';
       document.body.style.bottom = '';
     };
-  }, []);
+  }, [isMobile]);
 
-  // Featured releases array for mobile
-  const featuredReleases = [
-    {
-      title: 'FANTASIA & ETUDE',
-      year: '2025',
-      img: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/c7/35/b2c73583-ee06-57f8-0b9b-c08423293429/artwork.jpg/600x600bf-60.jpg',
-      link: 'https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q'
-    },
-    {
-      title: 'FANTASIA',
-      year: '2025',
-      img: 'https://i.scdn.co/image/ab67616d0000b273bcecbdb53ef1b1311a9923a8',
-      link: 'https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN'
-    },
-    {
-      title: 'ETUDE',
-      year: '2025',
-      img: 'https://i.scdn.co/image/ab67616d0000b2737029fe56be8fdd1093453b71',
-      link: 'https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q'
-    }
-  ];
+  // Get dynamic data from Spotify API
+  const featuredReleases = getFeaturedReleases(3);
+  const catalogReleases = getCatalogReleases();
+  const latestRelease = getLatestRelease();
 
   // Navigation items for GooeyNav
   const navItems = [
@@ -134,10 +142,16 @@ export default function ReleasesPage() {
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
   ];
-  // Determine active index based on current path (client only)
+
+  // Determine active index based on current path
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  let activeIndex = navItems.findIndex(item => item.href === currentPath);
-  if (activeIndex === -1) activeIndex = 2; // Default to 'Releases' if not found
+  const activeIndex = navItems.findIndex(item => item.href === currentPath);
+
+  useEffect(() => {
+    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
+    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 2); // Default to 'Releases' if not found
+  }, [navItems]);
+
   const handleNavClick = (href: string) => {
     if (typeof window !== 'undefined' && href !== window.location.pathname) {
       router.push(href);
@@ -145,122 +159,146 @@ export default function ReleasesPage() {
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden text-white p-1 sm:p-3" style={!isMobile ? { paddingTop: '70px' } : {}}>
-      <div className="absolute top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
-      <div className="max-w-4xl mx-auto relative z-10 h-full flex flex-col">
-        <header className="mb-2 text-center">
-          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-shadow-lg mb-1 sm:mb-2">
-            OKISO Music Releases
-          </h1>
-          <p className="text-xs sm:text-base md:text-lg text-shadow-md text-gray-200 mb-2 sm:mb-4 max-w-2xl mx-auto">
-            Explore OKISO&apos;s music catalog. Listen to the latest releases.
-          </p>
-        </header>
-        <ContentCard title="Latest Release" className="mb-2 flex-grow">
-          <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row'} gap-2 md:gap-4`}>
-            <div className="w-full max-w-[140px] mx-auto">
-              <a
-                href="https://open.spotify.com/album/0MAU5F8CQeuBQ4bC9N3SDi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-square transition-transform hover:scale-[1.02]"
-              >
-                <Image
-                  src="https://i.scdn.co/image/ab67616d00001e029899e44696d9069ad2953a4d"
-                  alt="RESURRECTION album artwork"
-                  className="rounded-md shadow"
-                  fill
-                  sizes="(max-width: 640px) 140px, 33vw"
-                  priority
-                />
-              </a>
+    <>
+      {!isMobile && (
+        <style>{`
+          html, body {
+            height: auto !important;
+            overflow-y: auto !important;
+          }
+        `}</style>
+      )}
+      <div className={`w-full relative text-white ${isMobile ? 'h-screen overflow-hidden bg-vignette' : 'min-h-screen'}`} style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 12px 12px' }}>
+        <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl h-full' : 'max-w-6xl pb-20'}`}>
+          <header className={`text-center ${isMobile ? 'mb-2' : 'mb-6'}`}>
+            <h1 className={`font-bold text-shadow-lg ${isMobile ? 'text-xl mb-1' : 'text-5xl mb-4'}`}>
+              OKISO Music Releases
+            </h1>
+            <p className={`text-shadow-md text-gray-200 mx-auto ${isMobile ? 'text-xs mb-2 max-w-2xl' : 'text-xl mb-6 max-w-4xl'}`}>
+              Explore OKISO&apos;s music catalog. Listen to the latest releases.
+            </p>
+          </header>
+          <ContentCard title="Latest Release" className={`${isMobile ? 'mb-2' : 'mb-6'}`}>
+            {latestRelease ? (
+              <div className={`flex ${isMobile ? 'flex-col gap-2' : 'flex-row gap-6'}`}>
+                <div className={`${isMobile ? 'w-full max-w-[140px] mx-auto' : 'w-full max-w-[220px]'}`}>
+                  <a
+                    href={latestRelease.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                  >
+                    <Image
+                      src={latestRelease.img}
+                      alt={`${latestRelease.title} album artwork`}
+                      className="rounded-md shadow"
+                      fill
+                      sizes={isMobile ? "140px" : "220px"}
+                      priority
+                    />
+                  </a>
+                </div>
+                <div className={`w-full flex flex-col justify-center ${isMobile ? 'items-center' : 'items-start'}`}>
+                  <h3 className={`font-semibold text-shadow-md ${isMobile ? 'text-base mb-1 text-center' : 'text-2xl mb-2 text-left'}`}>
+                    {latestRelease.title}
+                  </h3>
+                  <p className={`text-gray-200 text-shadow-sm ${isMobile ? 'text-xs mb-1 text-center' : 'text-base mb-3 text-left'}`}>
+                    Released {latestRelease.year}.
+                  </p>
+                  <div className={`flex flex-wrap gap-2 ${isMobile ? 'mt-1 justify-center' : 'mt-2 justify-start'}`}>
+                    <a
+                      href={latestRelease.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-1.5 bg-[#1DB954] hover:bg-[#1ed760] rounded-full text-black font-medium transition-colors ${isMobile ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'}`}
+                    >
+                      Listen on Spotify
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                {loading ? (
+                  <p className="text-gray-400">Loading latest release...</p>
+                ) : (
+                  <p className="text-gray-400">No releases found</p>
+                )}
+              </div>
+            )}
+          </ContentCard>
+          <ContentCard title="Featured Releases" className={`${isMobile ? 'mb-2' : 'mb-4'}`}>
+            <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-2 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
+              {featuredReleases.map((release, idx) => (
+                <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}>
+                  <a
+                    href={release.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                  >
+                    <Image
+                      src={release.img}
+                      alt={release.title + ' album artwork'}
+                      className="rounded-md shadow"
+                      fill
+                      sizes={isMobile ? "110px" : "160px"}
+                    />
+                  </a>
+                  <h4 className={`font-semibold text-shadow-sm mt-1 text-center ${isMobile ? 'text-xs' : 'text-sm'}`}>{release.title}</h4>
+                  <p className={`text-gray-300 text-shadow-sm mb-1 text-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}>{release.year}</p>
+                  <a
+                    href={release.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-green-400 hover:text-green-300 flex items-center gap-1 justify-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}
+                  >
+                    Listen
+                  </a>
+                </div>
+              ))}
             </div>
-            <div className="w-full flex flex-col justify-center items-center">
-              <h3 className="text-base sm:text-lg font-semibold mb-1 text-shadow-md text-center">RESURRECTION</h3>
-              <p className="text-gray-200 mb-1 text-xs sm:text-sm text-shadow-sm text-center">
-                The next evolution of OKISO&apos;s sound.<br />Released May 25, 2025.
-              </p>
-              <div className="mt-1 flex flex-wrap gap-2 justify-center">
-                <a
-                  href="https://open.spotify.com/album/0MAU5F8CQeuBQ4bC9N3SDi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-2 py-1 bg-[#1DB954] hover:bg-[#1ed760] rounded-full text-black text-xs font-medium transition-colors"
-                >
-                  Spotify
-                </a>
-                <a
-                  href="https://music.apple.com/us/album/resurrection/1808732861"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-2 py-1 bg-white/10 hover:bg-white/20 rounded-full text-white text-xs font-medium transition-colors backdrop-blur-sm"
-                >
-                  Apple Music
-                </a>
+          </ContentCard>
+          <ContentCard title="Catalog" className={`${isMobile ? 'flex-1 min-h-0' : 'mb-6'}`}>
+            <div className={`${isMobile ? 'h-full overflow-y-auto scrollbar-hide' : ''}`}>
+              <div className={`grid gap-2 pb-2 ${isMobile ? 'grid-cols-3' : 'grid-cols-4 md:grid-cols-5 gap-3 pb-4'}`}>
+                {catalogReleases.map((release, idx) => (
+                  <div key={idx} className={`bg-white/5 p-1 rounded-lg border border-white/10 ${isMobile ? '' : 'p-2'}`}>
+                    <a
+                      href={release.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative aspect-square transition-transform hover:scale-[1.02]"
+                    >
+                      <Image
+                        src={release.img}
+                        alt={release.title + ' album artwork'}
+                        className="rounded-md shadow"
+                        fill
+                        sizes={isMobile ? "110px" : "160px"}
+                      />
+                    </a>
+                    <h4 className={`font-semibold text-shadow-sm mt-1 text-center ${isMobile ? 'text-xs' : 'text-sm'}`}>{release.title}</h4>
+                    <p className={`text-gray-300 text-shadow-sm mb-1 text-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}>{release.year}</p>
+                    <a
+                      href={release.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`text-green-400 hover:text-green-300 flex items-center gap-1 justify-center ${isMobile ? 'text-[10px]' : 'text-xs'}`}
+                    >
+                      Listen
+                    </a>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        </ContentCard>
-        <ContentCard title="Featured Releases" className="mb-2">
-          <div className="flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide gap-2 -mx-1 px-1">
-            {featuredReleases.map((release, idx) => (
-              <div key={release.title} className="bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 w-[110px]">
-                <a
-                  href={release.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block relative aspect-square transition-transform hover:scale-[1.02]"
-                >
-                  <Image
-                    src={release.img}
-                    alt={release.title + ' album artwork'}
-                    className="rounded-md shadow"
-                    fill
-                    sizes="(max-width: 640px) 110px, 180px"
-                  />
-                </a>
-                <h4 className="font-semibold text-shadow-sm mt-1 text-xs text-center">{release.title}</h4>
-                <p className="text-[10px] text-gray-300 text-shadow-sm mb-1 text-center">{release.year}</p>
-                <a
-                  href={release.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-400 hover:text-green-300 text-[10px] flex items-center gap-1 justify-center"
-                >
-                  Listen
-                </a>
-              </div>
-            ))}
-          </div>
-        </ContentCard>
-        {/* GooeyNav at top for desktop, at bottom for mobile */}
-        <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
-          <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
-            <GooeyNav
-              items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
-              initialActiveIndex={activeIndex}
-              animationTime={600}
-              particleCount={15}
-              particleDistances={[90, 10]}
-              particleR={100}
-              timeVariance={300}
-              colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-            />
-          </div>
+          </ContentCard>
         </div>
-        {/* Back to Home button with smooth navigation, bottom left, all devices */}
-        {!isMobile && (
-          <div className="fixed bottom-2 left-2 z-20">
-            <button
-              onClick={() => router.push("/")}
-              className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-2 py-1 rounded-full inline-flex items-center text-xs min-h-[28px] text-shadow-sm border border-white/10 shadow touch-manipulation"
-              aria-label="Back to home page"
-            >
-              ← Home
-            </button>
-          </div>
-        )}
+        {/* GooeyNav - positioned differently for mobile vs desktop */}
+        <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { paddingTop: '18px' } : {}}>
+          <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

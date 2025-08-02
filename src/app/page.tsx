@@ -99,6 +99,7 @@ const allDockItems = [{
 export default function Home() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
+  const [initialActiveIndex, setInitialActiveIndex] = useState(1);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 640);
@@ -121,10 +122,15 @@ export default function Home() {
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
   ];
+
   // Determine active index based on current path
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  let activeIndex = navItems.findIndex(item => item.href === currentPath);
-  if (activeIndex === -1) activeIndex = 1; // Default to 'Home' if not found
+  const activeIndex = navItems.findIndex(item => item.href === currentPath);
+
+  useEffect(() => {
+    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
+    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 1); // Default to 'Home' if not found
+  }, [navItems]);
 
   // Navigation handler for GooeyNav
   const handleNavClick = (href: string) => {
@@ -151,7 +157,7 @@ export default function Home() {
         <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
           <GooeyNav
             items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
-            initialActiveIndex={activeIndex}
+            initialActiveIndex={initialActiveIndex}
             animationTime={600}
             particleCount={15}
             particleDistances={[90, 10]}

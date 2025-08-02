@@ -133,7 +133,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="h-screen w-full relative">
-          <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
+          <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
             <DarkVeil hueShift={280} resolutionScale={1.5} warpAmount={0.12} />
           </div>
           <div className="relative z-[1]">

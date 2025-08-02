@@ -11,6 +11,7 @@ export default function UpcomingPage() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [initialActiveIndex, setInitialActiveIndex] = useState(0);
 
   const minSwipeDistance = 50;
 
@@ -96,9 +97,16 @@ export default function UpcomingPage() {
     { label: 'Home', href: '/' },
     { label: 'Releases', href: '/releases' }
   ];
+
+  // Determine active index based on current path
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-  let activeIndex = navItems.findIndex(item => item.href === currentPath);
-  if (activeIndex === -1) activeIndex = 0; // Default to 'Upcoming' if not found
+  const activeIndex = navItems.findIndex(item => item.href === currentPath);
+
+  useEffect(() => {
+    const calculatedIndex = navItems.findIndex(item => item.href === window.location.pathname);
+    setInitialActiveIndex(calculatedIndex >= 0 ? calculatedIndex : 0); // Default to 'Upcoming' if not found
+  }, [navItems]);
+
   const handleNavClick = (href: string) => {
     if (href !== currentPath) {
       router.push(href);
@@ -106,62 +114,41 @@ export default function UpcomingPage() {
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden text-white p-3 sm:p-6">
+    <div className="h-screen w-full relative overflow-hidden text-white" style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 12px 12px' }}>
       {/* Vignette effect overlay - constrained to viewport */}
       <div className="absolute top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
 
-      <div className="max-w-4xl mx-auto relative z-10 h-full flex flex-col">
-        <header className="mb-4 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-shadow-lg mb-2 sm:mb-4 text-center sm:text-left">
+      <div className={`mx-auto relative z-10 h-full flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl'}`}>
+        <header className={`${isMobile ? 'mb-4' : 'mb-8'}`}>
+          <h1 className={`font-bold text-shadow-lg text-center ${isMobile ? 'text-2xl mb-2' : 'text-5xl mb-4'}`}>
             OKISO Upcoming Releases
           </h1>
-          <p className="text-base sm:text-xl text-shadow-md text-gray-200 mb-4 sm:mb-6 text-center sm:text-left">
+          <p className={`text-shadow-md text-gray-200 text-center mx-auto ${isMobile ? 'text-base mb-4 max-w-2xl' : 'text-xl mb-6 max-w-4xl'}`}>
             Get a preview of what is coming next from OKISO. Check back later for updates.
           </p>
         </header>
-        <ContentCard>
-          <div className="flex flex-col items-center justify-center py-8 sm:py-16 px-2 text-center flex-grow">
+        <ContentCard className="flex-grow">
+          <div className={`flex flex-col items-center justify-center text-center h-full ${isMobile ? 'py-8 px-2' : 'py-16 px-4'}`}>
             <div className="mb-6">
-              <svg className="w-12 h-12 sm:w-20 sm:h-20 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className={`text-gray-400 mx-auto mb-4 ${isMobile ? 'w-12 h-12' : 'w-20 h-20'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h2 className="text-xl sm:text-3xl font-bold text-shadow-lg mb-3 text-gray-300">
+              <h2 className={`font-bold text-shadow-lg mb-3 text-gray-300 ${isMobile ? 'text-xl' : 'text-3xl'}`}>
                 Nothing Yet
               </h2>
-              <p className="text-sm sm:text-xl text-shadow-md text-gray-400 mb-4">
+              <p className={`text-shadow-md text-gray-400 mb-4 ${isMobile ? 'text-sm' : 'text-xl'}`}>
                 No upcoming releases at the moment.
               </p>
-              <p className="text-xs sm:text-base text-gray-500 text-shadow-sm max-w-md mx-auto">
+              <p className={`text-gray-500 text-shadow-sm max-w-md mx-auto ${isMobile ? 'text-xs' : 'text-base'}`}>
                 Stay tuned for future announcements and new music from OKISO. Check back soon!
               </p>
             </div>
           </div>
         </ContentCard>
-        {/* Back to Home button with smooth navigation, bottom left, all devices */}
-        <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-20">
-          <button
-            onClick={() => router.push("/")}
-            className="text-gray-300 hover:text-white transition-colors bg-black/40 backdrop-blur-card px-3 sm:px-4 py-1.5 sm:py-2 rounded-full inline-flex items-center text-xs sm:text-sm min-h-[36px] sm:min-h-[44px] text-shadow-sm border border-white/10 shadow-lg touch-manipulation"
-            aria-label="Back to home page"
-          >
-            ← Back to home
-          </button>
-        </div>
       </div>
-      {/* GooeyNav at top for desktop, at bottom for mobile */}
-      <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
-        <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
-          <GooeyNav
-            items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
-            initialActiveIndex={activeIndex}
-            animationTime={600}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
+      {/* GooeyNav - positioned differently for mobile vs desktop */}
+      <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { paddingTop: '18px' } : {}}>
+        <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
       </div>
     </div>
   );
