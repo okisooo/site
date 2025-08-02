@@ -153,8 +153,22 @@ export default function Home() {
         }
       `}</style>
       {/* GooeyNav at top for desktop, at bottom for mobile */}
-      <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
-        <div style={{ position: 'relative', width: isMobile ? '100%' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
+      <div className={isMobile ? "fixed bottom-4 left-0 w-full z-50 flex justify-center" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
+        <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
+          {/* Glass Surface behind GooeyNav */}
+          <div className="absolute inset-0 z-[-1]" style={{
+            width: isMobile ? '350px' : '400px',
+            height: '60px',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
+            WebkitBackdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)'
+          }} />
           <GooeyNav
             items={navItems.map(item => ({ ...item, onClick: () => handleNavClick(item.href) }))}
             initialActiveIndex={initialActiveIndex}
@@ -169,10 +183,10 @@ export default function Home() {
       </div>
       {/* Prevent scroll bleed from scaled background */}
       {isMobile ? (
-        <div className="flex flex-col h-full min-h-0 px-4 pb-8 overflow-hidden">
+        <div className="flex flex-col h-full min-h-0 px-4 pb-24 overflow-hidden">
           {/* ASCIIText logo centered vertically for mobile */}
-          <div className="w-full flex justify-center mt-[-25] mb-0" style={{ position: 'relative', top: 0 }}>
-            <div style={{ width: 420, height: 400 }}>
+          <div className="w-full flex justify-center mt-8 mb-4" style={{ position: 'relative', top: 0 }}>
+            <div style={{ width: 420, height: 300 }}>
               <ASCIIText
                 text="オキソ"
                 enableWaves={true}
@@ -185,10 +199,10 @@ export default function Home() {
           </div>
 
           {/* Spacer to push content to bottom */}
-          <div className="flex-grow" />
+          <div className="flex-grow min-h-4" />
 
-          {/* Social icons as grid */}
-          <div className="grid grid-cols-3 gap-4 w-full max-w-xs mx-auto mt-2">
+          {/* Social icons as grid - positioned higher to avoid GooeyNav overlap */}
+          <div className="grid grid-cols-3 gap-4 w-full max-w-xs mx-auto mb-8">
             {allDockItems.map((item, idx) => (
               <button
                 key={item.label}

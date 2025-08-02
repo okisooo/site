@@ -60,14 +60,14 @@ export default function UpcomingPage() {
 
   useEffect(() => {
     document.body.classList.add('upcoming-page');
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100vh';
-    document.documentElement.style.height = '100vh';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100vw';
-    document.body.style.top = '0';
-    document.body.style.left = '0';
+    document.documentElement.style.overflow = 'auto';
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+    document.documentElement.style.height = 'auto';
+    document.body.style.position = 'static';
+    document.body.style.width = 'auto';
+    document.body.style.top = 'auto';
+    document.body.style.left = 'auto';
     document.body.style.right = '0';
     document.body.style.bottom = '0';
     return () => {
@@ -114,11 +114,11 @@ export default function UpcomingPage() {
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden text-white" style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 12px 12px' }}>
+    <div className="min-h-screen w-full relative text-white" style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 80px 12px' }}>
       {/* Vignette effect overlay - constrained to viewport */}
-      <div className="absolute top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
+      <div className="fixed top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
 
-      <div className={`mx-auto relative z-10 h-full flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl'}`}>
+      <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
         <header className={`${isMobile ? 'mb-4' : 'mb-8'}`}>
           <h1 className={`font-bold text-shadow-lg text-center ${isMobile ? 'text-2xl mb-2' : 'text-5xl mb-4'}`}>
             OKISO Upcoming Releases
@@ -147,8 +147,24 @@ export default function UpcomingPage() {
         </ContentCard>
       </div>
       {/* GooeyNav - positioned differently for mobile vs desktop */}
-      <div className={isMobile ? "fixed bottom-0 left-0 w-full z-50" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { paddingTop: '18px' } : {}}>
-        <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
+      <div className={isMobile ? "fixed bottom-4 left-0 w-full z-50 flex justify-center" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { paddingTop: '18px' } : {}}>
+        <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
+          {/* Glass Surface behind GooeyNav */}
+          <div className="absolute inset-0 z-[-1]" style={{
+            width: isMobile ? '350px' : '400px',
+            height: '60px',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
+            WebkitBackdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)'
+          }} />
+          <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
+        </div>
       </div>
     </div>
   );
