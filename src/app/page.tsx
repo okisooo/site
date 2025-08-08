@@ -179,7 +179,7 @@ export default function Home() {
                 onClick={item.onClick}
                 className="btn-social"
               >
-                {item.icon && React.cloneElement(item.icon as any, { className: 'btn-social-icon' })}
+                <span className="btn-social-icon">{item.icon}</span>
                 <span className="label">{item.label}</span>
               </button>
             ))}
