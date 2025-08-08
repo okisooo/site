@@ -75,7 +75,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     d: [number, number],
     r: number,
   ) => {
-            const rotate = noise(r / 10);
+    const rotate = noise(r / 10);
     const rotateValue = rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10;
     return {
       start: getXY(d[0], particleCount - i, particleCount),
@@ -162,7 +162,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       handleClick(
         {
           currentTarget: e.currentTarget,
-          preventDefault: () => {},
+          preventDefault: () => { },
         } as unknown as React.MouseEvent<HTMLAnchorElement>,
         index,
       );
@@ -185,7 +185,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   }, [activeIndex]);
   useEffect(() => {
     items.forEach((it) => {
-      try { router.prefetch(it.href); } catch {}
+      try { router.prefetch(it.href); } catch { }
     });
   }, [items, router]);
 
@@ -200,7 +200,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             display: flex; gap: 12px; list-style: none; margin: 0; padding: 2px 6px; position: relative; z-index: 3;
             font-family: var(--font-ui, system-ui, sans-serif);
             text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; font-size: 13px;
-            color: rgba(255,255,255,0.92);
+            color: rgba(255,255,255,0.95);
           }
           .nav-list li { position: relative; border-radius: 9999px; }
           .nav-list a {
@@ -208,26 +208,26 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             padding: 10px 14px; border-radius: 9999px; outline: none; text-align: center;
             line-height: 1; text-decoration: none; color: inherit;
           }
-          .nav-list a:focus-visible { box-shadow: 0 0 0 2px rgba(255,0,122,0.45); }
+          .nav-list a:focus-visible { box-shadow: 0 0 0 2px rgba(255,0,122,0.4); }
 
-          /* Active pill: more transparent frosted glass */
+          /* Active pill: extra transparent frosted glass */
           li.active { color: #fff; text-shadow: none; }
           li.active::after { opacity: 1; transform: scale(1); }
           li::after {
             content: ""; position: absolute; inset: 0; border-radius: 9999px;
-            background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-            border: 1px solid rgba(255,255,255,.18);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.35),
-                        0 8px 20px -14px rgba(255,0,122,.35),
-                        0 2px 8px -8px rgba(0,0,0,.55);
-            opacity: 0; transform: scale(0.965); transition: all 0.3s ease; z-index: -1;
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+            border: 1px solid rgba(255,255,255,.14);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.28),
+                        0 6px 16px -14px rgba(255,0,122,.3),
+                        0 2px 6px -8px rgba(0,0,0,.45);
+            opacity: 0; transform: scale(0.97); transition: all 0.3s ease; z-index: -1;
           }
 
           /* Gooey bubbles */
           .effect { position: absolute; opacity: 1; pointer-events: none; display: grid; place-items: center; z-index: 1; }
           .effect.filter { filter: blur(7px) contrast(100) blur(0); mix-blend-mode: screen; }
           .effect.filter::before { content: ""; position: absolute; inset: -60px; z-index: -2; background: transparent; }
-          .effect.filter::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,0.85); transform: scale(0); opacity: 0; z-index: -1; border-radius: 9999px; }
+          .effect.filter::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,0.75); transform: scale(0); opacity: 0; z-index: -1; border-radius: 9999px; }
           .effect.active::after { animation: pill 0.3s ease both; }
           @keyframes pill { to { transform: scale(1); opacity: 1; } }
 
@@ -256,12 +256,12 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
           width="auto"
           height="auto"
           borderRadius={20}
-          backgroundOpacity={0.08}
+          backgroundOpacity={0.01}
           saturation={1.6}
-          brightness={65}
+          brightness={70}
           blur={10}
-          displace={1.6}
-          distortionScale={-150}
+          displace={1.2}
+          distortionScale={-120}
           mixBlendMode="screen"
           style={{ padding: '6px 8px' }}
         >
