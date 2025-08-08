@@ -121,7 +121,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     `;
 
     return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
-  }, [borderRadius, borderWidth, brightness, opacity, blur, mixBlendMode]);
+  }, [borderRadius, borderWidth, brightness, opacity, blur, mixBlendMode, redGradId, blueGradId]);
 
   const updateDisplacementMap = useCallback(() => {
     feImageRef.current?.setAttribute("href", generateDisplacementMap());
@@ -183,6 +183,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   }, [width, height, updateDisplacementMap]);
 
   const supportsSVGFilters = () => {
+    if (typeof window === "undefined" || typeof navigator === "undefined" || typeof document === "undefined") {
+      return false;
+    }
+
     const isWebkit =
       /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
     const isFirefox = /Firefox/.test(navigator.userAgent);
