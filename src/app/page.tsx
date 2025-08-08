@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
@@ -123,7 +123,7 @@ export default function Home() {
   const initialActiveIndex = 1;
 
   return (
-    <div className="w-full h-screen min-h-0 relative overflow-hidden bg-transparent">
+    <div className={`${isMobile ? '' : 'pt-top-nav'} w-full h-screen min-h-0 relative overflow-hidden bg-transparent`}>
       <style>{`
         body.home-page {
           overflow: hidden !important;
@@ -136,22 +136,8 @@ export default function Home() {
         }
       `}</style>
       {/* GooeyNav at top for desktop, at bottom for mobile */}
-      <div className={isMobile ? "fixed bottom-4 left-0 w-full z-50 flex justify-center" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
-        <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
-          {/* Glass Surface behind GooeyNav */}
-          <div className="absolute inset-0 z-[-1]" style={{
-            width: isMobile ? '350px' : '400px',
-            height: '60px',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
-            borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)'
-          }} />
+      <div className={isMobile ? "fixed left-0 w-full z-50 flex justify-center bottom-nav-safe" : "fixed left-0 w-full z-50 flex justify-center top-nav-safe"}>
+        <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', zIndex: 50 }}>
           <GooeyNav
             items={navItems}
             initialActiveIndex={initialActiveIndex}
@@ -166,9 +152,9 @@ export default function Home() {
       </div>
       {/* Prevent scroll bleed from scaled background */}
       {isMobile ? (
-        <div className="flex flex-col h-full min-h-0 px-4 pb-24 overflow-hidden">
+        <div className="flex flex-col h-full min-h-0 px-4 pb-bottom-nav overflow-y-auto scrollbar-hide">
           {/* ASCIIText logo centered vertically for mobile */}
-          <div className="w-full flex justify-center mt-8 mb-4" style={{ position: 'relative', top: 0 }}>
+          <div className="w-full flex justify-center mt-8 mb-2" style={{ position: 'relative', top: 0 }}>
             <div style={{ width: 420, height: 300 }}>
               <ASCIIText
                 text="オキソ"
@@ -182,19 +168,19 @@ export default function Home() {
           </div>
 
           {/* Spacer to push content to bottom */}
-          <div className="flex-grow min-h-4" />
+          <div className="flex-grow min-h-2" />
 
           {/* Social icons as grid - positioned higher to avoid GooeyNav overlap */}
-          <div className="grid grid-cols-3 gap-4 w-full max-w-xs mx-auto mb-8">
+          <div className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto mb-3">
             {allDockItems.map((item) => (
               <button
                 key={item.label}
                 aria-label={item.label}
                 onClick={item.onClick}
-                className="flex flex-col items-center justify-center bg-gray-800/70 rounded-lg p-3 hover:bg-gray-700/90 transition"
+                className="btn-social"
               >
-                {item.icon}
-                <span className="text-[11px] text-white mt-1 opacity-70">{item.label}</span>
+                {item.icon && React.cloneElement(item.icon as any, { className: 'btn-social-icon' })}
+                <span className="label">{item.label}</span>
               </button>
             ))}
           </div>

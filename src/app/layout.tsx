@@ -1,5 +1,6 @@
 // src/app/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
+import { Exo_2, Urbanist } from "next/font/google";
 import SwipeContainer from '@/Components/SwipeContainer/SwipeContainer';
 import DarkVeil from '@/Backgrounds/DarkVeil/DarkVeil';
 import "./globals.css";
@@ -12,6 +13,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Display font for titles
+const exo2 = Exo_2({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+});
+
+// UI font for navbar/body
+const urbanist = Urbanist({
+  variable: "--font-ui",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata = {
@@ -64,7 +79,7 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
@@ -131,7 +146,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased`}>
         <div className="h-screen w-full relative">
           <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
             <DarkVeil hueShift={280} resolutionScale={1.5} warpAmount={0.12} />

@@ -85,10 +85,10 @@ export default function ReleasesPage() {
           overflow-y: auto !important;
         }
       `}</style>
-      <div className={`w-full relative text-white ${isMobile ? 'min-h-screen bg-vignette' : 'min-h-screen'}`} style={!isMobile ? { paddingTop: '70px', padding: '70px 24px 24px 24px' } : { padding: '16px 12px 80px 12px' }}>
+      <div className={`w-full relative text-white ${isMobile ? 'min-h-screen bg-vignette pb-bottom-nav px-3' : 'min-h-screen pt-top-nav px-6'}`}>
         <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
           <header className={`text-center ${isMobile ? 'mb-2' : 'mb-6'}`}>
-            <h1 className={`font-bold text-shadow-lg ${isMobile ? 'text-xl mb-1' : 'text-5xl mb-4'}`}>
+            <h1 className={`h-display h-neon-strong ${isMobile ? 'text-xl mb-1' : 'text-5xl mb-4'}`}>
               OKISO Music Releases
             </h1>
             <p className={`text-shadow-md text-gray-200 mx-auto ${isMobile ? 'text-xs mb-2 max-w-2xl' : 'text-xl mb-6 max-w-4xl'}`}>
@@ -226,25 +226,8 @@ export default function ReleasesPage() {
           </ContentCard>
         </div>
         {/* GooeyNav at top for desktop, at bottom for mobile */}
-        <div className={isMobile ? "fixed bottom-4 left-0 w-full z-50 flex justify-center" : "fixed top-0 left-0 w-full z-50 flex justify-center"} style={!isMobile ? { marginTop: '18px' } : {}}>
-          <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', fontFamily: 'Geist, sans-serif', zIndex: 50 }}>
-            {/* Simple glass backdrop behind GooeyNav */}
-            <div
-              className="absolute inset-0 z-[-1]"
-              style={{
-                width: isMobile ? '350px' : '400px',
-                height: '60px',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.2) brightness(1.1)',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)'
-              }}
-            />
+        <div className={isMobile ? "fixed left-0 w-full z-50 flex justify-center bottom-nav-safe" : "fixed left-0 w-full z-50 flex justify-center top-nav-safe"}>
+          <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', zIndex: 50 }}>
             <GooeyNav
               items={navItems}
               initialActiveIndex={initialActiveIndex}
