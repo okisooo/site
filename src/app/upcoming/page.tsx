@@ -9,28 +9,9 @@ export default function UpcomingPage() {
 
   useEffect(() => {
     document.body.classList.add('upcoming-page');
-    document.documentElement.style.overflow = 'auto';
-    document.body.style.overflow = 'auto';
-    document.body.style.height = 'auto';
-    document.documentElement.style.height = 'auto';
-    document.body.style.position = 'static';
-    document.body.style.width = 'auto';
-    document.body.style.top = 'auto';
-    document.body.style.left = 'auto';
-    document.body.style.right = '0';
-    document.body.style.bottom = '0';
+    // Keep default scrolling; avoid forcing positions on body/html to prevent iOS displacement
     return () => {
       document.body.classList.remove('upcoming-page');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.body.style.height = '';
-      document.documentElement.style.height = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.bottom = '';
     };
   }, []);
 
@@ -51,9 +32,9 @@ export default function UpcomingPage() {
   const initialActiveIndex = 0;
 
   return (
-    <div className={`min-h-screen w-full relative text-white ${isMobile ? 'pb-bottom-nav px-3' : 'pt-top-nav px-6'}`}>
-      {/* Vignette effect overlay - constrained to viewport */}
-      <div className="fixed top-0 left-0 w-full h-screen bg-vignette z-[1] pointer-events-none"></div>
+    <div className={`min-h-screen w-full relative text-white ${isMobile ? 'pb-bottom-nav px-3' : 'pt-top-nav px-6'}`} style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}>
+      {/* Vignette effect overlay - use absolute so it doesn't create viewport bugs on iOS */}
+      <div className="absolute top-0 left-0 w-full h-full bg-vignette z-[1] pointer-events-none"></div>
 
       <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
         <header className={`${isMobile ? 'mb-4' : 'mb-8'}`}>

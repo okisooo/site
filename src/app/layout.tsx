@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Exo_2, Urbanist } from "next/font/google";
 import SwipeContainer from '@/Components/SwipeContainer/SwipeContainer';
 import DarkVeil from '@/Backgrounds/DarkVeil/DarkVeil';
+import faviconPng from './favicon.png';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -82,6 +83,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        {/* Chrome/Android PWA meta (apple tag above can be deprecated in some contexts) */}
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
         <link rel="canonical" href="https://okiso.net" />
         {/* Script to prevent double navigation on touch devices */}
@@ -145,10 +148,13 @@ export default function RootLayout({
             })
           }}
         />
+        {/* Favicon (PNG) and Apple touch icon wired from app/favicon.png */}
+        <link rel="icon" type="image/png" sizes="any" href={faviconPng.src} />
+        <link rel="apple-touch-icon" href={faviconPng.src} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased`}>
-        <div className="h-screen w-full relative">
-          <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
+        <div className="h-screen w-full relative" style={{ height: '100dvh' }}>
+          <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100dvh', zIndex: 0, pointerEvents: 'none' }}>
             <DarkVeil hueShift={280} resolutionScale={1.5} warpAmount={0.12} />
           </div>
           <div className="relative z-[1]">

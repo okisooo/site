@@ -85,7 +85,9 @@ export default function ReleasesPage() {
           overflow-y: auto !important;
         }
       `}</style>
-      <div className={`w-full relative text-white ${isMobile ? 'min-h-screen bg-vignette pb-bottom-nav px-3' : 'min-h-screen pt-top-nav px-6'}`}>
+      <div className={`w-full relative text-white ${isMobile ? 'min-h-screen bg-vignette pb-bottom-nav px-3' : 'min-h-screen pt-top-nav px-6'}`} style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}>
+        {/* Vignette overlay made absolute to avoid iOS fixed bugs */}
+        <div className="absolute top-0 left-0 w-full h-full bg-vignette z-[1] pointer-events-none"></div>
         <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
           <header className={`text-center ${isMobile ? 'mb-2' : 'mb-6'}`}>
             <h1 className={`h-display h-neon-strong ${isMobile ? 'text-xl mb-1' : 'text-5xl mb-4'}`}>

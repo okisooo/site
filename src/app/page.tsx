@@ -107,8 +107,24 @@ export default function Home() {
   useEffect(() => {
     // Add body class to prevent scrolling on home page
     document.body.classList.add('home-page');
+
+    // Hard-lock scroll on iOS and others
+    const prevent = (e: Event) => {
+      e.preventDefault();
+      return false;
+    };
+    window.addEventListener('touchmove', prevent as EventListener, { passive: false });
+    window.addEventListener('wheel', prevent as EventListener, { passive: false });
+    const onScroll = () => {
+      if (window.scrollY !== 0) window.scrollTo(0, 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     return () => {
       document.body.classList.remove('home-page');
+      window.removeEventListener('touchmove', prevent as EventListener);
+      window.removeEventListener('wheel', prevent as EventListener);
+      window.removeEventListener('scroll', onScroll as EventListener);
     };
   }, []);
 
@@ -123,18 +139,23 @@ export default function Home() {
   const initialActiveIndex = 1;
 
   return (
-    <div className={`${isMobile ? '' : 'pt-top-nav'} w-full h-screen min-h-0 relative overflow-hidden bg-transparent`}>
+    <div className={`fixed inset-0 w-full h-full overflow-hidden bg-transparent`}>
       <style>{`
-        body.home-page {
-          overflow: hidden !important;
-          overscroll-behavior-y: none;
-          touch-action: pan-x;
-        }
-        html, body {
-          height: 100vh !important;
-          min-height: 0 !important;
-        }
-      `}</style>
+         body.home-page {
+           overflow: hidden !important;
+           position: fixed !important;
+           inset: 0 !important;
+           width: 100% !important;
+           overscroll-behavior: none !important;
+           touch-action: none !important;
+         }
+         html, body {
+           height: 100% !important;
+           min-height: 100% !important;
+           overscroll-behavior: none !important;
+           touch-action: none !important;
+         }
+       `}</style>
       {/* GooeyNav at top for desktop, at bottom for mobile */}
       <div className={isMobile ? "fixed left-0 w-full z-50 flex justify-center bottom-nav-safe" : "fixed left-0 w-full z-50 flex justify-center top-nav-safe"}>
         <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', zIndex: 50 }}>
@@ -150,12 +171,12 @@ export default function Home() {
           />
         </div>
       </div>
-      {/* Prevent scroll bleed from scaled background */}
+      {/* Prevent scroll bleed */}
       {isMobile ? (
-        <div className="flex flex-col h-full min-h-0 px-4 pb-bottom-nav overflow-y-auto scrollbar-hide">
-          {/* ASCIIText logo centered vertically for mobile */}
-          <div className="w-full flex justify-center mt-8 mb-2" style={{ position: 'relative', top: 0 }}>
-            <div style={{ width: 420, height: 300 }}>
+        <div className="absolute inset-0 px-4 overflow-hidden">
+          {/* ASCIIText near top and centered on mobile */}
+          <div className="absolute left-1/2 -translate-x-1/2" style={{ top: '3.5vh', pointerEvents: 'none' }}>
+            <div style={{ width: 'min(96vw, 440px)', height: 'min(48vh, 300px)' }}>
               <ASCIIText
                 text="オキソ"
                 enableWaves={true}
@@ -167,11 +188,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Spacer to push content to bottom */}
-          <div className="flex-grow min-h-2" />
-
-          {/* Social icons as grid - positioned higher to avoid GooeyNav overlap */}
-          <div className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto mb-3">
+          {/* Social icons grid fixed above nav */}
+          <div
+            className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto"
+            style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 'calc(var(--bottom-bar-height) + 16px)' }}
+          >
             {allDockItems.map((item) => (
               <button
                 key={item.label}
@@ -188,7 +209,7 @@ export default function Home() {
       ) : (
         <>
           {/* Centered ASCII Text element */}
-          <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
             <div className="relative" style={{ width: '1000px', height: '700px' }}>
               <ASCIIText
                 text="オキソ"

@@ -96,12 +96,18 @@ class AsciiFilter {
     this.domElement.style.left = "0";
     this.domElement.style.width = "100%";
     this.domElement.style.height = "100%";
+    // Don't capture touches/mouse to avoid scrolling/jank on mobile
+    this.domElement.style.pointerEvents = "none";
 
     this.pre = document.createElement("pre");
     this.domElement.appendChild(this.pre);
 
     this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
+    // Use willReadFrequently for performance and to silence console warning
+    this.context = (this.canvas.getContext(
+      "2d",
+      { willReadFrequently: true } as any
+    ) as CanvasRenderingContext2D) || this.canvas.getContext("2d");
     this.domElement.appendChild(this.canvas);
 
     this.deg = 0;
@@ -153,8 +159,10 @@ class AsciiFilter {
       this.pre.style.top = "50%";
       this.pre.style.transform = "translate(-50%, -50%)";
       this.pre.style.zIndex = "9";
-      this.pre.style.backgroundAttachment = "fixed";
+      // Remove background-attachment: fixed which causes scroll/compositing issues on iOS
+      // this.pre.style.backgroundAttachment = "fixed";
       this.pre.style.mixBlendMode = "difference";
+      this.pre.style.pointerEvents = "none";
     }
   }
 
@@ -644,15 +652,13 @@ export default function ASCIIText({
         position: "absolute",
         width: "100%",
         height: "100%",
+        pointerEvents: "none", // ensure no touch scroll is captured by overlay
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&display=swap');
 
-        body {
-          margin: 0;
-          padding: 0;
-        }
+        body { margin: 0; padding: 0; }
 
         canvas {
           position: absolute;
@@ -678,12 +684,14 @@ export default function ASCIIText({
           position: absolute;
           left: 0;
           top: 0;
+          /* remove background-attachment: fixed to avoid mobile scroll glitches */
+          /* background-attachment: fixed; */
           background-image: radial-gradient(circle, #ff6188 0%, #fc9867 50%, #ffd866 100%);
-          background-attachment: fixed;
           -webkit-text-fill-color: transparent;
           -webkit-background-clip: text;
           z-index: 9;
           mix-blend-mode: difference;
+          pointer-events: none;
         }
       `}</style>
     </div>
