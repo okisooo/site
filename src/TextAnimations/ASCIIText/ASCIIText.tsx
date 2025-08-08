@@ -104,10 +104,8 @@ class AsciiFilter {
 
     this.canvas = document.createElement("canvas");
     // Use willReadFrequently for performance and to silence console warning
-    this.context = (this.canvas.getContext(
-      "2d",
-      { willReadFrequently: true } as any
-    ) as CanvasRenderingContext2D) || this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext("2d", { willReadFrequently: true } as CanvasRenderingContext2DSettings);
+    this.context = ctx as CanvasRenderingContext2D | null;
     this.domElement.appendChild(this.canvas);
 
     this.deg = 0;
