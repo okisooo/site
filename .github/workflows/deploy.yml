@@ -36,10 +36,7 @@ jobs:
 
       # Skip update on the second run triggered by our own auto commit (contains [auto])
       - name: Update Spotify releases data
-        if: |
-          !contains(github.event.head_commit.message, '[auto]') && (
-            (github.event_name == 'workflow_dispatch' && inputs.refresh_releases == 'true') || github.event_name == 'push'
-          )
+        if: "!contains(github.event.head_commit.message, '[auto]') && ((github.event_name == 'workflow_dispatch' && inputs.refresh_releases == 'true') || github.event_name == 'push')"
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
@@ -52,7 +49,7 @@ jobs:
           npm run update-releases || { echo "Update script failed"; exit 1; }
 
       - name: Commit updated releases data (if changed)
-        if: !contains(github.event.head_commit.message, '[auto]')
+        if: "!contains(github.event.head_commit.message, '[auto]')"
         id: commit_data
         run: |
           git add src/data/releases.ts || true
