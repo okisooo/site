@@ -1,16 +1,20 @@
-name: Deploy to GitHub Pages
+name: Deploy (Update + GitHub Pages)
 
 on:
-  # Trigger when releases data is updated
   push:
     branches: [ main ]
-    paths: 
-      - 'src/data/releases.ts'
+    # If the releases data or source changes we redeploy
+    paths:
       - 'src/**'
       - 'package*.json'
-  
-  # Allow manual trigger
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
+    inputs:
+      refresh_releases:
+        description: 'Run Spotify releases update step'
+        required: false
+        default: 'true'
+        type: boolean
 
 jobs:
   build-and-deploy:
@@ -18,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed so we can commit back
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,10 +34,49 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Skip update on the second run triggered by our own auto commit (contains [auto])
+      - name: Update Spotify releases data
+        if: |
+          !contains(github.event.head_commit.message, '[auto]') && (
+            (github.event_name == 'workflow_dispatch' && inputs.refresh_releases == 'true') || github.event_name == 'push'
+          )
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: |
+          if [ -z "$SPOTIFY_CLIENT_ID" ] || [ -z "$SPOTIFY_CLIENT_SECRET" ]; then
+            echo "⚠️  Spotify credentials missing; skipping update step";
+            exit 0;
+          fi
+          echo "Running update script..."
+          npm run update-releases || { echo "Update script failed"; exit 1; }
+
+      - name: Commit updated releases data (if changed)
+        if: !contains(github.event.head_commit.message, '[auto]')
+        id: commit_data
+        run: |
+          git add src/data/releases.ts || true
+          if git diff --cached --quiet; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+            echo "No releases data changes to commit"
+          else
+            git config user.email "action@github.com"
+            git config user.name "GitHub Action"
+            git commit -m "chore: update spotify releases data [auto]"
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Build always uses the working tree (updated even if not yet pushed)
       - name: Build Next.js site
         run: npm run build
         env:
           NODE_ENV: production
+
+      # Push commit only after a successful build so a failing build doesn't pollute main
+      - name: Push data update commit
+        if: steps.commit_data.outputs.no_changes == 'false'
+        run: |
+          git push
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
