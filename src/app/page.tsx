@@ -14,7 +14,8 @@ import {
   FaDiscord,
   FaBandcamp,
   FaApple,
-  FaTwitch
+  FaTwitch,
+  FaReddit
 } from 'react-icons/fa';
 
 // Type declaration for window extensions
@@ -64,6 +65,10 @@ const allDockItems = [{
   icon: <FaTwitter size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'X',
   onClick: safeExternalLink("https://x.com/okisooo_")
+}, {
+  icon: <FaReddit size={24} className="text-white hover:text-white/80 transition-colors" />,
+  label: 'Reddit',
+  onClick: safeExternalLink("https://www.reddit.com/r/okisooo")
 }, {
   icon: <FaYoutube size={24} className="text-white hover:text-white/80 transition-colors" />,
   label: 'YouTube',
