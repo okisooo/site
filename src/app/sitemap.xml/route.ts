@@ -1,7 +1,7 @@
 import { staticReleases } from '@/data/releases';
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
 
   const urls = new Set<string>();
   urls.add(`${siteUrl}/`);
