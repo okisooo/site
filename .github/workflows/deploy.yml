@@ -51,6 +51,10 @@ jobs:
       - name: Generate sitemap
         run: npm run generate-sitemap
 
+      # Remove dynamic sitemap route (static export only)
+      - name: Remove dynamic sitemap route (static export only)
+        run: rm -f src/app/sitemap.xml/route.ts
+
       # Build always uses the working tree (updated even if not yet pushed)
       - name: Build Next.js site (static export)
         run: npm run build
