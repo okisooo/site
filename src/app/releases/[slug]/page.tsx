@@ -10,13 +10,13 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-export async function generateMetadata(props: { params: { slug: string } } | { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata(props: any) {
   const maybeParams = props?.params;
-  function isPromise<T>(v: unknown): v is Promise<T> {
-    return !!v && typeof v === 'object' && typeof (v as { then?: unknown }).then === 'function';
+  function isPromise(v: any) {
+    return !!v && typeof v === 'object' && typeof v.then === 'function';
   }
-  let slug: string | undefined;
-  if (isPromise<{ slug: string }>(maybeParams)) {
+  let slug;
+  if (isPromise(maybeParams)) {
     const awaited = await maybeParams;
     slug = awaited.slug;
   } else {
@@ -24,7 +24,7 @@ export async function generateMetadata(props: { params: { slug: string } } | { p
   }
 
   const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
-  if (!release) return { title: 'Release' } as Metadata;
+  if (!release) return { title: 'Release' };
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
   const url = `${siteUrl}/releases/${release.slug}`;
@@ -41,7 +41,7 @@ export async function generateMetadata(props: { params: { slug: string } } | { p
     alternates: {
       canonical: url
     }
-  } as Metadata;
+  };
 }
 
 export default function ReleasePage({ params }: { params: { slug: string } }) {
