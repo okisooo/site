@@ -9,7 +9,8 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function generateMetadata({ params }: any) {
   const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
   if (!release) return { title: 'Release' };
 
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
   };
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default function ReleasePage({ params }: { params: { slug: string } }) {
   const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
