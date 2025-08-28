@@ -69,6 +69,12 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Export static site
+        run: npx next export
+
+      - name: Copy CNAME for GitHub Pages
+        run: cp public/CNAME out/CNAME
+
       # Push commit only after a successful build so a failing build doesn't pollute main
       - name: Push data update commit
         if: steps.commit_data.outputs.no_changes == 'false'
