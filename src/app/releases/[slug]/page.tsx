@@ -10,14 +10,21 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-export async function generateMetadata(props: any): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> | { slug: string } }): Promise<Metadata> {
   // Accept both plain params and Promise-wrapped params to satisfy Next.js typings across versions
-  const maybeParams = props?.params;
-  const resolvedParams = (maybeParams && typeof maybeParams.then === 'function')
-    ? await maybeParams
-    : maybeParams || {};
+  const maybeParams = props?.params as (Promise<{ slug: string }> | { slug: string } | undefined);
 
-  const release = staticReleases.find(r => r.slug === resolvedParams.slug) as Release | undefined;
+  // Helper to detect Promise/thenable without using `any` (satisfies ESLint)
+  function isThenable<T>(v: unknown): v is Promise<T> {
+    return !!v && typeof v === 'object' && typeof (v as { then?: unknown }).then === 'function';
+  }
+
+  const resolvedParams = isThenable<{ slug: string }>(maybeParams)
+    ? await maybeParams
+    : (maybeParams as { slug?: string } | undefined) || {};
+
+  const slug = (resolvedParams as { slug?: string }).slug;
+  const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
   if (!release) return { title: 'Release' } as Metadata;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
