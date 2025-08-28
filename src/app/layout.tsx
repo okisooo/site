@@ -46,6 +46,9 @@ export const metadata = {
     "OKISO official",
     "OKISO music"
   ],
+  alternates: {
+    canonical: 'https://okiso.net'
+  },
   openGraph: {
     title: "オキソ | Vocaloid Artist",
     description:
@@ -184,7 +187,7 @@ export default function RootLayout({
           </div>
           <div className="relative z-[1]">
             <header className="sr-only">
-              <h1>オキソ | Vocaloid Artist</h1>
+              <h1>オキソ | VOCALOID Producer / VTuber</h1>
               <nav>{/* Your navigation links */}</nav>
             </header>
             <main className="relative h-full">

@@ -12,4 +12,7 @@ export const metadata: Metadata = {
     "OKISO future releases",
     "vocaloid announcements",
   ],
+  alternates: {
+    canonical: "https://okiso.net/upcoming",
+  },
 };
