@@ -48,29 +48,14 @@ jobs:
           echo "Running update script..."
           npm run update-releases || { echo "Update script failed"; exit 1; }
 
-      - name: Commit updated releases data (if changed)
-        if: "!contains(github.event.head_commit.message, '[auto]')"
-        id: commit_data
-        run: |
-          git add src/data/releases.ts || true
-          if git diff --cached --quiet; then
-            echo "no_changes=true" >> $GITHUB_OUTPUT
-            echo "No releases data changes to commit"
-          else
-            git config user.email "action@github.com"
-            git config user.name "GitHub Action"
-            git commit -m "chore: update spotify releases data [auto]"
-            echo "no_changes=false" >> $GITHUB_OUTPUT
-          fi
+      - name: Generate sitemap
+        run: npm run generate-sitemap
 
       # Build always uses the working tree (updated even if not yet pushed)
-      - name: Build Next.js site
+      - name: Build Next.js site (static export)
         run: npm run build
         env:
           NODE_ENV: production
-
-      - name: Export static site
-        run: npx next export
 
       - name: Copy CNAME for GitHub Pages
         run: cp public/CNAME out/CNAME
