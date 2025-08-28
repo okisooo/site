@@ -102,9 +102,7 @@ export default function ReleasesPage() {
               <div className={`flex ${isMobile ? 'flex-col gap-2' : 'flex-row gap-6'}`}>
                 <div className={`${isMobile ? 'w-full max-w-[140px] mx-auto' : 'w-full max-w-[220px]'}`}>
                   <a
-                    href={latestRelease.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={latestRelease.slug ? `/releases/${latestRelease.slug}` : latestRelease.link}
                     className="block relative aspect-square transition-transform hover:scale-[1.02]"
                   >
                     <Image
@@ -147,9 +145,7 @@ export default function ReleasesPage() {
               {featuredReleases.map((release: Release) => (
                 <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}>
                   <a
-                    href={release.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={release.slug ? `/releases/${release.slug}` : release.link}
                     className="block relative aspect-square transition-transform hover:scale-[1.02]"
                   >
                     <Image
@@ -178,9 +174,7 @@ export default function ReleasesPage() {
                 {catalogReleases.map((release: Release) => (
                   <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 ${isMobile ? 'flex-shrink-0' : ''}`}>
                     <a
-                      href={release.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={release.slug ? `/releases/${release.slug}` : release.link}
                       className="block relative aspect-square transition-transform hover:scale-[1.02]"
                     >
                       <Image

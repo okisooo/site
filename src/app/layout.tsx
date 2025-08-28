@@ -5,6 +5,7 @@ import SwipeContainer from '@/Components/SwipeContainer/SwipeContainer';
 import DarkVeil from '@/Backgrounds/DarkVeil/DarkVeil';
 import faviconPng from './favicon.png';
 import "./globals.css";
+import { staticReleases } from '@/data/releases';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +76,50 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Build site-level JSON-LD objects on the server
+  const siteUrl = 'https://okiso.net';
+
+  const musicGroupLd = {
+    "@context": "https://schema.org",
+    "@type": "MusicGroup",
+    "name": "OKISO",
+    "alternateName": "オキソ",
+    "url": siteUrl,
+    "image": "https://i.imgur.com/pM8llz7.gif",
+    "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
+    "sameAs": [
+      "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
+      "https://www.instagram.com/okisooo_/",
+      "https://github.com/okisooo",
+      "https://x.com/okisooo_",
+      "https://www.youtube.com/@okiso7",
+      "https://discord.gg/okiso",
+      "https://okiso.bandcamp.com/"
+    ]
+  };
+
+  const webSiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": siteUrl,
+    "name": "OKISO",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${siteUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": staticReleases.map((r, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "url": `${siteUrl}/releases/${r.slug || encodeURIComponent(r.title.toLowerCase().replace(/\s+/g, '-'))}`
+    }))
+  };
+
   return (
     <html lang="en">
       <head>
@@ -87,13 +132,14 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
         <link rel="canonical" href="https://okiso.net" />
+
         {/* Script to prevent double navigation on touch devices */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 window._navInProgress = false;
-                
+
                 // Helper to detect mobile devices
                 window.isMobileDevice = function() {
                   return (
@@ -101,7 +147,7 @@ export default function RootLayout({
                     (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /Macintosh/.test(navigator.userAgent))
                   );
                 };
-                
+
                 // Handle touch events consistently
                 if (window.isMobileDevice()) {
                   document.addEventListener('touchstart', function(e) {
@@ -114,40 +160,19 @@ export default function RootLayout({
             `
           }}
         />
+
+        {/* MusicGroup JSON-LD */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "MusicGroup",
-              "name": "OKISO",
-              "alternateName": "オキソ",
-              "url": "https://okiso.net",
-              "image": "https://i.imgur.com/pM8llz7.gif",
-              "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
-              "sameAs": [
-                "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
-                "https://www.instagram.com/okisooo_/",
-                "https://github.com/okisooo",
-                "https://x.com/okisooo_",
-                "https://www.youtube.com/@okiso7",
-                "https://discord.gg/okiso",
-                "https://okiso.bandcamp.com/"
-              ],
-              "makesOffer": {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "MusicAlbum",
-                  "name": "FANTASIA & ETUDE",
-                  "byArtist": {
-                    "@type": "MusicGroup",
-                    "name": "OKISO"
-                  }
-                }
-              }
-            })
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupLd) }}
         />
+
+        {/* Site-level JSON-LD: WebSite + ItemList (releases) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd] }) }}
+        />
+
         {/* Favicon (PNG) and Apple touch icon wired from app/favicon.png */}
         <link rel="icon" type="image/png" sizes="any" href={faviconPng.src} />
         <link rel="apple-touch-icon" href={faviconPng.src} />

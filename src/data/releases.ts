@@ -2,12 +2,26 @@
 // Last updated: 2025-08-25T22:17:38.327Z
 
 export interface Release {
+  id?: string;
   title: string;
   year: string;
   img: string;
-  link: string;
+  link: string; // Spotify or external link
   releaseDate: string;
   albumType: string;
+  slug?: string; // URL-friendly slug for per-release pages
+  description?: string; // short description used for metadata
+  tracks?: Array<{
+    id?: string;
+    title: string;
+    durationMs?: number;
+    duration?: string;
+    trackNumber?: number;
+    link?: string;
+  }>;
+  popularity?: number;
+  totalTracks?: number;
+  genres?: string[];
 }
 
 export const staticReleases: Release[] = [
@@ -17,7 +31,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273b7e914b7ad13f073e52ac24b",
     "link": "https://open.spotify.com/album/4eMPWLlqqcaJR0HjMZygLK",
     "releaseDate": "2025-08-15",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "love-loop-hedoro",
+    "description": "LOVE LOOP + HEDORO — single by OKISO."
   },
   {
     "title": "Ochame Kinou (GUMI COVER)",
@@ -25,7 +41,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273335a9f91d4294cb9a3de7af6",
     "link": "https://open.spotify.com/album/1iQHinMs6TsTGr0QYq2TGD",
     "releaseDate": "2025-07-18",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "ochame-kinou-gumi-cover",
+    "description": "Ochame Kinou (GUMI COVER) — single by OKISO."
   },
   {
     "title": "MIKU MIKU HATSUNE",
@@ -33,7 +51,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2735aebb8c70854419cedef0ed7",
     "link": "https://open.spotify.com/album/5g9YnaSj8JgyxgnfgG3Yz5",
     "releaseDate": "2025-06-01",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "miku-miku-hatsune",
+    "description": "MIKU MIKU HATSUNE — single by OKISO."
   },
   {
     "title": "RESURRECTION",
@@ -41,7 +61,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273778a4f44c3e5b63f663f87da",
     "link": "https://open.spotify.com/album/15AGWT0YohTDzF5gPCzgw3",
     "releaseDate": "2025-05-25",
-    "albumType": "album"
+    "albumType": "album",
+    "slug": "resurrection",
+    "description": "RESURRECTION — album by OKISO."
   },
   {
     "title": "My Dearest",
@@ -49,7 +71,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273478a688a5711326af2e76340",
     "link": "https://open.spotify.com/album/3gZf6iZobBpU0qk0Ynf9sR",
     "releaseDate": "2025-05-01",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "my-dearest",
+    "description": "My Dearest — single by OKISO."
   },
   {
     "title": "FANTASIA & ETUDE",
@@ -57,7 +81,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273f9828b8b052d94e53344ee27",
     "link": "https://open.spotify.com/album/2lmc5y1ZnzgSyKzyZOux6q",
     "releaseDate": "2025-04-25",
-    "albumType": "album"
+    "albumType": "album",
+    "slug": "fantasia-etude",
+    "description": "FANTASIA & ETUDE — album by OKISO."
   },
   {
     "title": "voidroid",
@@ -65,7 +91,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273236c5e927ae8bac15ed1eaa9",
     "link": "https://open.spotify.com/album/4NEgkpLoPck8FGujMpa4na",
     "releaseDate": "2025-04-15",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "voidroid",
+    "description": "voidroid — single by OKISO."
   },
   {
     "title": "ETUDE",
@@ -73,7 +101,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273d801af2d510e722d0444a16f",
     "link": "https://open.spotify.com/album/4raTOoWiHkOwYH7CQFzAcC",
     "releaseDate": "2025-04-07",
-    "albumType": "album"
+    "albumType": "album",
+    "slug": "etude",
+    "description": "ETUDE — album by OKISO."
   },
   {
     "title": "HELLO, WORLD.",
@@ -81,7 +111,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273b1a3e2b49011da734655b332",
     "link": "https://open.spotify.com/album/3WBZF8QXXRebLD0cud4KTQ",
     "releaseDate": "2025-03-25",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "hello-world",
+    "description": "HELLO, WORLD. — single by OKISO."
   },
   {
     "title": "Meet The Princess",
@@ -89,7 +121,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b27359b538de2a62ef053fa5b1d9",
     "link": "https://open.spotify.com/album/3tQfs4MH0zc8bVk9Inv2hT",
     "releaseDate": "2025-03-18",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "meet-the-princess",
+    "description": "Meet The Princess — single by OKISO."
   },
   {
     "title": "SHUT OFF",
@@ -97,7 +131,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273b05416788a9b6001b4424116",
     "link": "https://open.spotify.com/album/6JZQro8zNEHUfEFZuVFMrC",
     "releaseDate": "2025-03-15",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "shut-off",
+    "description": "SHUT OFF — single by OKISO."
   },
   {
     "title": "FANTASIA",
@@ -105,7 +141,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2734bcdda5555ac77a5b56c91b2",
     "link": "https://open.spotify.com/album/0t28Vt3fN6awEEFcTR3AlN",
     "releaseDate": "2025-03-10",
-    "albumType": "album"
+    "albumType": "album",
+    "slug": "fantasia",
+    "description": "FANTASIA — album by OKISO."
   },
   {
     "title": "ANOTHER LIFE (Remix)",
@@ -113,7 +151,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273a2658b2a9a9c1d2255482304",
     "link": "https://open.spotify.com/album/7uIGVdqJrhTWRyVJfB8bo6",
     "releaseDate": "2025-03-03",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "another-life-remix",
+    "description": "ANOTHER LIFE (Remix) — single by OKISO."
   },
   {
     "title": "PRECIOUS YOU",
@@ -121,7 +161,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2737cf45af28a4e3f4698b05723",
     "link": "https://open.spotify.com/album/74Gn18pzYvHn1ZWIjEs1mI",
     "releaseDate": "2025-02-25",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "precious-you",
+    "description": "PRECIOUS YOU — single by OKISO."
   },
   {
     "title": "TEARS IN HEAVEN '99",
@@ -129,7 +171,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2732ba246a8437bdd963b6ceca3",
     "link": "https://open.spotify.com/album/0jLZeVoHNqheN7rYfCIO9A",
     "releaseDate": "2025-02-17",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "tears-in-heaven-99",
+    "description": "TEARS IN HEAVEN '99 — single by OKISO."
   },
   {
     "title": "MANGO BOBA",
@@ -137,7 +181,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273e152bb5d2bac32afccf48a15",
     "link": "https://open.spotify.com/album/6vU5gaWqNZKNl3V9pkjsEI",
     "releaseDate": "2025-02-13",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "mango-boba",
+    "description": "MANGO BOBA — single by OKISO."
   },
   {
     "title": "FEAR",
@@ -145,7 +191,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2739b73074b371f4e08348fbfc6",
     "link": "https://open.spotify.com/album/20BzwSTaHHb6CDKhGzWHiQ",
     "releaseDate": "2025-02-13",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "fear",
+    "description": "FEAR — single by OKISO."
   },
   {
     "title": "DESTINY",
@@ -153,7 +201,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273e7e96cffbcb690cbe3c09c3e",
     "link": "https://open.spotify.com/album/2pttuX0SUW3BC8JHjVn2S0",
     "releaseDate": "2025-02-07",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "destiny",
+    "description": "DESTINY — single by OKISO."
   },
   {
     "title": "REVOLUTION",
@@ -161,7 +211,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b27311579e9278b6f267402f2fbb",
     "link": "https://open.spotify.com/album/1nQYgQ3t6OvbI61a72h9bX",
     "releaseDate": "2025-01-25",
-    "albumType": "album"
+    "albumType": "album",
+    "slug": "revolution",
+    "description": "REVOLUTION — album by OKISO."
   },
   {
     "title": "IN YOUR PRESENCE",
@@ -169,7 +221,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2739c3d81399abff94842117ce3",
     "link": "https://open.spotify.com/album/72PR4fh7pB0VDoUenr26uK",
     "releaseDate": "2025-01-24",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "in-your-presence",
+    "description": "IN YOUR PRESENCE — single by OKISO."
   },
   {
     "title": "MACHINE GUN",
@@ -177,7 +231,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273e88f4d805ba5f8d2a302efa1",
     "link": "https://open.spotify.com/album/74fSXSvQZlYItgFeWBOWIE",
     "releaseDate": "2025-01-17",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "machine-gun",
+    "description": "MACHINE GUN — single by OKISO."
   },
   {
     "title": "REVENGE",
@@ -185,7 +241,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2737b4bb19ded8f9653f7e0e5cc",
     "link": "https://open.spotify.com/album/3dhdyjSH3EG8YMFaHdmBw0",
     "releaseDate": "2025-01-07",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "revenge",
+    "description": "REVENGE — single by OKISO."
   },
   {
     "title": "FLY",
@@ -193,7 +251,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273c19b0fa854ea3cc6e899846a",
     "link": "https://open.spotify.com/album/3sMC9TVo5SHEpGV0WuyYJm",
     "releaseDate": "2025-01-03",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "fly",
+    "description": "FLY — single by OKISO."
   },
   {
     "title": "THUNDER",
@@ -201,7 +261,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b27332c94f834b9b57fb20f4bcc2",
     "link": "https://open.spotify.com/album/5Debz7V0TMizIqlRCnQtad",
     "releaseDate": "2024-12-26",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "thunder",
+    "description": "THUNDER — single by OKISO."
   },
   {
     "title": "PRIDE",
@@ -209,7 +271,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273da882f8839ef2515bb754da7",
     "link": "https://open.spotify.com/album/1K4cNRy6VPwaVV6VgE6Cbx",
     "releaseDate": "2024-12-15",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "pride",
+    "description": "PRIDE — single by OKISO."
   },
   {
     "title": "Watashi Wa Dare",
@@ -217,7 +281,9 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b2736cb81ad6535ef78c99da900d",
     "link": "https://open.spotify.com/album/4ZnFA6BezUO6Sd3EBRrten",
     "releaseDate": "2024-03-26",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "watashi-wa-dare",
+    "description": "Watashi Wa Dare — single by OKISO."
   },
   {
     "title": "Star Trail",
@@ -225,6 +291,8 @@ export const staticReleases: Release[] = [
     "img": "https://i.scdn.co/image/ab67616d0000b273322cbf0dd700345ea3aca5b2",
     "link": "https://open.spotify.com/album/13zLY9ytK7dqXJTPH3bvSv",
     "releaseDate": "2024-03-18",
-    "albumType": "single"
+    "albumType": "single",
+    "slug": "star-trail",
+    "description": "Star Trail — single by OKISO."
   }
 ];
