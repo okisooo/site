@@ -10,8 +10,14 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
+export async function generateMetadata(props: any): Promise<Metadata> {
+  // Accept both plain params and Promise-wrapped params to satisfy Next.js typings across versions
+  const maybeParams = props?.params;
+  const resolvedParams = (maybeParams && typeof maybeParams.then === 'function')
+    ? await maybeParams
+    : maybeParams || {};
+
+  const release = staticReleases.find(r => r.slug === resolvedParams.slug) as Release | undefined;
   if (!release) return { title: 'Release' } as Metadata;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
