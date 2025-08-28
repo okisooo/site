@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
 
@@ -9,10 +10,9 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export async function generateMetadata({ params }: any) {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
-  if (!release) return { title: 'Release' };
+  if (!release) return { title: 'Release' } as Metadata;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
   const url = `${siteUrl}/releases/${release.slug}`;
@@ -29,9 +29,8 @@ export async function generateMetadata({ params }: any) {
     alternates: {
       canonical: url
     }
-  };
+  } as Metadata;
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default function ReleasePage({ params }: { params: { slug: string } }) {
   const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
