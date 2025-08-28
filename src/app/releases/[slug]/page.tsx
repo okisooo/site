@@ -10,20 +10,19 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
-export async function generateMetadata(props: { params: Promise<{ slug: string }> | { slug: string } }): Promise<Metadata> {
-  // Accept both plain params and Promise-wrapped params to satisfy Next.js typings across versions
-  const maybeParams = props?.params as (Promise<{ slug: string }> | { slug: string } | undefined);
-
-  // Helper to detect Promise/thenable without using `any` (satisfies ESLint)
-  function isThenable<T>(v: unknown): v is Promise<T> {
+export async function generateMetadata(props: { params: { slug: string } } | { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const maybeParams = props?.params;
+  function isPromise<T>(v: unknown): v is Promise<T> {
     return !!v && typeof v === 'object' && typeof (v as { then?: unknown }).then === 'function';
   }
+  let slug: string | undefined;
+  if (isPromise<{ slug: string }>(maybeParams)) {
+    const awaited = await maybeParams;
+    slug = awaited.slug;
+  } else {
+    slug = maybeParams?.slug;
+  }
 
-  const resolvedParams = isThenable<{ slug: string }>(maybeParams)
-    ? await maybeParams
-    : (maybeParams as { slug?: string } | undefined) || {};
-
-  const slug = (resolvedParams as { slug?: string }).slug;
   const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
   if (!release) return { title: 'Release' } as Metadata;
 
