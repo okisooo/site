@@ -85,6 +85,16 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
         });
     }
 
+    // Helper to format ISO8601 durations like PT2M25S -> 2:25
+    function formatDuration(iso?: string) {
+        if (!iso) return '';
+        const m = iso.match(/(\d+)M/);
+        const s = iso.match(/(\d+)S/);
+        const mins = m ? m[1] : '0';
+        const secs = s ? s[1].padStart(2, '0') : '00';
+        return `${mins}:${secs}`;
+    }
+
     return (
         <main className="p-6">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -104,7 +114,7 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
                             <h2 className="font-semibold mb-2">Tracklist</h2>
                             <ol className="list-decimal list-inside">
                                 {release.tracks.map(t => (
-                                    <li key={t.id || `${t.title}-${t.trackNumber}`}>{t.trackNumber}. {t.title} {t.duration ? `— ${String(t.duration).replace('PT', '')}` : ''}</li>
+                                    <li key={t.id || `${t.title}-${t.trackNumber}`}>{t.title}{t.duration ? ` — ${formatDuration(String(t.duration))}` : ''}</li>
                                 ))}
                             </ol>
                         </div>
