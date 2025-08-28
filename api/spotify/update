@@ -1,0 +1,1 @@
+{"message":"Update endpoint disabled in static export build","docs":"Use scripts/update-releases.mjs or a server deployment for POST updates."}

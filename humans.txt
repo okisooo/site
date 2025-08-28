@@ -1,0 +1,11 @@
+/* TEAM */
+Artist: OKISO
+Contact: samueloxooo@gmail.com
+Twitter: @okisooo_
+Instagram: @okisooo_
+Location: Tokyo, Japan
+
+/* SITE */
+Last update: 2024-03-02
+Language: English, Japanese
+Technologies: NextJS, React, TailwindCSS, ThreeJS
