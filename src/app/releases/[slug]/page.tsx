@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
 
@@ -10,8 +9,10 @@ export async function generateStaticParams() {
     .map(r => ({ slug: r.slug as string }));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateMetadata(props: any) {
   const maybeParams = props?.params;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function isPromise(v: any) {
     return !!v && typeof v === 'object' && typeof v.then === 'function';
   }
