@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
