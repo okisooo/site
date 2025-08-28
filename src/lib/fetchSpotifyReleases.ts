@@ -141,7 +141,7 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
         const artistData = await artistResp.json();
         artistGenres = artistData.genres || [];
       }
-    } catch (e) {
+    } catch (_e) {
       // non-fatal
     }
 

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { staticReleases } from '@/data/releases';
+import { staticReleases, type Release } from '@/data/releases';
 
 // Pre-render all release pages at build time
 export async function generateStaticParams() {
@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const release = staticReleases.find(r => r.slug === params.slug);
+  const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
   if (!release) return { title: 'Release' };
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
@@ -32,13 +32,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default function ReleasePage({ params }: { params: { slug: string } }) {
-  const release = staticReleases.find(r => r.slug === params.slug);
+  const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
   if (!release) return notFound();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
   const url = `${siteUrl}/releases/${release.slug}`;
 
-  const jsonLd: any = {
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "MusicAlbum",
     "name": release.title,
@@ -57,13 +57,14 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
   };
 
   if (release.tracks && release.tracks.length > 0) {
-    jsonLd.track = release.tracks.map(t => ({
+    // safe to assert tracks exist because of the guard above
+    Object.assign(jsonLd, { track: release.tracks.map(t => ({
       "@type": "MusicRecording",
       "name": t.title,
       "duration": t.duration,
       "position": t.trackNumber,
       "url": t.link
-    }));
+    })) });
   }
 
   return (
@@ -85,7 +86,7 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
               <h2 className="font-semibold mb-2">Tracklist</h2>
               <ol className="list-decimal list-inside">
                 {release.tracks.map(t => (
-                  <li key={t.id || `${t.title}-${t.trackNumber}`}>{t.trackNumber}. {t.title} {t.duration ? `— ${t.duration.replace('PT','')}` : ''}</li>
+                  <li key={t.id || `${t.title}-${t.trackNumber}`}>{t.trackNumber}. {t.title} {t.duration ? `— ${String(t.duration).replace('PT','')}` : ''}</li>
                 ))}
               </ol>
             </div>
