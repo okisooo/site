@@ -13,4 +13,7 @@ export const metadata: Metadata = {
     "OKISO Spotify",
     "OKISO Bandcamp",
   ],
+  alternates: {
+    canonical: "https://okiso.net/releases",
+  },
 };
