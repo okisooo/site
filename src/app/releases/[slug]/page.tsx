@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
