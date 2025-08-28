@@ -131,7 +131,7 @@ export default function RootLayout({
         {/* Chrome/Android PWA meta (apple tag above can be deprecated in some contexts) */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
-        <link rel="canonical" href="https://okiso.net" />
+        {/* Removed hard-coded canonical so per-page metadata can control canonical URLs */}
 
         {/* Script to prevent double navigation on touch devices */}
         <script
