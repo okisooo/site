@@ -142,7 +142,8 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
         artistGenres = artistData.genres || [];
       }
     } catch (_e) {
-      // non-fatal
+      // non-fatal - reference to avoid unused var lint
+      void _e;
     }
 
     // For each album get full details (tracks, popularity)

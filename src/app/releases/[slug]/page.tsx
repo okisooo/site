@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     alternates: {
       canonical: url
     }
-  } as any;
+  };
 }
 
 export default function ReleasePage({ params }: { params: { slug: string } }) {
