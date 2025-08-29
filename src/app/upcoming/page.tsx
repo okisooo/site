@@ -58,7 +58,7 @@ export default function UpcomingPage() {
                 Open Prerelease on Spotify
               </a>
               <p className={`text-gray-500 text-shadow-sm max-w-md mx-auto mt-4 ${mobile ? 'text-xs' : 'text-base'}`}>
-                If the full tracklist isn't available yet, open the link to pre-save or preview the release.
+                If the full tracklist isn&apos;t available yet, open the link to pre-save or preview the release.
               </p>
             </div>
             {/* Keep the existing 'Nothing Yet' message below the prerelease card */}
