@@ -1,5 +1,7 @@
 import { staticReleases } from '@/data/releases';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
 

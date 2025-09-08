@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import ContentCard from '@/Components/ContentCard';
 import AdaptiveNavigation from '@/Components/AdaptiveNavigation/AdaptiveNavigation';
 import { useAdaptivePerformance } from '@/hooks/usePerformanceDetection';
@@ -53,7 +54,14 @@ export default function UpcomingPage() {
           <div className={`flex flex-col items-center justify-center text-center h-full ${mobile ? 'py-8 px-2' : 'py-16 px-4'}`}>
             <div className="mb-6">
               {/* Prerelease card */}
-              <img src="https://i.scdn.co/image/ab67616d00001e029179fe3075455dcde6dd64aa" alt="Prerelease artwork" className={`mx-auto mb-4 ${mobile ? 'w-36 h-36' : 'w-48 h-48'} object-cover rounded`} />
+              <Image 
+                src="https://i.scdn.co/image/ab67616d00001e029179fe3075455dcde6dd64aa" 
+                alt="Prerelease artwork" 
+                width={mobile ? 144 : 192}
+                height={mobile ? 144 : 192}
+                className={`mx-auto mb-4 ${mobile ? 'w-36 h-36' : 'w-48 h-48'} object-cover rounded`}
+                unoptimized
+              />
               <h2 className={`font-bold text-shadow-lg mb-3 text-gray-300 ${mobile ? 'text-xl' : 'text-3xl'}`}>New Prerelease</h2>
               <p className={`text-shadow-md text-gray-400 mb-4 ${mobile ? 'text-sm' : 'text-xl'}`}>
                 A new album is available as a prerelease on Spotify.

@@ -38,11 +38,16 @@ export function usePerformanceDetection(): PerformanceMetrics {
                                     CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
 
       // Get device memory (if available)
-      const navigator_: any = navigator;
-      const deviceMemory = navigator_.deviceMemory || 4;
+      const navigatorWithMemory = navigator as Navigator & { deviceMemory?: number };
+      const deviceMemory = navigatorWithMemory.deviceMemory || 4;
 
       // Check connection speed
-      const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+      const navigatorWithConnection = navigator as Navigator & {
+        connection?: { effectiveType: string };
+        mozConnection?: { effectiveType: string };
+        webkitConnection?: { effectiveType: string };
+      };
+      const connection = navigatorWithConnection.connection || navigatorWithConnection.mozConnection || navigatorWithConnection.webkitConnection;
       let connectionSpeed: 'slow' | 'fast' | 'unknown' = 'unknown';
       
       if (connection) {
@@ -64,12 +69,15 @@ export function usePerformanceDetection(): PerformanceMetrics {
       let isCharging: boolean | undefined;
       
       try {
-        const battery = await (navigator as any).getBattery?.();
+        const navigatorWithBattery = navigator as Navigator & {
+          getBattery?: () => Promise<{ level: number; charging: boolean }>;
+        };
+        const battery = await navigatorWithBattery.getBattery?.();
         if (battery) {
           batteryLevel = battery.level;
           isCharging = battery.charging;
         }
-      } catch (e) {
+      } catch {
         // Battery API not supported
       }
 
@@ -115,7 +123,7 @@ export function useAdaptivePerformance() {
     if (saved) {
       try {
         setUserSettings(JSON.parse(saved));
-      } catch (e) {
+      } catch {
         console.warn('Failed to parse performance settings');
       }
     }

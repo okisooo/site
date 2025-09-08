@@ -22,7 +22,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
     if (saved) {
       try {
         setUserSettings(JSON.parse(saved));
-      } catch (e) {
+      } catch {
         console.warn('Failed to parse performance settings');
       }
     }
