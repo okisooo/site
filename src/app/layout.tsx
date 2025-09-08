@@ -50,26 +50,26 @@ export const metadata = {
     canonical: 'https://okiso.net'
   },
   openGraph: {
-    title: "オキソ | Vocaloid Artist",
+    title: "OKISO オキソ | VOCALOID Producer / VTuber",
     description:
-      "Discover the work of Vocaloid Artist Okiso. Listen to music, explore art, and connect across social media.",
+      "Discover the universe of VOCALOID Producer / VTuber OKISO. Listen to music, explore art, and connect across social media.",
     url: "https://okiso.net",
     images: [
       {
         url: "https://i.imgur.com/pM8llz7.gif",
         width: 800,
         height: 600,
-        alt: "Okiso Vocaloid Artist"
+        alt: "OKISO Vocaloid Artist"
       }
     ],
-    siteName: "オキソ Portfolio",
+    siteName: "オキソ PORTFOLIO",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "オキソ | Vocaloid Artist",
+    title: "OKISO オキソ | VOCALOID Producer / VTuber",
     description:
-      "Discover Vocaloid Artist Okiso's portfolio with music, art, and social media links.",
+      "Discover VOCALOID Producer / VTuber OKISO's portfolio with music, art, and social media links.",
     images: ["https://i.imgur.com/pM8llz7.gif"]
   }
 };
@@ -89,7 +89,7 @@ export default function RootLayout({
     "alternateName": "オキソ",
     "url": siteUrl,
     "image": "https://i.imgur.com/pM8llz7.gif",
-    "description": "OKISO is a Vocaloid artist and music producer creating original electronic and Japanese vocaloid music.",
+    "description": "OKISO is a VOCALOID Producer, VTuber and Artist creating original electronic and Japanese styled VOCALOID music.",
     "sameAs": [
       "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
       "https://www.instagram.com/okisooo_/",
@@ -187,7 +187,7 @@ export default function RootLayout({
           </div>
           <div className="relative z-[1]">
             <header className="sr-only">
-              <h1>オキソ | VOCALOID Producer / VTuber</h1>
+              <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
               <nav>{/* Your navigation links */}</nav>
             </header>
             <main className="relative h-full">

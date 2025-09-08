@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo } from "react";
 import ContentCard from '@/Components/ContentCard';
-import GooeyNav from '@/Components/GooeyNav/GooeyNav';
+import AdaptiveNavigation from '@/Components/AdaptiveNavigation/AdaptiveNavigation';
+import { useAdaptivePerformance } from '@/hooks/usePerformanceDetection';
 
 export default function UpcomingPage() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const { shouldUseReducedEffects } = useAdaptivePerformance();
 
   useEffect(() => {
     document.body.classList.add('upcoming-page');
@@ -34,7 +36,9 @@ export default function UpcomingPage() {
   return (
     <div className={`min-h-screen w-full relative text-white ${mobile ? 'pb-bottom-nav px-3' : 'pt-top-nav px-6'}`} style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}>
       {/* Vignette effect overlay - use absolute so it doesn't create viewport bugs on iOS */}
-      <div className="absolute top-0 left-0 w-full h-full bg-vignette z-[1] pointer-events-none"></div>
+      {!shouldUseReducedEffects && (
+        <div className="absolute top-0 left-0 w-full h-full bg-vignette z-[1] pointer-events-none"></div>
+      )}
 
       <div className={`mx-auto relative z-10 flex flex-col ${mobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
         <header className={`${mobile ? 'mb-4' : 'mb-8'}`}>
@@ -74,11 +78,9 @@ export default function UpcomingPage() {
           </div>
         </ContentCard>
       </div>
-      {/* GooeyNav - positioned differently for mobile vs desktop */}
+      {/* AdaptiveNavigation - positioned differently for mobile vs desktop */}
       <div className={mobile ? "fixed left-0 w-full z-50 flex justify-center bottom-nav-safe" : "fixed left-0 w-full z-50 flex justify-center top-nav-safe"}>
-        <div style={{ position: 'relative', width: mobile ? 'auto' : 'auto', margin: '0 auto', zIndex: 50 }}>
-          <GooeyNav items={navItems} initialActiveIndex={initialActiveIndex} />
-        </div>
+        <AdaptiveNavigation items={navItems} initialActiveIndex={initialActiveIndex} />
       </div>
     </div>
   );
