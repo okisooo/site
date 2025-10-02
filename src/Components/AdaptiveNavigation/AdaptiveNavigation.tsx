@@ -15,10 +15,10 @@ interface AdaptiveNavigationProps {
 }
 
 // Simple fallback navigation
-const SimpleNavigation = ({ 
-  items, 
-  initialActiveIndex = 0, 
-  className 
+const SimpleNavigation = ({
+  items,
+  initialActiveIndex = 0,
+  className
 }: AdaptiveNavigationProps) => {
   return (
     <nav className={`${className} flex items-center justify-center`}>
@@ -29,8 +29,8 @@ const SimpleNavigation = ({
             href={item.href}
             className={`
               px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
-              ${index === initialActiveIndex 
-                ? 'bg-white/20 text-white shadow-sm' 
+              ${index === initialActiveIndex
+                ? 'bg-white/20 text-white shadow-sm'
                 : 'text-white/70 hover:text-white hover:bg-white/10'
               }
             `}
@@ -44,10 +44,10 @@ const SimpleNavigation = ({
 };
 
 // Reduced particle navigation
-const ReducedGooeyNav = ({ 
-  items, 
-  initialActiveIndex, 
-  className 
+const ReducedGooeyNav = ({
+  items,
+  initialActiveIndex,
+  className
 }: AdaptiveNavigationProps) => {
   return (
     <div className={className}>
@@ -70,17 +70,17 @@ export default function AdaptiveNavigation({
   initialActiveIndex = 0,
   className = ""
 }: AdaptiveNavigationProps) {
-  const { 
-    shouldUseReducedEffects, 
+  const {
+    shouldUseReducedEffects,
     shouldDisableAnimations,
     shouldReduceParticles,
-    isLowEnd 
+    isLowEnd
   } = useAdaptivePerformance();
 
   // Simple navigation for very low-end devices
   if (shouldDisableAnimations || isLowEnd) {
     return (
-      <SimpleNavigation 
+      <SimpleNavigation
         items={items}
         initialActiveIndex={initialActiveIndex}
         className={className}
@@ -91,7 +91,7 @@ export default function AdaptiveNavigation({
   // Reduced effects navigation
   if (shouldUseReducedEffects || shouldReduceParticles) {
     return (
-      <ReducedGooeyNav 
+      <ReducedGooeyNav
         items={items}
         initialActiveIndex={initialActiveIndex}
         className={className}

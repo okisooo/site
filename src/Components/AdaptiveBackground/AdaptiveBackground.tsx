@@ -12,7 +12,7 @@ interface AdaptiveBackgroundProps {
 
 // Static fallback backgrounds
 const StaticGradientBackground = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div 
+  <div
     className={`${className} relative`}
     style={{
       background: `
@@ -29,7 +29,7 @@ const StaticGradientBackground = ({ children, className }: { children: React.Rea
 
 const MinimalAnimatedBackground = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={`${className} relative overflow-hidden`}>
-    <div 
+    <div
       className="absolute inset-0 opacity-30"
       style={{
         background: `
@@ -51,11 +51,11 @@ const MinimalAnimatedBackground = ({ children, className }: { children: React.Re
 );
 
 export default function AdaptiveBackground({ children, backgroundType = 'darkveil', className = '' }: AdaptiveBackgroundProps) {
-  const { 
-    shouldUseStaticBackgrounds, 
-    shouldUseReducedEffects, 
+  const {
+    shouldUseStaticBackgrounds,
+    shouldUseReducedEffects,
     supportsWebGL,
-    isLowEnd 
+    isLowEnd
   } = useAdaptivePerformance();
 
   // Force static background for low-end devices
@@ -73,7 +73,7 @@ export default function AdaptiveBackground({ children, backgroundType = 'darkvei
     case 'darkveil':
       return (
         <div className={`${className} relative`}>
-          <DarkVeil 
+          <DarkVeil
             hueShift={0}
             noiseIntensity={0.02}
             scanlineIntensity={0.05}
@@ -85,11 +85,11 @@ export default function AdaptiveBackground({ children, backgroundType = 'darkvei
           {children}
         </div>
       );
-    
+
     case 'waves':
       return (
         <div className={`${className} relative`}>
-          <Waves 
+          <Waves
             lineColor="rgba(255, 42, 166, 0.3)"
             waveSpeedX={0.008}
             waveSpeedY={0.003}
@@ -101,7 +101,7 @@ export default function AdaptiveBackground({ children, backgroundType = 'darkvei
           {children}
         </div>
       );
-    
+
     default:
       return <StaticGradientBackground className={className}>{children}</StaticGradientBackground>;
   }

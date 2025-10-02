@@ -14,19 +14,19 @@ interface AdaptiveASCIITextProps {
 }
 
 // Fallback CSS-only text effect
-const StaticStyledText = ({ 
-  text, 
-  textColor, 
-  className 
-}: { 
-  text: string; 
-  textColor: string; 
+const StaticStyledText = ({
+  text,
+  textColor,
+  className
+}: {
+  text: string;
+  textColor: string;
   className?: string;
 }) => (
   <div className={`${className} relative flex items-center justify-center`}>
-    <div 
+    <div
       className="font-mono font-bold select-none"
-      style={{ 
+      style={{
         color: textColor,
         fontSize: 'clamp(2rem, 8vw, 6rem)',
         textShadow: `
@@ -43,19 +43,19 @@ const StaticStyledText = ({
 );
 
 // Reduced animation text effect
-const LightAnimatedText = ({ 
-  text, 
-  textColor, 
-  className 
-}: { 
-  text: string; 
-  textColor: string; 
+const LightAnimatedText = ({
+  text,
+  textColor,
+  className
+}: {
+  text: string;
+  textColor: string;
   className?: string;
 }) => (
   <div className={`${className} relative flex items-center justify-center`}>
-    <div 
+    <div
       className="font-mono font-bold select-none"
-      style={{ 
+      style={{
         color: textColor,
         fontSize: 'clamp(2rem, 8vw, 6rem)',
         textShadow: `
@@ -95,20 +95,20 @@ export default function AdaptiveASCIIText({
   enableWaves = true,
   className = ""
 }: AdaptiveASCIITextProps) {
-  const { 
-    shouldUseStaticBackgrounds, 
-    shouldUseReducedEffects, 
+  const {
+    shouldUseStaticBackgrounds,
+    shouldUseReducedEffects,
     shouldDisableAnimations,
     supportsWebGL,
-    isLowEnd 
+    isLowEnd
   } = useAdaptivePerformance();
 
   // No animation for reduced motion or very low-end devices
   if (shouldDisableAnimations || shouldUseStaticBackgrounds || !supportsWebGL) {
     return (
-      <StaticStyledText 
-        text={text} 
-        textColor={textColor} 
+      <StaticStyledText
+        text={text}
+        textColor={textColor}
         className={className}
       />
     );
@@ -117,9 +117,9 @@ export default function AdaptiveASCIIText({
   // Light animation for reduced effects
   if (shouldUseReducedEffects || isLowEnd) {
     return (
-      <LightAnimatedText 
-        text={text} 
-        textColor={textColor} 
+      <LightAnimatedText
+        text={text}
+        textColor={textColor}
         className={className}
       />
     );

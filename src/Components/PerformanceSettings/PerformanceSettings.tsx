@@ -32,7 +32,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
     const newSettings = { ...userSettings, [key]: value };
     setUserSettings(newSettings);
     localStorage.setItem('performance-settings', JSON.stringify(newSettings));
-    
+
     // Force page reload to apply settings
     window.location.reload();
   };
@@ -45,8 +45,8 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
         title="Performance Settings"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
         </svg>
       </button>
     );
@@ -64,7 +64,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
             ✕
           </button>
         </div>
-        
+
         <div className="space-y-4 text-sm">
           <div className="p-3 rounded bg-white/5 border border-white/10">
             <h4 className="font-semibold text-white mb-2">Auto-detected:</h4>
@@ -89,7 +89,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
                 className="rounded"
               />
             </label>
-            
+
             <label className="flex items-center justify-between">
               <span className="text-white">Force static backgrounds</span>
               <input
@@ -99,7 +99,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
                 className="rounded"
               />
             </label>
-            
+
             <label className="flex items-center justify-between">
               <span className="text-white">Force simple navigation</span>
               <input
@@ -112,7 +112,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
           </div>
 
           <p className="text-xs text-white/50">
-            Settings will apply after page reload. Auto-detection considers your device capabilities, 
+            Settings will apply after page reload. Auto-detection considers your device capabilities,
             connection speed, and battery level.
           </p>
         </div>
