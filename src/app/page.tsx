@@ -4,6 +4,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
 import Dock from '@/Components/Dock/Dock';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
+import PromoBanner from '@/Components/PromoBanner';
+import { crydieVideoHighlight } from '@/data/highlights';
 import {
   FaSpotify,
   FaInstagram,
@@ -101,6 +103,7 @@ const allDockItems = [{
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
+  const videoHighlight = crydieVideoHighlight;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 640);
@@ -193,22 +196,43 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Social icons grid fixed above nav */}
+          {/* Promo banner + social icons above nav */}
           <div
-            className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto"
-            style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 'calc(var(--bottom-bar-height) + 16px)' }}
+            className="fixed left-0 right-0 flex flex-col items-center gap-2"
+            style={{ bottom: 'calc(var(--bottom-bar-height) + 20px)' }}
           >
-            {allDockItems.map((item) => (
-              <button
-                key={item.label}
-                aria-label={item.label}
-                onClick={item.onClick}
-                className="btn-social"
-              >
-                <span className="btn-social-icon">{item.icon}</span>
-                <span className="label">{item.label}</span>
-              </button>
-            ))}
+            <div className="w-full px-1 flex justify-center">
+              <PromoBanner
+                eyebrow={videoHighlight.eyebrow}
+                title={videoHighlight.title}
+                description={videoHighlight.description}
+                href={videoHighlight.href}
+                ctaLabel={videoHighlight.ctaLabel}
+                accentColor={videoHighlight.accentColor}
+                accentGlow={videoHighlight.accentGlow}
+                ctaTextColor={videoHighlight.ctaTextColor}
+                releaseDate={videoHighlight.releaseDate}
+                releaseDateLabel={videoHighlight.releaseDateLabel}
+                image={videoHighlight.image}
+                imageAlt={videoHighlight.imageAlt}
+                compact
+                align="center"
+                className="w-full max-w-xs pointer-events-auto"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto">
+              {allDockItems.map((item) => (
+                <button
+                  key={item.label}
+                  aria-label={item.label}
+                  onClick={item.onClick}
+                  className="btn-social"
+                >
+                  <span className="btn-social-icon">{item.icon}</span>
+                  <span className="label">{item.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       ) : (
@@ -228,17 +252,37 @@ export default function Home() {
           </div>
 
           {/* Dock container - scrollable on mobile to fit all icons */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 pointer-events-auto">
-            <div className="flex justify-center w-full pb-3 sm:pb-4 pt-2">
-              <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
-                <Dock
-                  items={allDockItems}
-                  panelHeight={68}
-                  baseItemSize={50}
-                  magnification={70}
-                  spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-                  distance={200}
-                />
+          <div className="fixed bottom-0 left-0 right-0 z-20 pointer-events-none">
+            <div className="flex flex-col items-center gap-4 w-full pb-4 pt-2 pointer-events-none">
+              <div className="w-full flex justify-center px-4 pointer-events-auto">
+                <div className="w-full max-w-2xl">
+                  <PromoBanner
+                    eyebrow={videoHighlight.eyebrow}
+                    title={videoHighlight.title}
+                    description={videoHighlight.description}
+                    href={videoHighlight.href}
+                    ctaLabel={videoHighlight.ctaLabel}
+                    accentColor={videoHighlight.accentColor}
+                    accentGlow={videoHighlight.accentGlow}
+                    ctaTextColor={videoHighlight.ctaTextColor}
+                    releaseDate={videoHighlight.releaseDate}
+                    releaseDateLabel={videoHighlight.releaseDateLabel}
+                    image={videoHighlight.image}
+                    imageAlt={videoHighlight.imageAlt}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-center w-full pb-1 sm:pb-2 pointer-events-auto">
+                <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
+                  <Dock
+                    items={allDockItems}
+                    panelHeight={68}
+                    baseItemSize={50}
+                    magnification={70}
+                    spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
+                    distance={200}
+                  />
+                </div>
               </div>
             </div>
           </div>

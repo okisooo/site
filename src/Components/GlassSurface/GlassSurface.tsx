@@ -95,6 +95,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
   const isDarkMode = useDarkMode();
 
+  const [supportState, setSupportState] = useState({
+    svg: false,
+    backdrop: false,
+  });
+
   const generateDisplacementMap = useCallback(() => {
     const rect = containerRef.current?.getBoundingClientRect();
     const actualWidth = rect?.width || 400;
@@ -177,7 +182,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     setTimeout(updateDisplacementMap, 0);
   }, [width, height, updateDisplacementMap]);
 
-  const supportsSVGFilters = () => {
+  const detectSVGFilters = useCallback(() => {
     if (typeof window === "undefined" || typeof navigator === "undefined") {
       return false;
     }
@@ -190,15 +195,23 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     div.style.backdropFilter = `url(#${filterId})`;
     const styleAccepts = div.style.backdropFilter !== "";
     return styleAccepts || isChromium;
-  };
+  }, [filterId]);
 
-  const supportsBackdropFilter = () => {
+  const detectBackdropFilter = useCallback(() => {
     if (typeof window === "undefined" || typeof CSS === "undefined") return false;
     const hasSupports = "supports" in CSS && typeof (CSS as { supports: (prop: string, value: string) => boolean }).supports === "function";
     if (!hasSupports) return false;
     const css = CSS as { supports: (prop: string, value: string) => boolean };
     return css.supports("backdrop-filter", "blur(10px)") || css.supports("-webkit-backdrop-filter", "blur(10px)");
-  };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setSupportState({
+      svg: detectSVGFilters(),
+      backdrop: detectBackdropFilter(),
+    });
+  }, [detectBackdropFilter, detectSVGFilters]);
 
   const getContainerStyles = (): React.CSSProperties => {
     interface CSSVars extends React.CSSProperties {
@@ -211,12 +224,12 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       width: typeof width === "number" ? `${width}px` : width,
       height: typeof height === "number" ? `${height}px` : height,
       borderRadius: `${borderRadius}px`,
-      "--glass-frost": backgroundOpacity,
-      "--glass-saturation": saturation,
+      "--glass-frost": `${backgroundOpacity}`,
+      "--glass-saturation": `${saturation}`,
     };
 
-    const svgSupported = supportsSVGFilters();
-    const backdropFilterSupported = supportsBackdropFilter();
+    const svgSupported = supportState.svg;
+    const backdropFilterSupported = supportState.backdrop;
 
     if (svgSupported) {
       return {
@@ -301,7 +314,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     <div
       ref={containerRef}
       className={`${glassSurfaceClasses} ${focusVisibleClasses} ${className}`}
-      style={getContainerStyles()}
+  style={getContainerStyles()}
     >
       <svg
         className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10"

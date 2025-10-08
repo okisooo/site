@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useEffect, useState, useMemo } from 'react';
 import ContentCard from '@/Components/ContentCard';
 import GooeyNav from '@/Components/GooeyNav/GooeyNav';
+import PromoBanner from '@/Components/PromoBanner';
+import { crydieVideoHighlight } from '@/data/highlights';
 import { staticReleases, type Release } from '@/data/releases';
 
 export default function ReleasesPage() {
@@ -13,6 +15,7 @@ export default function ReleasesPage() {
   // Use static data (always available, fast loading)
   const releases = staticReleases;
   const featuredReleases = releases.slice(0, 3);
+  const videoHighlight = crydieVideoHighlight;
   const initialDisplayCount = isMobile ? 12 : 16; // Show more on desktop
   const catalogReleases = showAllReleases ? releases : releases.slice(0, initialDisplayCount);
   const latestRelease = releases[0] || null;
@@ -97,6 +100,24 @@ export default function ReleasesPage() {
               Explore OKISO&apos;s music catalog. Listen to the latest releases.
             </p>
           </header>
+          <div className={`${isMobile ? 'mb-2' : 'mb-6'}`}>
+            <PromoBanner
+              eyebrow={videoHighlight.eyebrow}
+              title={videoHighlight.title}
+              description={videoHighlight.description}
+              href={videoHighlight.href}
+              ctaLabel={videoHighlight.ctaLabel}
+              accentColor={videoHighlight.accentColor}
+              accentGlow={videoHighlight.accentGlow}
+              ctaTextColor={videoHighlight.ctaTextColor}
+              releaseDate={videoHighlight.releaseDate}
+              releaseDateLabel={videoHighlight.releaseDateLabel}
+              compact={isMobile}
+              align={isMobile ? 'center' : 'left'}
+              image={videoHighlight.image}
+              imageAlt={videoHighlight.imageAlt}
+            />
+          </div>
           <ContentCard title="Latest Release" className={`${isMobile ? 'mb-2' : 'mb-6'}`}>
             {latestRelease ? (
               <div className={`flex ${isMobile ? 'flex-col gap-2' : 'flex-row gap-6'}`}>
@@ -142,6 +163,35 @@ export default function ReleasesPage() {
           </ContentCard>
           <ContentCard title="Featured Releases" className={`${isMobile ? 'mb-2' : 'mb-4'}`}>
             <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-2 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
+              <a
+                href={videoHighlight.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`relative flex-shrink-0 rounded-lg border border-white/15 bg-white/10 transition-transform duration-200 hover:scale-[1.02] hover:border-white/25 shadow-[0_22px_60px_-40px_rgba(255,0,122,0.7)] ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}
+              >
+                <div className="relative aspect-square overflow-hidden rounded-t-lg">
+                  <Image
+                    src={videoHighlight.image ?? ''}
+                    alt={videoHighlight.imageAlt ?? videoHighlight.title}
+                    fill
+                    sizes={isMobile ? '110px' : '160px'}
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/55" aria-hidden="true" />
+                  <span className="absolute top-2 left-2 inline-flex items-center rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/90 backdrop-blur">
+                    Video
+                  </span>
+                </div>
+                <div className="px-2 pt-1 pb-2">
+                  <p className={`font-semibold text-shadow-md text-white ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                    CryDie MV
+                  </p>
+                  <p className={`text-white/70 text-shadow-sm ${isMobile ? 'text-[10px]' : 'text-xs'} flex items-center gap-1`}>
+                    Watch now
+                    <span aria-hidden="true">↗</span>
+                  </p>
+                </div>
+              </a>
               {featuredReleases.map((release: Release) => (
                 <div key={release.title} className={`bg-white/5 p-1 rounded-lg border border-white/10 flex-shrink-0 ${isMobile ? 'w-[110px]' : 'w-[160px]'}`}>
                   <a
