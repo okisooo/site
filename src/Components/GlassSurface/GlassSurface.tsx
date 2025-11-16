@@ -314,7 +314,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     <div
       ref={containerRef}
       className={`${glassSurfaceClasses} ${focusVisibleClasses} ${className}`}
-  style={getContainerStyles()}
+      style={getContainerStyles()}
     >
       <svg
         className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10"
