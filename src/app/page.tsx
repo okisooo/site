@@ -1,293 +1,225 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import ASCIIText from '@/TextAnimations/ASCIIText/ASCIIText';
-import Dock from '@/Components/Dock/Dock';
-import GooeyNav from '@/Components/GooeyNav/GooeyNav';
-import PromoBanner from '@/Components/PromoBanner';
-import { crydieVideoHighlight } from '@/data/highlights';
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import Image from "next/image";
+import UrbanCard from "@/Components/Urban/UrbanCard";
+import TapeDivider from "@/Components/Urban/TapeDivider";
+import TechOverlay from "@/Components/Urban/TechOverlay";
+import VerticalText from "@/Components/Urban/VerticalText";
 import {
   FaSpotify,
   FaInstagram,
-  FaFacebook,
   FaGithub,
   FaTwitter,
   FaYoutube,
   FaDiscord,
   FaBandcamp,
-  FaApple,
   FaTwitch,
-  FaReddit
-} from 'react-icons/fa';
-
-// Type declaration for window extensions
-declare global {
-  interface Window {
-    _linkClicked?: boolean;
-    _navInProgress?: boolean;
-    isMobileDevice?: () => boolean;
-  }
-}
-
-// Helper function to prevent multiple rapid clicks on external links
-const safeExternalLink = (url: string) => {
-  return () => {
-    // Prevent multiple clicks
-    if (window._linkClicked) return;
-    window._linkClicked = true;
-
-    // Open the link
-    window.open(url, "_blank");
-
-    // Reset after a delay
-    setTimeout(() => {
-      window._linkClicked = false;
-    }, 500);
-  };
-};
-
-// Full social links for desktop
-const allDockItems = [{
-  icon: <FaSpotify size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Spotify',
-  onClick: safeExternalLink("https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm?si=54f1d8b0d5784d97")
-}, {
-  icon: <FaInstagram size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Instagram',
-  onClick: safeExternalLink("https://www.instagram.com/okisooo_/")
-}, {
-  icon: <FaFacebook size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Facebook',
-  onClick: safeExternalLink("https://www.facebook.com/people/OKISO-%E3%82%AA%E3%82%AD%E3%82%BD/61577364628178/")
-}, {
-  icon: <FaGithub size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'GitHub',
-  onClick: safeExternalLink("https://github.com/okisooo")
-}, {
-  icon: <FaTwitter size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'X',
-  onClick: safeExternalLink("https://x.com/okisooo_")
-}, {
-  icon: <FaReddit size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Reddit',
-  onClick: safeExternalLink("https://www.reddit.com/r/okisooo")
-}, {
-  icon: <FaYoutube size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'YouTube',
-  onClick: safeExternalLink("https://www.youtube.com/@okiso7")
-}, {
-  icon: <FaTwitch size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Twitch',
-  onClick: safeExternalLink("https://twitch.tv/okiso7")
-}, {
-  icon: <FaBandcamp size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Bandcamp',
-  onClick: safeExternalLink("https://okiso.bandcamp.com/")
-}, {
-  icon: <FaApple size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Apple Music',
-  onClick: safeExternalLink("https://music.apple.com/us/artist/okiso/1735330883")
-}, {
-  icon: <FaDiscord size={24} className="text-white hover:text-white/80 transition-colors" />,
-  label: 'Discord',
-  onClick: safeExternalLink("https://discord.gg/okiso")
-}, {
-  icon: (
-    <svg width="24" height="24" viewBox="0 0 24 24" className="text-white hover:text-white/80 transition-colors" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-    </svg>
-  ),
-  label: 'VGen',
-  onClick: safeExternalLink("https://vgen.co/okiso")
-}];
+} from "react-icons/fa";
 
 export default function Home() {
-  const [isMobile, setIsMobile] = useState(false);
-  const videoHighlight = crydieVideoHighlight;
+  const heroRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const charRef = useRef<HTMLDivElement>(null);
+
+  const socialLinks: { icon: React.ReactNode; label: string; href: string; color: "yellow" | "pink" | "cyan" | "orange" }[] = [
+    { icon: <FaSpotify size={24} />, label: "Spotify", href: "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm", color: "yellow" },
+    { icon: <FaYoutube size={24} />, label: "YouTube", href: "https://www.youtube.com/@okiso7", color: "pink" },
+    { icon: <FaTwitter size={24} />, label: "Twitter", href: "https://x.com/okisooo_", color: "cyan" },
+    { icon: <FaInstagram size={24} />, label: "Instagram", href: "https://www.instagram.com/okisooo_/", color: "orange" },
+    { icon: <FaGithub size={24} />, label: "GitHub", href: "https://github.com/okisooo", color: "pink" },
+    { icon: <FaDiscord size={24} />, label: "Discord", href: "https://discord.gg/okiso", color: "cyan" },
+    { icon: <FaBandcamp size={24} />, label: "Bandcamp", href: "https://okiso.bandcamp.com/", color: "yellow" },
+    { icon: <FaTwitch size={24} />, label: "Twitch", href: "https://twitch.tv/okiso7", color: "pink" },
+  ];
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      // Hero Entrance
+      tl.from(charRef.current, {
+        x: 100,
+        opacity: 0,
+        duration: 1,
+        ease: "power4.out",
+      })
+        .from(
+          titleRef.current,
+          {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            ease: "back.out(1.7)",
+          },
+          "-=0.5"
+        )
+        .from(
+          statsRef.current?.children || [],
+          {
+            x: -50,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.5"
+        );
+    }, heroRef);
+
+    return () => ctx.revert();
   }, []);
-
-  useEffect(() => {
-    // Add body class to prevent scrolling on home page
-    document.body.classList.add('home-page');
-
-    // Hard-lock scroll on iOS and others
-    const prevent = (e: Event) => {
-      e.preventDefault();
-      return false;
-    };
-    window.addEventListener('touchmove', prevent as EventListener, { passive: false });
-    window.addEventListener('wheel', prevent as EventListener, { passive: false });
-    const onScroll = () => {
-      if (window.scrollY !== 0) window.scrollTo(0, 0);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    return () => {
-      document.body.classList.remove('home-page');
-      window.removeEventListener('touchmove', prevent as EventListener);
-      window.removeEventListener('wheel', prevent as EventListener);
-      window.removeEventListener('scroll', onScroll as EventListener);
-    };
-  }, []);
-
-  // Navigation items for GooeyNav
-  const navItems = useMemo(() => [
-    { label: 'Upcoming', href: '/upcoming' },
-    { label: 'Home', href: '/' },
-    { label: 'Releases', href: '/releases' }
-  ], []);
-
-  // Set to 1 since this is the home page (second item in navItems array)
-  const initialActiveIndex = 1;
 
   return (
-    <div className={`fixed inset-0 w-full h-full overflow-hidden bg-transparent`}>
-      <style>{`
-         body.home-page {
-           overflow: hidden !important;
-           position: fixed !important;
-           inset: 0 !important;
-           width: 100% !important;
-           overscroll-behavior: none !important;
-           touch-action: none !important;
-         }
-         html, body {
-           height: 100% !important;
-           min-height: 100% !important;
-           overscroll-behavior: none !important;
-           touch-action: none !important;
-         }
-       `}</style>
-      {/* GooeyNav at top for desktop, at bottom for mobile */}
-      <div className={isMobile ? "fixed left-0 w-full z-50 flex justify-center bottom-nav-safe" : "fixed left-0 w-full z-50 flex justify-center top-nav-safe"}>
-        <div style={{ position: 'relative', width: isMobile ? 'auto' : 'auto', margin: '0 auto', zIndex: 50 }}>
-          <GooeyNav
-            items={navItems}
-            initialActiveIndex={initialActiveIndex}
-            animationTime={600}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
-      </div>
-      {/* Prevent scroll bleed */}
-      {isMobile ? (
-        <div className="absolute inset-0 px-4 overflow-hidden">
-          {/* ASCIIText near top and centered on mobile */}
-          <div className="absolute left-1/2 -translate-x-1/2" style={{ top: '3.5vh', pointerEvents: 'none' }}>
-            <div style={{ width: 'min(96vw, 440px)', height: 'min(48vh, 300px)' }}>
-              <ASCIIText
-                text="オキソ"
-                enableWaves={true}
-                asciiFontSize={6}
-                textFontSize={90}
-                textColor="#fff"
-                planeBaseHeight={5}
-              />
+    <div className="min-h-screen w-full pb-20 overflow-x-hidden bg-urban-black text-urban-white selection:bg-neon-cyan selection:text-black">
+      <TechOverlay />
+
+      {/* Hero Section - Character Select Style */}
+      <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-[url('https://i.imgur.com/pM8llz7.gif')] bg-cover bg-center opacity-20 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-gradient-to-r from-urban-black via-transparent to-urban-black" />
+        <div className="absolute inset-0 bg-halftone opacity-10" />
+
+        <div className="container mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-center">
+          {/* Left: Stats & Info */}
+          <div className="lg:col-span-4 flex flex-col justify-center space-y-8 order-2 lg:order-1">
+            <div ref={statsRef} className="space-y-4">
+              <div className="bg-urban-dark/80 border-l-4 border-neon-cyan p-4 backdrop-blur-sm transform -skew-x-12">
+                <h3 className="text-neon-cyan font-display text-xl transform skew-x-12">ROLE</h3>
+                <p className="text-2xl font-bold transform skew-x-12">PRODUCER</p>
+              </div>
+              <div className="bg-urban-dark/80 border-l-4 border-neon-magenta p-4 backdrop-blur-sm transform -skew-x-12 ml-8">
+                <h3 className="text-neon-magenta font-display text-xl transform skew-x-12">CLASS</h3>
+                <p className="text-2xl font-bold transform skew-x-12">VTUBER</p>
+              </div>
+              <div className="bg-urban-dark/80 border-l-4 border-neon-orange p-4 backdrop-blur-sm transform -skew-x-12">
+                <h3 className="text-neon-orange font-display text-xl transform skew-x-12">AFFILIATION</h3>
+                <p className="text-2xl font-bold transform skew-x-12">OKISO.NET</p>
+              </div>
             </div>
           </div>
 
-          {/* Promo banner + social icons above nav */}
-          <div
-            className="fixed left-0 right-0 flex flex-col items-center gap-2"
-            style={{ bottom: 'calc(var(--bottom-bar-height) + 20px)' }}
-          >
-            <div className="w-full px-1 flex justify-center">
-              <PromoBanner
-                eyebrow={videoHighlight.eyebrow}
-                title={videoHighlight.title}
-                description={videoHighlight.description}
-                href={videoHighlight.href}
-                ctaLabel={videoHighlight.ctaLabel}
-                accentColor={videoHighlight.accentColor}
-                accentGlow={videoHighlight.accentGlow}
-                ctaTextColor={videoHighlight.ctaTextColor}
-                releaseDate={videoHighlight.releaseDate}
-                releaseDateLabel={videoHighlight.releaseDateLabel}
-                image={videoHighlight.image}
-                imageAlt={videoHighlight.imageAlt}
-                compact
-                align="center"
-                className="w-full max-w-xs pointer-events-auto"
-              />
+          {/* Center: Character / Title */}
+          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative">
+            <div ref={charRef} className="relative w-full aspect-[3/4] max-h-[80vh] flex items-center justify-center">
+              {/* Character Art */}
+              <div className="absolute inset-0 z-10 drop-shadow-2xl" style={{ filter: "contrast(1.1) brightness(1.05)" }}>
+                <Image
+                  src="/hero_character.png"
+                  alt="OKISO Character - Vocaloid Producer Avatar"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+
+              {/* Subtle Back Glow */}
+              <div className="absolute inset-0 bg-radial-gradient from-white/10 to-transparent opacity-50 blur-3xl -z-10" />
+
+              <h1 ref={titleRef} className="absolute bottom-10 text-[12vw] lg:text-[8vw] leading-none font-display font-black text-white tracking-tighter z-20 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]">
+                OKISO
+              </h1>
             </div>
-            <div className="grid grid-cols-3 gap-3 w-full max-w-xs mx-auto">
-              {allDockItems.map((item) => (
-                <button
-                  key={item.label}
-                  aria-label={item.label}
-                  onClick={item.onClick}
-                  className="btn-social"
-                >
-                  <span className="btn-social-icon">{item.icon}</span>
-                  <span className="label">{item.label}</span>
-                </button>
+          </div>
+
+          {/* Right: Vertical Text */}
+          <div className="lg:col-span-4 hidden lg:flex justify-end items-center order-3 h-full py-20">
+            <div className="flex gap-8 h-full">
+              <VerticalText text="VIRTUAL REALITY" color="cyan" className="opacity-50" />
+              <VerticalText text="AUDIO PRODUCTION" color="magenta" className="opacity-80" />
+              <VerticalText text="SYSTEM ONLINE" color="white" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <TapeDivider text="INITIATING SYSTEM LINK // WELCOME PROXY //" direction="left" color="yellow" />
+
+      {/* Content Grid */}
+      <section className="max-w-7xl mx-auto px-4 py-20 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Featured Release */}
+          <UrbanCard
+            title="LATEST DROP"
+            category="MUSIC"
+            accentColor="pink"
+            className="col-span-1 md:col-span-2 lg:col-span-2 min-h-[300px] flex flex-col justify-end bg-[url('https://i.imgur.com/pM8llz7.gif')] bg-cover bg-center"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-urban-black via-urban-black/50 to-transparent opacity-90" />
+            <div className="relative z-10">
+              <h2 className="text-5xl font-display font-bold text-white mb-2 drop-shadow-lg">CRYDIE</h2>
+              <p className="text-urban-white/90 mb-6 max-w-md text-lg font-medium">
+                New single out now. Experience the digital despair.
+              </p>
+              <button className="bg-neon-pink text-white font-bold py-3 px-8 clip-diagonal hover:bg-neon-pink/80 transition-colors border-2 border-white/20">
+                LISTEN NOW
+              </button>
+            </div>
+          </UrbanCard>
+
+          {/* Social Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {socialLinks.slice(0, 4).map((link) => (
+              <UrbanCard
+                key={link.label}
+                category="LINK"
+                accentColor={link.color}
+                className="aspect-square flex flex-col items-center justify-center gap-2"
+                href={link.href}
+              >
+                <div className={`text-4xl text-${link.color === 'cyan' ? 'neon-cyan' : link.color === 'orange' ? 'neon-orange' : `urban-${link.color}`}`}>{link.icon}</div>
+                <span className="font-bold text-sm uppercase tracking-wider">{link.label}</span>
+              </UrbanCard>
+            ))}
+          </div>
+
+          {/* About / Bio */}
+          <UrbanCard title="PROFILE" category="Db" accentColor="cyan" className="col-span-1 md:col-span-1">
+            <p className="text-urban-white/80 leading-relaxed font-ui">
+              OKISO is a digital entity creating electronic soundscapes in the void.
+              Specializing in Vocaloid production and virtual performance.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {["EDM", "PRODUCER", "VTUBER", "CYBERPUNK"].map((tag) => (
+                <span key={tag} className="text-xs font-mono border border-neon-cyan text-neon-cyan px-2 py-1 bg-neon-cyan/10">
+                  {tag}
+                </span>
               ))}
             </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* Centered ASCII Text element */}
-          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="relative" style={{ width: '1000px', height: '700px' }}>
-              <ASCIIText
-                text="オキソ"
-                enableWaves={true}
-                asciiFontSize={8}
-                textFontSize={250}
-                textColor="#ffffff"
-                planeBaseHeight={8}
-              />
-            </div>
+          </UrbanCard>
+
+          {/* More Socials */}
+          <div className="grid grid-cols-2 gap-4">
+            {socialLinks.slice(4).map((link) => (
+              <UrbanCard
+                key={link.label}
+                category="LINK"
+                accentColor={link.color}
+                className="aspect-square flex flex-col items-center justify-center gap-2"
+                href={link.href}
+              >
+                <div className={`text-4xl text-${link.color === 'cyan' ? 'neon-cyan' : link.color === 'orange' ? 'neon-orange' : `urban-${link.color}`}`}>{link.icon}</div>
+                <span className="font-bold text-sm uppercase tracking-wider">{link.label}</span>
+              </UrbanCard>
+            ))}
           </div>
 
-          {/* Dock container - scrollable on mobile to fit all icons */}
-          <div className="fixed bottom-0 left-0 right-0 z-20 pointer-events-none">
-            <div className="flex flex-col items-center gap-4 w-full pb-4 pt-2 pointer-events-none">
-              <div className="w-full flex justify-center px-4 pointer-events-auto">
-                <div className="w-full max-w-2xl">
-                  <PromoBanner
-                    eyebrow={videoHighlight.eyebrow}
-                    title={videoHighlight.title}
-                    description={videoHighlight.description}
-                    href={videoHighlight.href}
-                    ctaLabel={videoHighlight.ctaLabel}
-                    accentColor={videoHighlight.accentColor}
-                    accentGlow={videoHighlight.accentGlow}
-                    ctaTextColor={videoHighlight.ctaTextColor}
-                    releaseDate={videoHighlight.releaseDate}
-                    releaseDateLabel={videoHighlight.releaseDateLabel}
-                    image={videoHighlight.image}
-                    imageAlt={videoHighlight.imageAlt}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-center w-full pb-1 sm:pb-2 pointer-events-auto">
-                <div className="px-1 sm:px-6 py-2 sm:py-3 relative overflow-visible">
-                  <Dock
-                    items={allDockItems}
-                    panelHeight={68}
-                    baseItemSize={50}
-                    magnification={70}
-                    spring={{ mass: 0.2, stiffness: 200, damping: 18 }}
-                    distance={200}
-                  />
-                </div>
-              </div>
+          {/* Placeholder for Upcoming */}
+          <UrbanCard title="UPCOMING" category="EVT" accentColor="orange" className="col-span-1 md:col-span-2 flex items-center justify-center border-dashed border-neon-orange/30">
+            <div className="text-center opacity-50">
+              <p className="font-mono text-xl text-neon-orange">NO UPCOMING EVENTS DETECTED</p>
+              <p className="text-sm mt-2">STAY TUNED FOR UPDATES</p>
             </div>
-          </div>
-        </>
-      )}
+          </UrbanCard>
+
+        </div>
+      </section>
+
+      <TapeDivider text="END OF TRANSMISSION // OKISO.NET //" direction="right" color="pink" />
     </div>
   );
 }

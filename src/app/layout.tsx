@@ -1,8 +1,7 @@
-// src/app/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
 import { Exo_2, Urbanist } from "next/font/google";
-import SwipeContainer from '@/Components/SwipeContainer/SwipeContainer';
-import DarkVeil from '@/Backgrounds/DarkVeil/DarkVeil';
+import HalftoneWave from '@/Components/Urban/HalftoneWave';
+import CRTOverlay from '@/Components/Urban/CRTOverlay';
 import faviconPng from './favicon.png';
 import "./globals.css";
 import { staticReleases } from '@/data/releases';
@@ -123,6 +122,25 @@ export default function RootLayout({
     }))
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": siteUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Releases",
+        "item": `${siteUrl}/releases`
+      }
+    ]
+  };
+
   return (
     <html lang="en">
       <head>
@@ -134,7 +152,6 @@ export default function RootLayout({
         {/* Chrome/Android PWA meta (apple tag above can be deprecated in some contexts) */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#000000" />
-        {/* Removed hard-coded canonical so per-page metadata can control canonical URLs */}
 
         {/* Script to prevent double navigation on touch devices */}
         <script
@@ -170,35 +187,36 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupLd) }}
         />
 
-        {/* Site-level JSON-LD: WebSite + ItemList (releases) */}
+        {/* Site-level JSON-LD: WebSite + ItemList (releases) + Breadcrumbs */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd] }) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd, breadcrumbLd] }) }}
         />
 
         {/* Favicon (PNG) and Apple touch icon wired from app/favicon.png */}
         <link rel="icon" type="image/png" sizes="any" href={faviconPng.src} />
         <link rel="apple-touch-icon" href={faviconPng.src} />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased`}>
-        <div className="h-screen w-full relative" style={{ height: '100dvh' }}>
-          <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100dvh', zIndex: 0, pointerEvents: 'none' }}>
-            <DarkVeil hueShift={280} resolutionScale={1.5} warpAmount={0.12} />
-          </div>
-          <div className="relative z-[1]">
-            <header className="sr-only">
-              <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
-              <nav>{/* Your navigation links */}</nav>
-            </header>
-            <main className="relative h-full">
-              <SwipeContainer>
-                {children}
-              </SwipeContainer>
-            </main>
-            <footer className="sr-only">
-              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-            </footer>
-          </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased bg-urban-black text-urban-white overflow-x-hidden`}>
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <HalftoneWave />
+          <CRTOverlay />
+        </div>
+
+        <div className="relative z-[1] min-h-screen flex flex-col">
+          {/* Header hidden but accessible */}
+          <header className="sr-only">
+            <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
+            <nav>{/* Your navigation links */}</nav>
+          </header>
+
+          <main className="flex-grow relative w-full max-w-[1920px] mx-auto">
+            {children}
+          </main>
+
+          <footer className="sr-only">
+            <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+          </footer>
         </div>
       </body>
     </html>
