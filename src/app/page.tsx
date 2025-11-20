@@ -146,7 +146,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Social Grid */}
           <div className="grid grid-cols-2 gap-4">
-            {socialLinks.slice(0, 4).map((link) => (
+            {socialLinks.slice(0, 5).map((link) => (
               <UrbanCard
                 key={link.label}
                 category="LINK"
@@ -163,8 +163,7 @@ export default function Home() {
           {/* About / Bio */}
           <UrbanCard title="PROFILE" category="Db" accentColor="cyan" className="col-span-1 md:col-span-1">
             <p className="text-urban-white/80 leading-relaxed font-ui">
-              OKISO, also known as OXO or オキソ is an otherwordly entity creating experiences, the best way!
-              Blending hyperpop, gaming, and his art into a unique experience.
+              Just a virtual entity making noise on the internet. I produce hyperpop, write code, and stream games. Welcome to my world.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               {["HYPERPOP", "GAMER", "DEVELOPER", "ARTIST", "STREAMER"].map((tag) => (
@@ -177,7 +176,7 @@ export default function Home() {
 
           {/* More Socials */}
           <div className="grid grid-cols-2 gap-4">
-            {socialLinks.slice(4).map((link) => (
+            {socialLinks.slice(5).map((link) => (
               <UrbanCard
                 key={link.label}
                 category="LINK"
@@ -192,7 +191,7 @@ export default function Home() {
           </div>
 
           {/* Placeholder for Upcoming */}
-          <UrbanCard title="UPCOMING" category="EVT" accentColor="orange" className="col-span-1 md:col-span-2 flex items-center justify-center border-dashed border-neon-orange/30">
+          <UrbanCard title="UPCOMING" category="EVT" accentColor="orange" className="col-span-1 md:col-span-2 lg:col-span-3 flex items-center justify-center border-dashed border-neon-orange/30">
             <div className="text-center opacity-50">
               <p className="font-mono text-xl text-neon-orange">NO UPCOMING EVENTS DETECTED</p>
               <p className="text-sm mt-2">STAY TUNED FOR UPDATES</p>

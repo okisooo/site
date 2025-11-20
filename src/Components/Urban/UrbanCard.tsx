@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import React from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -24,10 +23,6 @@ export default function UrbanCard({
     onClick,
     href,
 }: UrbanCardProps) {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const borderRef = useRef<HTMLDivElement>(null);
-    const glowRef = useRef<HTMLDivElement>(null);
-
     const colors = {
         yellow: "border-urban-yellow bg-urban-yellow",
         pink: "border-urban-pink bg-urban-pink",
@@ -35,71 +30,20 @@ export default function UrbanCard({
         orange: "border-neon-orange bg-neon-orange",
     };
 
-    useEffect(() => {
-        const card = cardRef.current;
-        const border = borderRef.current;
-        const glow = glowRef.current;
-
-        if (!card || !border || !glow) return;
-
-        const tl = gsap.timeline({ paused: true });
-
-        tl.to(card, {
-            y: -5,
-            x: -5,
-            duration: 0.2,
-            ease: "power2.out",
-        })
-            .to(
-                border,
-                {
-                    x: 5,
-                    y: 5,
-                    opacity: 1,
-                    duration: 0.2,
-                    ease: "power2.out",
-                },
-                0
-            )
-            .to(
-                glow,
-                {
-                    opacity: 0.5,
-                    duration: 0.2,
-                    ease: "power2.out",
-                },
-                0
-            );
-
-        const handleMouseEnter = () => tl.play();
-        const handleMouseLeave = () => tl.reverse();
-
-        card.addEventListener("mouseenter", handleMouseEnter);
-        card.addEventListener("mouseleave", handleMouseLeave);
-
-        return () => {
-            card.removeEventListener("mouseenter", handleMouseEnter);
-            card.removeEventListener("mouseleave", handleMouseLeave);
-            tl.kill();
-        };
-    }, []);
-
     const CardContent = (
         <>
             {/* Glow Effect */}
             <div
-                ref={glowRef}
                 className={cn(
-                    "absolute inset-0 opacity-0 transition-opacity duration-300 blur-xl pointer-events-none",
+                    "absolute inset-0 opacity-0 transition-opacity duration-300 blur-xl pointer-events-none group-hover:opacity-50",
                     colors[accentColor].split(" ")[1] // Get bg color
                 )}
             />
 
             {/* Offset Border (Visual only) */}
             <div
-                ref={borderRef}
                 className={cn(
-                    "absolute inset-0 -z-10 border-2 opacity-0 transition-all duration-300",
+                    "absolute inset-0 -z-10 border-2 opacity-0 transition-all duration-300 ease-out translate-x-0 translate-y-0 group-hover:opacity-100 group-hover:translate-x-2 group-hover:translate-y-2",
                     colors[accentColor].split(" ")[0]
                 )}
                 style={{
@@ -134,7 +78,7 @@ export default function UrbanCard({
     );
 
     const commonClasses = cn(
-        "relative group cursor-pointer bg-urban-dark border-2 transition-all duration-300 block",
+        "relative group cursor-pointer bg-urban-dark border-2 transition-transform duration-300 ease-out block group-hover:-translate-x-1 group-hover:-translate-y-1",
         colors[accentColor].split(" ")[0], // Get border color
         className
     );
@@ -151,7 +95,6 @@ export default function UrbanCard({
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    ref={cardRef as unknown as React.RefObject<HTMLAnchorElement>}
                     className={commonClasses}
                     style={commonStyles}
                     onClick={onClick}
@@ -163,7 +106,6 @@ export default function UrbanCard({
         return (
             <Link
                 href={href}
-                ref={cardRef as unknown as React.RefObject<HTMLAnchorElement>}
                 className={commonClasses}
                 style={commonStyles}
                 onClick={onClick}
@@ -175,7 +117,6 @@ export default function UrbanCard({
 
     return (
         <div
-            ref={cardRef}
             className={commonClasses}
             style={commonStyles}
             onClick={onClick}
