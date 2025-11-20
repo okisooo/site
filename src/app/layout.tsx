@@ -31,17 +31,16 @@ const urbanist = Urbanist({
 });
 
 export const metadata = {
-  title: "OKISO | Official Website - Vocaloid Artist and Music Producer",
-  description: "OKISO - Official website of Vocaloid artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Japanese vocaloid music featuring original compositions.",
+  title: "OKISO | Official Website - Virtual Artist and Music Producer",
+  description: "OKISO - Official website of virtual artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Electronic music featuring original compositions.",
   keywords: [
     "OKISO",
     "okiso",
     "オキソ",
-    "vocaloid artist",
-    "vocaloid producer",
+    "virtual artist",
     "music producer",
     "electronic music",
-    "Japanese vocaloid",
+    "hyperpop",
     "OKISO official",
     "OKISO music"
   ],
@@ -49,13 +48,13 @@ export const metadata = {
     canonical: 'https://okiso.net'
   },
   openGraph: {
-    title: "OKISO オキソ | VOCALOID Producer / VTuber",
+    title: "OKISO オキソ | Virtual Artist / VTuber",
     description:
-      "Discover the universe of VOCALOID Producer / VTuber OKISO. Listen to music, explore art, and connect across social media.",
+      "Discover the universe of Virtual Artist / VTuber OKISO. Listen to music, explore art, and connect across social media.",
     url: "https://okiso.net",
     images: [
       {
-        url: "https://i.imgur.com/pM8llz7.gif",
+        url: "https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif",
         width: 800,
         height: 600,
         alt: "OKISO Vocaloid Artist"

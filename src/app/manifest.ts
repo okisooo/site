@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next';
 
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'OKISO | VOCALOID Producer',
+    name: 'OKISO | Virtual Artist',
     short_name: 'OKISO',
-    description: 'Official website of Vocaloid artist and music producer OKISO.',
+    description: 'Official website of virtual artist and music producer OKISO.',
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',

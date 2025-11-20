@@ -16,6 +16,7 @@ import {
   FaDiscord,
   FaBandcamp,
   FaTwitch,
+  FaReddit,
 } from "react-icons/fa";
 
 export default function Home() {
@@ -33,6 +34,7 @@ export default function Home() {
     { icon: <FaDiscord size={24} />, label: "Discord", href: "https://discord.gg/okiso", color: "cyan" },
     { icon: <FaBandcamp size={24} />, label: "Bandcamp", href: "https://okiso.bandcamp.com/", color: "yellow" },
     { icon: <FaTwitch size={24} />, label: "Twitch", href: "https://twitch.tv/okiso7", color: "pink" },
+    { icon: <FaReddit size={24} />, label: "Reddit", href: "https://www.reddit.com/user/okisooo/", color: "orange" },
   ];
 
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function Home() {
       {/* Hero Section - Character Select Style */}
       <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-[url('https://i.imgur.com/pM8llz7.gif')] bg-cover bg-center opacity-20 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-[url('https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif')] bg-cover bg-center opacity-20 mix-blend-luminosity" />
         <div className="absolute inset-0 bg-gradient-to-r from-urban-black via-transparent to-urban-black" />
         <div className="absolute inset-0 bg-halftone opacity-10" />
 
@@ -109,7 +111,7 @@ export default function Home() {
               <div className="absolute inset-0 z-10 drop-shadow-2xl" style={{ filter: "contrast(1.1) brightness(1.05)" }}>
                 <Image
                   src="/hero_character.png"
-                  alt="OKISO Character - Vocaloid Producer Avatar"
+                  alt="OKISO Character - Virtual Avatar"
                   fill
                   className="object-contain"
                   priority
@@ -142,25 +144,6 @@ export default function Home() {
       {/* Content Grid */}
       <section className="max-w-7xl mx-auto px-4 py-20 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Featured Release */}
-          <UrbanCard
-            title="LATEST DROP"
-            category="MUSIC"
-            accentColor="pink"
-            className="col-span-1 md:col-span-2 lg:col-span-2 min-h-[300px] flex flex-col justify-end bg-[url('https://i.imgur.com/pM8llz7.gif')] bg-cover bg-center"
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-urban-black via-urban-black/50 to-transparent opacity-90" />
-            <div className="relative z-10">
-              <h2 className="text-5xl font-display font-bold text-white mb-2 drop-shadow-lg">CRYDIE</h2>
-              <p className="text-urban-white/90 mb-6 max-w-md text-lg font-medium">
-                New single out now. Experience the digital despair.
-              </p>
-              <button className="bg-neon-pink text-white font-bold py-3 px-8 clip-diagonal hover:bg-neon-pink/80 transition-colors border-2 border-white/20">
-                LISTEN NOW
-              </button>
-            </div>
-          </UrbanCard>
-
           {/* Social Grid */}
           <div className="grid grid-cols-2 gap-4">
             {socialLinks.slice(0, 4).map((link) => (
@@ -180,11 +163,11 @@ export default function Home() {
           {/* About / Bio */}
           <UrbanCard title="PROFILE" category="Db" accentColor="cyan" className="col-span-1 md:col-span-1">
             <p className="text-urban-white/80 leading-relaxed font-ui">
-              OKISO is a digital entity creating electronic soundscapes in the void.
-              Specializing in Vocaloid production and virtual performance.
+              OKISO, also known as OXO or オキソ is an otherwordly entity creating experiences, the best way!
+              Blending hyperpop, gaming, and his art into a unique experience.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {["EDM", "PRODUCER", "VTUBER", "CYBERPUNK"].map((tag) => (
+              {["HYPERPOP", "GAMER", "DEVELOPER", "ARTIST", "STREAMER"].map((tag) => (
                 <span key={tag} className="text-xs font-mono border border-neon-cyan text-neon-cyan px-2 py-1 bg-neon-cyan/10">
                   {tag}
                 </span>
