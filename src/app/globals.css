@@ -3,16 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: #111111;
-  --foreground: #F0F0F0;
+  /* The Void Base */
+  --zzz-black: #0a0a0a;
+  --zzz-dark-grey: #1f1f1f;
+  --zzz-panel-bg: rgba(20, 20, 20, 0.95);
+
+  /* Neon Accents (Attribute Colors) */
+  --zzz-ether-purple: #ff005c;
+  /* Ether / Corruption */
+  --zzz-electric-blue: #7bb1ff;
+  /* Shock / Anby's Theme */
+  --zzz-impact-orange: #ff5c00;
+  /* Fire / Construction */
+  --zzz-volt-green: #ccff00;
+  /* Energy / HUD Accents */
+
+  /* UI Specifics */
+  --zzz-warning-yellow: #f2ff00;
+  --zzz-text-primary: #ffffff;
+  --zzz-text-muted: #858585;
+
+  --background: var(--zzz-black);
+  --foreground: var(--zzz-text-primary);
 }
 
 @layer base {
   body {
-    @apply bg-urban-black text-urban-white font-ui antialiased overflow-x-hidden;
+    @apply bg-zzz-black text-zzz-text-primary font-ui antialiased overflow-x-hidden;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display uppercase tracking-tighter;
   }
 }
@@ -22,21 +47,28 @@
     -webkit-text-stroke: 1px currentColor;
     color: transparent;
   }
-  
+
   .text-stroke-sm {
     -webkit-text-stroke: 0.5px currentColor;
     color: transparent;
   }
 
-  .clip-corner-tr {
+  /* ZZZ Specific Clip Paths */
+  .clip-zzz-card {
+    clip-path: polygon(10px 0, 100% 0,
+        100% calc(100% - 10px), calc(100% - 10px) 100%,
+        0 100%, 0 10px);
+  }
+
+  .clip-zzz-corner-tr {
     clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
   }
-  
-  .clip-corner-bl {
+
+  .clip-zzz-corner-bl {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
   }
-  
-  .clip-diagonal {
+
+  .clip-zzz-diagonal {
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
   }
 }

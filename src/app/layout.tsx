@@ -5,6 +5,7 @@ import CRTOverlay from '@/Components/Urban/CRTOverlay';
 import faviconPng from './favicon.png';
 import "./globals.css";
 import { staticReleases } from '@/data/releases';
+import MusicPlayer from '@/Components/ZZZ/MusicPlayer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -196,11 +197,13 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="any" href={faviconPng.src} />
         <link rel="apple-touch-icon" href={faviconPng.src} />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased bg-urban-black text-urban-white overflow-x-hidden`}>
+      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased bg-urban-black text-urban-white overflow-x-hidden`}>
         <div className="fixed inset-0 z-0 pointer-events-none">
           <HalftoneWave />
           <CRTOverlay />
         </div>
+
+        <MusicPlayer />
 
         <div className="relative z-[1] min-h-screen flex flex-col">
           {/* Header hidden but accessible */}
