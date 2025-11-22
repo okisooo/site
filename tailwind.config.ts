@@ -78,11 +78,16 @@ export default {
           "60%": { transform: "translate(2px, 2px)" },
           "80%": { transform: "translate(2px, -2px)" },
         },
+        scanline: {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "0 100%" },
+        },
       },
       animation: {
         marquee: "marquee 20s linear infinite",
         "marquee-reverse": "marquee-reverse 20s linear infinite",
         glitch: "glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite",
+        scanline: "scanline 8s linear infinite",
       },
     },
   },

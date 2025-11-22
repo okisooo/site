@@ -76,7 +76,7 @@ const ZZZCard: React.FC<ZZZCardProps> = ({
                     <h3 className={cn("font-display text-xl uppercase tracking-tighter", textColor)}>
                         {title}
                     </h3>
-                    <div className={cn("h-2 w-2 rounded-full animate-pulse", `bg-zzz-${accentColor}`)} />
+                    <div className={cn("h-2 w-2 rounded-full animate-pulse ml-4", `bg-zzz-${accentColor}`)} />
                 </div>
             )}
 
