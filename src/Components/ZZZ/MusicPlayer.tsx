@@ -8,6 +8,7 @@ const MusicPlayer: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume] = useState(0.3);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const isAttemptingPlay = useRef(false);
 
     // ZZZ Soundtrack Loop
     // Place your audio file at public/audio/bgm.mp3
@@ -17,24 +18,28 @@ const MusicPlayer: React.FC = () => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
         audioRef.current.preload = 'auto';
-
+        
         // Error handling for robustness
         audioRef.current.addEventListener('error', (e) => {
             console.error("Audio playback error:", e);
             setIsPlaying(false);
         });
 
+        const interactionEvents = ['click', 'keydown', 'touchstart', 'mousedown', 'pointerdown', 'scroll', 'wheel'];
+
         // Function to handle user interaction for autoplay
         const handleUserInteraction = () => {
-            if (audioRef.current) {
+            if (audioRef.current && !isAttemptingPlay.current) {
+                isAttemptingPlay.current = true;
                 audioRef.current.play().then(() => {
                     setIsPlaying(true);
                     // Remove listeners once played
-                    document.removeEventListener('click', handleUserInteraction);
-                    document.removeEventListener('keydown', handleUserInteraction);
-                    document.removeEventListener('touchstart', handleUserInteraction);
+                    interactionEvents.forEach(event => {
+                        document.removeEventListener(event, handleUserInteraction);
+                    });
                 }).catch(e => {
-                    console.log("Interaction play failed:", e);
+                    // Silent fail for interaction attempts (e.g. scroll might be blocked)
+                    isAttemptingPlay.current = false;
                 });
             }
         };
@@ -48,24 +53,24 @@ const MusicPlayer: React.FC = () => {
                 console.log("Auto-play prevented (waiting for interaction):", error);
                 setIsPlaying(false);
                 // Add listeners for user interaction
-                document.addEventListener('click', handleUserInteraction);
-                document.addEventListener('keydown', handleUserInteraction);
-                document.addEventListener('touchstart', handleUserInteraction);
+                interactionEvents.forEach(event => {
+                    document.addEventListener(event, handleUserInteraction, { passive: true });
+                });
             });
         }
 
         return () => {
             // Cleanup listeners
-            document.removeEventListener('click', handleUserInteraction);
-            document.removeEventListener('keydown', handleUserInteraction);
-            document.removeEventListener('touchstart', handleUserInteraction);
+            interactionEvents.forEach(event => {
+                document.removeEventListener(event, handleUserInteraction);
+            });
 
             if (audioRef.current) {
                 audioRef.current.pause();
                 audioRef.current = null;
             }
         };
-    }, []); useEffect(() => {
+    }, []);    useEffect(() => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.play().catch(e => console.log("Play failed:", e));
@@ -84,7 +89,7 @@ const MusicPlayer: React.FC = () => {
     const togglePlay = () => setIsPlaying(!isPlaying);
 
     return (
-        <div className="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 z-50 flex items-center gap-2 lg:gap-4 scale-90 lg:scale-100 origin-bottom-right">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4">
             {/* Visualizer Bars (CSS Animation) */}
             {isPlaying && (
                 <div className="flex items-end gap-1 h-8">
