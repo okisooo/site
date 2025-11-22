@@ -91,33 +91,33 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-zzz-black via-transparent to-zzz-black" />
         <div className="absolute inset-0 bg-halftone opacity-10" />
 
-        <div className="container mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-center">
+        <div className="container mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 h-full items-center">
           {/* Left: Stats & Info */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-8 order-2 lg:order-1">
-            <div ref={statsRef} className="space-y-6">
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-electric-blue p-6 clip-zzz-card transform -skew-x-6 hover:skew-x-0 transition-transform duration-300">
-                <h3 className="text-zzz-electric-blue font-display text-xl mb-1">ROLE //</h3>
-                <p className="text-4xl font-black uppercase tracking-tighter">
-                  <DecodingText text="PRODUCER" revealDuration={1} className="text-2xl lg:text-4xl" />
+          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 order-2 lg:order-1 w-full">
+            <div ref={statsRef} className="space-y-3 lg:space-y-6 w-full">
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-electric-blue p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-electric-blue font-display text-sm lg:text-xl mb-1">ROLE //</h3>
+                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="PRODUCER" revealDuration={1} className="text-xl lg:text-4xl" />
                 </p>
               </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-ether-purple p-6 clip-zzz-card transform -skew-x-6 ml-8 hover:skew-x-0 transition-transform duration-300">
-                <h3 className="text-zzz-ether-purple font-display text-xl mb-1">CLASS //</h3>
-                <p className="text-4xl font-black uppercase tracking-tighter">
-                  <DecodingText text="VTUBER" revealDuration={1.2} className="text-2xl lg:text-4xl" />
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-ether-purple p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:ml-8 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-ether-purple font-display text-sm lg:text-xl mb-1">CLASS //</h3>
+                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="VTUBER" revealDuration={1.2} className="text-xl lg:text-4xl" />
                 </p>
               </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-impact-orange p-6 clip-zzz-card transform -skew-x-6 hover:skew-x-0 transition-transform duration-300">
-                <h3 className="text-zzz-impact-orange font-display text-xl mb-1">AFFILIATION //</h3>
-                <p className="text-4xl font-black uppercase tracking-tighter">
-                  <DecodingText text="OKISO.NET" revealDuration={1.4} className="text-2xl lg:text-4xl" />
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-impact-orange p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-impact-orange font-display text-sm lg:text-xl mb-1">AFFILIATION //</h3>
+                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="OKISO.NET" revealDuration={1.4} className="text-xl lg:text-4xl" />
                 </p>
               </div>
             </div>
           </div>
 
           {/* Center: Character / Title */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative h-[50vh] lg:h-auto">
+          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative h-[40vh] lg:h-auto">
             <div ref={charRef} className="relative w-full h-full lg:aspect-[3/4] lg:max-h-[80vh] flex items-center justify-center">
               {/* Character Art */}
               <div className="absolute inset-0 z-10 drop-shadow-2xl" style={{ filter: "contrast(1.1) brightness(1.05)" }}>
