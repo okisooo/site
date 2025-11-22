@@ -17,7 +17,7 @@ const MusicPlayer: React.FC = () => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
         audioRef.current.preload = 'auto';
-        
+
         // Error handling for robustness
         audioRef.current.addEventListener('error', (e) => {
             console.error("Audio playback error:", e);

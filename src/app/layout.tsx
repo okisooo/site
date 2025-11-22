@@ -52,7 +52,7 @@ export const metadata = {
   openGraph: {
     title: "OKISO.NET // WEBSITE",
     description:
-      "Discover the universe of Virtual Artist / VTuber OKISO. Listen to music, explore art, and connect across social media.",
+      "CONNECTION ESTABLISHED // ^_^",
     url: "https://okiso.net",
     images: [
       {
