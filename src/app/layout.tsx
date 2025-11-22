@@ -32,7 +32,7 @@ const urbanist = Urbanist({
 });
 
 export const metadata = {
-  title: "OKISO | Official Website - Virtual Artist and Music Producer",
+  title: "OKISO.NET // WEBSITE",
   description: "OKISO - Official website of virtual artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Electronic music featuring original compositions.",
   keywords: [
     "OKISO",
@@ -49,7 +49,7 @@ export const metadata = {
     canonical: 'https://okiso.net'
   },
   openGraph: {
-    title: "OKISO オキソ | Virtual Artist / VTuber",
+    title: "OKISO.NET // WEBSITE",
     description:
       "Discover the universe of Virtual Artist / VTuber OKISO. Listen to music, explore art, and connect across social media.",
     url: "https://okiso.net",
@@ -58,18 +58,18 @@ export const metadata = {
         url: "https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif",
         width: 800,
         height: 600,
-        alt: "OKISO Vocaloid Artist"
+        alt: "OKISO.NET // WEBSITE"
       }
     ],
-    siteName: "オキソ PORTFOLIO",
+    siteName: "OKISO.NET",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "OKISO オキソ | VOCALOID Producer / VTuber",
+    title: "OKISO.NET // WEBSITE",
     description:
       "Discover VOCALOID Producer / VTuber OKISO's portfolio with music, art, and social media links.",
-    images: ["https://i.imgur.com/pM8llz7.gif"]
+    images: ["https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif"]
   }
 };
 

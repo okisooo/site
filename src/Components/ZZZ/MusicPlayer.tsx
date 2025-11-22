@@ -9,13 +9,21 @@ const MusicPlayer: React.FC = () => {
     const [volume] = useState(0.3);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // ZZZ Soundtrack Loop (Placeholder URL - replace with actual asset if available)
-    // Using a generic upbeat electronic loop for now as placeholder
-    const TRACK_URL = "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=cyberpunk-city-110288.mp3";
+    // ZZZ Soundtrack Loop
+    // Place your audio file at public/audio/bgm.mp3
+    const TRACK_URL = "/audio/bgm.mp3";
 
     useEffect(() => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
+        audioRef.current.preload = 'auto';
+        
+        // Error handling for robustness
+        audioRef.current.addEventListener('error', (e) => {
+            console.error("Audio playback error:", e);
+            setIsPlaying(false);
+        });
+
         // Volume is handled by the separate effect below
 
         // Auto-play attempt
@@ -24,7 +32,7 @@ const MusicPlayer: React.FC = () => {
             playPromise.then(() => {
                 setIsPlaying(true);
             }).catch(error => {
-                console.log("Auto-play prevented:", error);
+                console.log("Auto-play prevented (user interaction required):", error);
                 setIsPlaying(false);
             });
         }
