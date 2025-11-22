@@ -57,8 +57,6 @@ export const metadata = {
     images: [
       {
         url: "https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif",
-        width: 800,
-        height: 600,
         alt: "OKISO.NET // WEBSITE"
       }
     ],
