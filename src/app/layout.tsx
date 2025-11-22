@@ -32,6 +32,7 @@ const urbanist = Urbanist({
 });
 
 export const metadata = {
+  metadataBase: new URL('https://okiso.net'),
   title: "OKISO.NET // WEBSITE",
   description: "OKISO - Official website of virtual artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Electronic music featuring original compositions.",
   keywords: [
