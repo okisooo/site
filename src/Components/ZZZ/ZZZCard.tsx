@@ -37,6 +37,10 @@ const ZZZCard: React.FC<ZZZCardProps> = ({
         const card = cardRef.current;
         if (!card) return;
 
+        // Only enable hover animation on non-touch devices
+        const isTouch = window.matchMedia('(hover: none)').matches;
+        if (isTouch) return;
+
         const hoverAnim = gsap.to(card, {
             scale: 1.02,
             skewX: -2,
@@ -61,7 +65,7 @@ const ZZZCard: React.FC<ZZZCardProps> = ({
         <div
             ref={cardRef}
             className={cn(
-                "relative bg-zzz-panel-bg p-6 clip-zzz-card border-l-4 transition-colors duration-300 group",
+                "relative bg-zzz-panel-bg p-4 lg:p-6 clip-zzz-card border-l-4 transition-colors duration-300 group",
                 borderColor,
                 className
             )}

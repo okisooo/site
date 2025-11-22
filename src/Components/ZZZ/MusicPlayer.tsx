@@ -17,7 +17,7 @@ const MusicPlayer: React.FC = () => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
         audioRef.current.preload = 'auto';
-        
+
         // Error handling for robustness
         audioRef.current.addEventListener('error', (e) => {
             console.error("Audio playback error:", e);
@@ -65,7 +65,7 @@ const MusicPlayer: React.FC = () => {
                 audioRef.current = null;
             }
         };
-    }, []);    useEffect(() => {
+    }, []); useEffect(() => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.play().catch(e => console.log("Play failed:", e));
@@ -84,7 +84,7 @@ const MusicPlayer: React.FC = () => {
     const togglePlay = () => setIsPlaying(!isPlaying);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-4">
+        <div className="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 z-50 flex items-center gap-2 lg:gap-4 scale-90 lg:scale-100 origin-bottom-right">
             {/* Visualizer Bars (CSS Animation) */}
             {isPlaying && (
                 <div className="flex items-end gap-1 h-8">

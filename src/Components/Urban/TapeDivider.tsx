@@ -26,8 +26,8 @@ export default function TapeDivider({
     const textClass = "text-zzz-black";
 
     return (
-        <div className={cn("relative w-[120vw] left-[50%] -translate-x-[50%] overflow-hidden py-3 rotate-[-2deg] z-20 border-y-4 border-zzz-black shadow-[0_0_15px_rgba(0,0,0,0.5)] my-10", className)}>
-            <div className={cn("whitespace-nowrap font-display font-black text-2xl uppercase tracking-tighter flex gap-8",
+        <div className={cn("relative w-[120vw] left-[50%] -translate-x-[50%] overflow-hidden py-2 lg:py-3 rotate-[-2deg] z-20 border-y-4 border-zzz-black shadow-[0_0_15px_rgba(0,0,0,0.5)] my-10", className)}>
+            <div className={cn("whitespace-nowrap font-display font-black text-lg lg:text-2xl uppercase tracking-tighter flex gap-8",
                 direction === "left" ? "animate-marquee" : "animate-marquee-reverse",
                 textClass
             )}>
