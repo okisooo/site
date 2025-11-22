@@ -17,14 +17,27 @@ const MusicPlayer: React.FC = () => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
         audioRef.current.preload = 'auto';
-
+        
         // Error handling for robustness
         audioRef.current.addEventListener('error', (e) => {
             console.error("Audio playback error:", e);
             setIsPlaying(false);
         });
 
-        // Volume is handled by the separate effect below
+        // Function to handle user interaction for autoplay
+        const handleUserInteraction = () => {
+            if (audioRef.current) {
+                audioRef.current.play().then(() => {
+                    setIsPlaying(true);
+                    // Remove listeners once played
+                    document.removeEventListener('click', handleUserInteraction);
+                    document.removeEventListener('keydown', handleUserInteraction);
+                    document.removeEventListener('touchstart', handleUserInteraction);
+                }).catch(e => {
+                    console.log("Interaction play failed:", e);
+                });
+            }
+        };
 
         // Auto-play attempt
         const playPromise = audioRef.current.play();
@@ -32,20 +45,27 @@ const MusicPlayer: React.FC = () => {
             playPromise.then(() => {
                 setIsPlaying(true);
             }).catch(error => {
-                console.log("Auto-play prevented (user interaction required):", error);
+                console.log("Auto-play prevented (waiting for interaction):", error);
                 setIsPlaying(false);
+                // Add listeners for user interaction
+                document.addEventListener('click', handleUserInteraction);
+                document.addEventListener('keydown', handleUserInteraction);
+                document.addEventListener('touchstart', handleUserInteraction);
             });
         }
 
         return () => {
+            // Cleanup listeners
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+
             if (audioRef.current) {
                 audioRef.current.pause();
                 audioRef.current = null;
             }
         };
-    }, []);
-
-    useEffect(() => {
+    }, []);    useEffect(() => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.play().catch(e => console.log("Play failed:", e));
