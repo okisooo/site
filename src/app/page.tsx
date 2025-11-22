@@ -44,36 +44,70 @@ export default function Home() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
       const tl = gsap.timeline();
 
-      // Hero Entrance - Slam and Bounce
-      tl.from(charRef.current, {
-        x: 100,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power4.out",
-      })
-        .from(
-          titleRef.current,
-          {
-            scale: 2,
-            opacity: 0,
-            duration: 0.5,
-            ease: "back.out(1.7)",
-          },
-          "-=0.4"
-        )
-        .from(
-          statsRef.current?.children || [],
-          {
-            x: -100,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: "back.out(1.7)", // ZZZ style bounce
-          },
-          "-=0.3"
-        );
+      mm.add("(min-width: 1024px)", () => {
+        // Desktop Animation
+        tl.from(charRef.current, {
+          x: 100,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power4.out",
+        })
+          .from(
+            titleRef.current,
+            {
+              scale: 2,
+              opacity: 0,
+              duration: 0.5,
+              ease: "back.out(1.7)",
+            },
+            "-=0.4"
+          )
+          .from(
+            statsRef.current?.children || [],
+            {
+              x: -100,
+              opacity: 0,
+              stagger: 0.1,
+              duration: 0.6,
+              ease: "back.out(1.7)",
+            },
+            "-=0.3"
+          );
+      });
+
+      mm.add("(max-width: 1023px)", () => {
+        // Mobile Animation - Vertical Movements
+        tl.from(charRef.current, {
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power4.out",
+        })
+          .from(
+            titleRef.current,
+            {
+              scale: 1.5,
+              opacity: 0,
+              duration: 0.5,
+              ease: "back.out(1.7)",
+            },
+            "-=0.4"
+          )
+          .from(
+            statsRef.current?.children || [],
+            {
+              y: 20,
+              opacity: 0,
+              stagger: 0.1,
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            "-=0.3"
+          );
+      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -91,33 +125,9 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-zzz-black via-transparent to-zzz-black" />
         <div className="absolute inset-0 bg-halftone opacity-10" />
 
-        <div className="container mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 h-full items-center">
-          {/* Left: Stats & Info */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 order-2 lg:order-1 w-full">
-            <div ref={statsRef} className="space-y-3 lg:space-y-6 w-full">
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-electric-blue p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-electric-blue font-display text-sm lg:text-xl mb-1">ROLE //</h3>
-                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="PRODUCER" revealDuration={1} className="text-xl lg:text-4xl" />
-                </p>
-              </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-ether-purple p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:ml-8 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-ether-purple font-display text-sm lg:text-xl mb-1">CLASS //</h3>
-                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="VTUBER" revealDuration={1.2} className="text-xl lg:text-4xl" />
-                </p>
-              </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-impact-orange p-4 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-impact-orange font-display text-sm lg:text-xl mb-1">AFFILIATION //</h3>
-                <p className="text-xl lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="OKISO.NET" revealDuration={1.4} className="text-xl lg:text-4xl" />
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Center: Character / Title */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative h-[40vh] lg:h-auto">
+        <div className="container mx-auto px-4 relative z-10 flex flex-col lg:grid lg:grid-cols-12 gap-4 lg:gap-8 h-full justify-center lg:items-center">
+          {/* Center: Character / Title (Order 1 on Mobile) */}
+          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative h-[40vh] lg:h-auto w-full mb-4 lg:mb-0">
             <div ref={charRef} className="relative w-full h-full lg:aspect-[3/4] lg:max-h-[80vh] flex items-center justify-center">
               {/* Character Art */}
               <div className="absolute inset-0 z-10 drop-shadow-2xl" style={{ filter: "contrast(1.1) brightness(1.05)" }}>
@@ -134,12 +144,36 @@ export default function Home() {
               {/* Subtle Back Glow */}
               <div className="absolute inset-0 bg-radial-gradient from-white/10 to-transparent opacity-50 blur-3xl -z-10" />
 
-              <h1 ref={titleRef} className="absolute bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-white tracking-tighter z-20 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)] mix-blend-overlay">
+              <h1 ref={titleRef} className="absolute bottom-4 lg:bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-white tracking-tighter z-20 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)] mix-blend-overlay">
                 OKISO
               </h1>
-              <h1 className="absolute bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-transparent text-stroke tracking-tighter z-20 pointer-events-none">
+              <h1 className="absolute bottom-4 lg:bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-transparent text-stroke tracking-tighter z-20 pointer-events-none">
                 OKISO
               </h1>
+            </div>
+          </div>
+
+          {/* Left: Stats & Info (Order 2 on Mobile) */}
+          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 order-2 lg:order-1 w-full">
+            <div ref={statsRef} className="space-y-2 lg:space-y-6 w-full">
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-electric-blue p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-electric-blue font-display text-xs lg:text-xl mb-0.5 lg:mb-1">ROLE //</h3>
+                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="PRODUCER" revealDuration={1} className="text-lg lg:text-4xl" />
+                </p>
+              </div>
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-ether-purple p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:ml-8 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-ether-purple font-display text-xs lg:text-xl mb-0.5 lg:mb-1">CLASS //</h3>
+                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="VTUBER" revealDuration={1.2} className="text-lg lg:text-4xl" />
+                </p>
+              </div>
+              <div className="bg-zzz-panel-bg border-l-4 border-zzz-impact-orange p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
+                <h3 className="text-zzz-impact-orange font-display text-xs lg:text-xl mb-0.5 lg:mb-1">AFFILIATION //</h3>
+                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
+                  <DecodingText text="OKISO.NET" revealDuration={1.4} className="text-lg lg:text-4xl" />
+                </p>
+              </div>
             </div>
           </div>
 
