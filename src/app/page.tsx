@@ -31,16 +31,11 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
   ),
 });
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
 
-const socialLinks = [
+
+type BentoColor = 'sky' | 'pink' | 'yellow' | 'lavender' | 'mint' | 'cream';
+
+const socialLinks: { icon: React.ReactNode; label: string; href: string; color: BentoColor }[] = [
   { icon: <FaSpotify size={24} />, label: "Spotify", href: "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm", color: "mint" },
   { icon: <FaInstagram size={24} />, label: "Instagram", href: "https://www.instagram.com/okisooo_/", color: "pink" },
   { icon: <FaYoutube size={24} />, label: "YouTube", href: "https://www.youtube.com/@okiso7", color: "yellow" },
@@ -152,7 +147,7 @@ export default function Home() {
 
             {/* Main Social Blocks */}
             {socialLinks.map((link, i) => (
-              <BentoBox key={link.label} color={link.color as any} delay={i * 0.1} className="col-span-1 row-span-1 group cursor-pointer ba-corner-cross">
+              <BentoBox key={link.label} color={link.color} delay={i * 0.1} className="col-span-1 row-span-1 group cursor-pointer ba-corner-cross">
                 <a href={link.href} target="_blank" rel="noreferrer" className="w-full h-full flex flex-col items-center justify-center p-6 text-ba-dark group-hover:text-white transition-colors duration-300">
                   <div className={`p-4 rounded-full bg-white/50 group-hover:bg-white/20 mb-3 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
                     {link.icon}
