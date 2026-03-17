@@ -93,7 +93,7 @@ export default function Home() {
               transition={{ delay: 1, duration: 0.6 }}
               className="text-lg text-ba-dark-soft font-ui max-w-md mb-8 tracking-wide"
             >
-              just making some noise on the internet. writing songs, coding things, and being silly. welcome to my little corner of the web ✨
+              {isEasterEgg ? "its never lupus." : "just making some noise on the internet. writing songs, coding things, and making content. welcome my takolings! 🐙"}
             </motion.p>
 
             <motion.div
