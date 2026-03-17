@@ -26,7 +26,7 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full min-h-[400px]">
-      <div className="w-10 h-10 border-4 border-ba-sky/30 border-t-ba-sky rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-ba-red/30 border-t-ba-red rounded-full animate-spin" />
     </div>
   ),
 });
@@ -55,7 +55,7 @@ export default function Home() {
   const isEasterEgg = eggCount >= 5;
 
   return (
-    <div className="min-h-screen w-full pb-24 overflow-x-hidden selection:bg-ba-pink-light selection:text-ba-dark bg-ba-white">
+    <div className="flex-grow flex flex-col w-full overflow-x-hidden selection:bg-ba-pink-light selection:text-ba-dark bg-ba-white">
       <FloatingBackground />
 
       {/* ─── Hero Section ─── */}
@@ -79,7 +79,7 @@ export default function Home() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="flex items-center gap-3 mb-6"
             >
-              <span className="px-4 py-1.5 bg-ba-sky text-white text-sm font-bold rounded-full shadow-ba-soft">vtuber and producer! ♡</span>
+              <span className="px-4 py-1.5 bg-ba-red text-white text-sm font-bold rounded-full shadow-ba-soft">vtuber and producer! ♡</span>
             </motion.div>
 
             <motion.p
@@ -114,12 +114,12 @@ export default function Home() {
             className="relative w-[300px] h-[450px] md:w-[400px] md:h-[600px] cursor-pointer"
             onClick={() => setEggCount(c => c + 1)}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-ba-sky via-ba-pink to-ba-yellow opacity-20 blur-3xl animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-ba-red via-ba-pink to-ba-yellow opacity-20 blur-3xl animate-pulse" />
             <Image
               src={isEasterEgg ? "/easter_egg.jpg" : "/hero_character.png"}
               alt="OKISO — Virtual Artist Avatar"
               fill
-              className={`object-contain ${isEasterEgg ? 'rounded-3xl shadow-2xl scale-95 transition-all duration-500' : 'drop-shadow-[0_20px_40px_rgba(124,200,248,0.4)]'}`}
+              className={`object-contain ${isEasterEgg ? 'rounded-3xl shadow-2xl scale-95 transition-all duration-500' : 'drop-shadow-[0_20px_40px_rgba(255,77,77,0.4)]'}`}
               priority
               sizes="(max-width: 768px) 300px, 400px"
               unoptimized={isEasterEgg}
@@ -129,12 +129,12 @@ export default function Home() {
       </section>
 
       {/* ─── Lower Section (Classroom Vibe) ─── */}
-      <div className="relative w-full z-10 bg-white">
+      <div className="relative w-full flex-grow pb-24 z-10 bg-ba-white">
         {/* Full-width classroom grid background */}
         <div className="absolute inset-0 bg-classroom-grid opacity-50 pointer-events-none" />
 
         {/* Soft fade transition at the top */}
-        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
+        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-ba-white to-transparent pointer-events-none z-10" />
 
         {/* ─── Scrolling Marquee Divider ─── */}
         <div className="relative z-30 pt-4 pb-12">
@@ -149,7 +149,7 @@ export default function Home() {
             {socialLinks.map((link, i) => (
               <BentoBox key={link.label} color={link.color} delay={i * 0.1} className="col-span-1 row-span-1 group cursor-pointer ba-corner-cross">
                 <a href={link.href} target="_blank" rel="noreferrer" className="w-full h-full flex flex-col items-center justify-center p-6 text-ba-dark group-hover:text-white transition-colors duration-300">
-                  <div className={`p-4 rounded-full bg-white/50 group-hover:bg-white/20 mb-3 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
+                  <div className={`p-4 rounded-full bg-black/5 dark:bg-white/10 group-hover:bg-black/10 dark:group-hover:bg-white/20 mb-3 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
                     {link.icon}
                   </div>
                   <span className="font-display font-bold text-lg">{link.label}</span>
@@ -170,12 +170,12 @@ export default function Home() {
             {/* VRM Viewer Block */}
             <BentoBox color="lavender" delay={0.5} className="col-span-1 md:col-span-3 lg:col-span-2 row-span-3 p-0 overflow-hidden group ba-corner-cross">
               <div className="absolute inset-x-0 top-0 p-4 z-20 pointer-events-none bg-gradient-to-b from-ba-lavender/80 to-transparent flex justify-between items-start">
-                <h3 className="font-display font-black text-white text-shadow-sm flex items-center gap-2">
+                <h3 className="font-display font-black text-ba-dark text-shadow-sm flex items-center gap-2">
                   <span className="animate-spin-slow">✦</span> 3D Model
                 </h3>
                 <div className="bg-ba-dark text-white text-[9px] font-mono px-1.5 py-0.5 rounded opacity-50">SYS.OKISO.VRM</div>
               </div>
-              <div className="w-full h-full bg-gradient-to-b from-white to-ba-lavender/10">
+              <div className="w-full h-full bg-gradient-to-b from-ba-white to-ba-lavender/10">
                 <VRMViewer modelUrl="/model.vrm" className="w-full h-full min-h-[480px]" />
               </div>
             </BentoBox>
@@ -184,11 +184,11 @@ export default function Home() {
             <BentoBox color="cream" delay={0.6} className="col-span-1 md:col-span-1 lg:col-span-2 row-span-1 p-6 flex flex-col justify-center ba-corner-cross">
               <div className="flex items-center gap-2 mb-3">
                 <h4 className="font-display font-bold text-ba-muted text-sm tracking-wider uppercase m-0">More Links</h4>
-                <span className="text-ba-sky text-xs font-jp opacity-60">サブリンク</span>
+                <span className="text-ba-red text-xs font-jp opacity-60">サブリンク</span>
               </div>
               <div className="flex items-center gap-3">
                 {extraSocials.map((social, i) => (
-                  <a key={i} href={social.href} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-ba-dark/5 flex items-center justify-center text-ba-dark-soft hover:bg-ba-sky hover:text-white transition-all hover:scale-110 hover:-translate-y-1">
+                  <a key={i} href={social.href} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-ba-dark/5 flex items-center justify-center text-ba-dark-soft hover:bg-ba-red hover:text-white transition-all hover:scale-110 hover:-translate-y-1">
                     {social.icon}
                   </a>
                 ))}

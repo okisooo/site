@@ -139,7 +139,7 @@ export default function PromoBanner({
             >
               {ctaLabel}
               <span className={`${compact ? "text-base" : "text-lg"}`} aria-hidden="true">
-                ↗
+                ↁE
               </span>
             </a>
           </div>

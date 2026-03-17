@@ -13,7 +13,7 @@ interface PillButtonProps {
 }
 
 const variantMap = {
-    sky: 'bg-gradient-to-r from-ba-sky to-ba-sky-deep hover:shadow-ba-glow-sky',
+    sky: 'bg-gradient-to-r from-ba-red to-ba-red-deep hover:shadow-ba-glow-sky',
     pink: 'bg-gradient-to-r from-ba-pink to-ba-pink-deep hover:shadow-ba-glow-pink',
     yellow: 'bg-gradient-to-r from-ba-yellow to-ba-coral text-ba-dark hover:shadow-ba-glow-yellow',
 };

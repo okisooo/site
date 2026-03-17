@@ -79,7 +79,7 @@ const MusicPlayer: React.FC = () => {
 
     const togglePlay = () => setIsPlaying(!isPlaying);
 
-    const barColors = ['bg-ba-pink', 'bg-ba-sky', 'bg-ba-yellow', 'bg-ba-lavender'];
+    const barColors = ['bg-ba-pink', 'bg-ba-red', 'bg-ba-yellow', 'bg-ba-lavender'];
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
@@ -104,14 +104,14 @@ const MusicPlayer: React.FC = () => {
             )}
 
             {/* Player Control */}
-            <div className="bg-white/80 backdrop-blur-md border-2 border-ba-sky/20 p-1 rounded-ba-pill flex items-center gap-2 shadow-ba-soft">
+            <div className="bg-white/80 backdrop-blur-md border-2 border-ba-red/20 p-1 rounded-ba-pill flex items-center gap-2 shadow-ba-soft">
                 <button
                     onClick={togglePlay}
                     className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
                         isPlaying
                             ? "bg-gradient-to-r from-ba-pink to-ba-pink-deep text-white shadow-ba-glow-pink"
-                            : "bg-ba-sky/10 text-ba-sky-deep hover:bg-ba-sky hover:text-white"
+                            : "bg-ba-red/10 text-ba-red-deep hover:bg-ba-red hover:text-white"
                     )}
                 >
                     {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} className="ml-0.5" />}

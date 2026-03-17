@@ -24,17 +24,17 @@ export default function ProfileCard({
     return (
         <div className={cn(
             'relative bg-white/90 backdrop-blur-md rounded-ba-lg overflow-hidden',
-            'border-2 border-ba-sky/20 shadow-ba-card',
+            'border-2 border-ba-red/20 shadow-ba-card',
             className
         )}>
             {/* Header gradient band */}
-            <div className="h-2 bg-gradient-to-r from-ba-sky via-ba-pink to-ba-yellow" />
+            <div className="h-2 bg-gradient-to-r from-ba-red via-ba-pink to-ba-yellow" />
 
             <div className="p-6">
                 {/* Avatar + Info */}
                 <div className="flex items-start gap-5">
                     {imageSrc && (
-                        <div className="relative w-20 h-20 rounded-full overflow-hidden ring-4 ring-ba-sky/30 flex-shrink-0">
+                        <div className="relative w-20 h-20 rounded-full overflow-hidden ring-4 ring-ba-red/30 flex-shrink-0">
                             <Image
                                 src={imageSrc}
                                 alt={name}
@@ -49,7 +49,7 @@ export default function ProfileCard({
                             {name}
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm font-bold text-ba-sky-deep">{role}</span>
+                            <span className="text-sm font-bold text-ba-red-deep">{role}</span>
                             <span className="text-ba-muted">·</span>
                             <span className="text-sm text-ba-muted">{affiliation}</span>
                         </div>
@@ -61,7 +61,7 @@ export default function ProfileCard({
                     {tags.map((tag) => (
                         <span
                             key={tag}
-                            className="text-xs font-bold font-display px-3 py-1 rounded-ba-pill bg-ba-sky/10 text-ba-sky-deep border border-ba-sky/20"
+                            className="text-xs font-bold font-display px-3 py-1 rounded-ba-pill bg-ba-red/10 text-ba-red-deep border border-ba-red/20"
                         >
                             {tag}
                         </span>

@@ -13,7 +13,7 @@ interface AnimeCardProps {
 }
 
 const accentMap = {
-    sky: 'border-ba-sky/30 hover:border-ba-sky/60',
+    sky: 'border-ba-red/30 hover:border-ba-red/60',
     pink: 'border-ba-pink/30 hover:border-ba-pink/60',
     yellow: 'border-ba-yellow/30 hover:border-ba-yellow/60',
     lavender: 'border-ba-lavender/30 hover:border-ba-lavender/60',
@@ -21,7 +21,7 @@ const accentMap = {
 };
 
 const titleColorMap = {
-    sky: 'text-ba-sky-deep',
+    sky: 'text-ba-red-deep',
     pink: 'text-ba-pink-deep',
     yellow: 'text-ba-coral',
     lavender: 'text-purple-600',

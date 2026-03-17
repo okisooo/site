@@ -116,7 +116,7 @@ export default function ReleasesPage() {
           <AnimeCard title="Featured Releases" accentColor="yellow" className={`${isMobile ? 'mb-4' : 'mb-6'}`}>
             <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-3 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
               {featuredReleases.map((release: Release) => (
-                <div key={release.title} className={`bg-ba-sky/5 p-2 rounded-ba border border-ba-sky/10 flex-shrink-0 transition-all hover:shadow-ba-soft hover:-translate-y-1 ${isMobile ? 'w-[120px]' : 'w-[170px]'}`}>
+                <div key={release.title} className={`bg-ba-red/5 p-2 rounded-ba border border-ba-red/10 flex-shrink-0 transition-all hover:shadow-ba-soft hover:-translate-y-1 ${isMobile ? 'w-[120px]' : 'w-[170px]'}`}>
                   <a
                     href={release.slug ? `/releases/${release.slug}` : release.link}
                     className="block relative aspect-square transition-transform rounded-ba overflow-hidden"

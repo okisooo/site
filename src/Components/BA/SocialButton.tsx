@@ -11,7 +11,7 @@ interface SocialButtonProps {
 }
 
 const colorMap = {
-    sky: 'bg-ba-sky/10 text-ba-sky-deep hover:bg-ba-sky hover:text-white hover:shadow-ba-glow-sky',
+    sky: 'bg-ba-red/10 text-ba-red-deep hover:bg-ba-red hover:text-white hover:shadow-ba-glow-sky',
     pink: 'bg-ba-pink/10 text-ba-pink-deep hover:bg-ba-pink hover:text-white hover:shadow-ba-glow-pink',
     yellow: 'bg-ba-yellow/10 text-ba-coral hover:bg-ba-yellow hover:text-ba-dark hover:shadow-ba-glow-yellow',
     lavender: 'bg-ba-lavender/10 text-purple-600 hover:bg-ba-lavender hover:text-white hover:shadow-[0_0_20px_rgba(196,181,253,0.4)]',

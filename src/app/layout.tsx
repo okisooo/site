@@ -2,6 +2,8 @@ import { Nunito, Quicksand } from "next/font/google";
 import "./globals.css";
 import { staticReleases } from '@/data/releases';
 // import MusicPlayer from '@/Components/BA/MusicPlayer';
+import { ThemeProvider } from "@/Components/ThemeProvider";
+import { ThemeToggle } from "@/Components/ThemeToggle";
 const nunito = Nunito({
   variable: "--font-display",
   subsets: ["latin"],
@@ -150,26 +152,29 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/easter_egg.jpg" />
       </head>
       <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased bg-ba-white text-ba-dark overflow-x-hidden`}>
-        {/* Soft animated background */}
-        <div className="fixed inset-0 z-0 pointer-events-none bg-ba-gradient-sky" />
-        <div className="fixed inset-0 z-0 pointer-events-none dots-bg opacity-[0.03]" />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          {/* Soft animated background */}
+          <div className="fixed inset-0 z-0 pointer-events-none bg-ba-gradient-red" />
+          <div className="fixed inset-0 z-0 pointer-events-none dots-bg opacity-[0.03]" />
 
-        {/* <MusicPlayer /> */}
+          {/* <MusicPlayer /> */}
 
-        <div className="relative z-[1] min-h-screen flex flex-col">
-          <header className="sr-only">
-            <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
-            <nav>{/* Navigation links */}</nav>
-          </header>
+          <div className="relative z-[1] min-h-screen flex flex-col">
+            <header className="sr-only">
+              <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
+              <nav>{/* Navigation links */}</nav>
+            </header>
 
-          <main className="flex-grow relative w-full max-w-[1920px] mx-auto">
-            {children}
-          </main>
+            <main className="flex-grow relative w-full flex flex-col max-w-[1920px] mx-auto">
+              {children}
+            </main>
 
-          <footer className="sr-only">
-            <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-          </footer>
-        </div>
+            <footer className="sr-only">
+              <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
+            </footer>
+          </div>
+          <ThemeToggle />
+        </ThemeProvider>
       </body>
     </html>
   );

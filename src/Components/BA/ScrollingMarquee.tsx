@@ -12,7 +12,7 @@ export default function ScrollingMarquee({ text, speed = 50, className = "" }: S
     const repeatedText = Array(10).fill(text);
 
     return (
-        <div className={`w-full overflow-hidden bg-ba-sky text-white font-display font-black tracking-widest uppercase py-3 shadow-md border-y-2 border-white/30 transform -rotate-1 origin-left z-20 ${className}`}>
+        <div className={`w-full overflow-hidden bg-ba-red text-white font-display font-black tracking-widest uppercase py-3 shadow-md border-y-2 border-white/30 transform -rotate-1 origin-left z-20 ${className}`}>
             <Marquee speed={speed} gradient={false} autoFill>
                 <div className="flex items-center">
                     {repeatedText.map((t, index) => (

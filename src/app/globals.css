@@ -3,19 +3,26 @@
 @tailwind utilities;
 
 :root {
-  /* Blue Archive inspired palette */
-  --ba-sky: #7CC8F8;
-  --ba-sky-light: #B8E2FF;
-  --ba-sky-deep: #3B9CEA;
+  /* Blue Archive / Deep Dark Red palette */
+  --ba-red: #FF3333;
+  --ba-red-light: #4A1A1A;
+  --ba-red-deep: #CC0000;
+
   --ba-pink: #FF7EB3;
-  --ba-pink-light: #FFB8D4;
-  --ba-yellow: #FFD166;
-  --ba-lavender: #C4B5FD;
-  --ba-mint: #6EE7B7;
-  --ba-coral: #FB923C;
-  --ba-white: #FAFBFF;
-  --ba-cream: #FFF8F0;
-  --ba-dark: #2D3047;
+  --ba-pink-light: #4A1A2B;
+
+  --ba-yellow: #B28C3D;
+  --ba-lavender: #4f4685;
+  --ba-mint: #2E6B52;
+  --ba-coral: #B25A1E;
+
+  /* Deep dark UI backgrounds natively */
+  --ba-white: #0A0D14;
+  /* Previously white, now deep navy/black */
+  --ba-cream: #121622;
+  /* Previously cream, now elevated dark card */
+  --ba-dark: #FAFBFF;
+  /* Previously dark, now white text */
   --ba-muted: #8B95A5;
 
   --background: var(--ba-white);
@@ -54,8 +61,8 @@
     @apply px-6 py-3 rounded-ba-pill font-display font-bold text-white transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95;
   }
 
-  .btn-ba-sky {
-    @apply btn-ba bg-gradient-to-r from-ba-sky to-ba-sky-deep hover:shadow-ba-glow-sky;
+  .btn-ba-red {
+    @apply btn-ba bg-gradient-to-r from-ba-red to-ba-red-deep hover:shadow-ba-glow-red;
   }
 
   .btn-ba-pink {
@@ -85,22 +92,18 @@
     background-size: 24px 24px;
   }
 
-  /* Anime Classroom Window / Soft Sky Grid (Cute Blue Archive Style) */
-  .bg-ba-stripes {
+  /* Anime Classroom Window / Soft Sky Grid */
+  .bg-classroom-grid {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.4) 2px, transparent 2px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
-      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-    background-color: var(--ba-sky-light);
-    box-shadow: inset 0 0 120px rgba(255, 255, 255, 0.8);
+      linear-gradient(var(--ba-white) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ba-white) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-color: var(--ba-red-light);
   }
 
   /* Soft vignette for sections */
   .vignette-soft {
-    box-shadow: inset 0 0 100px rgba(184, 226, 255, 0.3);
+    box-shadow: inset 0 0 100px rgba(255, 179, 179, 0.3);
   }
 
   /* UI Corner Crosshairs (Tech / HUD look) */
@@ -114,7 +117,7 @@
     position: absolute;
     width: 6px;
     height: 6px;
-    border-color: var(--ba-sky-deep);
+    border-color: var(--ba-red-deep);
     border-style: solid;
     opacity: 0.5;
     pointer-events: none;

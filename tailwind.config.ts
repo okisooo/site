@@ -7,15 +7,16 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/Components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Blue Archive inspired palette
-        "ba-sky": "#7CC8F8",
-        "ba-sky-light": "#B8E2FF",
-        "ba-sky-deep": "#3B9CEA",
+        // Blue Archive inspired palette (Red/White focus)
+        "ba-red": "#FF4D4D",
+        "ba-red-light": "#FFB3B3",
+        "ba-red-deep": "#CC0000",
         "ba-pink": "#FF7EB3",
         "ba-pink-light": "#FFB8D4",
         "ba-pink-deep": "#E84F8A",
@@ -39,11 +40,11 @@ export default {
         mono: ["var(--font-geist-mono)", "monospace"],
       },
       backgroundImage: {
-        "ba-gradient-sky": "linear-gradient(180deg, #B8E2FF 0%, #FAFBFF 50%, #FFF8F0 100%)",
-        "ba-gradient-sunset": "linear-gradient(135deg, #FFB8D4 0%, #FFD166 50%, #B8E2FF 100%)",
-        "ba-gradient-hero": "linear-gradient(180deg, #7CC8F8 0%, #B8E2FF 40%, #FAFBFF 100%)",
-        "ba-gradient-card": "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,251,255,0.8) 100%)",
-        "dots-pattern": "radial-gradient(circle, #C4B5FD 1px, transparent 1px)",
+        "ba-gradient-red": "linear-gradient(180deg, var(--ba-red-light) 0%, var(--ba-white) 50%, var(--ba-cream) 100%)",
+        "ba-gradient-sunset": "linear-gradient(135deg, var(--ba-pink-light) 0%, var(--ba-yellow) 50%, var(--ba-red-light) 100%)",
+        "ba-gradient-hero": "linear-gradient(180deg, var(--ba-red) 0%, var(--ba-red-light) 40%, var(--ba-white) 100%)",
+        "ba-gradient-card": "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(250,251,255,0.05) 100%)",
+        "dots-pattern": "radial-gradient(circle, var(--ba-lavender) 1px, transparent 1px)",
       },
       backgroundSize: {
         "dots": "24px 24px",
@@ -54,10 +55,10 @@ export default {
         "ba-pill": "9999px",
       },
       boxShadow: {
-        "ba-soft": "0 4px 20px rgba(124, 200, 248, 0.15), 0 2px 8px rgba(0,0,0,0.05)",
-        "ba-card": "0 8px 32px rgba(124, 200, 248, 0.2), 0 2px 8px rgba(0,0,0,0.04)",
+        "ba-soft": "0 4px 20px rgba(255, 77, 77, 0.15), 0 2px 8px rgba(0,0,0,0.05)",
+        "ba-card": "0 8px 32px rgba(255, 77, 77, 0.2), 0 2px 8px rgba(0,0,0,0.04)",
         "ba-glow-pink": "0 0 20px rgba(255, 126, 179, 0.4)",
-        "ba-glow-sky": "0 0 20px rgba(124, 200, 248, 0.4)",
+        "ba-glow-red": "0 0 20px rgba(255, 77, 77, 0.4)",
         "ba-glow-yellow": "0 0 20px rgba(255, 209, 102, 0.4)",
       },
       keyframes: {

@@ -61,7 +61,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
             onClick={() => setIsOpen(false)}
             className="text-white/70 hover:text-white"
           >
-            ✕
+            ✁E
           </button>
         </div>
 

@@ -73,7 +73,7 @@ export default function VRMViewer({ modelUrl, className, height = '500px' }: VRM
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-ba z-10">
                     <div className="flex flex-col items-center gap-3">
-                        <div className="w-10 h-10 border-4 border-ba-sky/30 border-t-ba-sky rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-4 border-ba-red/30 border-t-ba-red rounded-full animate-spin" />
                         <span className="text-sm font-display font-bold text-ba-muted">Loading model...</span>
                     </div>
                 </div>
