@@ -1,40 +1,24 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import { Exo_2, Urbanist } from "next/font/google";
-import HalftoneWave from '@/Components/Urban/HalftoneWave';
-import CRTOverlay from '@/Components/Urban/CRTOverlay';
-import faviconPng from './favicon.png';
+import { Nunito, Quicksand } from "next/font/google";
 import "./globals.css";
 import { staticReleases } from '@/data/releases';
-import MusicPlayer from '@/Components/ZZZ/MusicPlayer';
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Display font for titles
-const exo2 = Exo_2({
+// import MusicPlayer from '@/Components/BA/MusicPlayer';
+const nunito = Nunito({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: ["700", "800", "900"],
 });
 
-// UI font for navbar/body
-const urbanist = Urbanist({
+const quicksand = Quicksand({
   variable: "--font-ui",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
+
 export const metadata = {
   metadataBase: new URL('https://okiso.net'),
-  title: "OKISO.NET // WEBSITE",
-  description: "OKISO - Official website of virtual artist and music producer. Explore OKISO's music, releases, art, and connect via social media. Electronic music featuring original compositions.",
+  title: "OKISO ✦ Official Site",
+  description: "OKISO — Virtual artist, VOCALOID producer & VTuber. Explore music, releases, art, and more!",
   keywords: [
     "OKISO",
     "okiso",
@@ -43,6 +27,8 @@ export const metadata = {
     "music producer",
     "electronic music",
     "hyperpop",
+    "vocaloid",
+    "vtuber",
     "OKISO official",
     "OKISO music"
   ],
@@ -50,25 +36,23 @@ export const metadata = {
     canonical: 'https://okiso.net'
   },
   openGraph: {
-    title: "OKISO.NET // WEBSITE",
-    description:
-      "CONNECTION ESTABLISHED // ^_^",
+    title: "OKISO ✦ Official Site",
+    description: "Virtual artist, VOCALOID producer & VTuber ♪",
     url: "https://okiso.net",
     images: [
       {
-        url: "https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif",
-        alt: "OKISO.NET // WEBSITE"
+        url: "https://okiso.net/easter_egg.jpg",
+        alt: "OKISO Official Site"
       }
     ],
-    siteName: "OKISO.NET",
+    siteName: "OKISO",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "OKISO.NET // WEBSITE",
-    description:
-      "Discover VOCALOID Producer / VTuber OKISO's portfolio with music, art, and social media links.",
-    images: ["https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif"]
+    title: "OKISO ✦ Official Site",
+    description: "Virtual artist, VOCALOID producer & VTuber — music, art & vibes ♪",
+    images: ["https://okiso.net/easter_egg.jpg"]
   }
 };
 
@@ -77,7 +61,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Build site-level JSON-LD objects on the server
   const siteUrl = 'https://okiso.net';
 
   const musicGroupLd = {
@@ -86,7 +69,7 @@ export default function RootLayout({
     "name": "OKISO",
     "alternateName": "オキソ",
     "url": siteUrl,
-    "image": "https://i.imgur.com/pM8llz7.gif",
+    "image": "https://okiso.net/easter_egg.jpg",
     "description": "OKISO is a VOCALOID Producer, VTuber and Artist creating original electronic and Japanese styled VOCALOID music.",
     "sameAs": [
       "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
@@ -148,37 +131,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        {/* Chrome/Android PWA meta (apple tag above can be deprecated in some contexts) */}
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#000000" />
-
-        {/* Script to prevent double navigation on touch devices */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                window._navInProgress = false;
-
-                // Helper to detect mobile devices
-                window.isMobileDevice = function() {
-                  return (
-                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                    (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /Macintosh/.test(navigator.userAgent))
-                  );
-                };
-
-                // Handle touch events consistently
-                if (window.isMobileDevice()) {
-                  document.addEventListener('touchstart', function(e) {
-                    if (e.target && e.target.tagName === 'A') {
-                      e.target._touchStarted = true;
-                    }
-                  }, { passive: true });
-                }
-              })();
-            `
-          }}
-        />
+        <meta name="theme-color" content="#7CC8F8" />
 
         {/* MusicGroup JSON-LD */}
         <script
@@ -186,29 +140,26 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupLd) }}
         />
 
-        {/* Site-level JSON-LD: WebSite + ItemList (releases) + Breadcrumbs */}
+        {/* Site-level JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd, breadcrumbLd] }) }}
         />
 
-        {/* Favicon (PNG) and Apple touch icon wired from app/favicon.png */}
-        <link rel="icon" type="image/png" sizes="any" href={faviconPng.src} />
-        <link rel="apple-touch-icon" href={faviconPng.src} />
+        <link rel="icon" type="image/jpeg" sizes="any" href="/easter_egg.jpg" />
+        <link rel="apple-touch-icon" href="/easter_egg.jpg" />
       </head>
-      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${exo2.variable} antialiased bg-urban-black text-urban-white overflow-x-hidden`}>
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <HalftoneWave />
-          <CRTOverlay />
-        </div>
+      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased bg-ba-white text-ba-dark overflow-x-hidden`}>
+        {/* Soft animated background */}
+        <div className="fixed inset-0 z-0 pointer-events-none bg-ba-gradient-sky" />
+        <div className="fixed inset-0 z-0 pointer-events-none dots-bg opacity-[0.03]" />
 
-        <MusicPlayer />
+        {/* <MusicPlayer /> */}
 
         <div className="relative z-[1] min-h-screen flex flex-col">
-          {/* Header hidden but accessible */}
           <header className="sr-only">
             <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
-            <nav>{/* Your navigation links */}</nav>
+            <nav>{/* Navigation links */}</nav>
           </header>
 
           <main className="flex-grow relative w-full max-w-[1920px] mx-auto">

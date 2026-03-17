@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import React from "react";
 import Image from "next/image";
-import ZZZCard from "@/Components/ZZZ/ZZZCard";
-import ZZZButton from "@/Components/ZZZ/ZZZButton";
-import ZZZGrid from "@/Components/ZZZ/ZZZGrid";
-import TapeDivider from "@/Components/Urban/TapeDivider";
-import TechOverlay from "@/Components/Urban/TechOverlay";
-import VerticalText from "@/Components/Urban/VerticalText";
-import DecodingText from "@/Components/ZZZ/DecodingText";
-import HollowDistortion from "@/Components/ZZZ/HollowDistortion";
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import PillButton from "@/Components/BA/PillButton";
+import BentoBox from "@/Components/BA/BentoBox";
+import FloatingBackground from "@/Components/BA/FloatingBackground";
+import ScrollingMarquee from "@/Components/BA/ScrollingMarquee";
+import SplitText from "@/Components/ReactBits/SplitText";
 import {
   FaSpotify,
   FaInstagram,
@@ -23,238 +21,188 @@ import {
   FaReddit,
 } from "react-icons/fa";
 
+// Dynamically import VRM viewer
+const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full min-h-[400px]">
+      <div className="w-10 h-10 border-4 border-ba-sky/30 border-t-ba-sky rounded-full animate-spin" />
+    </div>
+  ),
+});
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+const socialLinks = [
+  { icon: <FaSpotify size={24} />, label: "Spotify", href: "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm", color: "mint" },
+  { icon: <FaInstagram size={24} />, label: "Instagram", href: "https://www.instagram.com/okisooo_/", color: "pink" },
+  { icon: <FaYoutube size={24} />, label: "YouTube", href: "https://www.youtube.com/@okiso7", color: "yellow" },
+  { icon: <FaDiscord size={24} />, label: "Discord", href: "https://discord.gg/okiso", color: "lavender" },
+  { icon: <FaTwitch size={24} />, label: "Twitch", href: "https://twitch.tv/okiso7", color: "cream" },
+  { icon: <FaTwitter size={24} />, label: "X (Twitter)", href: "https://x.com/okisooo_", color: "sky" },
+];
+
+const extraSocials = [
+  { icon: <FaGithub size={20} />, href: "https://github.com/okisooo" },
+  { icon: <FaBandcamp size={20} />, href: "https://okiso.bandcamp.com/" },
+  { icon: <FaReddit size={20} />, href: "https://www.reddit.com/user/okisooo/" },
+];
+
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const charRef = useRef<HTMLDivElement>(null);
-
-  // Map social links to ZZZ accent colors
-  const socialLinks: { icon: React.ReactNode; label: string; href: string; color: "ether-purple" | "electric-blue" | "impact-orange" | "volt-green" }[] = [
-    { icon: <FaSpotify size={24} />, label: "Spotify", href: "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm", color: "volt-green" },
-    { icon: <FaYoutube size={24} />, label: "YouTube", href: "https://www.youtube.com/@okiso7", color: "ether-purple" },
-    { icon: <FaTwitter size={24} />, label: "Twitter", href: "https://x.com/okisooo_", color: "electric-blue" },
-    { icon: <FaInstagram size={24} />, label: "Instagram", href: "https://www.instagram.com/okisooo_/", color: "impact-orange" },
-    { icon: <FaGithub size={24} />, label: "GitHub", href: "https://github.com/okisooo", color: "ether-purple" },
-    { icon: <FaDiscord size={24} />, label: "Discord", href: "https://discord.gg/okiso", color: "electric-blue" },
-    { icon: <FaBandcamp size={24} />, label: "Bandcamp", href: "https://okiso.bandcamp.com/", color: "volt-green" },
-    { icon: <FaTwitch size={24} />, label: "Twitch", href: "https://twitch.tv/okiso7", color: "ether-purple" },
-    { icon: <FaReddit size={24} />, label: "Reddit", href: "https://www.reddit.com/user/okisooo/", color: "impact-orange" },
-  ];
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-      const tl = gsap.timeline();
-
-      mm.add("(min-width: 1024px)", () => {
-        // Desktop Animation
-        tl.from(charRef.current, {
-          x: 100,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power4.out",
-        })
-          .from(
-            titleRef.current,
-            {
-              scale: 2,
-              opacity: 0,
-              duration: 0.5,
-              ease: "back.out(1.7)",
-            },
-            "-=0.4"
-          )
-          .from(
-            statsRef.current?.children || [],
-            {
-              x: -100,
-              opacity: 0,
-              stagger: 0.1,
-              duration: 0.6,
-              ease: "back.out(1.7)",
-            },
-            "-=0.3"
-          );
-      });
-
-      mm.add("(max-width: 1023px)", () => {
-        // Mobile Animation - Vertical Movements
-        tl.from(charRef.current, {
-          y: 50,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power4.out",
-        })
-          .from(
-            titleRef.current,
-            {
-              scale: 1.5,
-              opacity: 0,
-              duration: 0.5,
-              ease: "back.out(1.7)",
-            },
-            "-=0.4"
-          )
-          .from(
-            statsRef.current?.children || [],
-            {
-              y: 20,
-              opacity: 0,
-              stagger: 0.1,
-              duration: 0.6,
-              ease: "power2.out",
-            },
-            "-=0.3"
-          );
-      });
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
+  const [eggCount, setEggCount] = React.useState(0);
+  const isEasterEgg = eggCount >= 5;
 
   return (
-    <div className="min-h-screen w-full pb-20 overflow-x-hidden bg-zzz-black text-zzz-text-primary selection:bg-zzz-electric-blue selection:text-black">
-      <TechOverlay />
-      <HollowDistortion />
+    <div className="min-h-screen w-full pb-24 overflow-x-hidden selection:bg-ba-pink-light selection:text-ba-dark bg-ba-white">
+      <FloatingBackground />
 
-      {/* Hero Section - Character Select Style */}
-      <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 bg-[url('https://upload-os-bbs.hoyolab.com/upload/2025/10/12/412978508/d76b17a7ca9c5906a1186b6ae09b8247_785297769067386992.gif')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-zzz-black via-transparent to-zzz-black" />
-        <div className="absolute inset-0 bg-halftone opacity-10" />
+      {/* ─── Hero Section ─── */}
+      <section className="relative pt-24 pb-12 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[80vh] bg-ba-gradient-hero opacity-80" />
+        <div className="absolute inset-0 dots-bg opacity-[0.03]" />
 
-        <div className="container mx-auto px-4 relative z-10 flex flex-col lg:grid lg:grid-cols-12 gap-4 lg:gap-8 h-full justify-center lg:items-center">
-          {/* Center: Character / Title (Order 1 on Mobile) */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center order-1 lg:order-2 relative h-[40vh] lg:h-auto w-full mb-4 lg:mb-0">
-            <div ref={charRef} className="relative w-full h-full lg:aspect-[3/4] lg:max-h-[80vh] flex items-center justify-center">
-              {/* Character Art */}
-              <div className="absolute inset-0 z-10 drop-shadow-2xl" style={{ filter: "contrast(1.1) brightness(1.05)" }}>
-                <Image
-                  src="/hero_character.png"
-                  alt="OKISO Character - Virtual Avatar"
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
+        <div className="container mx-auto px-4 relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24">
 
-              {/* Subtle Back Glow */}
-              <div className="absolute inset-0 bg-radial-gradient from-white/10 to-transparent opacity-50 blur-3xl -z-10" />
+          {/* Text Content */}
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left z-20">
+            <SplitText
+              text="OKISO"
+              className="text-7xl md:text-8xl lg:text-[140px] font-display font-black text-ba-dark tracking-tighter leading-none mb-4"
+              delay={200}
+            />
 
-              <h1 ref={titleRef} className="absolute bottom-4 lg:bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-white tracking-tighter z-20 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)] mix-blend-overlay">
-                OKISO
-              </h1>
-              <h1 className="absolute bottom-4 lg:bottom-10 text-[15vw] lg:text-[8vw] leading-none font-display font-black text-transparent text-stroke tracking-tighter z-20 pointer-events-none">
-                OKISO
-              </h1>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="flex items-center gap-3 mb-6"
+            >
+              <span className="px-4 py-1.5 bg-ba-sky text-white text-sm font-bold rounded-full shadow-ba-soft">vtuber and producer! ♡</span>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.6 }}
+              className="text-lg text-ba-dark-soft font-ui max-w-md mb-8 tracking-wide"
+            >
+              just making some noise on the internet. writing songs, coding things, and being silly. welcome to my little corner of the web ✨
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.6 }}
+              className="flex gap-4"
+            >
+              <PillButton variant="sky" size="lg" href="https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm">
+                ♫ Spotify
+              </PillButton>
+              <PillButton variant="pink" size="lg" href="https://www.youtube.com/@okiso7">
+                ▶ YouTube
+              </PillButton>
+            </motion.div>
           </div>
 
-          {/* Left: Stats & Info (Order 2 on Mobile) */}
-          <div className="lg:col-span-4 flex flex-col justify-center space-y-4 lg:space-y-8 order-2 lg:order-1 w-full">
-            <div ref={statsRef} className="space-y-2 lg:space-y-6 w-full">
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-electric-blue p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-electric-blue font-display text-xs lg:text-xl mb-0.5 lg:mb-1">ROLE //</h3>
-                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="PRODUCER" revealDuration={1} className="text-lg lg:text-4xl" />
-                </p>
-              </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-ether-purple p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:ml-8 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-ether-purple font-display text-xs lg:text-xl mb-0.5 lg:mb-1">CLASS //</h3>
-                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="VTUBER" revealDuration={1.2} className="text-lg lg:text-4xl" />
-                </p>
-              </div>
-              <div className="bg-zzz-panel-bg border-l-4 border-zzz-impact-orange p-3 lg:p-6 clip-zzz-card lg:transform lg:-skew-x-6 lg:hover:skew-x-0 transition-transform duration-300 w-full">
-                <h3 className="text-zzz-impact-orange font-display text-xs lg:text-xl mb-0.5 lg:mb-1">AFFILIATION //</h3>
-                <p className="text-lg lg:text-4xl font-black uppercase tracking-tighter truncate">
-                  <DecodingText text="OKISO.NET" revealDuration={1.4} className="text-lg lg:text-4xl" />
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Vertical Text */}
-          <div className="lg:col-span-4 hidden lg:flex justify-end items-center order-3 h-full py-20">
-            <div className="flex gap-8 h-full">
-              <VerticalText text="VIRTUAL REALITY" color="cyan" className="opacity-50" />
-              <VerticalText text="AUDIO PRODUCTION" color="magenta" className="opacity-80" />
-              <VerticalText text="SYSTEM ONLINE" color="white" />
-            </div>
-          </div>
+          {/* Character Art */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 60, damping: 15, delay: 0.4 }}
+            className="relative w-[300px] h-[450px] md:w-[400px] md:h-[600px] cursor-pointer"
+            onClick={() => setEggCount(c => c + 1)}
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-ba-sky via-ba-pink to-ba-yellow opacity-20 blur-3xl animate-pulse" />
+            <Image
+              src={isEasterEgg ? "/easter_egg.jpg" : "/hero_character.png"}
+              alt="OKISO — Virtual Artist Avatar"
+              fill
+              className={`object-contain ${isEasterEgg ? 'rounded-3xl shadow-2xl scale-95 transition-all duration-500' : 'drop-shadow-[0_20px_40px_rgba(124,200,248,0.4)]'}`}
+              priority
+              sizes="(max-width: 768px) 300px, 400px"
+              unoptimized={isEasterEgg}
+            />
+          </motion.div>
         </div>
       </section>
 
-      <TapeDivider text="INITIATING SYSTEM LINK // WELCOME PROXY //" direction="left" color="yellow" />
+      {/* ─── Lower Section (Classroom Vibe) ─── */}
+      <div className="relative w-full z-10 bg-white">
+        {/* Full-width classroom grid background */}
+        <div className="absolute inset-0 bg-classroom-grid opacity-50 pointer-events-none" />
 
-      {/* Content Grid */}
-      <section className="max-w-7xl mx-auto px-4 py-20 relative z-10">
-        <ZZZGrid>
-          {/* Social Grid */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-1 grid grid-cols-2 gap-4">
-            {socialLinks.slice(0, 4).map((link) => (
-              <ZZZCard
-                key={link.label}
-                accentColor={link.color}
-                className="aspect-square flex flex-col items-center justify-center gap-2 hover:bg-zzz-dark-grey/50 cursor-pointer"
-                onClick={() => window.open(link.href, '_blank')}
-              >
-                <div className={`text-4xl text-zzz-${link.color}`}>{link.icon}</div>
-                <span className="font-bold text-sm uppercase tracking-wider">{link.label}</span>
-              </ZZZCard>
+        {/* Soft fade transition at the top */}
+        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
+
+        {/* ─── Scrolling Marquee Divider ─── */}
+        <div className="relative z-30 pt-4 pb-12">
+          <ScrollingMarquee text="OKISO オキソ" />
+        </div>
+
+        {/* ─── Bento Grid Section (Anime UI) ─── */}
+        <section className="max-w-6xl mx-auto px-4 pb-24 relative z-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[160px]">
+
+            {/* Main Social Blocks */}
+            {socialLinks.map((link, i) => (
+              <BentoBox key={link.label} color={link.color as any} delay={i * 0.1} className="col-span-1 row-span-1 group cursor-pointer ba-corner-cross">
+                <a href={link.href} target="_blank" rel="noreferrer" className="w-full h-full flex flex-col items-center justify-center p-6 text-ba-dark group-hover:text-white transition-colors duration-300">
+                  <div className={`p-4 rounded-full bg-white/50 group-hover:bg-white/20 mb-3 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
+                    {link.icon}
+                  </div>
+                  <span className="font-display font-bold text-lg">{link.label}</span>
+                </a>
+              </BentoBox>
             ))}
+
+            {/* About Bio Block */}
+            <BentoBox color="cream" delay={0.4} className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 p-8 flex flex-col justify-center ba-corner-cross relative overflow-hidden">
+              <div className="absolute top-4 right-4 bg-ba-pink text-white text-[10px] font-bold px-2 py-0.5 rounded-sm font-jp transform rotate-3">プロフィール</div>
+
+              <h3 className="text-2xl font-display font-bold text-ba-dark mb-3">who am i? ₍ ᐢ. ̫ .ᐢ ₎</h3>
+              <p className="text-ba-dark-soft font-ui text-lg leading-relaxed relative z-10">
+                im okiso! i make vocaloid music, stream sometimes, and do a lot of coding. this site is basically just a place for me to put all my stuff. thanks for stopping by!
+              </p>
+            </BentoBox>
+
+            {/* VRM Viewer Block */}
+            <BentoBox color="lavender" delay={0.5} className="col-span-1 md:col-span-3 lg:col-span-2 row-span-3 p-0 overflow-hidden group ba-corner-cross">
+              <div className="absolute inset-x-0 top-0 p-4 z-20 pointer-events-none bg-gradient-to-b from-ba-lavender/80 to-transparent flex justify-between items-start">
+                <h3 className="font-display font-black text-white text-shadow-sm flex items-center gap-2">
+                  <span className="animate-spin-slow">✦</span> 3D Model
+                </h3>
+                <div className="bg-ba-dark text-white text-[9px] font-mono px-1.5 py-0.5 rounded opacity-50">SYS.OKISO.VRM</div>
+              </div>
+              <div className="w-full h-full bg-gradient-to-b from-white to-ba-lavender/10">
+                <VRMViewer modelUrl="/model.vrm" className="w-full h-full min-h-[480px]" />
+              </div>
+            </BentoBox>
+
+            {/* Mini Links Block */}
+            <BentoBox color="cream" delay={0.6} className="col-span-1 md:col-span-1 lg:col-span-2 row-span-1 p-6 flex flex-col justify-center ba-corner-cross">
+              <div className="flex items-center gap-2 mb-3">
+                <h4 className="font-display font-bold text-ba-muted text-sm tracking-wider uppercase m-0">More Links</h4>
+                <span className="text-ba-sky text-xs font-jp opacity-60">サブリンク</span>
+              </div>
+              <div className="flex items-center gap-3">
+                {extraSocials.map((social, i) => (
+                  <a key={i} href={social.href} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-ba-dark/5 flex items-center justify-center text-ba-dark-soft hover:bg-ba-sky hover:text-white transition-all hover:scale-110 hover:-translate-y-1">
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </BentoBox>
+
           </div>
-
-          {/* About / Bio */}
-          <ZZZCard title="PROFILE_DATA" accentColor="electric-blue" className="col-span-1 md:col-span-2 lg:col-span-1">
-            <p className="text-zzz-text-primary/80 leading-relaxed font-mono text-sm mb-6">
-              &gt; SYSTEM SCAN COMPLETE<br />
-              &gt; ENTITY: OKISO<br />
-              &gt; TYPE: VIRTUAL PRODUCER<br /><br />
-              Just a virtual entity making noise on the internet. I produce hyperpop, write code, and stream games. Welcome to my world.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {["HYPERPOP", "GAMER", "DEVELOPER", "ARTIST", "STREAMER"].map((tag) => (
-                <span key={tag} className="text-xs font-bold font-display border border-zzz-electric-blue text-zzz-electric-blue px-2 py-1 bg-zzz-electric-blue/10">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div className="mt-8">
-              <ZZZButton className="w-full" accentColor="electric-blue" onClick={() => window.location.href = 'mailto:oxo@okiso.net'}>INITIATE CONTACT</ZZZButton>
-            </div>
-          </ZZZCard>
-
-          {/* More Socials & Links */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-1 grid grid-cols-2 gap-4">
-            {socialLinks.slice(4, 8).map((link) => (
-              <ZZZCard
-                key={link.label}
-                accentColor={link.color}
-                className="aspect-square flex flex-col items-center justify-center gap-2 hover:bg-zzz-dark-grey/50 cursor-pointer"
-                onClick={() => window.open(link.href, '_blank')}
-              >
-                <div className={`text-4xl text-zzz-${link.color}`}>{link.icon}</div>
-                <span className="font-bold text-sm uppercase tracking-wider">{link.label}</span>
-              </ZZZCard>
-            ))}
-          </div>
-
-          {/* Upcoming Events */}
-          <ZZZCard title="UPCOMING_EVENTS" accentColor="impact-orange" className="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center min-h-[200px] border-dashed border-zzz-impact-orange/30">
-            <div className="text-center opacity-50 mt-4">
-              <p className="font-display text-2xl text-zzz-impact-orange animate-pulse">NO UPCOMING EVENTS DETECTED</p>
-              <p className="font-mono text-sm mt-2 text-zzz-text-muted">SCANNING FOR NEW SIGNALS...</p>
-            </div>
-          </ZZZCard>
-
-        </ZZZGrid>
-      </section>
-
-      <TapeDivider text="END OF TRANSMISSION // OKISO.NET //" direction="right" color="pink" />
+        </section>
+      </div>
     </div>
   );
 }

@@ -3,33 +3,28 @@
 @tailwind utilities;
 
 :root {
-  /* The Void Base */
-  --zzz-black: #0a0a0a;
-  --zzz-dark-grey: #1f1f1f;
-  --zzz-panel-bg: rgba(20, 20, 20, 0.95);
+  /* Blue Archive inspired palette */
+  --ba-sky: #7CC8F8;
+  --ba-sky-light: #B8E2FF;
+  --ba-sky-deep: #3B9CEA;
+  --ba-pink: #FF7EB3;
+  --ba-pink-light: #FFB8D4;
+  --ba-yellow: #FFD166;
+  --ba-lavender: #C4B5FD;
+  --ba-mint: #6EE7B7;
+  --ba-coral: #FB923C;
+  --ba-white: #FAFBFF;
+  --ba-cream: #FFF8F0;
+  --ba-dark: #2D3047;
+  --ba-muted: #8B95A5;
 
-  /* Neon Accents (Attribute Colors) */
-  --zzz-ether-purple: #ff005c;
-  /* Ether / Corruption */
-  --zzz-electric-blue: #7bb1ff;
-  /* Shock / Anby's Theme */
-  --zzz-impact-orange: #ff5c00;
-  /* Fire / Construction */
-  --zzz-volt-green: #ccff00;
-  /* Energy / HUD Accents */
-
-  /* UI Specifics */
-  --zzz-warning-yellow: #f2ff00;
-  --zzz-text-primary: #ffffff;
-  --zzz-text-muted: #858585;
-
-  --background: var(--zzz-black);
-  --foreground: var(--zzz-text-primary);
+  --background: var(--ba-white);
+  --foreground: var(--ba-dark);
 }
 
 @layer base {
   body {
-    @apply bg-zzz-black text-zzz-text-primary font-ui antialiased overflow-x-hidden;
+    @apply bg-ba-white text-ba-dark font-ui antialiased overflow-x-hidden;
   }
 
   h1,
@@ -38,37 +33,109 @@
   h4,
   h5,
   h6 {
-    @apply font-display uppercase tracking-tighter;
+    @apply font-display tracking-tight;
+  }
+
+  ::selection {
+    background: var(--ba-pink-light);
+    color: var(--ba-dark);
+  }
+}
+
+@layer components {
+
+  /* Soft card with glass effect */
+  .card-ba {
+    @apply bg-ba-card backdrop-blur-md rounded-ba shadow-ba-card border border-white/50;
+  }
+
+  /* Pill button base */
+  .btn-ba {
+    @apply px-6 py-3 rounded-ba-pill font-display font-bold text-white transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg active:scale-95;
+  }
+
+  .btn-ba-sky {
+    @apply btn-ba bg-gradient-to-r from-ba-sky to-ba-sky-deep hover:shadow-ba-glow-sky;
+  }
+
+  .btn-ba-pink {
+    @apply btn-ba bg-gradient-to-r from-ba-pink to-ba-pink-deep hover:shadow-ba-glow-pink;
+  }
+
+  .btn-ba-yellow {
+    @apply btn-ba bg-gradient-to-r from-ba-yellow to-ba-coral text-ba-dark hover:shadow-ba-glow-yellow;
   }
 }
 
 @layer utilities {
-  .text-stroke {
-    -webkit-text-stroke: 1px currentColor;
-    color: transparent;
+
+  /* Shimmer effect for cards */
+  .shimmer-ba {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
   }
 
-  .text-stroke-sm {
-    -webkit-text-stroke: 0.5px currentColor;
-    color: transparent;
+  /* Decorative dot grid background */
+  .dots-bg {
+    background-image: radial-gradient(circle, var(--ba-lavender) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
-  /* ZZZ Specific Clip Paths */
-  .clip-zzz-card {
-    clip-path: polygon(10px 0, 100% 0,
-        100% calc(100% - 10px), calc(100% - 10px) 100%,
-        0 100%, 0 10px);
+  /* Anime Classroom Window / Soft Sky Grid (Cute Blue Archive Style) */
+  .bg-ba-stripes {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    background-color: var(--ba-sky-light);
+    box-shadow: inset 0 0 120px rgba(255, 255, 255, 0.8);
   }
 
-  .clip-zzz-corner-tr {
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+  /* Soft vignette for sections */
+  .vignette-soft {
+    box-shadow: inset 0 0 100px rgba(184, 226, 255, 0.3);
   }
 
-  .clip-zzz-corner-bl {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  /* UI Corner Crosshairs (Tech / HUD look) */
+  .ba-corner-cross {
+    position: relative;
   }
 
-  .clip-zzz-diagonal {
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  .ba-corner-cross::before,
+  .ba-corner-cross::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-color: var(--ba-sky-deep);
+    border-style: solid;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 20;
   }
+
+  .ba-corner-cross::before {
+    top: 6px;
+    left: 6px;
+    border-width: 1px 0 0 1px;
+  }
+
+  .ba-corner-cross::after {
+    bottom: 6px;
+    right: 6px;
+    border-width: 0 1px 1px 0;
+  }
+}
+
+/* Japanese typography helper */
+.font-jp {
+  font-family: 'Noto Sans JP', sans-serif;
+  letter-spacing: 0.05em;
 }
