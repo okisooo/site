@@ -7,6 +7,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2 } from 'l
 interface CustomVideoPlayerProps {
   src: string;
   hlsUrl?: string;
+  streamUrl?: string;
   sourceUrl?: string;
   poster?: string;
   title?: string;
@@ -21,11 +22,11 @@ function formatTime(seconds: number) {
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
+export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const previousVolumeRef = useRef(1);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(autoPlay);
   const [volume, setVolume] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -58,20 +59,22 @@ export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, titl
   useEffect(() => {
     let cancelled = false;
     let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let retryCount = 0;
 
     const preferredHlsUrl = hlsUrl || (src.toLowerCase().includes('.m3u8') ? src : undefined);
-    const fallbackUrl = sourceUrl || src;
+    const streamFallbackUrl = streamUrl || (!src.toLowerCase().includes('.m3u8') ? src : undefined);
+    const sourceFallbackUrl = sourceUrl || streamFallbackUrl || src;
 
     const resolvePlaybackUrl = async () => {
       if (!preferredHlsUrl) {
-        setResolvedSrc(fallbackUrl);
+        setResolvedSrc(streamFallbackUrl || sourceFallbackUrl);
         setHlsReady(null);
         setHlsGenerating(false);
         return;
       }
 
       try {
-        const response = await fetch(preferredHlsUrl, { method: 'HEAD' });
+        const response = await fetch(preferredHlsUrl, { method: 'HEAD', cache: 'no-store' });
         if (cancelled) return;
 
         const readyHeader = response.headers.get('x-hls-ready');
@@ -92,22 +95,29 @@ export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, titl
 
         if (response.status === 503 && generating) {
           const retryAfterSeconds = Number(retryAfterHeader || '2');
-          retryTimer = setTimeout(resolvePlaybackUrl, Math.max(1, retryAfterSeconds) * 1000);
+          retryCount += 1;
+          if (retryCount <= 10) {
+            retryTimer = setTimeout(resolvePlaybackUrl, Math.max(1, retryAfterSeconds) * 1000);
+            return;
+          }
+
+          setResolvedSrc(streamFallbackUrl || sourceFallbackUrl);
+          setUsedFallbackSource(Boolean(sourceUrl && !streamFallbackUrl));
           return;
         }
 
-        setResolvedSrc(fallbackUrl);
-        setUsedFallbackSource(true);
+        setResolvedSrc(streamFallbackUrl || sourceFallbackUrl);
+        setUsedFallbackSource(Boolean(sourceUrl && !streamFallbackUrl));
       } catch {
         if (cancelled) return;
-        // If preflight check fails (CORS/network), still attempt HLS first in player.
+        // If HEAD preflight fails, still attempt HLS first in player.
         setResolvedSrc(preferredHlsUrl);
         setHlsReady(null);
         setHlsGenerating(false);
       }
     };
 
-    setResolvedSrc(src);
+    setResolvedSrc(streamFallbackUrl || sourceFallbackUrl);
     setUsedFallbackSource(false);
     setHlsReady(null);
     setHlsGenerating(false);
@@ -117,7 +127,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, titl
       cancelled = true;
       if (retryTimer) clearTimeout(retryTimer);
     };
-  }, [src, hlsUrl, sourceUrl]);
+  }, [src, hlsUrl, streamUrl, sourceUrl]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -232,8 +242,10 @@ export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, titl
         poster={poster}
         className="w-full h-full object-cover"
         loop
+        controls
+        autoPlay={autoPlay}
         playsInline
-        preload="metadata"
+        preload="auto"
         muted={isMuted}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -246,7 +258,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, titl
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onError={() => {
-          const fallbackUrl = sourceUrl || src;
+          const fallbackUrl = sourceUrl || streamUrl || src;
           if (!usedFallbackSource && fallbackUrl && resolvedSrc !== fallbackUrl) {
             setResolvedSrc(fallbackUrl);
             setUsedFallbackSource(true);

@@ -7,6 +7,7 @@ export interface FeaturedVideo {
   poster?: string;
   category?: string;
   hlsUrl?: string;
+  streamUrl?: string;
   hasHlsPackage?: boolean;
   sourceUrl?: string;
 }
@@ -17,56 +18,18 @@ interface UseFeaturedVideosResult {
   error: string | null;
 }
 
-type MatchMode = 'any' | 'all';
+const FEED_URL = 'https://api.okiso.net/api/media/website/videos/feed?limit=50';
 
-interface UseFeaturedVideosOptions {
-  category?: string;
-  categories?: string[];
-  match?: MatchMode;
-  limit?: number;
-  refreshMs?: number;
-}
-
-const FEED_BASE_URL = 'https://api.okiso.net/api/media/website/videos/feed';
-
-function buildFeedUrl(options: UseFeaturedVideosOptions) {
-  const params = new URLSearchParams();
-  params.set('usecase', 'website');
-
-  const limit = Math.max(1, Math.min(200, options.limit ?? 50));
-  params.set('limit', String(limit));
-
-  if (options.category) {
-    params.set('category', options.category);
-  } else if (options.categories && options.categories.length > 0) {
-    params.set('categories', options.categories.join(','));
-    params.set('match', options.match ?? 'any');
-  } else {
-    params.set('match', options.match ?? 'any');
-  }
-
-  return `${FEED_BASE_URL}?${params.toString()}`;
-}
-
-export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFeaturedVideosResult {
+export function useFeaturedVideos(): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const hasLoadedOnceRef = useRef(false);
-
-  const {
-    category,
-    categories,
-    match = 'any',
-    limit = 50,
-    refreshMs = 60000,
-  } = options;
+  const refreshMs = 60000;
 
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
-
-    const endpoint = buildFeedUrl({ category, categories, match, limit });
 
     const loadVideos = async () => {
       try {
@@ -75,7 +38,7 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
         }
         setError(null);
 
-        const response = await fetch(endpoint, { cache: 'no-store' });
+        const response = await fetch(FEED_URL, { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
@@ -100,8 +63,9 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
               category?: string;
             };
 
-            // Playback priority: hlsUrl first, then sourceUrl fallback.
-            const src = raw.hlsUrl || raw.sourceUrl || raw.streamUrl || raw.url;
+            // Policy priority: hlsUrl -> streamUrl -> sourceUrl.
+            const streamUrl = raw.streamUrl || raw.url;
+            const src = raw.hlsUrl || streamUrl || raw.sourceUrl;
             if (!src) return null;
 
             return {
@@ -111,6 +75,7 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
               poster: raw.poster || raw.thumbnail || raw.thumbnailUrl || undefined,
               category: raw.category,
               hlsUrl: raw.hlsUrl,
+              streamUrl,
               hasHlsPackage: raw.hasHlsPackage,
               sourceUrl: raw.sourceUrl,
             };
@@ -144,7 +109,7 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
-  }, [category, categories, match, limit, refreshMs]);
+  }, [refreshMs]);
 
   return { videos, isLoading, error };
 }

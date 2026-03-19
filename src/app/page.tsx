@@ -23,23 +23,10 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
 import { useTwitchLive } from '@/hooks/useTwitchLive';
 import { FeaturedVideo, useFeaturedVideos } from '@/hooks/useFeaturedVideos';
 
-type VideoFilter = 'all' | 'cover' | 'self';
-
 export default function Home() {
   const { isLive } = useTwitchLive('okiso');
   const [showFeaturedWhileLive, setShowFeaturedWhileLive] = useState(false);
-  const [videoFilter, setVideoFilter] = useState<VideoFilter>('all');
-  const featuredVideoOptions = useMemo(() => {
-    if (videoFilter === 'cover') {
-      return { category: 'cover' as const, limit: 50 };
-    }
-    if (videoFilter === 'self') {
-      return { category: 'self' as const, limit: 50 };
-    }
-    return { match: 'any' as const, limit: 50 };
-  }, [videoFilter]);
-
-  const { videos, isLoading: videosLoading, error: videosError } = useFeaturedVideos(featuredVideoOptions);
+  const { videos, isLoading: videosLoading, error: videosError } = useFeaturedVideos();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<FeaturedVideo | null>(null);
 
@@ -212,29 +199,6 @@ export default function Home() {
                 </button>
               </div>
             )}
-            {!showingLive && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setVideoFilter('all')}
-                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'all' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setVideoFilter('cover')}
-                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'cover' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
-                >
-                  Covers
-                </button>
-                <button
-                  onClick={() => setVideoFilter('self')}
-                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'self' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
-                >
-                  Originals
-                </button>
-              </div>
-            )}
-
             {(isLive || videosLoading || activeVideo) && (
               <div className="w-full aspect-video rounded-[24px] md:rounded-[40px] overflow-hidden bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group isolate">
                 {showingLive ? (
@@ -249,6 +213,7 @@ export default function Home() {
                   <CustomVideoPlayer
                     src={activeVideo.src}
                     hlsUrl={activeVideo.hlsUrl}
+                    streamUrl={activeVideo.streamUrl}
                     sourceUrl={activeVideo.sourceUrl}
                     poster={activeVideo.poster}
                     title={activeVideo.title}
@@ -264,7 +229,7 @@ export default function Home() {
 
             {!showingLive && !videosLoading && !activeVideo && (
               <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
-                <p className="font-black uppercase tracking-widest text-black/60 dark:text-white/60">No videos published yet for this filter.</p>
+                <p className="font-black uppercase tracking-widest text-black/60 dark:text-white/60">No website videos published yet.</p>
                 {videosError && <p className="mt-2 text-xs font-bold text-black/40 dark:text-white/40">Feed error: {videosError}</p>}
               </div>
             )}
