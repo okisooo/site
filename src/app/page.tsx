@@ -211,6 +211,7 @@ export default function Home() {
                   />
                 ) : activeVideo ? (
                   <CustomVideoPlayer
+                    key={activeVideo.id}
                     src={activeVideo.src}
                     hlsUrl={activeVideo.hlsUrl}
                     streamUrl={activeVideo.streamUrl}
