@@ -5,6 +5,8 @@ export interface FeaturedVideo {
   title: string;
   src: string;
   poster?: string;
+  category?: string;
+  sourceUrl?: string;
 }
 
 interface UseFeaturedVideosResult {
@@ -13,33 +15,60 @@ interface UseFeaturedVideosResult {
   error: string | null;
 }
 
-const fallbackVideos: FeaturedVideo[] = [
-  {
-    id: 'okiso-default-1',
-    title: 'FEATURED_VIDEO_01',
-    src: 'https://api.okiso.net/media/file/videos/1773908791738-f163a7a7d96eb7d0.mov',
-  },
-];
+type MatchMode = 'any' | 'all';
 
-export function useFeaturedVideos(): UseFeaturedVideosResult {
+interface UseFeaturedVideosOptions {
+  category?: string;
+  categories?: string[];
+  match?: MatchMode;
+  limit?: number;
+  refreshMs?: number;
+}
+
+const FEED_BASE_URL = 'https://api.okiso.net/api/media/website/videos/feed';
+
+function buildFeedUrl(options: UseFeaturedVideosOptions) {
+  const params = new URLSearchParams();
+  params.set('usecase', 'website');
+
+  const limit = Math.max(1, Math.min(200, options.limit ?? 50));
+  params.set('limit', String(limit));
+
+  if (options.category) {
+    params.set('category', options.category);
+  } else if (options.categories && options.categories.length > 0) {
+    params.set('categories', options.categories.join(','));
+    params.set('match', options.match ?? 'any');
+  } else {
+    params.set('match', options.match ?? 'any');
+  }
+
+  return `${FEED_BASE_URL}?${params.toString()}`;
+}
+
+export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const {
+    category,
+    categories,
+    match = 'any',
+    limit = 50,
+    refreshMs = 60000,
+  } = options;
+
   useEffect(() => {
     let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const endpoint = buildFeedUrl({ category, categories, match, limit });
 
     const loadVideos = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-        const endpoint = process.env.NEXT_PUBLIC_VIDEOS_API_URL;
-        if (!endpoint) {
-          setVideos(fallbackVideos);
-          setIsLoading(false);
-          return;
-        }
 
         const response = await fetch(endpoint, { cache: 'no-store' });
         if (!response.ok) {
@@ -47,32 +76,25 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
         }
 
         const payload = await response.json();
-        const rawItems = Array.isArray(payload)
-          ? payload
-          : Array.isArray(payload?.videos)
-            ? payload.videos
-            : Array.isArray(payload?.items)
-              ? payload.items
-              : Array.isArray(payload?.data)
-                ? payload.data
-                : [];
+        const rawItems: unknown[] = Array.isArray(payload?.videos) ? payload.videos : [];
 
-        const items: FeaturedVideo[] = rawItems
+        const mapped: Array<FeaturedVideo | null> = rawItems
           .map((item: unknown, index: number) => {
             const raw = item as {
               id?: string | number;
               title?: string;
               name?: string;
-              src?: string;
-              url?: string;
-              videoUrl?: string;
               streamUrl?: string;
+              url?: string;
+              sourceUrl?: string;
               poster?: string;
               thumbnail?: string;
               thumbnailUrl?: string;
+              category?: string;
             };
 
-            const src = raw.src || raw.videoUrl || raw.streamUrl || raw.url;
+            // Playback priority: streamUrl -> url. sourceUrl is retained for original-download access only.
+            const src = raw.streamUrl || raw.url;
             if (!src) return null;
 
             return {
@@ -80,22 +102,29 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
               title: raw.title || raw.name || `VIDEO_${index + 1}`,
               src,
               poster: raw.poster || raw.thumbnail || raw.thumbnailUrl || undefined,
+              category: raw.category,
+              sourceUrl: raw.sourceUrl,
             };
-          })
-          .filter((video: FeaturedVideo | null): video is FeaturedVideo => Boolean(video));
+          });
+
+        const items: FeaturedVideo[] = mapped.filter((video): video is FeaturedVideo => video !== null);
 
         if (!cancelled) {
-          setVideos(items.length > 0 ? items : fallbackVideos);
+          setVideos(items);
         }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load videos');
-          setVideos(fallbackVideos);
+          setVideos([]);
         }
       } finally {
         if (!cancelled) {
           setIsLoading(false);
         }
+      }
+
+      if (!cancelled && refreshMs > 0) {
+        timer = setTimeout(loadVideos, refreshMs);
       }
     };
 
@@ -103,8 +132,9 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
 
     return () => {
       cancelled = true;
+      if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [category, categories, match, limit, refreshMs]);
 
   return { videos, isLoading, error };
 }

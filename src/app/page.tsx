@@ -23,14 +23,42 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
 import { useTwitchLive } from '@/hooks/useTwitchLive';
 import { FeaturedVideo, useFeaturedVideos } from '@/hooks/useFeaturedVideos';
 
+type VideoFilter = 'all' | 'cover' | 'self';
+
 export default function Home() {
   const { isLive } = useTwitchLive('okiso');
-  const { videos, isLoading: videosLoading } = useFeaturedVideos();
+  const [showFeaturedWhileLive, setShowFeaturedWhileLive] = useState(false);
+  const [videoFilter, setVideoFilter] = useState<VideoFilter>('all');
+  const featuredVideoOptions = useMemo(() => {
+    if (videoFilter === 'cover') {
+      return { category: 'cover' as const, limit: 50 };
+    }
+    if (videoFilter === 'self') {
+      return { category: 'self' as const, limit: 50 };
+    }
+    return { match: 'any' as const, limit: 50 };
+  }, [videoFilter]);
+
+  const { videos, isLoading: videosLoading, error: videosError } = useFeaturedVideos(featuredVideoOptions);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<FeaturedVideo | null>(null);
 
+  const showingLive = isLive && !showFeaturedWhileLive;
+
   useEffect(() => {
-    if (!activeVideo && videos.length > 0) {
+    if (!isLive) {
+      setShowFeaturedWhileLive(false);
+    }
+  }, [isLive]);
+
+  useEffect(() => {
+    if (videos.length === 0) {
+      setActiveVideo(null);
+      return;
+    }
+
+    const activeStillExists = activeVideo ? videos.some((video) => video.id === activeVideo.id) : false;
+    if (!activeStillExists) {
       setActiveVideo(videos[0]);
     }
   }, [videos, activeVideo]);
@@ -165,36 +193,81 @@ export default function Home() {
                               <div className="w-full xl:w-7/12 flex flex-col gap-6 md:gap-12">      
             <div className="flex items-center justify-between">
               <h2 className="text-[12vw] xl:text-[6vw] font-black leading-[0.9] uppercase tracking-tighter text-black dark:text-white">
-                {isLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/20">{isLive ? "Broadcast" : "Videos"}</span>
+                {showingLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/20">{showingLive ? "Broadcast" : "Videos"}</span>
               </h2>
             </div>
-            <div className="w-full aspect-video rounded-[24px] md:rounded-[40px] overflow-hidden bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group isolate">
-              {isLive ? (
-                <iframe
-                  src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`}
-                  height="100%"
-                  width="100%"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                />
-              ) : videosLoading ? (
-                <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase">
-                  Loading videos...
-                </div>
-              ) : activeVideo ? (
-                <CustomVideoPlayer
-                  src={activeVideo.src}
-                  poster={activeVideo.poster}
-                  title={activeVideo.title}
-                  className="w-full h-full"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase px-6 text-center">
-                  No videos available from API yet.
-                </div>
-              )}
-            </div>
-            {!isLive && videos.length > 1 && (
+            {isLive && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setShowFeaturedWhileLive(false)}
+                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${!showFeaturedWhileLive ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                >
+                  Live Broadcast
+                </button>
+                <button
+                  onClick={() => setShowFeaturedWhileLive(true)}
+                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${showFeaturedWhileLive ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                >
+                  Featured Videos
+                </button>
+              </div>
+            )}
+            {!showingLive && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setVideoFilter('all')}
+                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'all' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setVideoFilter('cover')}
+                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'cover' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                >
+                  Covers
+                </button>
+                <button
+                  onClick={() => setVideoFilter('self')}
+                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${videoFilter === 'self' ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                >
+                  Originals
+                </button>
+              </div>
+            )}
+
+            {(isLive || videosLoading || activeVideo) && (
+              <div className="w-full aspect-video rounded-[24px] md:rounded-[40px] overflow-hidden bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group isolate">
+                {showingLive ? (
+                  <iframe
+                    src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`}
+                    height="100%"
+                    width="100%"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                ) : videosLoading ? (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase">
+                    Loading videos...
+                  </div>
+                ) : activeVideo ? (
+                  <CustomVideoPlayer
+                    src={activeVideo.src}
+                    poster={activeVideo.poster}
+                    title={activeVideo.title}
+                    className="w-full h-full"
+                  />
+                ) : null}
+              </div>
+            )}
+
+            {!showingLive && !videosLoading && !activeVideo && (
+              <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                <p className="font-black uppercase tracking-widest text-black/60 dark:text-white/60">No videos published yet for this filter.</p>
+                {videosError && <p className="mt-2 text-xs font-bold text-black/40 dark:text-white/40">Feed error: {videosError}</p>}
+              </div>
+            )}
+
+            {!showingLive && videos.length > 1 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {videos.slice(0, 6).map((video) => (
                   <button
