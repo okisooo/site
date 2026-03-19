@@ -13,6 +13,14 @@ interface UseFeaturedVideosResult {
   error: string | null;
 }
 
+const fallbackVideos: FeaturedVideo[] = [
+  {
+    id: 'okiso-default-1',
+    title: 'FEATURED_VIDEO_01',
+    src: 'https://api.okiso.net/media/file/videos/1773908791738-f163a7a7d96eb7d0.mov',
+  },
+];
+
 export function useFeaturedVideos(): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +36,7 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
 
         const endpoint = process.env.NEXT_PUBLIC_VIDEOS_API_URL;
         if (!endpoint) {
-          setVideos([]);
+          setVideos(fallbackVideos);
           setIsLoading(false);
           return;
         }
@@ -77,12 +85,12 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
           .filter((video: FeaturedVideo | null): video is FeaturedVideo => Boolean(video));
 
         if (!cancelled) {
-          setVideos(items);
+          setVideos(items.length > 0 ? items : fallbackVideos);
         }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load videos');
-          setVideos([]);
+          setVideos(fallbackVideos);
         }
       } finally {
         if (!cancelled) {
