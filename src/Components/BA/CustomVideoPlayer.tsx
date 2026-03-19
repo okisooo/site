@@ -316,7 +316,10 @@ const playerContainerClass = isCinemaMode
             step={0.01}
             value={isMuted ? 0 : volume}
             onChange={handleVolumeChange}
-            className="w-20 md:w-28 h-2 appearance-none bg-white/20 rounded-full cursor-pointer accent-[#FF7EB3]"
+            className="w-20 md:w-28 h-2 appearance-none rounded-full cursor-pointer accent-[#FF7EB3]"
+            style={{ 
+              background: `linear-gradient(to right, #FF7EB3 ${(isMuted ? 0 : volume) * 100}%, rgba(255,255,255,0.2) ${(isMuted ? 0 : volume) * 100}%)`
+            }}
             aria-label="Volume"
           />
 
@@ -329,7 +332,10 @@ const playerContainerClass = isCinemaMode
               step={0.1}
               value={Math.min(currentTime, duration || 0)}
               onChange={handleSeek}
-              className="flex-1 h-2 appearance-none bg-white/20 rounded-full cursor-pointer accent-[#FF7EB3]"
+              className="flex-1 h-2 appearance-none rounded-full cursor-pointer accent-[#FF7EB3]"
+              style={{ 
+                background: `linear-gradient(to right, #FF7EB3 ${duration ? (currentTime / duration) * 100 : 0}%, rgba(255,255,255,0.2) ${duration ? (currentTime / duration) * 100 : 0}%)`
+              }}
               aria-label="Playback progress"
             />
             <span className="text-xs font-bold tracking-wider text-white/80 min-w-[42px]">{formatTime(duration)}</span>
