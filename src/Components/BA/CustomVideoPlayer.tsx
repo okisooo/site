@@ -42,6 +42,14 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
+    // Boost z-index of the parent section to escape stacking context traps
+    const parentSection = videoRef.current?.closest('section');
+    let originalZIndex = '';
+    if (parentSection) {
+      originalZIndex = parentSection.style.zIndex;
+      parentSection.style.zIndex = '99999';
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsCinemaMode(false);
@@ -52,6 +60,9 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
     return () => {
       document.body.style.overflow = originalOverflow;
+      if (parentSection) {
+        parentSection.style.zIndex = originalZIndex;
+      }
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isCinemaMode]);
@@ -209,15 +220,15 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
 const playerContainerClass = isCinemaMode
     ? 'relative z-[1] group w-full max-w-6xl aspect-video overflow-hidden flex flex-col bg-black rounded-[24px] md:rounded-[32px] border border-white/20 shadow-[0_30px_120px_rgba(0,0,0,0.8)]'
-    : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center ${className}`;
+    : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center rounded-[16px] md:rounded-[24px] ${className}`;
 
   return (
-    <div className={isCinemaMode ? 'fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
+    <div className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
       {isCinemaMode && (
         <button
           aria-label="Close cinema mode"
           onClick={() => setIsCinemaMode(false)}
-          className="absolute inset-0 bg-black/65 backdrop-blur-md"
+          className="absolute inset-0 bg-black/80 backdrop-blur-xl z-0"
         />
       )}
 
@@ -245,6 +256,8 @@ const playerContainerClass = isCinemaMode
         autoPlay={autoPlay}
         playsInline
         preload="auto"
+        crossOrigin="anonymous"
+        disablePictureInPicture
         muted={isMuted}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}

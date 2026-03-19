@@ -200,7 +200,7 @@ export default function Home() {
               </div>
             )}
             {(isLive || videosLoading || activeVideo) && (
-              <div className="w-full aspect-video rounded-[24px] md:rounded-[40px] overflow-hidden bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group isolate">
+              <div className={`w-full aspect-video rounded-[24px] md:rounded-[40px] bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group`}>
                 {showingLive ? (
                   <iframe
                     src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`}
