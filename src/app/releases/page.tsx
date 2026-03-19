@@ -1,200 +1,87 @@
-"use client";
+"use client"
 
-import Image from 'next/image';
-import { useEffect, useState, useMemo } from 'react';
-import AnimeCard from '@/Components/BA/AnimeCard';
-import PillButton from '@/Components/BA/PillButton';
-import GooeyNav from '@/Components/GooeyNav/GooeyNav';
-import { staticReleases, type Release } from '@/data/releases';
+import { useState, useMemo, useEffect } from "react"
+import { Canvas } from "@react-three/fiber"
+import { OrbitControls } from "@react-three/drei"
+import { OrbitGallery } from "@/Components/3D/OrbitGallery"
+import GooeyNav from "@/Components/GooeyNav/GooeyNav"
+import { Release } from "@/data/releases"
 
 export default function ReleasesPage() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [showAllReleases, setShowAllReleases] = useState(false);
-
-  const releases = staticReleases;
-  const featuredReleases = releases.slice(0, 3);
-  const initialDisplayCount = isMobile ? 12 : 16;
-  const catalogReleases = showAllReleases ? releases : releases.slice(0, initialDisplayCount);
-  const latestRelease = releases[0] || null;
-  const hasMoreReleases = releases.length > initialDisplayCount;
+  const [selectedRelease, setSelectedRelease] = useState<Release | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    const handleResize = () => setIsMobile(window.innerWidth < 640)
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   useEffect(() => {
-    document.body.classList.add('releases-page');
-    document.documentElement.style.overflow = 'auto';
-    document.body.style.overflow = 'auto';
-    document.body.style.height = 'auto';
-    document.documentElement.style.height = 'auto';
-    document.body.style.position = 'static';
-    document.body.style.width = 'auto';
-
+    document.body.style.overflow = "hidden"
+    document.body.style.height = "100vh"
     return () => {
-      document.body.classList.remove('releases-page');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.body.style.height = '';
-      document.documentElement.style.height = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    };
-  }, [isMobile]);
+      document.body.style.overflow = "auto"
+      document.body.style.height = "auto"
+    }
+  }, [])
 
   const navItems = useMemo(() => [
-    { label: 'Upcoming', href: '/upcoming' },
-    { label: 'Home', href: '/' },
-    { label: 'Releases', href: '/releases' }
-  ], []);
-
-  const initialActiveIndex = 2;
+    { label: "Upcoming", href: "/upcoming" },
+    { label: "Home", href: "/" },
+    { label: "Releases", href: "/releases" }
+  ], [])
 
   return (
-    <>
-      <style>{`
-        html, body {
-          height: auto !important;
-          overflow-y: auto !important;
-        }
-      `}</style>
-      <div className={`w-full relative text-ba-dark ${isMobile ? 'min-h-screen pb-24 px-3' : 'min-h-screen pt-20 px-6'}`} style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}>
-        <div className={`mx-auto relative z-10 flex flex-col ${isMobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
-          <header className={`text-center ${isMobile ? 'mb-4' : 'mb-8'}`}>
-            <h1 className={`font-display font-black text-ba-dark ${isMobile ? 'text-2xl mb-1' : 'text-5xl mb-4'}`}>
-              ✦ Music Releases
-            </h1>
-            <p className={`text-ba-muted mx-auto ${isMobile ? 'text-sm mb-2 max-w-2xl' : 'text-lg mb-6 max-w-4xl'}`}>
-              Explore OKISO&apos;s music catalog. Listen to the latest releases ♪
+    <div className="w-full h-screen bg-black relative overflow-hidden">
+      {/* 3D Canvas */}
+      <Canvas camera={{ position: [-8, 2, 10], fov: 50 }}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <OrbitGallery onSelectRelease={setSelectedRelease} />
+        <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+      </Canvas>
+
+      {/* Selected Release Overlay (Bottom Left) */}
+      <div 
+        className={`absolute bottom-24 md:bottom-10 left-5 md:left-10 z-40 bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl transition-all duration-500 max-w-[320px] md:max-w-md ${selectedRelease ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none"}`}
+      >
+        {selectedRelease && (
+          <div className="flex flex-col gap-4 text-white">
+            <span className="text-xs font-black uppercase tracking-widest text-[#FF7EB3]">{selectedRelease.albumType} {"//"} {selectedRelease.year}</span>
+            <h2 className="text-3xl font-black uppercase tracking-tighter leading-none shadow-black drop-shadow-lg">
+              {selectedRelease.title}
+            </h2>
+            <p className="text-sm font-bold text-white/70">
+              {selectedRelease.tracks?.length || 1} Tracks
             </p>
-          </header>
-
-          {/* Latest Release */}
-          <AnimeCard title="Latest Release" accentColor="pink" className={`${isMobile ? 'mb-4' : 'mb-6'}`}>
-            {latestRelease ? (
-              <div className={`flex ${isMobile ? 'flex-col gap-3' : 'flex-row gap-6'}`}>
-                <div className={`${isMobile ? 'w-full max-w-[160px] mx-auto' : 'w-full max-w-[220px]'}`}>
-                  <a
-                    href={latestRelease.slug ? `/releases/${latestRelease.slug}` : latestRelease.link}
-                    className="block relative aspect-square transition-transform hover:scale-[1.03] hover:shadow-ba-card rounded-ba overflow-hidden"
-                  >
-                    <Image
-                      src={latestRelease.img}
-                      alt={`${latestRelease.title} album artwork`}
-                      className="rounded-ba"
-                      fill
-                      sizes={isMobile ? "160px" : "220px"}
-                      priority
-                    />
-                  </a>
-                </div>
-                <div className={`w-full flex flex-col justify-center ${isMobile ? 'items-center' : 'items-start'}`}>
-                  <h3 className={`font-display font-bold text-ba-dark ${isMobile ? 'text-lg mb-1 text-center' : 'text-2xl mb-2 text-left'}`}>
-                    {latestRelease.title}
-                  </h3>
-                  <p className={`text-ba-muted ${isMobile ? 'text-sm mb-2 text-center' : 'text-base mb-4 text-left'}`}>
-                    Released {latestRelease.year}
-                  </p>
-                  <PillButton variant="sky" size="sm" href={latestRelease.link}>
-                    ♫ Listen on Spotify
-                  </PillButton>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-ba-muted">No releases found</p>
-              </div>
-            )}
-          </AnimeCard>
-
-          {/* Featured Releases */}
-          <AnimeCard title="Featured Releases" accentColor="yellow" className={`${isMobile ? 'mb-4' : 'mb-6'}`}>
-            <div className={`flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide ${isMobile ? 'gap-3 -mx-1 px-1' : 'gap-4 -mx-2 px-2'}`}>
-              {featuredReleases.map((release: Release) => (
-                <div key={release.title} className={`bg-ba-red/5 p-2 rounded-ba border border-ba-red/10 flex-shrink-0 transition-all hover:shadow-ba-soft hover:-translate-y-1 ${isMobile ? 'w-[120px]' : 'w-[170px]'}`}>
-                  <a
-                    href={release.slug ? `/releases/${release.slug}` : release.link}
-                    className="block relative aspect-square transition-transform rounded-ba overflow-hidden"
-                  >
-                    <Image
-                      src={release.img}
-                      alt={release.title + ' album artwork'}
-                      className="rounded-ba"
-                      fill
-                      sizes={isMobile ? "120px" : "170px"}
-                    />
-                  </a>
-                  <div className="mt-2 px-1">
-                    <p className={`font-display font-bold truncate text-ba-dark ${isMobile ? 'text-xs' : 'text-sm'}`}>
-                      {release.title}
-                    </p>
-                    <p className={`text-ba-muted ${isMobile ? 'text-xs' : 'text-sm'}`}>
-                      {release.year}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-2">
+              <a 
+                href={selectedRelease.link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-white text-black font-black uppercase tracking-widest px-6 py-3 rounded-full hover:bg-[#FF7EB3] hover:text-white transition-colors"
+               >
+                LISTEN NOW
+              </a>
             </div>
-          </AnimeCard>
+          </div>
+        )}
+      </div>
 
-          {/* Full Catalog */}
-          <AnimeCard title="Full Catalog" accentColor="lavender">
-            <div>
-              <div className={`grid gap-3 ${isMobile ? 'grid-cols-3' : 'grid-cols-4 md:grid-cols-6 lg:grid-cols-8'}`}>
-                {catalogReleases.map((release: Release) => (
-                  <div key={release.title} className="bg-ba-lavender/5 p-1.5 rounded-ba border border-ba-lavender/10 transition-all hover:shadow-ba-soft hover:-translate-y-1">
-                    <a
-                      href={release.slug ? `/releases/${release.slug}` : release.link}
-                      className="block relative aspect-square rounded-ba overflow-hidden"
-                    >
-                      <Image
-                        src={release.img}
-                        alt={release.title + ' album artwork'}
-                        className="rounded-[12px]"
-                        fill
-                        sizes={isMobile ? "100px" : "150px"}
-                      />
-                    </a>
-                    <div className="mt-1.5 px-0.5">
-                      <p className={`font-display font-bold truncate text-ba-dark ${isMobile ? 'text-xs' : 'text-sm'}`}>
-                        {release.title}
-                      </p>
-                      <p className={`text-ba-muted ${isMobile ? 'text-[10px]' : 'text-xs'}`}>
-                        {release.year}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Show More/Less */}
-              {hasMoreReleases && !showAllReleases && (
-                <div className="flex justify-center mt-6">
-                  <PillButton variant="sky" size="sm" onClick={() => setShowAllReleases(true)}>
-                    Show More ({releases.length - initialDisplayCount} more releases)
-                  </PillButton>
-                </div>
-              )}
-              {showAllReleases && hasMoreReleases && (
-                <div className="flex justify-center mt-6">
-                  <PillButton variant="sky" size="sm" onClick={() => setShowAllReleases(false)}>
-                    Show Less
-                  </PillButton>
-                </div>
-              )}
-            </div>
-          </AnimeCard>
-        </div>
+      {/* Header Overlay */}
+      <div className="absolute top-8 left-0 right-0 z-40 pointer-events-none flex flex-col items-center">
+         <h1 className="text-4xl md:text-6xl font-black text-white/90 drop-shadow-2xl uppercase tracking-tighter">DISCOGRAPHY</h1>
+         <p className="text-white/60 font-bold tracking-widest uppercase text-sm mt-2">Interactive Archive</p>
+      </div>
 
-        {/* Navigation */}
-        <div className={isMobile ? "fixed left-0 w-full z-50 flex justify-center bottom-4" : "fixed left-0 w-full z-50 flex justify-center top-4"}>
+      {/* Navigation */}
+      <div className={`fixed left-0 w-full z-50 flex justify-center pointer-events-none ${isMobile ? "bottom-4" : "top-4"}`}>
+        <div className="pointer-events-auto">
           <GooeyNav
             items={navItems}
-            initialActiveIndex={initialActiveIndex}
+            initialActiveIndex={2}
             animationTime={600}
             particleCount={15}
             particleDistances={[90, 10]}
@@ -204,6 +91,6 @@ export default function ReleasesPage() {
           />
         </div>
       </div>
-    </>
-  );
+    </div>
+  )
 }

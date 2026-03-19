@@ -29,11 +29,9 @@ function VRMModel({ url }: VRMModelProps) {
                     scene.add(vrm.scene);
                     vrm.scene.rotation.y = Math.PI; // Face camera
 
-                    // Reset model position
-                    const box = new THREE.Box3().setFromObject(vrm.scene);
-                    const center = box.getCenter(new THREE.Vector3());
-                    vrm.scene.position.sub(center);
-                    vrm.scene.position.y += box.getSize(new THREE.Vector3()).y / 2;
+                    // The bounding box logic was pushing the model into the shadow realm.
+                    // VRMs natively spawn at 0,0,0 feet-first, so this is correct.
+                    vrm.scene.position.set(0, 0, 0);
                 }
             },
             undefined,
@@ -65,7 +63,7 @@ interface VRMViewerProps {
     height?: string;
 }
 
-export default function VRMViewer({ modelUrl, className, height = '500px' }: VRMViewerProps) {
+export default function VRMViewer({ modelUrl, className, height = '100%' }: VRMViewerProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (
@@ -79,7 +77,7 @@ export default function VRMViewer({ modelUrl, className, height = '500px' }: VRM
                 </div>
             )}
             <Canvas
-                camera={{ position: [0, 1.2, 2.5], fov: 35 }}
+                camera={{ position: [0, 1.0, 3.0], fov: 35 }}
                 onCreated={() => {
                     // Small delay to let the model start loading
                     setTimeout(() => setIsLoaded(true), 1000);
@@ -95,12 +93,11 @@ export default function VRMViewer({ modelUrl, className, height = '500px' }: VRM
                 <VRMModel url={modelUrl} />
 
                 <OrbitControls
-                    target={[0, 1, 0]}
-                    minDistance={1.5}
-                    maxDistance={5}
-                    maxPolarAngle={Math.PI / 1.8}
-                    minPolarAngle={Math.PI / 6}
+                    target={[0, 1.0, 0]}
+                    enableZoom={false}
                     enablePan={false}
+                    maxPolarAngle={Math.PI / 2}
+                    minPolarAngle={Math.PI / 2}
                     autoRotate
                     autoRotateSpeed={1.5}
                 />

@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const MusicPlayer: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -22,7 +23,7 @@ const MusicPlayer: React.FC = () => {
             setIsPlaying(false);
         });
 
-        const interactionEvents = ['click', 'keydown', 'touchstart', 'mousedown', 'pointerdown', 'scroll', 'wheel'];
+        const interactionEvents = ['click', 'touchstart', 'scroll'];
 
         const handleUserInteraction = () => {
             if (audioRef.current && !isAttemptingPlay.current) {
@@ -79,49 +80,49 @@ const MusicPlayer: React.FC = () => {
 
     const togglePlay = () => setIsPlaying(!isPlaying);
 
-    const barColors = ['bg-ba-pink', 'bg-ba-red', 'bg-ba-yellow', 'bg-ba-lavender'];
-
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-            {/* Visualizer Bars */}
-            {isPlaying && (
-                <div className="flex items-end gap-[3px] h-8">
-                    {barColors.map((color, i) => (
-                        <div
-                            key={i}
-                            className={cn(
-                                'w-1 rounded-full transition-all',
-                                color,
-                                i === 0 && 'animate-[bounce_0.5s_infinite] h-full',
-                                i === 1 && 'animate-[bounce_0.7s_infinite] h-2/3',
-                                i === 2 && 'animate-[bounce_0.6s_infinite] h-1/2',
-                                i === 3 && 'animate-[bounce_0.8s_infinite] h-3/4',
-                            )}
-                            style={{ animationDelay: `${i * 0.1}s` }}
-                        />
-                    ))}
-                </div>
-            )}
+        <div className="fixed bottom-8 left-8 z-[100] flex items-center gap-4 group">
+            {/* Visualizer & Info - Expands on hover */}
+            <AnimatePresence>
+                {isPlaying && (
+                    <motion.div 
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "auto", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        className="overflow-hidden bg-white/80 backdrop-blur-xl border border-black/5 shadow-2xl rounded-full pr-6 pl-4 py-2 flex items-center gap-4"
+                    >
+                        <div className="flex items-end gap-[3px] h-6 flex-shrink-0">
+                            {[1, 2, 3, 4, 5].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="w-1.5 rounded-t-sm bg-ba-pink"
+                                    style={{ 
+                                        animation: `bounce ${0.4 + (i * 0.1)}s infinite alternate`,
+                                        height: `${100 - (i * 15)}%` 
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex flex-col min-w-[120px]">
+                            <span className="text-[10px] font-black tracking-[0.2em] text-black/50 uppercase">Global_BGM</span>
+                            <span className="text-sm font-black tracking-widest text-black uppercase truncate">OKISO_V1.mp3</span>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-            {/* Player Control */}
-            <div className="bg-white/80 backdrop-blur-md border-2 border-ba-red/20 p-1 rounded-ba-pill flex items-center gap-2 shadow-ba-soft">
-                <button
-                    onClick={togglePlay}
-                    className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
-                        isPlaying
-                            ? "bg-gradient-to-r from-ba-pink to-ba-pink-deep text-white shadow-ba-glow-pink"
-                            : "bg-ba-red/10 text-ba-red-deep hover:bg-ba-red hover:text-white"
-                    )}
-                >
-                    {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} className="ml-0.5" />}
-                </button>
-
-                <div className="pr-4 pl-1 flex flex-col">
-                    <span className="text-[10px] font-bold text-ba-muted uppercase tracking-wider">♫ NOW PLAYING</span>
-                    <span className="text-xs font-display font-bold text-ba-dark">BGM</span>
-                </div>
-            </div>
+            {/* Huge Play Button */}
+            <button
+                onClick={togglePlay}
+                className={cn(
+                    "w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-white/20 transform hover:scale-110",
+                    isPlaying
+                        ? "bg-ba-pink text-white shadow-[0_0_40px_rgba(255,126,179,0.6)] border-none"
+                        : "bg-white/90 backdrop-blur-xl text-black hover:bg-black hover:text-white"
+                )}
+            >
+                {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} className="ml-1" />}
+            </button>
         </div>
     );
 };

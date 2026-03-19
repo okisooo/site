@@ -13,6 +13,8 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        border: "var(--border)",
+        ring: "var(--ring)",
         // Blue Archive inspired palette (Red/White focus)
         "ba-red": "#FF4D4D",
         "ba-red-light": "#FFB3B3",
@@ -114,8 +116,10 @@ export default {
         "wiggle": "wiggle 1s ease-in-out infinite",
         "slide-up": "slide-up 0.6s ease-out",
         "shimmer": "shimmer 3s linear infinite",
-        marquee: "marquee 20s linear infinite",
-        "marquee-reverse": "marquee-reverse 20s linear infinite",
+        marquee: "marquee 10s linear infinite",
+        "marquee-reverse": "marquee-reverse 10s linear infinite",
+        "marquee-fast": "marquee 3s linear infinite",
+        "marquee-reverse-fast": "marquee-reverse 3s linear infinite",
       },
     },
   },

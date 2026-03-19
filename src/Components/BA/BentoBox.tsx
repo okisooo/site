@@ -11,12 +11,12 @@ interface BentoBoxProps {
 }
 
 const colorMap = {
-    sky: 'bg-ba-red/10 border-ba-red/20 hover:border-ba-red/50 shadow-[0_8px_32px_-12px_rgba(124,200,248,0.2)]',
-    pink: 'bg-ba-pink/10 border-ba-pink/20 hover:border-ba-pink/50 shadow-[0_8px_32px_-12px_rgba(255,126,179,0.2)]',
-    yellow: 'bg-ba-yellow/10 border-ba-yellow/20 hover:border-ba-yellow/50 shadow-[0_8px_32px_-12px_rgba(255,209,102,0.2)]',
-    lavender: 'bg-ba-lavender/10 border-ba-lavender/20 hover:border-ba-lavender/50 shadow-[0_8px_32px_-12px_rgba(196,181,253,0.2)]',
-    mint: 'bg-ba-mint/10 border-ba-mint/20 hover:border-ba-mint/50 shadow-[0_8px_32px_-12px_rgba(110,231,183,0.2)]',
-    cream: 'bg-ba-card/80 border-ba-white/80 hover:border-ba-pink/30 shadow-ba-soft',
+    sky: 'bg-ba-sky/30 border-ba-sky/50 backdrop-blur-xl shadow-[8px_8px_0px_#75baff] hover:shadow-[12px_12px_0px_#75baff] hover:bg-ba-sky/40',
+    pink: 'bg-ba-pink/30 border-ba-pink/50 backdrop-blur-xl shadow-[8px_8px_0px_#ff99c8] hover:shadow-[12px_12px_0px_#ff99c8] hover:bg-ba-pink/40',
+    yellow: 'bg-ba-yellow/30 border-ba-yellow/50 backdrop-blur-xl shadow-[8px_8px_0px_#ffe499] hover:shadow-[12px_12px_0px_#ffe499] hover:bg-ba-yellow/40',
+    lavender: 'bg-ba-lavender/30 border-ba-lavender/50 backdrop-blur-xl shadow-[8px_8px_0px_#b3a6ff] hover:shadow-[12px_12px_0px_#b3a6ff] hover:bg-ba-lavender/40',
+    mint: 'bg-ba-mint/30 border-ba-mint/50 backdrop-blur-xl shadow-[8px_8px_0px_#8fcca9] hover:shadow-[12px_12px_0px_#8fcca9] hover:bg-ba-mint/40',
+    cream: 'bg-white/40 border-white/60 backdrop-blur-xl shadow-[8px_8px_0px_#ffffff] hover:shadow-[12px_12px_0px_#ffffff] hover:bg-white/50',
 };
 
 export default function BentoBox({ children, className = '', color = 'cream', delay = 0 }: BentoBoxProps) {
@@ -26,14 +26,14 @@ export default function BentoBox({ children, className = '', color = 'cream', de
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{
-                duration: 0.6,
+                duration: 0.1,
                 delay,
                 type: "spring",
-                stiffness: 100,
-                damping: 20
+                stiffness: 400,
+                damping: 25
             }}
-            whileHover={{ y: -4, scale: 1.01 }}
-            className={`relative overflow-hidden rounded-ba-lg border backdrop-blur-md transition-all duration-300 ${colorMap[color]} ${className}`}
+            whileHover={{ y: -6, scale: 1.02, skewX: -2 }}
+            className={`relative overflow-hidden brutalist-border border-2 transition-all duration-[50ms] ${colorMap[color]} ${className}`}
         >
             {/* Glossy top highlight */}
             <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-ba-white/40 to-transparent opacity-50 pointer-events-none" />

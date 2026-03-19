@@ -1,9 +1,12 @@
-import { Nunito, Quicksand } from "next/font/google";
+import { Nunito, Quicksand, Geist } from "next/font/google";
 import "./globals.css";
 import { staticReleases } from '@/data/releases';
-// import MusicPlayer from '@/Components/BA/MusicPlayer';
 import { ThemeProvider } from "@/Components/ThemeProvider";
 import { ThemeToggle } from "@/Components/ThemeToggle";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 const nunito = Nunito({
   variable: "--font-display",
   subsets: ["latin"],
@@ -126,7 +129,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
@@ -148,15 +151,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd, breadcrumbLd] }) }}
         />
 
-        <link rel="icon" type="image/jpeg" sizes="any" href="/easter_egg.jpg" />
-        <link rel="apple-touch-icon" href="/easter_egg.jpg" />
+        <link rel="icon" type="image/png" sizes="any" href="/icon.png" />
+        <link rel="apple-touch-icon" href="/icon.png" />
       </head>
-      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased bg-ba-white text-ba-dark overflow-x-hidden`}>
+      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          {/* Soft animated background */}
-          <div className="fixed inset-0 z-0 pointer-events-none bg-ba-gradient-red" />
-          <div className="fixed inset-0 z-0 pointer-events-none dots-bg opacity-[0.03]" />
-
           {/* <MusicPlayer /> */}
 
           <div className="relative z-[1] min-h-screen flex flex-col">
