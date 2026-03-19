@@ -1,22 +1,17 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
 import { OrbitGallery } from "@/Components/3D/OrbitGallery"
-import GooeyNav from "@/Components/GooeyNav/GooeyNav"
 import { Release } from "@/data/releases"
 
 export default function ReleasesPage() {
-  const [selectedRelease, setSelectedRelease] = useState<Release | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
+  const [hoveredRelease, setHoveredRelease] = useState<Release | null>(null)
+  const [pinnedRelease, setPinnedRelease] = useState<Release | null>(null)
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640)
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+  const selectedRelease = pinnedRelease ?? hoveredRelease
 
   useEffect(() => {
     document.body.style.overflow = "hidden"
@@ -27,19 +22,16 @@ export default function ReleasesPage() {
     }
   }, [])
 
-  const navItems = useMemo(() => [
-    { label: "Upcoming", href: "/upcoming" },
-    { label: "Home", href: "/" },
-    { label: "Releases", href: "/releases" }
-  ], [])
-
   return (
     <div className="w-full h-screen bg-black relative overflow-hidden">
       {/* 3D Canvas */}
       <Canvas camera={{ position: [-8, 2, 10], fov: 50 }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
-        <OrbitGallery onSelectRelease={setSelectedRelease} />
+        <OrbitGallery
+          onHoverRelease={setHoveredRelease}
+          onClickRelease={setPinnedRelease}
+        />
         <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
       </Canvas>
 
@@ -56,6 +48,14 @@ export default function ReleasesPage() {
             <p className="text-sm font-bold text-white/70">
               {selectedRelease.tracks?.length || 1} Tracks
             </p>
+            {pinnedRelease && (
+              <button
+                onClick={() => setPinnedRelease(null)}
+                className="self-start text-xs font-black uppercase tracking-widest text-white/70 hover:text-white transition-colors"
+              >
+                Close
+              </button>
+            )}
             <div className="mt-2">
               <a 
                 href={selectedRelease.link} 
@@ -76,20 +76,14 @@ export default function ReleasesPage() {
          <p className="text-white/60 font-bold tracking-widest uppercase text-sm mt-2">Interactive Archive</p>
       </div>
 
-      {/* Navigation */}
-      <div className={`fixed left-0 w-full z-50 flex justify-center pointer-events-none ${isMobile ? "bottom-4" : "top-4"}`}>
-        <div className="pointer-events-auto">
-          <GooeyNav
-            items={navItems}
-            initialActiveIndex={2}
-            animationTime={600}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
+      {/* Back Button */}
+      <div className="absolute top-6 left-6 z-50">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-black font-black uppercase tracking-widest hover:bg-[#FF7EB3] hover:text-white transition-colors"
+        >
+          ← Back
+        </Link>
       </div>
     </div>
   )

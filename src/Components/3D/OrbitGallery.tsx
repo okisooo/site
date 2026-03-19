@@ -7,9 +7,11 @@ import * as THREE from "three"
 import { Release, staticReleases } from "@/data/releases"
 
 export function OrbitGallery({
-  onSelectRelease,
+  onHoverRelease,
+  onClickRelease,
 }: {
-  onSelectRelease: (release: Release | null) => void
+  onHoverRelease: (release: Release | null) => void
+  onClickRelease: (release: Release) => void
 }) {
   const PARTICLE_COUNT = 1500
   const PARTICLE_SIZE_MIN = 0.005
@@ -135,14 +137,18 @@ export function OrbitGallery({
           onPointerOver={(e) => {
             e.stopPropagation()
             setHoveredIndex(index)
-            onSelectRelease(image.release)
+            onHoverRelease(image.release)
             document.body.style.cursor = 'pointer'
           }}
           onPointerOut={(e) => {
             e.stopPropagation()
             setHoveredIndex(null)
-            onSelectRelease(null)
+            onHoverRelease(null)
             document.body.style.cursor = 'auto'
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onClickRelease(image.release)
           }}
           scale={hoveredIndex === index ? 1.2 : 1}
         >
