@@ -207,12 +207,12 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     setIsCinemaMode((prev) => !prev);
   };
 
-  const playerContainerClass = isCinemaMode
+const playerContainerClass = isCinemaMode
     ? 'relative z-[1] group w-full max-w-6xl aspect-video overflow-hidden flex flex-col bg-black rounded-[24px] md:rounded-[32px] border border-white/20 shadow-[0_30px_120px_rgba(0,0,0,0.8)]'
-    : `relative group w-full h-full overflow-hidden flex flex-col bg-black ${className}`;
+    : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center ${className}`;
 
   return (
-    <div className={isCinemaMode ? 'fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8' : ''}>
+    <div className={isCinemaMode ? 'fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
       {isCinemaMode && (
         <button
           aria-label="Close cinema mode"
@@ -240,9 +240,8 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         ref={videoRef}
         src={resolvedSrc}
         poster={poster}
-        className="w-full h-full object-cover"
+        className="w-full aspect-video object-contain"
         loop
-        controls
         autoPlay={autoPlay}
         playsInline
         preload="auto"

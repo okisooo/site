@@ -25,7 +25,7 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const hasLoadedOnceRef = useRef(false);
-  const refreshMs = 60000;
+  const refreshMs = 0; // Disabled polling to prevent playback reset
 
   useEffect(() => {
     let cancelled = false;
