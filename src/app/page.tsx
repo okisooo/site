@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
@@ -21,10 +21,24 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
 });
 
 import { useTwitchLive } from '@/hooks/useTwitchLive';
+import { FeaturedVideo, useFeaturedVideos } from '@/hooks/useFeaturedVideos';
 
 export default function Home() {
   const { isLive } = useTwitchLive('okiso');
+  const { videos, isLoading: videosLoading } = useFeaturedVideos();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<FeaturedVideo | null>(null);
+
+  useEffect(() => {
+    if (!activeVideo && videos.length > 0) {
+      setActiveVideo(videos[0]);
+    }
+  }, [videos, activeVideo]);
+
+  const twitchParent = useMemo(() => {
+    if (typeof window === 'undefined') return 'localhost';
+    return window.location.hostname || 'localhost';
+  }, []);
   
   return (
     <div className="min-h-screen bg-transparent text-black dark:text-white overflow-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500">
@@ -151,26 +165,48 @@ export default function Home() {
                               <div className="w-full xl:w-7/12 flex flex-col gap-6 md:gap-12">      
             <div className="flex items-center justify-between">
               <h2 className="text-[12vw] xl:text-[6vw] font-black leading-[0.9] uppercase tracking-tighter text-black dark:text-white">
-                {isLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/20">Broadcast</span>
+                {isLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/20">{isLive ? "Broadcast" : "Videos"}</span>
               </h2>
             </div>
             <div className="w-full aspect-video rounded-[24px] md:rounded-[40px] overflow-hidden bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group isolate">
               {isLive ? (
                 <iframe
-                  src={`https://player.twitch.tv/?channel=okiso&parent=localhost`}
+                  src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`}
                   height="100%"
                   width="100%"
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
                 />
-              ) : (
-                <CustomVideoPlayer 
-                  src="https://www.w3schools.com/html/mov_bbb.mp4" 
-                  title="LATEST_STREAM.MP4"
+              ) : videosLoading ? (
+                <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase">
+                  Loading videos...
+                </div>
+              ) : activeVideo ? (
+                <CustomVideoPlayer
+                  src={activeVideo.src}
+                  poster={activeVideo.poster}
+                  title={activeVideo.title}
                   className="w-full h-full"
                 />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase px-6 text-center">
+                  No videos available from API yet.
+                </div>
               )}
             </div>
+            {!isLive && videos.length > 1 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {videos.slice(0, 6).map((video) => (
+                  <button
+                    key={video.id}
+                    onClick={() => setActiveVideo(video)}
+                    className={`text-left px-4 py-3 rounded-2xl border transition-colors ${activeVideo?.id === video.id ? 'bg-ba-pink text-white border-ba-pink' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10'}`}
+                  >
+                    <p className="font-bold text-sm uppercase tracking-wide truncate">{video.title}</p>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Social Ecosystem */}

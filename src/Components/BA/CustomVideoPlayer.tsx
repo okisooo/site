@@ -9,12 +9,22 @@ interface CustomVideoPlayerProps {
   poster?: string;
   title?: string;
   className?: string;
+  autoPlay?: boolean;
 }
 
-export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', className = '' }: CustomVideoPlayerProps) {
+function formatTime(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds <= 0) return '00:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isMuted, setIsMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -24,6 +34,31 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
         videoRef.current.play();
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration || 0);
+      if (autoPlay) {
+        videoRef.current.play().catch(() => {
+          setIsPlaying(false);
+        });
+      }
+    }
+  };
+
+  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextTime = Number(event.target.value);
+    if (videoRef.current) {
+      videoRef.current.currentTime = nextTime;
+      setCurrentTime(nextTime);
     }
   };
 
@@ -65,7 +100,12 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
         className="w-full h-full object-cover"
         loop
         playsInline
+        preload="metadata"
         muted={isMuted}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         onClick={togglePlay}
       />
 
@@ -99,8 +139,18 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
             {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>
 
-          <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden relative">
-             <div className="absolute top-0 left-0 w-1/3 h-full bg-ba-pink shadow-[0_0_10px_var(--ba-pink)]" />
+          <div className="flex-1 flex items-center gap-3">
+            <span className="text-xs font-bold tracking-wider text-white/80 min-w-[42px]">{formatTime(currentTime)}</span>
+            <input
+              type="range"
+              min={0}
+              max={duration || 0}
+              step={0.1}
+              value={Math.min(currentTime, duration || 0)}
+              onChange={handleSeek}
+              className="flex-1 h-2 appearance-none bg-white/20 rounded-full cursor-pointer accent-[#FF7EB3]"
+            />
+            <span className="text-xs font-bold tracking-wider text-white/80 min-w-[42px]">{formatTime(duration)}</span>
           </div>
 
           <button 
