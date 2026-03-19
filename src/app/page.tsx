@@ -245,10 +245,6 @@ export default function Home() {
                     allowFullScreen
                     className="absolute inset-0 w-full h-full"
                   />
-                ) : videosLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase">
-                    Loading videos...
-                  </div>
                 ) : activeVideo ? (
                   <CustomVideoPlayer
                     src={activeVideo.src}
@@ -256,6 +252,10 @@ export default function Home() {
                     title={activeVideo.title}
                     className="w-full h-full"
                   />
+                ) : videosLoading ? (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/70 font-bold tracking-widest uppercase">
+                    Loading videos...
+                  </div>
                 ) : null}
               </div>
             )}

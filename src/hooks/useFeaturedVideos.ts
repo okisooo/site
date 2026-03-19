@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface FeaturedVideo {
   id: string;
@@ -50,6 +50,7 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasLoadedOnceRef = useRef(false);
 
   const {
     category,
@@ -67,7 +68,9 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
 
     const loadVideos = async () => {
       try {
-        setIsLoading(true);
+        if (!hasLoadedOnceRef.current) {
+          setIsLoading(true);
+        }
         setError(null);
 
         const response = await fetch(endpoint, { cache: 'no-store' });
@@ -119,6 +122,7 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
         }
       } finally {
         if (!cancelled) {
+          hasLoadedOnceRef.current = true;
           setIsLoading(false);
         }
       }
