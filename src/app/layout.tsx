@@ -151,8 +151,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd, breadcrumbLd] }) }}
         />
 
-        <link rel="icon" type="image/png" sizes="any" href="/icon.png" />
-        <link rel="apple-touch-icon" href="/icon.png" />
+        <link rel="icon" type="image/png" sizes="any" href="/icon.png?v=20260319" />
+        <link rel="apple-touch-icon" href="/icon.png?v=20260319" />
       </head>
       <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
