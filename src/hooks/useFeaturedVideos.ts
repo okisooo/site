@@ -6,6 +6,8 @@ export interface FeaturedVideo {
   src: string;
   poster?: string;
   category?: string;
+  hlsUrl?: string;
+  hasHlsPackage?: boolean;
   sourceUrl?: string;
 }
 
@@ -87,6 +89,8 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
               id?: string | number;
               title?: string;
               name?: string;
+              hlsUrl?: string;
+              hasHlsPackage?: boolean;
               streamUrl?: string;
               url?: string;
               sourceUrl?: string;
@@ -96,8 +100,8 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
               category?: string;
             };
 
-            // Playback priority: streamUrl -> url. sourceUrl is retained for original-download access only.
-            const src = raw.streamUrl || raw.url;
+            // Playback priority: hlsUrl first, then sourceUrl fallback.
+            const src = raw.hlsUrl || raw.sourceUrl || raw.streamUrl || raw.url;
             if (!src) return null;
 
             return {
@@ -106,6 +110,8 @@ export function useFeaturedVideos(options: UseFeaturedVideosOptions = {}): UseFe
               src,
               poster: raw.poster || raw.thumbnail || raw.thumbnailUrl || undefined,
               category: raw.category,
+              hlsUrl: raw.hlsUrl,
+              hasHlsPackage: raw.hasHlsPackage,
               sourceUrl: raw.sourceUrl,
             };
           });

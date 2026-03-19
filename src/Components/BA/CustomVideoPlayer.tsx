@@ -6,6 +6,8 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2 } from 'l
 
 interface CustomVideoPlayerProps {
   src: string;
+  hlsUrl?: string;
+  sourceUrl?: string;
   poster?: string;
   title?: string;
   className?: string;
@@ -19,7 +21,7 @@ function formatTime(seconds: number) {
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
+export default function CustomVideoPlayer({ src, hlsUrl, sourceUrl, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const previousVolumeRef = useRef(1);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
@@ -28,8 +30,10 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isCinemaMode, setIsCinemaMode] = useState(false);
-  const [streamReady, setStreamReady] = useState<boolean | null>(null);
-  const [streamGenerating, setStreamGenerating] = useState<boolean>(false);
+  const [resolvedSrc, setResolvedSrc] = useState(src);
+  const [hlsReady, setHlsReady] = useState<boolean | null>(null);
+  const [hlsGenerating, setHlsGenerating] = useState(false);
+  const [usedFallbackSource, setUsedFallbackSource] = useState(false);
 
   useEffect(() => {
     if (!isCinemaMode) return;
@@ -53,35 +57,67 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
 
   useEffect(() => {
     let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const checkStreamHeaders = async () => {
+    const preferredHlsUrl = hlsUrl || (src.toLowerCase().includes('.m3u8') ? src : undefined);
+    const fallbackUrl = sourceUrl || src;
+
+    const resolvePlaybackUrl = async () => {
+      if (!preferredHlsUrl) {
+        setResolvedSrc(fallbackUrl);
+        setHlsReady(null);
+        setHlsGenerating(false);
+        return;
+      }
+
       try {
-        const response = await fetch(src, { method: 'HEAD' });
-        if (!response.ok || cancelled) return;
+        const response = await fetch(preferredHlsUrl, { method: 'HEAD' });
+        if (cancelled) return;
 
-        const readyHeader = response.headers.get('x-stream-ready');
-        const generatingHeader = response.headers.get('x-stream-generating');
+        const readyHeader = response.headers.get('x-hls-ready');
+        const generatingHeader = response.headers.get('x-hls-generating');
+        const retryAfterHeader = response.headers.get('retry-after');
 
-        if (!cancelled) {
-          setStreamReady(readyHeader === 'true');
-          setStreamGenerating(generatingHeader === 'true');
+        const generating = generatingHeader === 'true';
+        const ready = readyHeader === 'true';
+
+        setHlsReady(readyHeader === null ? null : ready);
+        setHlsGenerating(generating);
+
+        if (response.ok || ready) {
+          setResolvedSrc(preferredHlsUrl);
+          setUsedFallbackSource(false);
+          return;
         }
+
+        if (response.status === 503 && generating) {
+          const retryAfterSeconds = Number(retryAfterHeader || '2');
+          retryTimer = setTimeout(resolvePlaybackUrl, Math.max(1, retryAfterSeconds) * 1000);
+          return;
+        }
+
+        setResolvedSrc(fallbackUrl);
+        setUsedFallbackSource(true);
       } catch {
-        if (!cancelled) {
-          setStreamReady(null);
-          setStreamGenerating(false);
-        }
+        if (cancelled) return;
+        // If preflight check fails (CORS/network), still attempt HLS first in player.
+        setResolvedSrc(preferredHlsUrl);
+        setHlsReady(null);
+        setHlsGenerating(false);
       }
     };
 
-    setStreamReady(null);
-    setStreamGenerating(false);
-    checkStreamHeaders();
+    setResolvedSrc(src);
+    setUsedFallbackSource(false);
+    setHlsReady(null);
+    setHlsGenerating(false);
+    resolvePlaybackUrl();
 
     return () => {
       cancelled = true;
+      if (retryTimer) clearTimeout(retryTimer);
     };
-  }, [src]);
+  }, [src, hlsUrl, sourceUrl]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -185,14 +221,14 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
           </span>
         </div>
         <div className="font-bold text-xs md:text-sm text-white/50 tracking-widest bg-white/10 px-3 py-1 rounded-full backdrop-blur-md">
-          {streamGenerating && streamReady === false ? 'OPTIMIZING VIDEO...' : 'SYS.VOD.01'}
+          {hlsGenerating && hlsReady === false ? 'OPTIMIZING VIDEO...' : usedFallbackSource ? 'SOURCE FALLBACK' : 'SYS.VOD.01'}
         </div>
       </div>
 
       {/* Video Element */}
       <video
         ref={videoRef}
-        src={src}
+        src={resolvedSrc}
         poster={poster}
         className="w-full h-full object-cover"
         loop
@@ -209,6 +245,13 @@ export default function CustomVideoPlayer({ src, poster, title = 'ARCHIVE.MP4', 
         }}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onError={() => {
+          const fallbackUrl = sourceUrl || src;
+          if (!usedFallbackSource && fallbackUrl && resolvedSrc !== fallbackUrl) {
+            setResolvedSrc(fallbackUrl);
+            setUsedFallbackSource(true);
+          }
+        }}
         onClick={togglePlay}
       />
 

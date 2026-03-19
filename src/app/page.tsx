@@ -248,6 +248,8 @@ export default function Home() {
                 ) : activeVideo ? (
                   <CustomVideoPlayer
                     src={activeVideo.src}
+                    hlsUrl={activeVideo.hlsUrl}
+                    sourceUrl={activeVideo.sourceUrl}
                     poster={activeVideo.poster}
                     title={activeVideo.title}
                     className="w-full h-full"
