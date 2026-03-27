@@ -6,7 +6,7 @@ import { useTexture } from "@react-three/drei"
 import * as THREE from "three"
 
 export function ParticleSphere() {
-  const PARTICLE_COUNT = 1500 
+  const PARTICLE_COUNT = 1500
   const PARTICLE_SIZE_MIN = 0.005
   const PARTICLE_SIZE_MAX = 0.010
   const SPHERE_RADIUS = 9
@@ -16,7 +16,7 @@ export function ParticleSphere() {
   const PARTICLE_OPACITY = 1
 
   const IMAGE_COUNT = 24
-  const IMAGE_SIZE = 1.5 
+  const IMAGE_SIZE = 1.5
 
   const groupRef = useRef<THREE.Group>(null)
 
@@ -73,7 +73,7 @@ export function ParticleSphere() {
         position: [x, y, z],
         scale: Math.random() * (PARTICLE_SIZE_MAX - PARTICLE_SIZE_MIN) + PARTICLE_SIZE_MIN,
         color: new THREE.Color().setHSL(
-          Math.random() * 0.1 + 0.05, 
+          Math.random() * 0.1 + 0.05,
           0.8,
           0.6 + Math.random() * 0.3,
         ),
@@ -90,7 +90,7 @@ export function ParticleSphere() {
     for (let i = 0; i < IMAGE_COUNT; i++) {
       const angle = (i / IMAGE_COUNT) * Math.PI * 2
       const x = SPHERE_RADIUS * Math.cos(angle)
-      const y = 0 
+      const y = 0
       const z = SPHERE_RADIUS * Math.sin(angle)
 
       const position = new THREE.Vector3(x, y, z)
@@ -108,7 +108,7 @@ export function ParticleSphere() {
         position: [x, y, z],
         rotation: [euler.x, euler.y, euler.z],
         textureIndex: i % textures.length,
-        color: new THREE.Color().setHSL(Math.random(), 0.7, 0.6), 
+        color: new THREE.Color().setHSL(Math.random(), 0.7, 0.6),
       })
     }
 

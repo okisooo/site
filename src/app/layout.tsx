@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/Components/ThemeProvider";
 import { ThemeToggle } from "@/Components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const nunito = Nunito({
   variable: "--font-display",

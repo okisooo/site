@@ -62,7 +62,7 @@ export default function SpotlightCard({
         }}
       />
       <div className="relative z-10 w-full h-full">
-          {children}
+        {children}
       </div>
     </div>
   );

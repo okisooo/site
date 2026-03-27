@@ -36,7 +36,7 @@ export default function ReleasesPage() {
       </Canvas>
 
       {/* Selected Release Overlay (Bottom Left) */}
-      <div 
+      <div
         className={`absolute bottom-24 md:bottom-10 left-5 md:left-10 z-40 bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl transition-all duration-500 max-w-[320px] md:max-w-md ${selectedRelease ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none"}`}
       >
         {selectedRelease && (
@@ -57,12 +57,12 @@ export default function ReleasesPage() {
               </button>
             )}
             <div className="mt-2">
-              <a 
-                href={selectedRelease.link} 
-                target="_blank" 
+              <a
+                href={selectedRelease.link}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-white text-black font-black uppercase tracking-widest px-6 py-3 rounded-full hover:bg-[#FF7EB3] hover:text-white transition-colors"
-               >
+              >
                 LISTEN NOW
               </a>
             </div>
@@ -72,8 +72,8 @@ export default function ReleasesPage() {
 
       {/* Header Overlay */}
       <div className="absolute top-8 left-0 right-0 z-40 pointer-events-none flex flex-col items-center">
-         <h1 className="text-4xl md:text-6xl font-black text-white/90 drop-shadow-2xl uppercase tracking-tighter">DISCOGRAPHY</h1>
-         <p className="text-white/60 font-bold tracking-widest uppercase text-sm mt-2">Interactive Archive</p>
+        <h1 className="text-4xl md:text-6xl font-black text-white/90 drop-shadow-2xl uppercase tracking-tighter">DISCOGRAPHY</h1>
+        <p className="text-white/60 font-bold tracking-widest uppercase text-sm mt-2">Interactive Archive</p>
       </div>
 
       {/* Back Button */}

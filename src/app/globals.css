@@ -44,6 +44,7 @@
     background: var(--ba-pink-light);
     color: var(--ba-dark);
   }
+
   :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -78,6 +79,7 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
   }
+
   .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
@@ -111,9 +113,11 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
   }
+
   .theme {
     --font-sans: var(--font-sans);
   }
+
   html {
     @apply font-sans;
   }
@@ -248,21 +252,67 @@
 }
 
 @keyframes glitch-anim-1 {
-  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
-  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-  80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 1px); }
-  100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -1px); }
+  0% {
+    clip-path: inset(20% 0 80% 0);
+    transform: translate(-2px, 1px);
+  }
+
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+
+  40% {
+    clip-path: inset(40% 0 50% 0);
+    transform: translate(-2px, 2px);
+  }
+
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(2px, -2px);
+  }
+
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-2px, 1px);
+  }
+
+  100% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(2px, -1px);
+  }
 }
 
 @keyframes glitch-anim-2 {
-  0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
-  20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
-  40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
-  60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 1px); }
-  80% { clip-path: inset(50% 0 30% 0); transform: translate(2px, -1px); }
-  100% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 2px); }
+  0% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(2px, -1px);
+  }
+
+  20% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(2px, -2px);
+  }
+
+  60% {
+    clip-path: inset(20% 0 50% 0);
+    transform: translate(-2px, 1px);
+  }
+
+  80% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(2px, -1px);
+  }
+
+  100% {
+    clip-path: inset(5% 0 80% 0);
+    transform: translate(-2px, 2px);
+  }
 }
 
 .brutalist-border {
@@ -274,13 +324,11 @@
 }
 
 .scanlines {
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0),
-    rgba(255,255,255,0) 50%,
-    rgba(0,0,0,0.2) 50%,
-    rgba(0,0,0,0.2)
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 50%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.2));
   background-size: 100% 4px;
   pointer-events: none;
 }

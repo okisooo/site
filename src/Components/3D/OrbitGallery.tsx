@@ -85,7 +85,7 @@ export function OrbitGallery({
       let z = radius * Math.sin(theta) * Math.sin(phi)
 
       if (isNaN(x) || isNaN(y) || isNaN(z)) {
-          x = 0; y = 0; z = radius;
+        x = 0; y = 0; z = radius;
       }
 
       const position = new THREE.Vector3(x, y, z)
@@ -123,7 +123,7 @@ export function OrbitGallery({
   return (
     <group ref={groupRef}>
       {particles.map((particle, index) => (
-        <mesh key={`particle-${index}`} position={particle.position as [number,number,number]} scale={particle.scale}>
+        <mesh key={`particle-${index}`} position={particle.position as [number, number, number]} scale={particle.scale}>
           <sphereGeometry args={[1, 8, 6]} />
           <meshBasicMaterial color={particle.color} transparent opacity={PARTICLE_OPACITY} />
         </mesh>
@@ -132,8 +132,8 @@ export function OrbitGallery({
       {orbitingImages.map((image, index) => (
         <mesh
           key={`image-${index}`}
-          position={image.position as [number,number,number]}
-          rotation={image.rotation as [number,number,number]}
+          position={image.position as [number, number, number]}
+          rotation={image.rotation as [number, number, number]}
           onPointerOver={(e) => {
             e.stopPropagation()
             setHoveredIndex(index)
