@@ -60,7 +60,7 @@ export default function SocialGrid() {
     {
       name: "Twitch",
       icon: FaTwitch,
-      href: "https://twitch.tv/okiso",
+      href: "https://www.twitch.tv/okiso7/",
       status: "Follow", // Twitch generic until API integration
       statusColor: "bg-purple-500",
       color: "hover:bg-[#9146FF] hover:text-white dark:hover:bg-[#9146FF]",
@@ -68,28 +68,28 @@ export default function SocialGrid() {
     {
       name: "YouTube",
       icon: FaYoutube,
-      href: "https://youtube.com/okiso",
+      href: "https://www.youtube.com/@okiso7",
       status: "",
       color: "hover:bg-[#FF0000] hover:text-white dark:hover:bg-[#FF0000]",
     },
     {
       name: "Spotify",
       icon: FaSpotify,
-      href: "https://spotify.com/okiso",
+      href: "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
       status: "",
       color: "hover:bg-[#1DB954] hover:text-white dark:hover:bg-[#1DB954]",
     },
     {
       name: "X (Twitter)",
       icon: FaTwitter,
-      href: "https://twitter.com/okiso",
+      href: "https://x.com/okisooo_",
       status: "",
       color: "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black",
     },
     {
       name: "Instagram",
       icon: FaInstagram,
-      href: "https://instagram.com/okiso",
+      href: "https://www.instagram.com/okisooo_/",
       status: "",
       color: "hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white",
     },
