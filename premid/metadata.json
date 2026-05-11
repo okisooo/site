@@ -1,0 +1,27 @@
+{
+  "author": {
+    "name": "OKISO",
+    "id": "274178934143451137"
+  },
+  "service": "OKISO",
+  "description": {
+    "en": "Shows what you're watching or listening to on okiso.net",
+    "ja": "okiso.netで視聴中のコンテンツをDiscordに表示します"
+  },
+  "url": "okiso.net",
+  "version": "1.0.0",
+  "logo": "https://okiso.net/icon.png",
+  "thumbnail": "https://okiso.net/easter_egg.jpg",
+  "color": "#FF7EB3",
+  "category": "music",
+  "tags": ["okiso", "vocaloid", "music", "vtuber", "producer"],
+  "settings": [
+    {
+      "id": "showTimestamp",
+      "title": "Show Timestamp",
+      "icon": "fas fa-clock",
+      "value": true,
+      "description": "Display the time remaining on the video"
+    }
+  ]
+}

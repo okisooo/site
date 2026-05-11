@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
@@ -56,7 +56,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500">
+    <div
+      className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500"
+      data-premid-page="home"
+      {...(showingLive ? { 'data-premid-live': 'true' } : {})}
+      {...(activeVideo ? { 'data-premid-active-video': activeVideo.title } : {})}
+    >
 
       {/* ─── MASSIVE HERO ─── */}
       <section className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500">

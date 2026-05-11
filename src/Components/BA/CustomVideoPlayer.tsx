@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -372,7 +372,13 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center rounded-[16px] md:rounded-[24px] ${className}`;
 
   return (
-    <div className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
+    <div
+      className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}
+      data-premid-title={title}
+      data-premid-current-time={currentTime.toFixed(1)}
+      data-premid-duration={duration.toFixed(1)}
+      data-premid-paused={String(!isPlaying)}
+    >
       {isCinemaMode && (
         <button
           aria-label="Close cinema mode"
