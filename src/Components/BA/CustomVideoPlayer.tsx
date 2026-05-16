@@ -381,7 +381,11 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         />
       )}
 
-      <div className={playerContainerClass}>
+      <div 
+        className={playerContainerClass}
+        data-premid-title={title}
+        data-premid-paused={!isPlaying}
+      >
         {hlsErrorToast && (
           <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-red-500/90 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg backdrop-blur-md animate-in fade-in zoom-in duration-300">
             {hlsErrorToast}

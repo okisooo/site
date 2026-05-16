@@ -96,7 +96,11 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
     }
 
     return (
-        <main className="p-6">
+        <main 
+            data-premid-page="release"
+            data-premid-release-title={release.title}
+            className="p-6"
+        >
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <h1 className="text-3xl font-bold mb-4">{release.title}</h1>
             <div className="flex gap-6 items-start">

@@ -23,7 +23,10 @@ export default function ReleasesPage() {
   }, [])
 
   return (
-    <div className="w-full h-screen bg-black relative overflow-hidden">
+    <div 
+      data-premid-page="releases"
+      className="w-full h-screen bg-black relative overflow-hidden"
+    >
       {/* 3D Canvas */}
       <Canvas camera={{ position: [-8, 2, 10], fov: 50 }}>
         <ambientLight intensity={0.5} />

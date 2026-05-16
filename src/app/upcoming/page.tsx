@@ -31,7 +31,11 @@ export default function UpcomingPage() {
   const mobile = isMobile === null ? false : isMobile;
 
   return (
-    <div className={`min-h-screen w-full relative text-ba-dark ${mobile ? 'pb-24 px-3' : 'pt-20 px-6'}`} style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}>
+    <div 
+      data-premid-page="upcoming"
+      className={`min-h-screen w-full relative text-ba-dark ${mobile ? 'pb-24 px-3' : 'pt-20 px-6'}`} 
+      style={{ overscrollBehaviorY: 'contain', overscrollBehaviorX: 'none', touchAction: 'pan-y' }}
+    >
       <div className={`mx-auto relative z-10 flex flex-col ${mobile ? 'max-w-4xl' : 'max-w-6xl pb-20'}`}>
         <header className={`${mobile ? 'mb-4' : 'mb-8'}`}>
           <h1 className={`font-display font-black text-ba-dark text-center ${mobile ? 'text-2xl mb-2' : 'text-5xl mb-4'}`}>
