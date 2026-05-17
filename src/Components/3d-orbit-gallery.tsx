@@ -56,8 +56,10 @@ export function ParticleSphere() {
     })
   }, [textures])
 
-  const particles = useMemo(() => {
-    const particles = []
+  const particlesGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry()
+    const positions = new Float32Array(PARTICLE_COUNT * 3)
+    const colors = new Float32Array(PARTICLE_COUNT * 3)
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const phi = Math.acos(-1 + (2 * i) / PARTICLE_COUNT)
@@ -69,20 +71,26 @@ export function ParticleSphere() {
       const y = radiusVariation * Math.cos(phi)
       const z = radiusVariation * Math.sin(theta) * Math.sin(phi)
 
-      particles.push({
-        position: [x, y, z],
-        scale: Math.random() * (PARTICLE_SIZE_MAX - PARTICLE_SIZE_MIN) + PARTICLE_SIZE_MIN,
-        color: new THREE.Color().setHSL(
-          Math.random() * 0.1 + 0.05,
-          0.8,
-          0.6 + Math.random() * 0.3,
-        ),
-        rotationSpeed: (Math.random() - 0.5) * 0.01,
-      })
-    }
+      positions[i * 3] = x
+      positions[i * 3 + 1] = y
+      positions[i * 3 + 2] = z
 
-    return particles
-  }, [PARTICLE_COUNT, SPHERE_RADIUS, POSITION_RANDOMNESS, PARTICLE_SIZE_MIN, PARTICLE_SIZE_MAX])
+      const color = new THREE.Color().setHSL(
+        Math.random() * 0.1 + 0.05,
+        0.8,
+        0.6 + Math.random() * 0.3,
+      )
+      
+      colors[i * 3] = color.r
+      colors[i * 3 + 1] = color.g
+      colors[i * 3 + 2] = color.b
+    }
+    
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+
+    return geometry
+  }, [PARTICLE_COUNT, SPHERE_RADIUS, POSITION_RANDOMNESS])
 
   const orbitingImages = useMemo(() => {
     const images = []

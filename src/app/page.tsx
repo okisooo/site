@@ -56,11 +56,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div 
-      data-premid-page="home"
-      data-premid-live={showingLive ? "true" : "false"}
-      className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500"
-    >
+    <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500">
 
       {/* ─── MASSIVE HERO ─── */}
       <section className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500">
@@ -297,7 +293,6 @@ export default function Home() {
           />
           {/* Modal Content */}
           <motion.div
-            data-premid-modal="terms"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
