@@ -113,8 +113,8 @@ export function ParticleSphere() {
       euler.z += Math.PI
 
       images.push({
-        position: [x, y, z],
-        rotation: [euler.x, euler.y, euler.z],
+        position: [x, y, z] as [number, number, number],
+        rotation: [euler.x, euler.y, euler.z] as [number, number, number],
         textureIndex: i % textures.length,
         color: new THREE.Color().setHSL(Math.random(), 0.7, 0.6),
       })
@@ -132,12 +132,9 @@ export function ParticleSphere() {
 
   return (
     <group ref={groupRef}>
-      {particles.map((particle, index) => (
-        <mesh key={index} position={particle.position} scale={particle.scale}>
-          <sphereGeometry args={[1, 8, 6]} />
-          <meshBasicMaterial color={particle.color} transparent opacity={PARTICLE_OPACITY} />
-        </mesh>
-      ))}
+      <points geometry={particlesGeometry}>
+        <pointsMaterial size={0.02} vertexColors transparent opacity={PARTICLE_OPACITY} sizeAttenuation={true} />
+      </points>
 
       {orbitingImages.map((image, index) => (
         <mesh key={`image-${index}`} position={image.position} rotation={image.rotation}>

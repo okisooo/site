@@ -3,6 +3,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
+import { PlayReleaseButton } from '@/components/PlayReleaseButton';
 
 // Pre-render all release pages at build time
 export async function generateStaticParams() {
@@ -112,7 +113,10 @@ export default function ReleasePage({ params }: { params: { slug: string } }) {
                 <div>
                     <p className="text-gray-400 mb-2">Released: {release.releaseDate} ({release.year})</p>
                     <p className="mb-4">{release.description}</p>
-                    <a href={release.link} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#1DB954] text-black font-medium px-3 py-2 rounded">Listen on Spotify</a>
+                    <div className="flex items-center gap-3">
+                        <PlayReleaseButton release={release} />
+                        <a href={release.link} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#1DB954] text-black font-medium px-3 py-2 rounded-md hover:bg-[#1ed760] transition-colors">Listen on Spotify</a>
+                    </div>
                     {release.tracks && release.tracks.length > 0 && (
                         <div className="mt-4">
                             <h2 className="font-semibold mb-2">Tracklist</h2>
