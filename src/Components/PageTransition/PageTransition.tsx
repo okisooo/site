@@ -23,7 +23,7 @@ const pageVariants = {
     }),
 };
 
-const pageTransition = {
+const pageTransition: any = {
     type: "tween",
     duration: 0.6,
     ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smooth feel

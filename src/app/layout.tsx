@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/Components/ThemeProvider";
 import { ThemeToggle } from "@/Components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
-import { MusicPlayer } from "@/components/MusicPlayer";
+import { MusicPlayer } from "@/Components/MusicPlayer";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 

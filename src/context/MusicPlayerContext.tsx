@@ -3,130 +3,110 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
 
 export interface Track {
-  id: string
+  id: string // Spotify ID is required now
   title: string
   artist: string
-  audioUrl: string
-  coverUrl: string
+  audioUrl?: string
+  coverUrl?: string
+  uri?: string
 }
 
 interface MusicPlayerContextType {
   currentTrack: Track | null
   isPlaying: boolean
-  progress: number // 0 to 1
-  volume: number // 0 to 1
-  duration: number // in seconds
   playTrack: (track: Track) => void
-  togglePlayPause: () => void
-  setVolume: (vol: number) => void
-  seek: (progress: number) => void
   closePlayer: () => void
+  spotifyController: any
 }
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
 
+// Adding type declaration for Spotify API to avoid TS errors if necessary
+declare global {
+  interface Window {
+    onSpotifyIframeApiReady: (IFrameAPI: any) => void;
+  }
+}
+
 export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [volume, setVolume] = useState(0.5)
-  const [duration, setDuration] = useState(0)
+  const [spotifyController, setSpotifyController] = useState<any>(null)
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-
-  // Initialize audio element
+  // Initialize Spotify API
   useEffect(() => {
-    audioRef.current = new Audio()
-    audioRef.current.volume = volume
+    const script = document.createElement('script')
+    script.src = "https://open.spotify.com/embed/iframe-api/v1"
+    script.async = true
+    document.body.appendChild(script)
 
-    const updateProgress = () => {
-      if (audioRef.current && audioRef.current.duration) {
-        setProgress(audioRef.current.currentTime / audioRef.current.duration)
-        setDuration(audioRef.current.duration)
+    window.onSpotifyIframeApiReady = (IFrameAPI: any) => {
+      const element = document.getElementById('spotify-embed')
+      if (!element) return
+
+      const options = {
+        width: '100%',
+        height: '80',
+        uri: '', 
+        theme: '0' // 0 for dark theme
       }
-    }
 
-    const handleEnded = () => {
-      setIsPlaying(false)
-      setProgress(0)
+      const callback = (EmbedController: any) => {
+        setSpotifyController(EmbedController)
+        EmbedController.addListener('playback_update', (e: any) => {
+          setIsPlaying(!e.data.isPaused)
+          
+          // Emit events for PreMiD to pick up!
+          const container = document.getElementById('spotify-embed-container-data')
+          if (container) {
+            container.setAttribute('data-premid-paused', e.data.isPaused ? 'true' : 'false')
+          }
+        })
+      }
+      IFrameAPI.createController(element, options, callback)
     }
-
-    audioRef.current.addEventListener('timeupdate', updateProgress)
-    audioRef.current.addEventListener('ended', handleEnded)
-    audioRef.current.addEventListener('loadedmetadata', updateProgress)
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.removeEventListener('timeupdate', updateProgress)
-        audioRef.current.removeEventListener('ended', handleEnded)
-        audioRef.current.removeEventListener('loadedmetadata', updateProgress)
-        audioRef.current = null
-      }
+      document.body.removeChild(script)
     }
-  }, []) // Empty deps so audio element is persistent
+  }, []) // Empty deps so it only loads once
 
-  // Handle track changes
+  // Handle PreMiD DOM attributes
   useEffect(() => {
-    if (audioRef.current && currentTrack) {
-      if (audioRef.current.src !== currentTrack.audioUrl) {
-        audioRef.current.src = currentTrack.audioUrl
-        if (isPlaying) {
-          audioRef.current.play().catch(console.error)
-        }
-      }
+    const container = document.getElementById('spotify-embed-container-data')
+    if (currentTrack && container) {
+       container.setAttribute('data-premid-track-id', currentTrack.id)
+       container.setAttribute('data-premid-track-title', currentTrack.title)
+       container.setAttribute('data-premid-track-artist', currentTrack.artist)
+    } else if (container) {
+       container.removeAttribute('data-premid-track-id')
+       container.removeAttribute('data-premid-track-title')
+       container.removeAttribute('data-premid-track-artist')
+       container.removeAttribute('data-premid-paused')
     }
   }, [currentTrack])
-
-  // Handle play/pause
-  useEffect(() => {
-    if (audioRef.current && currentTrack) {
-      if (isPlaying) {
-        audioRef.current.play().catch(console.error)
-      } else {
-        audioRef.current.pause()
-      }
-    }
-  }, [isPlaying])
-
-  // Handle volume changes
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume
-    }
-  }, [volume])
 
   const playTrack = (track: Track) => {
     // If playing the same track, just toggle
     if (currentTrack && currentTrack.id === track.id) {
-      setIsPlaying(true)
+      if (spotifyController) spotifyController.togglePlay()
       return
     }
+    
     setCurrentTrack(track)
-    setIsPlaying(true)
-  }
-
-  const togglePlayPause = () => {
-    if (currentTrack) {
-      setIsPlaying(!isPlaying)
-    }
-  }
-
-  const setVolumeLevel = (vol: number) => {
-    setVolume(Math.max(0, Math.min(1, vol)))
-  }
-
-  const seek = (newProgress: number) => {
-    if (audioRef.current && audioRef.current.duration) {
-      const newTime = newProgress * audioRef.current.duration
-      audioRef.current.currentTime = newTime
-      setProgress(newProgress)
+    if (spotifyController) {
+      // Use the provided URI, default to track if missing
+      spotifyController.loadUri(track.uri || `spotify:track:${track.id}`)
+      spotifyController.play()
     }
   }
 
   const closePlayer = () => {
-    setIsPlaying(false)
+    if (spotifyController) {
+      spotifyController.pause()
+    }
     setCurrentTrack(null)
+    setIsPlaying(false)
   }
 
   return (
@@ -134,16 +114,12 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       value={{
         currentTrack,
         isPlaying,
-        progress,
-        volume,
-        duration,
         playTrack,
-        togglePlayPause,
-        setVolume: setVolumeLevel,
-        seek,
         closePlayer,
+        spotifyController
       }}
     >
+      <div id="spotify-embed-container-data" style={{ display: 'none' }} />
       {children}
     </MusicPlayerContext.Provider>
   )

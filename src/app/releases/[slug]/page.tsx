@@ -48,8 +48,9 @@ export async function generateMetadata(props: any) {
     };
 }
 
-export default function ReleasePage({ params }: { params: { slug: string } }) {
-    const release = staticReleases.find(r => r.slug === params.slug) as Release | undefined;
+export default async function ReleasePage({ params }: { params: Promise<{ slug: string }> }) {
+    const awaitedParams = await params;
+    const release = staticReleases.find(r => r.slug === awaitedParams.slug) as Release | undefined;
     if (!release) return notFound();
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
