@@ -12,7 +12,7 @@ presence.on('UpdateData', async () => {
 
   const presenceData: PresenceData = {
     type: 3, // ActivityType.Watching
-    largeImageKey: ActivityAssets.Logo,
+    largeImageKey: 'https://i.imgur.com/0Qraju1.png',
     largeImageText: 'okiso.net',
     startTimestamp: browsingTimestamp,
     buttons: [
