@@ -120,14 +120,14 @@ export default function SocialGrid() {
         href="https://discord.gg/okiso"
         target="_blank"
         rel="noopener noreferrer"
-        className="col-span-1 md:col-span-2 flex flex-col md:flex-row items-center md:items-start justify-between p-6 md:p-8 rounded-[24px] bg-[#5865F2]/10 dark:bg-[#5865F2]/20 border-2 border-[#5865F2]/30 hover:border-[#5865F2] hover:shadow-[0_10px_40px_rgba(88,101,242,0.3)] transition-all duration-300 w-full h-full relative group"
+        className="col-span-1 md:col-span-2 flex flex-col items-center md:items-start justify-between p-6 md:p-8 rounded-[24px] bg-[#5865F2]/10 dark:bg-[#5865F2]/20 border-2 border-[#5865F2]/30 hover:border-[#5865F2] hover:shadow-[0_10px_40px_rgba(88,101,242,0.3)] transition-all duration-300 w-full h-full relative group"
       >
         {/* Background Icon Detail */}
         <div className="absolute -top-10 -right-10 opacity-5 transition-transform duration-700 pointer-events-none group-hover:scale-110 group-hover:-rotate-12">
           <FaDiscord className="text-[250px] text-[#5865F2]" />
         </div>
 
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 relative z-10 w-full">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10 w-full">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 flex-1 min-w-0 w-full">
             {/* Avatar Area */}
             <div className="relative shrink-0 mt-2">
@@ -145,36 +145,48 @@ export default function SocialGrid() {
             </div>
 
             {/* User Info & Rich Presence */}
-            <div className="flex flex-col text-center md:text-left flex-1 min-w-0">
-              <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
-                <h3 className="font-black text-2xl md:text-3xl tracking-tight text-black dark:text-white">
-                  {lanyardData?.discord_user?.global_name || (lanyardData?.discord_user as { display_name?: string })?.display_name || "OKISO"}
-                </h3>
-                {activeBadges.length > 0 && (
-                  <div className="flex items-center gap-1 bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-[8px] border border-black/5 dark:border-white/5 shrink-0">
-                    {activeBadges.map(badge => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={badge.name}
-                        src={`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/SVG/${badge.name}.svg`}
-                        alt={badge.label}
-                        title={badge.label}
-                        className="w-5 h-5 object-contain"
-                      />
-                    ))}
+            <div className="flex flex-col text-center md:text-left flex-1 min-w-0 w-full">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
+                <div className="flex flex-col items-center md:items-start">
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
+                    <h3 className="font-black text-2xl md:text-3xl tracking-tight text-black dark:text-white">
+                      {lanyardData?.discord_user?.global_name || (lanyardData?.discord_user as { display_name?: string })?.display_name || "OKISO"}
+                    </h3>
+                    {activeBadges.length > 0 && (
+                      <div className="flex items-center gap-1 bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-[8px] border border-black/5 dark:border-white/5 shrink-0">
+                        {activeBadges.map(badge => (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            key={badge.name}
+                            src={`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/SVG/${badge.name}.svg`}
+                            alt={badge.label}
+                            title={badge.label}
+                            className="w-5 h-5 object-contain"
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Username Handle Pill */}
-              <div className="mt-1 flex justify-center md:justify-start">
-                <span className="text-xs md:text-sm font-bold text-black/50 dark:text-white/50 bg-black/5 dark:bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest border border-black/5 dark:border-white/5 shadow-sm">
-                  {lanyardData?.discord_user?.username ? `@${lanyardData.discord_user.username}` : "@.oxo"}
-                </span>
+                  {/* Username Handle Pill */}
+                  <div className="mt-1 flex justify-center md:justify-start">
+                    <span className="text-xs md:text-sm font-bold text-black/50 dark:text-white/50 bg-black/5 dark:bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest border border-black/5 dark:border-white/5 shadow-sm">
+                      {lanyardData?.discord_user?.username ? `@${lanyardData.discord_user.username}` : "@.oxo"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Join Server Action CTA Button - Desktop */}
+                <div className="hidden md:block shrink-0 self-center">
+                  <div className="flex items-center gap-2.5 bg-[#5865F2] text-white px-5 py-3 rounded-full font-black text-sm uppercase tracking-wider shadow-[0_4px_15px_rgba(88,101,242,0.35)] group-hover:bg-[#4752C4] group-hover:shadow-[0_4px_25px_rgba(88,101,242,0.55)] transition-all duration-300 border border-white/10">
+                    <FaDiscord className="text-xl transition-transform group-hover:scale-110 group-hover:-rotate-6" />
+                    <span>Join Server</span>
+                  </div>
+                </div>
               </div>
 
               {activityName ? (
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mt-4 bg-white/70 dark:bg-black/40 p-4 rounded-[16px] backdrop-blur-md border border-black/5 dark:border-white/5 shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mt-4 bg-white/70 dark:bg-black/40 p-4 rounded-[16px] backdrop-blur-md border border-black/5 dark:border-white/5 shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300 w-full">
                   {activityImage && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={activityImage} alt={activityName} className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shadow-md shrink-0" />
@@ -194,13 +206,13 @@ export default function SocialGrid() {
               )}
             </div>
           </div>
+        </div>
 
-          {/* Join Server Action CTA Button */}
-          <div className="shrink-0 mt-4 md:mt-0 md:self-center">
-            <div className="flex items-center gap-2.5 bg-[#5865F2] text-white px-5 py-3 rounded-full font-black text-sm uppercase tracking-wider shadow-[0_4px_15px_rgba(88,101,242,0.35)] group-hover:bg-[#4752C4] group-hover:shadow-[0_4px_25px_rgba(88,101,242,0.55)] transition-all duration-300 border border-white/10">
-              <FaDiscord className="text-xl transition-transform group-hover:scale-110 group-hover:-rotate-6" />
-              <span>Join Server</span>
-            </div>
+        {/* Join Server Action CTA Button - Mobile */}
+        <div className="block md:hidden shrink-0 mt-6 z-10 w-full">
+          <div className="flex items-center justify-center gap-2.5 bg-[#5865F2] text-white px-5 py-3 rounded-full font-black text-sm uppercase tracking-wider shadow-[0_4px_15px_rgba(88,101,242,0.35)] group-hover:bg-[#4752C4] group-hover:shadow-[0_4px_25px_rgba(88,101,242,0.55)] transition-all duration-300 border border-white/10">
+            <FaDiscord className="text-xl transition-transform group-hover:scale-110 group-hover:-rotate-6" />
+            <span>Join Server</span>
           </div>
         </div>
       </a>
