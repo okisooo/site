@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
-import { PlayReleaseButton } from '@/components/PlayReleaseButton';
+import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
 
 // Pre-render all release pages at build time
 export async function generateStaticParams() {

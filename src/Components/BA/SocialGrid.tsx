@@ -148,7 +148,7 @@ export default function SocialGrid() {
             <div className="flex flex-col text-center md:text-left flex-1 min-w-0">
               <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
                 <h3 className="font-black text-2xl md:text-3xl tracking-tight text-black dark:text-white">
-                  {lanyardData?.discord_user?.global_name || (lanyardData?.discord_user as any)?.display_name || "OKISO"}
+                  {lanyardData?.discord_user?.global_name || (lanyardData?.discord_user as { display_name?: string })?.display_name || "OKISO"}
                 </h3>
                 {activeBadges.length > 0 && (
                   <div className="flex items-center gap-1 bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-[8px] border border-black/5 dark:border-white/5 shrink-0">
