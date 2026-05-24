@@ -1,8 +1,23 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { FaDiscord, FaYoutube, FaSpotify, FaTwitch, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useLanyard } from "react-use-lanyard";
+
+const BADGES_MAP = [
+  { flag: 1 << 0, name: "staff", label: "Discord Staff" },
+  { flag: 1 << 1, name: "partner", label: "Partnered Server Owner" },
+  { flag: 1 << 2, name: "hypesquad_events", label: "HypeSquad Events" },
+  { flag: 1 << 3, name: "bug_hunter_level_1", label: "Bug Hunter Level 1" },
+  { flag: 1 << 6, name: "hypesquad_bravery", label: "HypeSquad Bravery" },
+  { flag: 1 << 7, name: "hypesquad_brilliance", label: "HypeSquad Brilliance" },
+  { flag: 1 << 8, name: "hypesquad_balance", label: "HypeSquad Balance" },
+  { flag: 1 << 9, name: "early_supporter", label: "Early Supporter" },
+  { flag: 1 << 14, name: "bug_hunter_level_2", label: "Bug Hunter Level 2" },
+  { flag: 1 << 17, name: "verified_developer", label: "Early Verified Developer" },
+  { flag: 1 << 18, name: "certified_moderator", label: "Certified Moderator Alumni" },
+  { flag: 1 << 22, name: "active_developer", label: "Active Developer" },
+];
 
 export default function SocialGrid() {
   // Replace with the user's actual Discord ID if known, or leave as a placeholder for them to inject.
@@ -21,6 +36,9 @@ export default function SocialGrid() {
   const avatarUrl = lanyardData?.discord_user
     ? `https://cdn.discordapp.com/avatars/${lanyardData.discord_user.id}/${lanyardData.discord_user.avatar}.png?size=128`
     : '/icon.png';
+
+  const userFlags = lanyardData?.discord_user?.public_flags || 0;
+  const activeBadges = BADGES_MAP.filter(badge => (userFlags & badge.flag) !== 0);
 
   let activityTypeStr = "";
   let activityName = "";
@@ -109,52 +127,80 @@ export default function SocialGrid() {
           <FaDiscord className="text-[250px] text-[#5865F2]" />
         </div>
 
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10 w-full">
-          {/* Avatar Area */}
-          <div className="relative shrink-0 mt-2">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white dark:border-ba-dark bg-black/20 shadow-lg">
-              {lanyardData ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatarUrl} alt="Discord Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gray-500/30 animate-pulse" />
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 relative z-10 w-full">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 flex-1 min-w-0 w-full">
+            {/* Avatar Area */}
+            <div className="relative shrink-0 mt-2">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white dark:border-ba-dark bg-black/20 shadow-lg">
+                {lanyardData ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatarUrl} alt="Discord Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gray-500/30 animate-pulse" />
+                )}
+              </div>
+              {lanyardData && (
+                <div className={`absolute bottom-0 right-1 w-6 h-6 rounded-full border-4 border-white dark:border-ba-dark ${discordStatusColor} shadow-md`} />
               )}
             </div>
-            {lanyardData && (
-              <div className={`absolute bottom-0 right-1 w-6 h-6 rounded-full border-4 border-white dark:border-ba-dark ${discordStatusColor} shadow-md`} />
-            )}
+
+            {/* User Info & Rich Presence */}
+            <div className="flex flex-col text-center md:text-left flex-1 min-w-0">
+              <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
+                <h3 className="font-black text-2xl md:text-3xl tracking-tight text-black dark:text-white">
+                  {lanyardData?.discord_user?.global_name || (lanyardData?.discord_user as any)?.display_name || "OKISO"}
+                </h3>
+                {activeBadges.length > 0 && (
+                  <div className="flex items-center gap-1 bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded-[8px] border border-black/5 dark:border-white/5 shrink-0">
+                    {activeBadges.map(badge => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={badge.name}
+                        src={`https://cdn.jsdelivr.net/gh/merlinfuchs/discord-badges/SVG/${badge.name}.svg`}
+                        alt={badge.label}
+                        title={badge.label}
+                        className="w-5 h-5 object-contain"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Username Handle Pill */}
+              <div className="mt-1 flex justify-center md:justify-start">
+                <span className="text-xs md:text-sm font-bold text-black/50 dark:text-white/50 bg-black/5 dark:bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest border border-black/5 dark:border-white/5 shadow-sm">
+                  {lanyardData?.discord_user?.username ? `@${lanyardData.discord_user.username}` : "@.oxo"}
+                </span>
+              </div>
+
+              {activityName ? (
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mt-4 bg-white/70 dark:bg-black/40 p-4 rounded-[16px] backdrop-blur-md border border-black/5 dark:border-white/5 shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300">
+                  {activityImage && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={activityImage} alt={activityName} className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shadow-md shrink-0" />
+                  )}
+                  <div className="flex flex-col text-sm overflow-hidden text-center md:text-left justify-center min-h-[4rem]">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#5865F2] mb-1">{activityTypeStr}</span>
+                    <span className="font-bold text-black dark:text-white truncate max-w-[250px] md:max-w-full" title={activityName}>{activityName}</span>
+                    {activityDetails && <span className="text-black/70 dark:text-white/70 truncate max-w-[250px] md:max-w-full" title={activityDetails}>{activityDetails}</span>}
+                    {activityState && <span className="text-black/50 dark:text-white/50 truncate max-w-[250px] md:max-w-full" title={activityState}>{activityState}</span>}
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-3 text-sm md:text-base font-bold text-black/50 dark:text-white/50 flex items-center justify-center md:justify-start gap-2">
+                  <span className={`w-2 h-2 rounded-full ${discordStatusColor} animate-pulse`} />
+                  {isDiscordOnline ? "Online and vibing." : "Currently offline."}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* User Info & Rich Presence */}
-          <div className="flex flex-col text-center md:text-left flex-1 min-w-0">
-            <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
-              <h3 className="font-black text-2xl md:text-3xl tracking-tight text-black dark:text-white">
-                {lanyardData?.discord_user?.global_name || lanyardData?.discord_user?.username || "Fetching Profile..."}
-              </h3>
-              <span className="text-xs md:text-sm font-bold text-black/50 dark:text-white/50 bg-black/5 dark:bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest border border-black/5 dark:border-white/5">
-                OKISO
-              </span>
+          {/* Join Server Action CTA Button */}
+          <div className="shrink-0 mt-4 md:mt-0 md:self-center">
+            <div className="flex items-center gap-2.5 bg-[#5865F2] text-white px-5 py-3 rounded-full font-black text-sm uppercase tracking-wider shadow-[0_4px_15px_rgba(88,101,242,0.35)] group-hover:bg-[#4752C4] group-hover:shadow-[0_4px_25px_rgba(88,101,242,0.55)] transition-all duration-300 border border-white/10">
+              <FaDiscord className="text-xl transition-transform group-hover:scale-110 group-hover:-rotate-6" />
+              <span>Join Server</span>
             </div>
-
-            {activityName ? (
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mt-4 bg-white/70 dark:bg-black/40 p-4 rounded-[16px] backdrop-blur-md border border-black/5 dark:border-white/5 shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300">
-                {activityImage && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={activityImage} alt={activityName} className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shadow-md shrink-0" />
-                )}
-                <div className="flex flex-col text-sm overflow-hidden text-center md:text-left justify-center min-h-[4rem]">
-                  <span className="text-xs font-black uppercase tracking-wider text-[#5865F2] mb-1">{activityTypeStr}</span>
-                  <span className="font-bold text-black dark:text-white truncate max-w-[250px] md:max-w-full" title={activityName}>{activityName}</span>
-                  {activityDetails && <span className="text-black/70 dark:text-white/70 truncate max-w-[250px] md:max-w-full" title={activityDetails}>{activityDetails}</span>}
-                  {activityState && <span className="text-black/50 dark:text-white/50 truncate max-w-[250px] md:max-w-full" title={activityState}>{activityState}</span>}
-                </div>
-              </div>
-            ) : (
-              <div className="mt-3 text-sm md:text-base font-bold text-black/50 dark:text-white/50 flex items-center justify-center md:justify-start gap-2">
-                <span className={`w-2 h-2 rounded-full ${discordStatusColor} animate-pulse`} />
-                {isDiscordOnline ? "Online and vibing." : "Currently offline."}
-              </div>
-            )}
           </div>
         </div>
       </a>
