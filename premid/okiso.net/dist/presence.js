@@ -57,17 +57,19 @@ presence.on('UpdateData', async () => {
             }
         }
     }
-    // ─── Discography (3D Gallery) ───
+    // ─── Discography ───
     else if (pathname === '/releases') {
-        presenceData.details = 'Exploring the 3D Audio Archive';
-        presenceData.state = 'Interactive Discography';
-    }
-    // ─── Individual Release Page ───
-    else if (pathname.startsWith('/releases/')) {
-        const releaseEl = document.querySelector('[data-premid-release-title]');
-        const releaseTitle = releaseEl?.getAttribute('data-premid-release-title');
-        presenceData.details = 'Viewing Release';
-        presenceData.state = releaseTitle ? `🎵 ${releaseTitle}` : 'Release Page';
+        const container = document.querySelector('[data-premid-page="releases"]');
+        const viewMode = container?.getAttribute('data-premid-view');
+        const releaseTitle = container?.getAttribute('data-premid-release-title');
+        if (releaseTitle) {
+            presenceData.details = 'Viewing Release';
+            presenceData.state = `🎵 ${releaseTitle}`;
+        }
+        else {
+            presenceData.details = viewMode === 'orbit' ? 'Exploring 3D Audio Archive' : 'Browsing Discography';
+            presenceData.state = viewMode === 'orbit' ? 'Interactive 3D Mode' : 'List View';
+        }
     }
     // ─── Upcoming Page ───
     else if (pathname === '/upcoming') {
