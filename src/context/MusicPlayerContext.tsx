@@ -6,8 +6,10 @@ interface MusicPlayerContextType {
   currentTrackId: string | null
   currentTrackTitle: string | null
   currentTrackArtist: string | null
+  currentTrackCover: string | null
+  currentTrackLink: string | null
   isPlaying: boolean
-  playSpotifyTrack: (uri: string, title: string, artist?: string) => void
+  playSpotifyTrack: (uri: string, title: string, artist: string, cover?: string, link?: string) => void
   togglePlayPause: () => void
   closePlayer: () => void
 }
@@ -25,6 +27,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   const [currentTrackId, setCurrentTrackId] = useState<string | null>(null)
   const [currentTrackTitle, setCurrentTrackTitle] = useState<string | null>(null)
   const [currentTrackArtist, setCurrentTrackArtist] = useState<string | null>(null)
+  const [currentTrackCover, setCurrentTrackCover] = useState<string | null>(null)
+  const [currentTrackLink, setCurrentTrackLink] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,9 +69,11 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [])
 
-  const playSpotifyTrack = useCallback((uri: string, title: string, artist: string = 'OKISO') => {
+  const playSpotifyTrack = useCallback((uri: string, title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
     setCurrentTrackTitle(title)
     setCurrentTrackArtist(artist)
+    setCurrentTrackCover(cover || null)
+    setCurrentTrackLink(link || null)
 
     if (controllerRef.current) {
       if (currentTrackId !== uri) {
@@ -106,6 +112,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         currentTrackId,
         currentTrackTitle,
         currentTrackArtist,
+        currentTrackCover,
+        currentTrackLink,
         isPlaying,
         playSpotifyTrack,
         togglePlayPause,

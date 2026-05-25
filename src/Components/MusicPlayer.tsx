@@ -5,7 +5,7 @@ import { useMusicPlayer } from '@/context/MusicPlayerContext'
 import { X } from 'lucide-react'
 
 export function MusicPlayer() {
-  const { currentTrackId, currentTrackTitle, currentTrackArtist, isPlaying, closePlayer } = useMusicPlayer()
+  const { currentTrackId, currentTrackTitle, currentTrackArtist, currentTrackCover, currentTrackLink, isPlaying, closePlayer } = useMusicPlayer()
 
   return (
     <div 
@@ -19,6 +19,8 @@ export function MusicPlayer() {
         id="spotify-embed-container-data"
         data-premid-track-title={currentTrackTitle || ''}
         data-premid-track-artist={currentTrackArtist || ''}
+        data-premid-cover-url={currentTrackCover || ''}
+        data-premid-link={currentTrackLink || ''}
         data-premid-paused={!isPlaying ? 'true' : 'false'}
       >
         {/* Cute Header Bar */}

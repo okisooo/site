@@ -19,7 +19,7 @@ export function PlayReleaseButton({ release }: { release: Release }) {
     }
 
     if (release.id) {
-      playSpotifyTrack(uri, release.title, 'OKISO')
+      playSpotifyTrack(uri, release.title, 'OKISO', release.img, release.link)
     }
   }
 

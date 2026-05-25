@@ -3,14 +3,10 @@ import { Assets, getTimestampsFromMedia } from 'premid'
 const presence = new Presence({ clientId: '1505219461152636949' })
 const browsingTimestamp = Math.floor(Date.now() / 1000)
 
-enum ActivityAssets {
-  Logo = 'logo',
-}
-
 presence.on('UpdateData', async () => {
   const { pathname } = document.location
 
-  const presenceData: PresenceData = {
+  const presenceData: any = {
     type: 3, // ActivityType.Watching
     largeImageKey: 'https://i.imgur.com/0Qraju1.png',
     largeImageText: 'okiso.net',
@@ -96,14 +92,28 @@ presence.on('UpdateData', async () => {
 
   if (trackTitle) {
     const artist = musicContainer?.getAttribute('data-premid-track-artist')
+    const coverUrl = musicContainer?.getAttribute('data-premid-cover-url')
+    const spotifyLink = musicContainer?.getAttribute('data-premid-link')
     const paused = musicContainer?.getAttribute('data-premid-paused') === 'true'
 
     // Override the main details if they are listening to music
     presenceData.type = 2 // ActivityType.Listening
     presenceData.details = paused ? `Paused: ${trackTitle}` : `Listening to ${trackTitle}`
     presenceData.state = `by ${artist || 'OKISO'}`
-    presenceData.smallImageKey = paused ? Assets.Pause : Assets.Play
-    presenceData.smallImageText = paused ? 'Paused' : 'Playing'
+    presenceData.smallImageKey = 'logo'
+    presenceData.smallImageText = 'okiso.net'
+    
+    if (coverUrl) {
+      presenceData.largeImageKey = coverUrl
+      presenceData.largeImageText = trackTitle
+    }
+    
+    if (spotifyLink) {
+      presenceData.buttons = [
+        { label: 'Listen on Spotify', url: spotifyLink },
+      ]
+    }
+    
     delete presenceData.startTimestamp // Remove browsing timestamp so it doesn't look like a long song
   }
 
