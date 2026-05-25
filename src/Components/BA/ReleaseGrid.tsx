@@ -2,10 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { staticReleases } from '@/data/releases';
-import { Play } from 'lucide-react';
+import { staticReleases, type Release } from '@/data/releases';
+import { Play, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
 
 export default function ReleaseGrid() {
+  const [selectedRelease, setSelectedRelease] = React.useState<Release | null>(null);
+
   // Let's grab the top 4 releases
   const recentReleases = staticReleases.slice(0, 4);
 
@@ -26,12 +30,10 @@ export default function ReleaseGrid() {
       {/* Grid of Huge Albums */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
         {recentReleases.map((release) => (
-          <a
+          <button
             key={release.id}
-            href={release.link}
-            target="_blank"
-            rel="noreferrer"
-            className="group relative block w-full aspect-square md:aspect-auto md:h-[600px] border-8 border-white bg-white shadow-[0_30px_60px_rgba(0,0,0,0.1)] rounded-[32px] md:rounded-[48px] overflow-hidden"
+            onClick={() => setSelectedRelease(release)}
+            className="group relative block w-full aspect-square md:aspect-auto md:h-[600px] border-8 border-white bg-white shadow-[0_30px_60px_rgba(0,0,0,0.1)] rounded-[32px] md:rounded-[48px] overflow-hidden text-left"
           >
             {/* The Image Image */}
             <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -64,7 +66,7 @@ export default function ReleaseGrid() {
                 </h3>
               </div>
             </div>
-          </a>
+          </button>
         ))}
       </div>
 
@@ -73,6 +75,58 @@ export default function ReleaseGrid() {
           VIEW FULL DISCOGRAPHY <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
       </div>
+
+      {/* Super Cute Popup Modal */}
+      <AnimatePresence>
+        {selectedRelease && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setSelectedRelease(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md bg-white dark:bg-[#111] rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-black/10 dark:border-white/10 overflow-hidden"
+            >
+              <button
+                onClick={() => setSelectedRelease(null)}
+                className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full transition-colors z-10"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-6 shadow-lg border-2 border-black/5 dark:border-white/5">
+                <img src={selectedRelease.img} alt={selectedRelease.title} className="w-full h-full object-cover" />
+              </div>
+
+              <div className="text-center mb-8">
+                <h3 className="text-2xl md:text-3xl font-black tracking-tighter uppercase mb-1">{selectedRelease.title}</h3>
+                <p className="text-black/50 dark:text-white/50 font-bold tracking-widest text-sm uppercase">
+                  {selectedRelease.year} {'//'} {selectedRelease.albumType}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <PlayReleaseButton release={selectedRelease} />
+                <a
+                  href={selectedRelease.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 rounded-md bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold uppercase tracking-widest text-center transition-colors shadow-md"
+                >
+                  Listen on Spotify
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
