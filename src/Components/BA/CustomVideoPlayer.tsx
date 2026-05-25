@@ -384,7 +384,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
       <div 
         className={playerContainerClass}
-        {...(hasPlayed ? {
+        {...(hasPlayed && isPlaying ? {
           'data-premid-title': title,
           'data-premid-paused': !isPlaying
         } : {})}

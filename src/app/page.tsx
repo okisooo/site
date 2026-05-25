@@ -28,6 +28,14 @@ export default function Home() {
   const [showFeaturedWhileLive, setShowFeaturedWhileLive] = useState(false);
   const { videos, isLoading: videosLoading, error: videosError } = useFeaturedVideos();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(label);
+    setTimeout(() => setCopiedText(null), 2000);
+  };
   const [activeVideo, setActiveVideo] = useState<FeaturedVideo | null>(null);
 
   const showingLive = isLive && !showFeaturedWhileLive;
@@ -95,7 +103,7 @@ export default function Home() {
               <div className="flex items-center gap-6 md:gap-8 overflow-hidden max-w-0 opacity-0 px-0 group-hover:max-w-[500px] group-hover:opacity-100 group-hover:pl-8 group-hover:pr-4 transition-all duration-[800ms] ease-in-out whitespace-nowrap">
                 <a href="#archive" className="hover:text-ba-pink transition-colors">ARCHIVE</a>
                 <a href="#social" className="hover:text-ba-pink transition-colors">SOCIAL</a>
-                <a href="#contact" className="hover:text-ba-pink transition-colors">CONTACT</a>
+                <button onClick={() => setIsContactOpen(true)} className="hover:text-ba-pink transition-colors">CONTACT</button>
               </div>
               <div className="w-10 h-10 md:w-12 md:h-12 flex flex-col justify-center items-center gap-[5px] cursor-pointer bg-black/5 dark:bg-white/5 rounded-full my-1 ml-1 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-[800ms]">
                 <div className="w-5 h-[2px] rounded-full bg-black dark:bg-white transition-all duration-[800ms] ease-in-out group-hover:-translate-x-1.5 group-hover:w-3 group-hover:bg-ba-pink" />
@@ -293,6 +301,7 @@ export default function Home() {
           />
           {/* Modal Content */}
           <motion.div
+            data-premid-modal="terms"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -339,6 +348,73 @@ export default function Home() {
                   By using my content, you agree to abide by these simple rules. Have fun creating!
                 </p>
               </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ─── CONTACT MODAL ─── */}
+      {isContactOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsContactOpen(false)}
+          />
+          <motion.div
+            data-premid-modal="contact"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative bg-white dark:bg-[#111] text-black dark:text-white w-full max-w-xl rounded-[24px] md:rounded-[40px] p-8 md:p-12 shadow-[0_40px_80px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10"
+          >
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter">Contact</h2>
+                <div className="w-16 h-2 bg-ba-pink mt-2"></div>
+              </div>
+              <button
+                onClick={() => setIsContactOpen(false)}
+                className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center hover:bg-ba-pink hover:text-white transition-colors"
+                aria-label="Close"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={() => handleCopy("contact@okiso.net", "email")}
+                className="w-full flex items-center justify-between p-6 bg-black/5 dark:bg-white/5 hover:bg-ba-pink dark:hover:bg-ba-pink hover:text-white rounded-2xl md:rounded-[32px] transition-all group"
+              >
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-bold uppercase tracking-widest opacity-60 group-hover:opacity-100">Email</span>
+                  <span className="text-lg md:text-2xl font-black mt-1">contact@okiso.net</span>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                  {copiedText === "email" ? <span className="font-bold">✓</span> : <span className="font-bold text-xs md:text-sm tracking-widest">COPY</span>}
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleCopy(".oxo", "discord")}
+                className="w-full flex items-center justify-between p-6 bg-black/5 dark:bg-white/5 hover:bg-ba-pink dark:hover:bg-ba-pink hover:text-white rounded-2xl md:rounded-[32px] transition-all group"
+              >
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-bold uppercase tracking-widest opacity-60 group-hover:opacity-100">Discord</span>
+                  <span className="text-lg md:text-2xl font-black mt-1">.oxo</span>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                  {copiedText === "discord" ? <span className="font-bold">✓</span> : <span className="font-bold text-xs md:text-sm tracking-widest">COPY</span>}
+                </div>
+              </button>
+            </div>
+            
+            <div className="mt-8 p-6 bg-black/5 dark:bg-white/5 rounded-2xl border-l-4 border-ba-pink">
+              <p className="text-sm font-bold text-black/60 dark:text-white/60">
+                Business inquiries and collaborations welcome! Feel free to copy my handles and reach out directly.
+              </p>
             </div>
           </motion.div>
         </div>

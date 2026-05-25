@@ -15,11 +15,16 @@ presence.on('UpdateData', async () => {
     };
     // ─── Home Page ───
     if (pathname === '/') {
-        // Check for Terms Modal
+        // Check for Modals
         const termsModal = document.querySelector('[data-premid-modal="terms"]');
+        const contactModal = document.querySelector('[data-premid-modal="contact"]');
         if (termsModal) {
             presenceData.details = 'Reading Content Terms';
             presenceData.state = 'Legal & Guidelines';
+        }
+        else if (contactModal) {
+            presenceData.details = 'Viewing Contact Info';
+            presenceData.state = 'Business & Collaborations';
         }
         else {
             // Check for live broadcast
