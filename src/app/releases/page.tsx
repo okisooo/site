@@ -38,7 +38,7 @@ export default function ReleasesPage() {
       className={`w-full min-h-screen bg-ba-cream dark:bg-black relative transition-colors duration-500 ${viewMode === 'orbit' ? 'overflow-hidden' : ''}`}
     >
       {/* ─── NAVIGATION & TOGGLE HEADER ─── */}
-      <div className="fixed top-0 left-0 w-full z-50 flex flex-col md:flex-row justify-between items-center p-4 md:p-6 pointer-events-none gap-4">
+      <div className={`fixed top-0 left-0 w-full z-50 flex flex-col md:flex-row justify-between items-center p-4 md:p-6 pointer-events-none gap-4 ${viewMode === 'orbit' ? 'dark' : ''}`}>
         
         {/* Left: Back Button */}
         <Link
