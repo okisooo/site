@@ -90,6 +90,7 @@ export default function ReleaseGrid() {
             onClick={() => setSelectedRelease(null)}
           >
             <motion.div
+              data-premid-release-title={selectedRelease.title}
               initial={{ scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 20, opacity: 0 }}

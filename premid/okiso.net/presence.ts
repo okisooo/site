@@ -6,6 +6,8 @@ const browsingTimestamp = Math.floor(Date.now() / 1000)
 presence.on('UpdateData', async () => {
   const { pathname } = document.location
 
+  const releaseTitle = document.querySelector('[data-premid-release-title]')?.getAttribute('data-premid-release-title')
+
   const presenceData: any = {
     type: 3, // ActivityType.Watching
     largeImageKey: 'https://i.imgur.com/0Qraju1.png',
@@ -17,8 +19,13 @@ presence.on('UpdateData', async () => {
     ],
   }
 
+  // ─── Global Overrides ───
+  if (releaseTitle) {
+    presenceData.details = 'Viewing Release'
+    presenceData.state = `🎵 ${releaseTitle}`
+  }
   // ─── Home Page ───
-  if (pathname === '/') {
+  else if (pathname === '/') {
     // Check for Modals
     const termsModal = document.querySelector('[data-premid-modal="terms"]')
     const contactModal = document.querySelector('[data-premid-modal="contact"]')
@@ -74,15 +81,9 @@ presence.on('UpdateData', async () => {
   else if (pathname === '/releases') {
     const container = document.querySelector('[data-premid-page="releases"]')
     const viewMode = container?.getAttribute('data-premid-view')
-    const releaseTitle = container?.getAttribute('data-premid-release-title')
 
-    if (releaseTitle) {
-      presenceData.details = 'Viewing Release'
-      presenceData.state = `🎵 ${releaseTitle}`
-    } else {
-      presenceData.details = viewMode === 'orbit' ? 'Exploring 3D Audio Archive' : 'Browsing Discography'
-      presenceData.state = viewMode === 'orbit' ? 'Interactive 3D Mode' : 'List View'
-    }
+    presenceData.details = viewMode === 'orbit' ? 'Exploring 3D Audio Archive' : 'Browsing Discography'
+    presenceData.state = viewMode === 'orbit' ? 'Interactive 3D Mode' : 'List View'
   }
 
   // ─── Upcoming Page ───
