@@ -1,31 +1,33 @@
 "use client"
 
-import React, { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
+import React from 'react'
 import { useMusicPlayer } from '@/context/MusicPlayerContext'
+import { X } from 'lucide-react'
 
 export function MusicPlayer() {
-  const { currentTrack, closePlayer } = useMusicPlayer()
+  const { currentTrackId, currentTrackTitle, currentTrackArtist, isPlaying, closePlayer } = useMusicPlayer()
 
   return (
-    <div
-      className={`fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 transition-all duration-500 ease-in-out ${
-        currentTrack ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0 pointer-events-none'
+    <div 
+      className={`fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[600px] z-[51] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-2xl shadow-2xl ${
+        currentTrackId ? 'translate-y-0 opacity-100' : 'translate-y-[150%] opacity-0 pointer-events-none'
       }`}
     >
-      <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl flex items-center pr-12 border border-white/10 dark:border-white/20">
-        
-        {/* The actual iframe mounts inside here */}
-        <div id="spotify-embed" className="w-full h-[80px]"></div>
-        
-        {/* Close button layered on top/side */}
+      {/* Container for the Spotify Iframe */}
+      <div 
+        className="relative w-full rounded-xl overflow-hidden bg-black border border-white/10 shadow-2xl"
+        id="spotify-embed-container-data"
+        data-premid-track-title={currentTrackTitle || ''}
+        data-premid-track-artist={currentTrackArtist || ''}
+        data-premid-paused={!isPlaying ? 'true' : 'false'}
+      >
         <button 
           onClick={closePlayer} 
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+          className="absolute -top-1 -right-1 z-50 text-white/70 hover:text-white bg-black/80 hover:bg-red-500 rounded-bl-xl rounded-tr-xl p-1.5 transition-all shadow-md"
         >
-          <X size={20} />
+          <X size={16} />
         </button>
+        <div id="spotify-embed-container" className="w-full"></div>
       </div>
     </div>
   )

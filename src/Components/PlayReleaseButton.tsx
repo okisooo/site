@@ -6,25 +6,24 @@ import { useMusicPlayer } from '@/context/MusicPlayerContext'
 import type { Release } from '@/data/releases'
 
 export function PlayReleaseButton({ release }: { release: Release }) {
-  const { playTrack, currentTrack, isPlaying } = useMusicPlayer()
+  const { playSpotifyTrack, currentTrackId, isPlaying, togglePlayPause } = useMusicPlayer()
+
+  const uri = release.albumType === 'single' || release.albumType === 'album' 
+    ? `spotify:album:${release.id}`
+    : `spotify:track:${release.id}`
 
   const handlePlay = () => {
-    // If playing the current release
-    if (currentTrack?.id === release.id) {
-      playTrack(currentTrack!)
+    if (currentTrackId === uri) {
+      togglePlayPause()
       return
     }
 
-    playTrack({
-      id: release.id || release.title,
-      // If it's an album/single, use spotify:album, else we default to track if we were passing tracks
-      uri: `spotify:album:${release.id}`,
-      title: release.title,
-      artist: 'OKISO',
-    })
+    if (release.id) {
+      playSpotifyTrack(uri, release.title, 'OKISO')
+    }
   }
 
-  const isActive = currentTrack?.id === release.id
+  const isActive = currentTrackId === uri
 
   return (
     <button
