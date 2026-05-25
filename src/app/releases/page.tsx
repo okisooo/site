@@ -36,7 +36,10 @@ export default function ReleasesPage() {
     <div 
       data-premid-page="releases"
       data-premid-view={viewMode}
-      {...(pinnedRelease ? { 'data-premid-release-title': pinnedRelease.title } : {})}
+      {...(pinnedRelease ? { 
+        'data-premid-release-title': pinnedRelease.title,
+        'data-premid-release-cover': pinnedRelease.img
+      } : {})}
       className={`w-full min-h-screen bg-ba-cream dark:bg-black relative transition-colors duration-500 ${viewMode === 'orbit' ? 'overflow-hidden' : ''}`}
     >
       {/* ─── NAVIGATION & TOGGLE HEADER ─── */}

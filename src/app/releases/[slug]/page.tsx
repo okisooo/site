@@ -101,6 +101,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
         <main 
             data-premid-page="release"
             data-premid-release-title={release.title}
+            data-premid-release-cover={release.img}
             className="p-6"
         >
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

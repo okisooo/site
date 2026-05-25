@@ -386,7 +386,8 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         className={playerContainerClass}
         {...(hasPlayed && isPlaying ? {
           'data-premid-title': title,
-          'data-premid-paused': !isPlaying
+          'data-premid-paused': !isPlaying,
+          'data-premid-poster': poster
         } : {})}
       >
         {hlsErrorToast && (

@@ -7,6 +7,7 @@ presence.on('UpdateData', async () => {
   const { pathname } = document.location
 
   const releaseTitle = document.querySelector('[data-premid-release-title]')?.getAttribute('data-premid-release-title')
+  const releaseCover = document.querySelector('[data-premid-release-cover]')?.getAttribute('data-premid-release-cover')
 
   const presenceData: any = {
     type: 3, // ActivityType.Watching
@@ -23,6 +24,10 @@ presence.on('UpdateData', async () => {
   if (releaseTitle) {
     presenceData.details = 'Viewing Release'
     presenceData.state = `🎵 ${releaseTitle}`
+    if (releaseCover) {
+      presenceData.largeImageKey = releaseCover
+      presenceData.largeImageText = releaseTitle
+    }
   }
   // ─── Home Page ───
   else if (pathname === '/') {
@@ -54,10 +59,15 @@ presence.on('UpdateData', async () => {
         if (videoPlayer) {
           const videoTitle = videoPlayer.getAttribute('data-premid-title')
           const paused = videoPlayer.getAttribute('data-premid-paused') === 'true'
+          const videoPoster = videoPlayer.getAttribute('data-premid-poster')
 
           presenceData.details = videoTitle || 'Watching a Video'
           presenceData.smallImageKey = paused ? Assets.Pause : Assets.Play
           presenceData.smallImageText = paused ? 'Paused' : 'Playing'
+
+          if (videoPoster) {
+            presenceData.largeImageKey = videoPoster
+          }
 
           if (!paused) {
             const video = document.querySelector<HTMLVideoElement>('[data-premid-title] video')
