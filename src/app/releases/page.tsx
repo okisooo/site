@@ -88,6 +88,16 @@ export default function ReleasesPage() {
           ← Back
         </Link>
       </div>
+
+      {/* Upcoming Button */}
+      <div className="absolute top-6 right-6 z-50">
+        <Link
+          href="/upcoming"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-black font-black uppercase tracking-widest hover:bg-[#FF7EB3] hover:text-white transition-colors"
+        >
+          Upcoming →
+        </Link>
+      </div>
     </div>
   )
 }

@@ -13,6 +13,7 @@ presence.on('UpdateData', async () => {
     startTimestamp: browsingTimestamp,
     buttons: [
       { label: 'Visit okiso.net', url: `https://okiso.net${pathname === '/' ? '' : pathname}` },
+      { label: 'Join Discord', url: 'https://discord.gg/okiso' },
     ],
   }
 
@@ -75,6 +76,7 @@ presence.on('UpdateData', async () => {
     presenceData.details = 'Viewing Release'
     presenceData.state = releaseTitle ? `🎵 ${releaseTitle}` : 'Release Page'
   }
+
   // ─── Upcoming Page ───
   else if (pathname === '/upcoming') {
     presenceData.details = 'Browsing'
@@ -100,8 +102,8 @@ presence.on('UpdateData', async () => {
     presenceData.type = 2 // ActivityType.Listening
     presenceData.details = paused ? `Paused: ${trackTitle}` : `Listening to ${trackTitle}`
     presenceData.state = `by ${artist || 'OKISO'}`
-    presenceData.smallImageKey = 'logo'
-    presenceData.smallImageText = 'okiso.net'
+    presenceData.smallImageKey = paused ? Assets.Pause : 'logo'
+    presenceData.smallImageText = paused ? 'Paused' : 'okiso.net'
     
     if (coverUrl) {
       presenceData.largeImageKey = coverUrl
@@ -111,6 +113,7 @@ presence.on('UpdateData', async () => {
     if (spotifyLink) {
       presenceData.buttons = [
         { label: 'Listen on Spotify', url: spotifyLink },
+        { label: 'Join Discord', url: 'https://discord.gg/okiso' },
       ]
     }
     

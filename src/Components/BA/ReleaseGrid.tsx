@@ -70,9 +70,12 @@ export default function ReleaseGrid() {
         ))}
       </div>
 
-      <div className="flex justify-center w-full mt-4">
-        <Link href="/releases" className="bg-white text-black border-4 border-black px-12 py-6 rounded-full text-2xl font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-2">
+      <div className="flex flex-col md:flex-row justify-center items-center w-full mt-4 gap-6">
+        <Link href="/releases" className="bg-white text-black border-4 border-black px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-2">
           VIEW FULL DISCOGRAPHY <span className="group-hover:translate-x-2 transition-transform">→</span>
+        </Link>
+        <Link href="/upcoming" className="bg-ba-pink text-white border-4 border-ba-pink px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-ba-pink-deep hover:border-ba-pink-deep transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(255,126,179,0.3)] hover:shadow-none translate-y-0 hover:translate-y-2">
+          UPCOMING RELEASES <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
       </div>
 
