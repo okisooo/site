@@ -169,7 +169,7 @@ export default function RootLayout({
               <nav>{/* Navigation links */}</nav>
             </header>
 
-            <main className="flex-grow relative w-full flex flex-col max-w-[1920px] mx-auto">
+            <main className="flex-grow relative w-full flex flex-col">
               {children}
             </main>
 

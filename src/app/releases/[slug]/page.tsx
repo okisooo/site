@@ -98,11 +98,11 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
     }
 
     return (
-        <main 
+        <div 
             data-premid-page="release"
             data-premid-release-title={release.title}
             data-premid-release-cover={release.img}
-            className="p-6"
+            className="w-full max-w-4xl mx-auto p-6 md:p-12"
         >
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <h1 className="text-3xl font-bold mb-4">{release.title}</h1>
@@ -131,6 +131,6 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
                     )}
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

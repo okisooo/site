@@ -64,7 +64,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500 relative">
 
       {/* ─── MASSIVE HERO ─── */}
       <section className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500">
@@ -91,7 +91,7 @@ export default function Home() {
         </div>
 
         {/* Top Header Row */}
-        <header className="relative z-30 w-full p-6 md:p-8 flex justify-between items-center text-sm md:text-xl font-bold uppercase tracking-widest">
+        <header className="relative z-30 w-full max-w-[2200px] mx-auto p-6 md:p-8 flex justify-between items-center text-sm md:text-xl font-bold uppercase tracking-widest">
           <div className="flex items-center gap-4 bg-white/50 dark:bg-black/20 backdrop-blur-md px-6 py-3 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
             <span className="w-3 h-3 bg-ba-pink rounded-full animate-pulse shadow-[0_0_10px_rgba(255,126,179,0.8)]" />
             LIVE_SYSTEM // 2026
@@ -115,53 +115,50 @@ export default function Home() {
         </header>
 
         {/* Main Hero Content */}
-        <div className="relative z-20 flex-grow grid grid-cols-1 lg:grid-cols-12 max-w-[1920px] mx-auto w-full px-6 md:px-12 h-full">
+        <div className="relative z-20 flex-1 w-full flex flex-col lg:flex-row">
 
-          {/* Left: Giant Typography */}
-          <div className="col-span-12 lg:col-span-7 flex flex-col justify-center lg:justify-end pb-0 lg:pb-32 z-30 pointer-events-none">
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="pointer-events-auto"
-            >
-              <h1 className="text-[20vw] lg:text-[15vw] leading-[0.75] font-black uppercase tracking-tighter mix-blend-multiply dark:mix-blend-normal">
-                OKISO
-              </h1>
-              <p className="mt-8 text-lg md:text-2xl lg:text-3xl font-medium max-w-2xl text-black/70 dark:text-white/70 leading-snug">
-                at your command!
-              </p>
+          {/* Left: Bounded Typography */}
+          <div className="w-full max-w-[2200px] mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center lg:justify-end pb-0 lg:pb-32 z-30 pointer-events-none">
+            <div className="w-full lg:w-[50%]">
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="pointer-events-auto"
+              >
+                <h1 className="text-[20vw] lg:text-[15vw] leading-[0.75] font-black uppercase tracking-tighter mix-blend-multiply dark:mix-blend-normal">
+                  OKISO
+                </h1>
+                <p className="mt-8 text-lg md:text-2xl lg:text-3xl font-medium max-w-2xl text-black/70 dark:text-white/70 leading-snug">
+                  at your command!
+                </p>
 
-              <div className="mt-12 flex items-center gap-4 md:gap-6">
-                <a href="#archive" className="bg-black dark:bg-white text-white dark:text-black px-8 md:px-10 py-5 rounded-full text-sm md:text-xl font-bold uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-all transform hover:scale-105 flex items-center gap-4 group shadow-xl">
-                  <FaPlay className="group-hover:animate-pulse" /> Latest Release
-                </a>
-                <div className="hidden md:block w-16 h-[2px] bg-black/20 dark:bg-white/20" />
-                <span className="hidden md:block text-sm font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/40">Scroll Down</span>
-              </div>
-            </motion.div>
+                <div className="mt-12 flex items-center gap-4 md:gap-6">
+                  <a href="#archive" className="bg-black dark:bg-white text-white dark:text-black px-8 md:px-10 py-5 rounded-full text-sm md:text-xl font-bold uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-all transform hover:scale-105 flex items-center gap-4 group shadow-xl">
+                    <FaPlay className="group-hover:animate-pulse" /> Latest Release
+                  </a>
+                  <div className="hidden md:block w-16 h-[2px] bg-black/20 dark:bg-white/20" />
+                  <span className="hidden md:block text-sm font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/40">Scroll Down</span>
+                </div>
+              </motion.div>
+            </div>
           </div>
 
-          {/* Right: VRM Viewer */}
-          <div className="col-span-12 lg:col-span-5 relative h-[50vh] lg:h-full flex items-center justify-center z-10 pointer-events-auto">
+          {/* Right: VRM Viewer (Anchored to right half) */}
+          <div className="w-full h-[50vh] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[50vw] lg:h-full flex items-center justify-center z-10 pointer-events-none">
             <motion.div
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 w-full h-[120%] lg:h-[140%] flex flex-col justify-center items-center lg:-translate-y-24"
+              className="absolute inset-0 w-full h-full flex flex-col justify-center items-center"
             >
               {/* Massive ambient glow behind model */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-ba-pink/20 blur-[120px] rounded-full pointer-events-none mix-blend-overlay dark:mix-blend-lighten" />
 
-              <div className="w-full h-full relative z-10 cursor-grab active:cursor-grabbing">
+              <div className="w-full h-full relative z-10 pointer-events-auto cursor-grab active:cursor-grabbing">
                 <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
               </div>
-
-              {/* Decorative Tag overlaying model */}
-              <div className="absolute bottom-8 md:bottom-24 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-black/80 backdrop-blur-xl px-6 md:px-8 py-3 md:py-4 rounded-full border border-black/5 dark:border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.1)] z-30 flex items-center gap-3 w-max transform hover:scale-105 transition-transform">
-                <span className="w-3 h-3 bg-green-400 rounded-full animate-ping" />
-                <span className="font-bold text-sm md:text-base tracking-widest text-black dark:text-white">MODEL_ONLINE // 01</span>
-              </div>
+              {/* Tag removed by user request for cleaner layout */}
             </motion.div>
           </div>
         </div>
@@ -181,7 +178,7 @@ export default function Home() {
       </div>
 
       {/* ─── MEDIA & SOCIAL SHOWCASE ─── */}
-      <section id="social" className="pt-24 md:pt-40 pb-12 md:pb-20 px-4 md:px-12 max-w-[1920px] mx-auto z-20 relative transition-colors duration-500">
+      <section id="social" className="pt-24 md:pt-40 pb-12 md:pb-20 px-4 md:px-12 max-w-[2200px] mx-auto z-20 relative transition-colors duration-500">
         <div className="flex flex-col xl:flex-row gap-12 md:gap-24">
 
           {/* Main Video Feature */}
@@ -275,7 +272,7 @@ export default function Home() {
       </section>
 
       {/* ─── AUDIO ARCHIVE SHOWCASE ─── */}
-      <section id="archive" className="pb-24 md:pb-40 pt-12 md:pt-20 px-4 md:px-12 max-w-[1920px] mx-auto z-20 relative">
+      <section id="archive" className="pb-24 md:pb-40 pt-12 md:pt-20 px-4 md:px-12 max-w-[2200px] mx-auto z-20 relative">
         <ReleaseGrid />
       </section>
 

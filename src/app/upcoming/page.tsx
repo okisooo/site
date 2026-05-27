@@ -20,24 +20,24 @@ export default function UpcomingPage() {
       data-premid-page="upcoming"
       className="w-full h-screen bg-ba-cream dark:bg-black relative overflow-hidden flex flex-col items-center justify-center selection:bg-ba-pink selection:text-white"
     >
-      {/* Back Button */}
-      <div className="absolute top-6 left-6 z-50">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-colors shadow-lg"
-        >
-          ← Back
-        </Link>
-      </div>
-
-      {/* Releases Button */}
-      <div className="absolute top-6 right-6 z-50">
-        <Link
-          href="/releases"
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-colors shadow-lg"
-        >
-          Releases →
-        </Link>
+      {/* Top Header Buttons */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-full max-w-[1920px] px-6 z-50 flex justify-between items-center pointer-events-none">
+        <div className="pointer-events-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-colors shadow-lg"
+          >
+            ← Back
+          </Link>
+        </div>
+        <div className="pointer-events-auto">
+          <Link
+            href="/releases"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-colors shadow-lg"
+          >
+            Releases →
+          </Link>
+        </div>
       </div>
 
       {/* Kinetic Background Typography */}

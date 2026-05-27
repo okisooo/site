@@ -11,6 +11,28 @@ interface VRMModelProps {
     url: string;
 }
 
+function CameraAdjuster() {
+    const { camera, size } = useThree();
+
+    useEffect(() => {
+        if (camera instanceof THREE.PerspectiveCamera) {
+            const aspect = size.width / size.height;
+            
+            const targetDistance = 2.0;
+            const fitHeight = 1.5; // Zooms in on the character (fits torso and head)
+            const fitWidth = 2.2;  // Fits wide T-pose model width + padding
+            
+            const fovHeight = 2 * Math.atan(fitHeight / (2 * targetDistance)) * (180 / Math.PI);
+            const fovWidth = 2 * Math.atan(fitWidth / (2 * targetDistance * aspect)) * (180 / Math.PI);
+            
+            camera.fov = Math.max(fovHeight, fovWidth);
+            camera.updateProjectionMatrix();
+        }
+    }, [size.width, size.height, camera]);
+
+    return null;
+}
+
 function VRMModel({ url }: VRMModelProps) {
     const vrmRef = useRef<VRM | null>(null);
     const { scene } = useThree();
@@ -77,7 +99,8 @@ export default function VRMViewer({ modelUrl, className, height = '100%' }: VRMV
                 </div>
             )}
             <Canvas
-                camera={{ position: [0, 1.0, 3.0], fov: 35 }}
+                dpr={[1, 2]}
+                camera={{ position: [0, 1.1, 2.0], fov: 35 }}
                 onCreated={() => {
                     // Small delay to let the model start loading
                     setTimeout(() => setIsLoaded(true), 1000);
@@ -91,9 +114,10 @@ export default function VRMViewer({ modelUrl, className, height = '100%' }: VRMV
                 <pointLight position={[0, 2, 0]} intensity={0.5} color="#FFB8D4" />
 
                 <VRMModel url={modelUrl} />
+                <CameraAdjuster />
 
                 <OrbitControls
-                    target={[0, 1.0, 0]}
+                    target={[0, 1.1, 0]}
                     enableZoom={false}
                     enablePan={false}
                     maxPolarAngle={Math.PI / 2}
