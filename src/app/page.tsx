@@ -168,7 +168,7 @@ export default function Home() {
       </section>
 
       {/* ─── KINETIC DIVIDER ─── */}
-      <div className="w-full bg-ba-pink py-4 md:py-8 overflow-hidden flex origin-left transform -skew-y-2 relative z-30 shadow-[0_20px_50px_rgba(255,126,179,0.3)] -mt-16 md:-mt-24 border-y-8 border-black dark:border-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="w-[110vw] -ml-[5vw] bg-ba-pink py-4 md:py-8 overflow-hidden flex origin-left transform -skew-y-2 relative z-30 shadow-[0_20px_50px_rgba(255,126,179,0.3)] -mt-16 md:-mt-24 border-y-8 border-black dark:border-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <Marquee speed={60} gradient={false} autoFill className="overflow-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <div className="flex items-center whitespace-nowrap gap-4 md:gap-8 px-4 md:px-8 text-black font-black text-2xl md:text-4xl tracking-widest uppercase overflow-hidden py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <span>SYSTEM.ARCHIVE.ONLINE</span>
