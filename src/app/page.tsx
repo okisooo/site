@@ -284,7 +284,7 @@ export default function Home() {
         </h1>
         <div className="relative z-10 mt-12 md:mt-24 flex flex-wrap justify-center gap-6 md:gap-12 text-sm md:text-xl font-bold tracking-[0.2em] uppercase text-white/50">
           <button onClick={() => setIsTermsOpen(true)} className="hover:text-white hover:drop-shadow-[0_0_10px_white] transition-all uppercase">Terms</button>
-          <a href="mailto:oxo@okiso.net" className="hover:text-white hover:drop-shadow-[0_0_10px_white] transition-all">Contact</a>
+          <button onClick={() => setIsContactOpen(true)} className="hover:text-white hover:drop-shadow-[0_0_10px_white] transition-all uppercase">Contact</button>
         </div>
       </footer>
 
@@ -382,12 +382,12 @@ export default function Home() {
 
             <div className="flex flex-col gap-4">
               <button
-                onClick={() => handleCopy("contact@okiso.net", "email")}
+                onClick={() => handleCopy("oxo@okiso.net", "email")}
                 className="w-full flex items-center justify-between p-6 bg-black/5 dark:bg-white/5 hover:bg-ba-pink dark:hover:bg-ba-pink hover:text-white rounded-2xl md:rounded-[32px] transition-all group"
               >
                 <div className="flex flex-col items-start">
                   <span className="text-sm font-bold uppercase tracking-widest opacity-60 group-hover:opacity-100">Email</span>
-                  <span className="text-lg md:text-2xl font-black mt-1">contact@okiso.net</span>
+                  <span className="text-lg md:text-2xl font-black mt-1">oxo@okiso.net</span>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                   {copiedText === "email" ? <span className="font-bold">✓</span> : <span className="font-bold text-xs md:text-sm tracking-widest">COPY</span>}
