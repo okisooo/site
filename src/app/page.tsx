@@ -67,7 +67,10 @@ export default function Home() {
     <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500 relative">
 
       {/* ─── MASSIVE HERO ─── */}
-      <section className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500">
+      <section 
+        className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500"
+        style={{ clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 3.492vw), 0 100%)" }}
+      >
 
         {/* Kinetic Background Typography */}
         <div className="absolute inset-0 pointer-events-none flex flex-col justify-center overflow-hidden z-0 opacity-[0.08] dark:opacity-[0.06]">
