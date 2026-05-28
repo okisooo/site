@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaDiscord, FaYoutube, FaSpotify, FaTwitch, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useLanyard } from "react-use-lanyard";
@@ -25,6 +26,11 @@ export default function SocialGrid() {
   // 274178934143451137 is the user's Discord ID
   const [isDiscordModalOpen, setIsDiscordModalOpen] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -246,7 +252,8 @@ export default function SocialGrid() {
       ))}
 
       {/* DISCORD MODAL */}
-      <AnimatePresence>
+      {mounted && createPortal(
+        <AnimatePresence>
         {isDiscordModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div
@@ -315,7 +322,9 @@ export default function SocialGrid() {
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }
