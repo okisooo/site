@@ -60,6 +60,8 @@ interface Release {
 }
 
 import YTMusic from 'ytmusic-api';
+import fs from 'fs';
+import path from 'path';
 
 async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -200,6 +202,35 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       }
     }
 
+    // --- CACHING LOGIC ---
+    // Read the existing releases.ts to cache existing YouTube links and prevent API rate limiting
+    const releasesFilePath = path.join(process.cwd(), 'src', 'data', 'releases.ts');
+    let existingReleases: Release[] = [];
+    try {
+      if (fs.existsSync(releasesFilePath)) {
+        const fileContent = fs.readFileSync(releasesFilePath, 'utf8');
+        // Extract the JSON array from the TypeScript file
+        const jsonMatch = fileContent.match(/export const releases: Release\[\] = (\[[\s\S]*\]);/);
+        if (jsonMatch && jsonMatch[1]) {
+          existingReleases = JSON.parse(jsonMatch[1]);
+        }
+      }
+    } catch (e) {
+      console.log('Failed to parse existing releases.ts for cache. Proceeding without cache.');
+    }
+    
+    // Build cache map: trackId -> YouTube Link
+    const cachedYoutubeLinks = new Map<string, string>();
+    existingReleases.forEach(r => {
+      r.tracks?.forEach(t => {
+        if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
+          cachedYoutubeLinks.set(t.id, t.link);
+        }
+      });
+    });
+    console.log(`Found ${cachedYoutubeLinks.size} cached YouTube links in releases.ts.`);
+    // ---------------------
+
     // Step 2.6: Search YouTube Music for each track
     const youtubeLinkMap = new Map<string, string>(); // trackId -> YouTube Link
     console.log('Searching YouTube Music for matching tracks...');
@@ -214,6 +245,12 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
 
     let searchCount = 0;
     for (const trackId of trackIdsArray) {
+      // Use cache if available
+      if (cachedYoutubeLinks.has(trackId)) {
+        youtubeLinkMap.set(trackId, cachedYoutubeLinks.get(trackId)!);
+        continue;
+      }
+
       // Find track name
       let trackName = "";
       for (const album of albumDetails) {
