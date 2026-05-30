@@ -220,15 +220,16 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
     }
     
     // Build cache map: trackId -> YouTube Link
+    // TEMPORARILY DISABLED: We are deliberately wiping the cache so the bulletproof algorithm can fetch 100% accurate links.
     const cachedYoutubeLinks = new Map<string, string>();
-    existingReleases.forEach(r => {
-      r.tracks?.forEach(t => {
-        if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
-          cachedYoutubeLinks.set(t.id, t.link);
-        }
-      });
-    });
-    console.log(`Found ${cachedYoutubeLinks.size} cached YouTube links in releases.ts.`);
+    // existingReleases.forEach(r => {
+    //   r.tracks?.forEach(t => {
+    //     if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
+    //       cachedYoutubeLinks.set(t.id, t.link);
+    //     }
+    //   });
+    // });
+    console.log(`Cache cleared for bulletproof re-fetch.`);
     // ---------------------
 
     // Step 2.6: Search YouTube Music for each track
@@ -262,10 +263,26 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
         try {
           let ytLink = "";
           
-          // Search YouTube Music for OKISO + trackName
+          // Search YouTube Music for OKISO + trackName (wrapped in quotes for strict text match if possible, but standard is fine)
           const results = await ytmusic.search(`OKISO ${trackName}`);
-          // Find the first valid song or video
-          const validSong = results.find((r: any) => r.type === 'SONG' || r.type === 'VIDEO');
+          
+          // STRICT VALIDATION
+          const validSong = results.find((r: any) => {
+            // 1. Must be a SONG or VIDEO (No Albums/Playlists)
+            if (r.type !== 'SONG' && r.type !== 'VIDEO') return false;
+            
+            // 2. Track name must be somewhere in the title (case insensitive)
+            const titleMatch = r.name?.toLowerCase().includes(trackName.toLowerCase());
+            if (!titleMatch) return false;
+
+            // 3. Artist or Channel must contain OKISO or Vocaloids
+            const artistName = r.artist?.name?.toLowerCase() || '';
+            const isOkiso = artistName.includes('okiso') || artistName.includes('release - topic');
+            const isVocaloid = artistName.includes('miku') || artistName.includes('gumi') || artistName.includes('una');
+            if (!isOkiso && !isVocaloid) return false;
+
+            return true;
+          });
           
           if (validSong && validSong.videoId) {
             ytLink = `https://www.youtube.com/watch?v=${validSong.videoId}`;

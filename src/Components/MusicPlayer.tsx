@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from 'react'
 import { useMusicPlayer } from '@/context/MusicPlayerContext'
-import { Play, Pause, X, Disc3, ExternalLink } from 'lucide-react'
+import { Play, Pause, X, Disc3, ExternalLink, SkipBack, SkipForward, Repeat, Volume2, VolumeX } from 'lucide-react'
 
 export function MusicPlayer() {
-  const { currentTrackId, currentTrackTitle, currentTrackArtist, currentTrackCover, currentTrackLink, isPlaying, togglePlayPause, closePlayer } = useMusicPlayer()
+  const { 
+    currentTrackId, currentTrackTitle, currentTrackArtist, currentTrackCover, currentTrackLink, 
+    isPlaying, volume, isLooping,
+    togglePlayPause, closePlayer, playNext, playPrev, setVolume, toggleLoop 
+  } = useMusicPlayer()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -77,7 +81,13 @@ export function MusicPlayer() {
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-3 pl-2 border-l border-white/10">
+          <div className="flex items-center gap-2 pl-2 border-l border-white/10">
+            <button 
+              onClick={playPrev}
+              className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <SkipBack size={16} fill="currentColor" />
+            </button>
             <button 
               onClick={togglePlayPause}
               className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
@@ -85,8 +95,42 @@ export function MusicPlayer() {
               {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" className="ml-1" />}
             </button>
             <button 
+              onClick={playNext}
+              className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <SkipForward size={16} fill="currentColor" />
+            </button>
+          </div>
+
+          {/* Extra Controls (Volume & Loop & Close) */}
+          <div className="flex items-center gap-1 pl-2 border-l border-white/10">
+            <button 
+              onClick={toggleLoop}
+              className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${isLooping ? 'text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]' : 'text-white/40 hover:text-white hover:bg-white/10'}`}
+              title="Toggle Loop"
+            >
+              <Repeat size={14} />
+            </button>
+
+            {/* Volume Slider (Hover expanding) */}
+            <div className="group/volume relative flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+              {volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-8 h-24 bg-black/90 backdrop-blur-xl border border-white/10 rounded-full flex flex-col items-center justify-end py-3 opacity-0 pointer-events-none group-hover/volume:opacity-100 group-hover/volume:pointer-events-auto transition-all shadow-xl">
+                <input 
+                  type="range" 
+                  min="0" max="100" 
+                  value={volume}
+                  onChange={(e) => setVolume(Number(e.target.value))}
+                  className="w-16 h-1 -rotate-90 origin-center bg-white/20 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-[0_0_10px_white]"
+                />
+              </div>
+            </div>
+
+            <button 
               onClick={closePlayer}
-              className="flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white transition-colors"
+              className="flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors ml-1"
+              title="Close Player"
             >
               <X size={16} />
             </button>
