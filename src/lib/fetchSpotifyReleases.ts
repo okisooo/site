@@ -59,7 +59,7 @@ interface Release {
   genres?: string[];
 }
 
-import YouTube from 'youtube-sr';
+import YTMusic from 'ytmusic-api';
 
 async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -200,57 +200,52 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       }
     }
 
-    // Step 2.6: Search YouTube for each track
+    // Step 2.6: Search YouTube Music for each track
     const youtubeLinkMap = new Map<string, string>(); // trackId -> YouTube Link
-    console.log('Searching YouTube for matching tracks...');
-    let searchCount = 0;
+    console.log('Searching YouTube Music for matching tracks...');
     
+    let ytmusic: any = null;
+    try {
+      ytmusic = new YTMusic();
+      await ytmusic.initialize();
+    } catch (e: any) {
+      console.error('Failed to initialize ytmusic-api:', e.message || 'Unknown error');
+    }
+
+    let searchCount = 0;
     for (const trackId of trackIdsArray) {
-      const isrc = isrcMap.get(trackId);
-      // We also need the track name for fallback
+      // Find track name
       let trackName = "";
       for (const album of albumDetails) {
         const t = album.tracks.items.find(x => x.id === trackId);
         if (t) { trackName = t.name; break; }
       }
 
-      try {
-        let ytLink = "";
-        
-        // Strategy 1: Search by ISRC (most accurate)
-        if (isrc) {
-          const isrcResults = await YouTube.search(isrc, { type: "video", limit: 3 });
-          if (isrcResults.length > 0) {
-            ytLink = isrcResults[0].url;
+      if (ytmusic) {
+        try {
+          let ytLink = "";
+          
+          // Search YouTube Music for OKISO + trackName
+          const results = await ytmusic.search(`OKISO ${trackName}`);
+          // Find the first valid song or video
+          const validSong = results.find((r: any) => r.type === 'SONG' || r.type === 'VIDEO');
+          
+          if (validSong && validSong.videoId) {
+            ytLink = `https://www.youtube.com/watch?v=${validSong.videoId}`;
           }
-        }
 
-        // Strategy 2: Fallback to exact match title search
-        if (!ytLink && trackName) {
-          const fallbackQuery = `OKISO "${trackName}"`;
-          const fallbackResults = await YouTube.search(fallbackQuery, { type: "video", limit: 5 });
-          const validVideos = fallbackResults.filter(v => {
-            const author = v.channel?.name?.toLowerCase() || '';
-            const title = v.title?.toLowerCase() || '';
-            const isCorrectChannel = author.includes('okiso') || author.includes('release - topic');
-            const isExactTitle = title.includes(trackName.toLowerCase());
-            return isCorrectChannel && isExactTitle;
-          });
-          if (validVideos.length > 0) {
-            ytLink = validVideos[0].url;
+          if (ytLink) {
+            youtubeLinkMap.set(trackId, ytLink);
           }
-        }
 
-        if (ytLink) {
-          youtubeLinkMap.set(trackId, ytLink);
+          // Delay to prevent rate limiting in CI
+          searchCount++;
+          if (searchCount % 5 === 0) console.log(`Processed ${searchCount}/${trackIdsArray.length} tracks on YouTube Music...`);
+          await delay(1000);
+        } catch (e: any) {
+          // DO NOT print full stack traces, just a tiny warning to prevent log spam
+          console.error(`[WARN] Search failed for ${trackName}: ${e.message || 'Unknown error'}`);
         }
-
-        // Delay slightly to prevent rate limiting
-        searchCount++;
-        if (searchCount % 5 === 0) console.log(`Processed ${searchCount}/${trackIdsArray.length} tracks on YouTube...`);
-        await delay(300);
-      } catch (e) {
-        console.error(`YouTube search failed for ${trackName}:`, e);
       }
     }
 
