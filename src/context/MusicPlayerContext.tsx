@@ -33,7 +33,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null)
-  const isReadyRef = useRef<boolean>(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const script = document.createElement("script")
@@ -59,7 +59,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         },
         events: {
           onReady: () => {
-            isReadyRef.current = true
+            setIsReady(true)
           },
           onStateChange: (event: any) => {
             // YT.PlayerState.PLAYING is 1, PAUSED is 2, ENDED is 0
@@ -85,11 +85,11 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     setCurrentTrackArtist(artist)
     setCurrentTrackCover(cover || null)
     setCurrentTrackLink(link || null)
+    setCurrentTrackId(videoId)
 
-    if (playerRef.current && isReadyRef.current) {
+    if (playerRef.current && isReady) {
       if (currentTrackId !== videoId) {
         playerRef.current.loadVideoById(videoId)
-        setCurrentTrackId(videoId)
         setIsPlaying(true)
       } else {
         // Toggle play pause
@@ -100,15 +100,23 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
           playerRef.current.playVideo()
         }
       }
-    } else {
-      setCurrentTrackId(videoId) 
-      // If player isn't ready yet but they clicked play, we could queue it, 
-      // but typically the API loads very fast.
     }
-  }, [currentTrackId])
+  }, [currentTrackId, isReady])
+
+  // Effect to automatically play if a track is selected but the player just became ready
+  useEffect(() => {
+    if (isReady && currentTrackId && playerRef.current) {
+      const state = playerRef.current.getPlayerState()
+      // If it's unstarted (-1) or ended (0) or paused (2), and we have a track ID, we should load it
+      if (state !== 1) {
+        playerRef.current.loadVideoById(currentTrackId)
+        setIsPlaying(true)
+      }
+    }
+  }, [isReady, currentTrackId])
 
   const togglePlayPause = useCallback(() => {
-    if (playerRef.current && isReadyRef.current) {
+    if (playerRef.current && isReady) {
       const state = playerRef.current.getPlayerState()
       if (state === 1) {
         playerRef.current.pauseVideo()
@@ -116,10 +124,10 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         playerRef.current.playVideo()
       }
     }
-  }, [])
+  }, [isReady])
 
   const closePlayer = useCallback(() => {
-    if (playerRef.current && isReadyRef.current) {
+    if (playerRef.current && isReady) {
       playerRef.current.stopVideo()
     }
     setIsPlaying(false)
@@ -141,8 +149,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       }}
     >
       {children}
-      {/* Invisible YouTube Player Container */}
-      <div id="youtube-embed-container" className="hidden pointer-events-none opacity-0 absolute"></div>
+      {/* Invisible YouTube Player Container - Removed 'hidden' so it correctly initializes */}
+      <div id="youtube-embed-container" className="pointer-events-none opacity-0 absolute w-0 h-0"></div>
     </MusicPlayerContext.Provider>
   )
 }
