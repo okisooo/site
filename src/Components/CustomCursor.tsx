@@ -9,8 +9,8 @@ export function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false); // Only show after initial mouse move
 
   // Smooth springs for the cursor
-  const cursorX = useSpring(mousePosition.x, { stiffness: 300, damping: 20, mass: 0.5 });
-  const cursorY = useSpring(mousePosition.y, { stiffness: 300, damping: 20, mass: 0.5 });
+  const cursorX = useSpring(mousePosition.x, { stiffness: 150, damping: 15, mass: 0.1 });
+  const cursorY = useSpring(mousePosition.y, { stiffness: 150, damping: 15, mass: 0.1 });
 
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
@@ -64,10 +64,12 @@ export function CustomCursor() {
           width: 32,
           height: 32,
           backgroundColor: "white",
-          opacity: isHovering ? 0.3 : 0.8,
+        }}
+        animate={{
+          opacity: isHovering ? 0.2 : 0.8,
           scale: isHovering ? 2.5 : 1,
         }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
       />
       {/* The exact dot point */}
       <motion.div
@@ -77,8 +79,11 @@ export function CustomCursor() {
           y: mousePosition.y - 4,
           width: 8,
           height: 8,
+        }}
+        animate={{
           opacity: isHovering ? 0 : 1,
         }}
+        transition={{ duration: 0.2 }}
       />
     </>
   );

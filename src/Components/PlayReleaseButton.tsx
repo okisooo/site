@@ -5,7 +5,7 @@ import { Play } from 'lucide-react'
 import { useMusicPlayer } from '@/context/MusicPlayerContext'
 import type { Release } from '@/data/releases'
 
-export function PlayReleaseButton({ release }: { release: Release }) {
+export function PlayReleaseButton({ release, onClose }: { release: Release, onClose?: () => void }) {
   const { playTrack, currentTrackId, isPlaying, togglePlayPause } = useMusicPlayer()
 
   // Extract video ID from youtube link (e.g., https://www.youtube.com/watch?v=GNd16uxzUlk)
@@ -30,6 +30,7 @@ export function PlayReleaseButton({ release }: { release: Release }) {
     }
 
     playTrack(videoId, release.title, 'OKISO', release.img, trackLink)
+    if (onClose) onClose()
   }
 
   const isActive = currentTrackId === videoId
