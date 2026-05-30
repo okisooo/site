@@ -21,7 +21,15 @@ export function MusicPlayer() {
       }`}
     >
       {/* Dynamic Player Container */}
-      <div className="relative w-full rounded-2xl overflow-hidden bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] flex flex-col p-4">
+      <div 
+        className="relative w-full rounded-2xl overflow-hidden bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] flex flex-col p-4"
+        id="spotify-embed-container-data"
+        data-premid-track-title={currentTrackTitle || ''}
+        data-premid-track-artist={currentTrackArtist || ''}
+        data-premid-cover-url={currentTrackCover || ''}
+        data-premid-link={currentTrackLink || ''}
+        data-premid-paused={!isPlaying ? 'true' : 'false'}
+      >
         
         {/* Glow effect matching album art */}
         {currentTrackCover && (
