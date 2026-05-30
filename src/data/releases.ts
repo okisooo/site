@@ -42,7 +42,7 @@ export const staticReleases: Release[] = [
         "durationMs": 236571,
         "duration": "PT3M57S",
         "trackNumber": 1,
-        "link": "https://open.spotify.com/track/3eCy6HPR031XDxDr910lrp"
+        "link": "https://www.youtube.com/watch?v=GNd16uxzUlk"
       }
     ],
     "popularity": 0,
@@ -68,7 +68,7 @@ export const staticReleases: Release[] = [
         "durationMs": 168022,
         "duration": "PT2M48S",
         "trackNumber": 1,
-        "link": "https://open.spotify.com/track/0o0QzChjzNroryMSSM2dVU"
+        "link": "https://www.youtube.com/watch?v=_8HL_wQR2To"
       },
       {
         "id": "1wxeKuO7kLDt69fHx0Gu1x",

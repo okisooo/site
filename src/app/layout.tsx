@@ -6,6 +6,8 @@ import { ThemeToggle } from "@/Components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { MusicPlayer } from "@/Components/MusicPlayer";
+import { CustomCursor } from "@/Components/CustomCursor";
+import { TitleAnimator } from "@/Components/TitleAnimator";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -160,6 +162,8 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <TitleAnimator />
+          <CustomCursor />
           <MusicPlayerProvider>
             <MusicPlayer />
 

@@ -121,6 +121,12 @@
   html {
     @apply font-sans;
   }
+
+  @media (pointer: fine) {
+    *, a, button, input {
+      cursor: none !important;
+    }
+  }
 }
 
 @layer components {

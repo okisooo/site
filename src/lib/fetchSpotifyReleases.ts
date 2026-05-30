@@ -59,6 +59,12 @@ interface Release {
   genres?: string[];
 }
 
+import YouTube from 'youtube-sr';
+
+async function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function slugify(title: string, id?: string) {
   // Basic slug: lowercase, remove non-alnum (except spaces), replace spaces with dashes
   const base = title
@@ -166,6 +172,88 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       }
     }
 
+    // Step 2.5: Fetch ISRCs for all tracks
+    const allTrackIds = new Set<string>();
+    albumDetails.forEach(album => {
+      album.tracks.items.forEach(t => allTrackIds.add(t.id));
+    });
+    const trackIdsArray = Array.from(allTrackIds);
+    const isrcMap = new Map<string, string>(); // trackId -> ISRC
+
+    console.log(`Fetching ISRCs for ${trackIdsArray.length} tracks...`);
+    for (let i = 0; i < trackIdsArray.length; i += 50) {
+      const batchIds = trackIdsArray.slice(i, i + 50).join(',');
+      try {
+        const res = await fetch(`https://api.spotify.com/v1/tracks?ids=${batchIds}`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          data.tracks.forEach((t: any) => {
+            if (t && t.id && t.external_ids?.isrc) {
+              isrcMap.set(t.id, t.external_ids.isrc);
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Failed to fetch track batch', e);
+      }
+    }
+
+    // Step 2.6: Search YouTube for each track
+    const youtubeLinkMap = new Map<string, string>(); // trackId -> YouTube Link
+    console.log('Searching YouTube for matching tracks...');
+    let searchCount = 0;
+    
+    for (const trackId of trackIdsArray) {
+      const isrc = isrcMap.get(trackId);
+      // We also need the track name for fallback
+      let trackName = "";
+      for (const album of albumDetails) {
+        const t = album.tracks.items.find(x => x.id === trackId);
+        if (t) { trackName = t.name; break; }
+      }
+
+      try {
+        let ytLink = "";
+        
+        // Strategy 1: Search by ISRC (most accurate)
+        if (isrc) {
+          const isrcResults = await YouTube.search(isrc, { type: "video", limit: 3 });
+          if (isrcResults.length > 0) {
+            ytLink = isrcResults[0].url;
+          }
+        }
+
+        // Strategy 2: Fallback to exact match title search
+        if (!ytLink && trackName) {
+          const fallbackQuery = `OKISO "${trackName}"`;
+          const fallbackResults = await YouTube.search(fallbackQuery, { type: "video", limit: 5 });
+          const validVideos = fallbackResults.filter(v => {
+            const author = v.channel?.name?.toLowerCase() || '';
+            const title = v.title?.toLowerCase() || '';
+            const isCorrectChannel = author.includes('okiso') || author.includes('release - topic');
+            const isExactTitle = title.includes(trackName.toLowerCase());
+            return isCorrectChannel && isExactTitle;
+          });
+          if (validVideos.length > 0) {
+            ytLink = validVideos[0].url;
+          }
+        }
+
+        if (ytLink) {
+          youtubeLinkMap.set(trackId, ytLink);
+        }
+
+        // Delay slightly to prevent rate limiting
+        searchCount++;
+        if (searchCount % 5 === 0) console.log(`Processed ${searchCount}/${trackIdsArray.length} tracks on YouTube...`);
+        await delay(300);
+      } catch (e) {
+        console.error(`YouTube search failed for ${trackName}:`, e);
+      }
+    }
+
     // Map albumDetails to Release format
     const releases: Release[] = albumDetails.map((album) => ({
       id: album.id,
@@ -183,7 +271,7 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
         durationMs: t.duration_ms,
         duration: msToIsoDuration(t.duration_ms),
         trackNumber: t.track_number,
-        link: t.external_urls?.spotify
+        link: youtubeLinkMap.get(t.id) || t.external_urls?.spotify
       })),
       popularity: album.popularity,
       totalTracks: album.tracks.total,
