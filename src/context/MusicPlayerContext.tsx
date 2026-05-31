@@ -11,6 +11,8 @@ interface MusicPlayerContextType {
   isPlaying: boolean
   volume: number
   isLooping: boolean
+  currentTime: number
+  duration: number
   playTrack: (videoId: string, title: string, artist: string, cover?: string, link?: string) => void
   togglePlayPause: () => void
   closePlayer: () => void
@@ -18,6 +20,7 @@ interface MusicPlayerContextType {
   toggleLoop: () => void
   playNext: () => void
   playPrev: () => void
+  seekTo: (time: number) => void
 }
 
 import { staticReleases } from '@/data/releases'
@@ -34,7 +37,7 @@ const globalPlaylist = staticReleases.flatMap(r =>
       title: t.title,
       artist: 'OKISO',
       cover: r.img,
-      link: t.link || r.link
+      link: r.link // ALWAYS use the album's Spotify link instead of the youtube track link
     }
   })
 ).filter(t => t.videoId);
@@ -57,6 +60,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolumeState] = useState(100)
   const [isLooping, setIsLooping] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null)
@@ -136,6 +141,22 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       window.removeEventListener('okiso-track-ended', onEndedListener)
     }
   }, [])
+
+  // Poll for current time
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying && isReady && playerRef.current) {
+      interval = setInterval(() => {
+        try {
+          setCurrentTime(playerRef.current.getCurrentTime() || 0);
+          setDuration(playerRef.current.getDuration() || 0);
+        } catch (e) {
+          // ignore
+        }
+      }, 500);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, isReady]);
 
   const playTrack = useCallback((videoId: string, title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
     setCurrentTrackTitle(title)
@@ -223,6 +244,13 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     setIsLooping(prev => !prev)
   }, [])
 
+  const seekTo = useCallback((time: number) => {
+    if (playerRef.current && isReady) {
+      playerRef.current.seekTo(time, true)
+      setCurrentTime(time)
+    }
+  }, [isReady])
+
   return (
     <MusicPlayerContext.Provider
       value={{
@@ -234,13 +262,16 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         isPlaying,
         volume,
         isLooping,
+        currentTime,
+        duration,
         playTrack,
         togglePlayPause,
         closePlayer,
         setVolume,
         toggleLoop,
         playNext,
-        playPrev
+        playPrev,
+        seekTo
       }}
     >
       {children}
