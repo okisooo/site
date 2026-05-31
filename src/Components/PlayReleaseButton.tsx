@@ -37,11 +37,12 @@ export function PlayReleaseButton({ release, onClose }: { release: Release, onCl
 
   return (
     <button
-      onClick={handlePlay}
-      className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white font-medium px-4 py-2 rounded-md transition-colors shadow-lg"
+      onClick={() => alert("Audio playback is temporarily disabled while we organize the music library. Check back later!")}
+      className="inline-flex items-center gap-2 bg-pink-500/50 cursor-not-allowed text-white font-medium px-4 py-2 rounded-md transition-colors shadow-lg"
+      title="Audio temporarily disabled"
     >
       <Play size={18} fill="currentColor" />
-      {isActive && isPlaying ? 'Pause Audio' : 'Play Audio'}
+      Audio Maintenance
     </button>
   )
 }
