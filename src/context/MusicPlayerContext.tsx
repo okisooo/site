@@ -28,21 +28,23 @@ import { staticReleases } from '@/data/releases'
 // Build a global playlist from all available releases
 const sanitizeFileName = (name: string) => name.replace(/[\/\\?%*:|"<>]/g, '-').trim()
 
-const globalPlaylist = staticReleases.flatMap(r => 
-  (r.tracks || []).map(t => {
-    return {
-      title: t.title,
-      artist: 'OKISO',
-      cover: r.img,
-      link: r.link,
-      audioSrc: `/audio/${sanitizeFileName(t.title)}.mp3`
-    }
-  })
-)
-
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
 
 export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
+  const globalPlaylist = React.useMemo(() => {
+    return staticReleases.flatMap(r => 
+      (r.tracks || []).map(t => {
+        return {
+          title: t.title,
+          artist: 'OKISO',
+          cover: r.img,
+          link: r.link,
+          audioSrc: `/audio/${sanitizeFileName(t.title)}.mp3`
+        }
+      })
+    )
+  }, [])
+
   const [currentTrackTitle, setCurrentTrackTitle] = useState<string | null>(null)
   const [currentTrackArtist, setCurrentTrackArtist] = useState<string | null>(null)
   const [currentTrackCover, setCurrentTrackCover] = useState<string | null>(null)
@@ -63,6 +65,28 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [])
 
+  const playTrack = useCallback((title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
+    setCurrentTrackTitle(title)
+    setCurrentTrackArtist(artist)
+    setCurrentTrackCover(cover || null)
+    setCurrentTrackLink(link || null)
+
+    if (audioRef.current) {
+      if (currentTrackTitle !== title) {
+        audioRef.current.src = `/audio/${sanitizeFileName(title)}.mp3`
+        audioRef.current.play().catch(console.error)
+        setIsPlaying(true)
+      } else {
+        // Toggle play pause
+        if (isPlaying) {
+          audioRef.current.pause()
+        } else {
+          audioRef.current.play().catch(console.error)
+        }
+      }
+    }
+  }, [currentTrackTitle, isPlaying])
+
   const handleTrackEnd = useCallback(() => {
     if (isLooping && audioRef.current) {
       audioRef.current.currentTime = 0
@@ -78,7 +102,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     } else {
       setIsPlaying(false)
     }
-  }, [currentTrackTitle, isLooping, playTrack])
+  }, [currentTrackTitle, isLooping, playTrack, globalPlaylist])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -112,27 +136,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [handleTrackEnd])
 
-  const playTrack = useCallback((title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
-    setCurrentTrackTitle(title)
-    setCurrentTrackArtist(artist)
-    setCurrentTrackCover(cover || null)
-    setCurrentTrackLink(link || null)
 
-    if (audioRef.current) {
-      if (currentTrackTitle !== title) {
-        audioRef.current.src = `/audio/${sanitizeFileName(title)}.mp3`
-        audioRef.current.play().catch(console.error)
-        setIsPlaying(true)
-      } else {
-        // Toggle play pause
-        if (isPlaying) {
-          audioRef.current.pause()
-        } else {
-          audioRef.current.play().catch(console.error)
-        }
-      }
-    }
-  }, [currentTrackTitle, isPlaying])
 
   const togglePlayPause = useCallback(() => {
     if (audioRef.current) {
@@ -159,7 +163,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       const next = globalPlaylist[currentIndex + 1]
       playTrack(next.title, next.artist, next.cover, next.link)
     }
-  }, [currentTrackTitle, playTrack])
+  }, [currentTrackTitle, playTrack, globalPlaylist])
 
   const playPrev = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) {
@@ -171,7 +175,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       const prev = globalPlaylist[currentIndex - 1]
       playTrack(prev.title, prev.artist, prev.cover, prev.link)
     }
-  }, [currentTrackTitle, playTrack])
+  }, [currentTrackTitle, playTrack, globalPlaylist])
 
   const setVolume = useCallback((v: number) => {
     setVolumeState(v)
