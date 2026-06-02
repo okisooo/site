@@ -18,15 +18,30 @@ export function MusicPlayer() {
 
   if (!mounted) return null
 
+  const progressPercent = duration ? (currentTime / duration) * 100 : 0
+  const volumePercent = volume
+
   return (
     <div 
-      className={`fixed bottom-6 left-1/2 -translate-x-1/2 w-[max-content] z-[51] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[51] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         currentTrackId ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-[150%] opacity-0 scale-95 pointer-events-none'
       }`}
     >
-      {/* Dynamic Player Container */}
+      {/* Premium ambient glow that bleeds outside the player container */}
+      {currentTrackCover && (
+        <div 
+          className="absolute inset-0 -m-6 opacity-35 dark:opacity-25 blur-3xl pointer-events-none transition-all duration-500 rounded-full"
+          style={{ 
+            backgroundImage: `url(${currentTrackCover})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+      )}
+
+      {/* Main Player Container */}
       <div 
-        className="relative rounded-full overflow-hidden bg-black/90 dark:bg-[#111]/90 backdrop-blur-2xl border border-white/10 dark:border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex items-center p-2 pr-6 gap-4"
+        className="relative rounded-full bg-zinc-950/95 dark:bg-black/95 border border-white/10 dark:border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex flex-col p-3 px-6 gap-2 w-[340px] md:w-[420px]"
         id="spotify-embed-container-data"
         data-premid-track-title={currentTrackTitle || ''}
         data-premid-track-artist={currentTrackArtist || ''}
@@ -35,137 +50,144 @@ export function MusicPlayer() {
         data-premid-paused={!isPlaying ? 'true' : 'false'}
       >
         
-        {/* Glow effect matching album art */}
-        {currentTrackCover && (
-          <div 
-            className="absolute inset-0 opacity-30 dark:opacity-20 blur-2xl pointer-events-none"
-            style={{ 
-              backgroundImage: `url(${currentTrackCover})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        )}
-
-        <div className="relative z-10 w-full flex flex-col gap-2">
+        {/* Main Controls Row */}
+        <div className="relative z-10 w-full flex items-center justify-between gap-3">
           
-          <div className="flex items-center gap-4 w-full">
-            {/* Album Art (Spinning Image) */}
-            <div className="relative w-12 h-12 shrink-0 rounded-full overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+          {/* Album Cover & Info */}
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {/* Album Art */}
+            <div className="relative w-11 h-11 shrink-0 rounded-full overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10">
               {currentTrackCover ? (
                 <img 
                   src={currentTrackCover} 
                   alt="Cover" 
-                  className={`w-full h-full object-cover transition-transform duration-500 ${isPlaying ? 'animate-[spin_10s_linear_infinite] scale-110' : 'scale-100'}`} 
+                  className={`w-full h-full object-cover transition-transform duration-500 ${isPlaying ? 'animate-[spin_12s_linear_infinite] scale-110' : 'scale-100'}`} 
                 />
               ) : (
                 <div className="w-full h-full bg-black flex items-center justify-center">
-                  <Disc3 className={`w-6 h-6 text-white ${isPlaying ? 'animate-[spin_4s_linear_infinite]' : ''}`} />
+                  <Disc3 className={`w-5 h-5 text-white ${isPlaying ? 'animate-[spin_4s_linear_infinite]' : ''}`} />
                 </div>
               )}
             </div>
 
-          {/* Track Info */}
-          <div className="min-w-[120px] max-w-[200px] flex flex-col justify-center">
-            <h4 className="text-sm font-bold text-white truncate drop-shadow-md">
-              {currentTrackTitle || 'Loading...'}
-            </h4>
-            
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse' : 'bg-white/50'}`} />
-              <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest truncate">
-                {currentTrackArtist || 'OKISO'}
-              </p>
-            </div>
-          </div>
-
-            {/* Controls */}
-            <div className="flex items-center gap-2 pl-2 border-l border-white/10 shrink-0">
-              <button 
-                onClick={playPrev}
-                className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <SkipBack size={16} fill="currentColor" />
-              </button>
-              <button 
-                onClick={togglePlayPause}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] shrink-0"
-              >
-                {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" className="ml-1" />}
-              </button>
-              <button 
-                onClick={playNext}
-                className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <SkipForward size={16} fill="currentColor" />
-              </button>
-            </div>
-
-            {/* Extra Controls (Volume & Loop & Close) */}
-            <div className="flex items-center gap-1 pl-2 border-l border-white/10 shrink-0">
-              <button 
-                onClick={toggleLoop}
-                className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${isLooping ? 'text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]' : 'text-white/40 hover:text-white hover:bg-white/10'}`}
-                title="Toggle Loop"
-              >
-                <Repeat size={14} />
-              </button>
-
-              {/* Volume Slider (Horizontal Popup) */}
-              <div className="group/volume relative flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
-                {volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
-                
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-32 h-10 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center px-4 opacity-0 pointer-events-none group-hover/volume:opacity-100 group-hover/volume:pointer-events-auto transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                  <input 
-                    type="range" 
-                    min="0" max="100" 
-                    value={volume}
-                    onChange={(e) => setVolume(Number(e.target.value))}
-                    className="w-full h-1 bg-white/20 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-[0_0_10px_white]"
-                  />
-                </div>
+            {/* Track Info */}
+            <div className="min-w-0 flex-1">
+              <h4 className="text-xs font-bold text-white truncate drop-shadow-md">
+                {currentTrackTitle || 'Loading...'}
+              </h4>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className={`w-1 h-1 rounded-full ${isPlaying ? 'bg-pink-500 shadow-[0_0_6px_#ec4899] animate-pulse' : 'bg-white/40'}`} />
+                <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest truncate">
+                  {currentTrackArtist || 'OKISO'}
+                </p>
               </div>
-
-              <button 
-                onClick={closePlayer}
-                className="flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors ml-1"
-                title="Close Player"
-              >
-                <X size={16} />
-              </button>
-              {currentTrackLink && (
-                <a 
-                  href={currentTrackLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-8 h-8 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors"
-                  title="Open in Spotify"
-                >
-                  <ExternalLink size={14} />
-                </a>
-              )}
             </div>
           </div>
 
-          {/* Seek Bar */}
-          <div className="w-full flex items-center gap-2 px-1">
-            <span className="text-[9px] text-white/50 font-mono w-6 text-right">
-              {Math.floor(currentTime / 60)}:{(Math.floor(currentTime % 60)).toString().padStart(2, '0')}
-            </span>
-            <input 
-              type="range"
-              min={0}
-              max={duration || 100}
-              value={currentTime}
-              onChange={(e) => seekTo(Number(e.target.value))}
-              className="flex-1 h-1 bg-white/20 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full hover:[&::-webkit-slider-thumb]:scale-125 transition-all"
-            />
-            <span className="text-[9px] text-white/50 font-mono w-6">
-              {Math.floor(duration / 60)}:{(Math.floor(duration % 60)).toString().padStart(2, '0')}
-            </span>
+          {/* Center Playback Controls */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button 
+              onClick={playPrev}
+              className="flex items-center justify-center w-7 h-7 rounded-full text-white/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all"
+              title="Previous Track"
+            >
+              <SkipBack size={15} fill="currentColor" />
+            </button>
+            <button 
+              onClick={togglePlayPause}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(255,255,255,0.35)] shrink-0"
+              title={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? <Pause size={15} fill="currentColor" /> : <Play size={15} fill="currentColor" className="ml-0.5" />}
+            </button>
+            <button 
+              onClick={playNext}
+              className="flex items-center justify-center w-7 h-7 rounded-full text-white/50 hover:text-white hover:bg-white/10 active:scale-90 transition-all"
+              title="Next Track"
+            >
+              <SkipForward size={15} fill="currentColor" />
+            </button>
+          </div>
+
+          {/* Right Action Icons */}
+          <div className="flex items-center gap-1.5 shrink-0 pl-1 border-l border-white/10">
+            {/* Loop Toggle */}
+            <button 
+              onClick={toggleLoop}
+              className={`flex items-center justify-center w-7 h-7 rounded-full transition-all ${isLooping ? 'text-pink-500 drop-shadow-[0_0_6px_#ec4899]' : 'text-white/45 hover:text-white hover:bg-white/10'}`}
+              title="Toggle Loop"
+            >
+              <Repeat size={13} />
+            </button>
+
+            {/* Volume Inline Expand (Prevents clipping entirely) */}
+            <div className="group/volume flex items-center gap-1 transition-all duration-300">
+              <button 
+                onClick={() => setVolume(volume === 0 ? 100 : 0)}
+                className="flex items-center justify-center w-7 h-7 rounded-full text-white/45 hover:text-white hover:bg-white/10 transition-colors"
+                title={volume === 0 ? "Unmute" : "Mute"}
+              >
+                {volume === 0 ? <VolumeX size={13} /> : <Volume2 size={13} />}
+              </button>
+              
+              <input 
+                type="range" 
+                min="0" max="100" 
+                value={volume}
+                onChange={(e) => setVolume(Number(e.target.value))}
+                style={{
+                  background: `linear-gradient(to right, #ffffff ${volumePercent}%, rgba(255,255,255,0.15) ${volumePercent}%)`
+                }}
+                className="w-0 opacity-0 group-hover/volume:w-16 group-hover/volume:opacity-100 transition-all duration-300 h-[3px] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+              />
+            </div>
+
+            {/* External Spotify link */}
+            {currentTrackLink && (
+              <a 
+                href={currentTrackLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-7 h-7 rounded-full text-white/45 hover:text-white hover:bg-white/10 transition-colors"
+                title="Open Album"
+              >
+                <ExternalLink size={13} />
+              </a>
+            )}
+
+            {/* Close Button */}
+            <button 
+              onClick={closePlayer}
+              className="flex items-center justify-center w-7 h-7 rounded-full text-white/45 hover:text-white hover:bg-white/10 transition-colors"
+              title="Close Player"
+            >
+              <X size={13} />
+            </button>
           </div>
 
         </div>
+
+        {/* Dynamic Gradient Seek Bar */}
+        <div className="w-full flex items-center gap-2.5 px-0.5 mt-1 relative z-10">
+          <span className="text-[8px] text-white/40 font-mono w-6 text-right select-none">
+            {Math.floor(currentTime / 60)}:{(Math.floor(currentTime % 60)).toString().padStart(2, '0')}
+          </span>
+          <input 
+            type="range"
+            min={0}
+            max={duration || 100}
+            value={currentTime}
+            onChange={(e) => seekTo(Number(e.target.value))}
+            style={{
+              background: `linear-gradient(to right, #ec4899 ${progressPercent}%, rgba(255,255,255,0.15) ${progressPercent}%)`
+            }}
+            className="flex-1 h-[3px] rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full hover:[&::-webkit-slider-thumb]:scale-125 transition-all duration-150 [&::-webkit-slider-thumb]:shadow-[0_0_8px_#ec4899]"
+          />
+          <span className="text-[8px] text-white/40 font-mono w-6 select-none">
+            {Math.floor(duration / 60)}:{(Math.floor(duration % 60)).toString().padStart(2, '0')}
+          </span>
+        </div>
+
       </div>
     </div>
   )
