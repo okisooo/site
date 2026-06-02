@@ -23,13 +23,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed so we can commit back
+          fetch-depth: 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install dependencies
         run: npm ci
@@ -64,9 +72,19 @@ jobs:
       - name: Copy CNAME for GitHub Pages
         run: cp public/CNAME out/CNAME
 
+      # Commit data update if any
+      - name: Commit data update
+        id: commit_data
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/data/releases.ts src/data/highlights.ts
+          # Proceed even if no changes
+          git commit -m "chore(data): auto-update spotify releases [auto]" || echo "no_changes=true" >> $GITHUB_OUTPUT
+
       # Push commit only after a successful build so a failing build doesn't pollute main
       - name: Push data update commit
-        if: steps.commit_data.outputs.no_changes == 'false'
+        if: steps.commit_data.outputs.no_changes != 'true'
         run: |
           git push
 
