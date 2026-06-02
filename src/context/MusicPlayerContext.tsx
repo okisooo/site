@@ -13,7 +13,7 @@ interface MusicPlayerContextType {
   isLooping: boolean
   currentTime: number
   duration: number
-  playTrack: (videoId: string, title: string, artist: string, cover?: string, link?: string) => void
+  playTrack: (title: string, artist: string, cover?: string, link?: string) => void
   togglePlayPause: () => void
   closePlayer: () => void
   setVolume: (v: number) => void
@@ -26,33 +26,23 @@ interface MusicPlayerContextType {
 import { staticReleases } from '@/data/releases'
 
 // Build a global playlist from all available releases
+const sanitizeFileName = (name: string) => name.replace(/[\/\\?%*:|"<>]/g, '-').trim()
+
 const globalPlaylist = staticReleases.flatMap(r => 
   (r.tracks || []).map(t => {
-    let videoId = '';
-    if (t.link?.includes('v=')) videoId = t.link.split('v=')[1].split('&')[0];
-    else if (t.link?.includes('youtu.be/')) videoId = t.link.split('youtu.be/')[1].split('?')[0];
-    
     return {
-      videoId,
       title: t.title,
       artist: 'OKISO',
       cover: r.img,
-      link: r.link // ALWAYS use the album's Spotify link instead of the youtube track link
+      link: r.link,
+      audioSrc: `/audio/${sanitizeFileName(t.title)}.mp3`
     }
   })
-).filter(t => t.videoId);
+)
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
 
-declare global {
-  interface Window {
-    onYouTubeIframeAPIReady: () => void
-    YT: any
-  }
-}
-
 export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
-  const [currentTrackId, setCurrentTrackId] = useState<string | null>(null)
   const [currentTrackTitle, setCurrentTrackTitle] = useState<string | null>(null)
   const [currentTrackArtist, setCurrentTrackArtist] = useState<string | null>(null)
   const [currentTrackCover, setCurrentTrackCover] = useState<string | null>(null)
@@ -63,193 +53,146 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const playerRef = useRef<any>(null)
-  const [isReady, setIsReady] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Auto-advance logic
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio()
+      audioRef.current.volume = volume / 100
+    }
+  }, [])
+
   const handleTrackEnd = useCallback(() => {
-    if (isLooping && playerRef.current) {
-      playerRef.current.seekTo(0)
-      playerRef.current.playVideo()
+    if (isLooping && audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(console.error)
       return
     }
     
     // Play Next
-    const currentIndex = globalPlaylist.findIndex(t => t.videoId === currentTrackId)
+    const currentIndex = globalPlaylist.findIndex(t => t.title === currentTrackTitle)
     if (currentIndex >= 0 && currentIndex < globalPlaylist.length - 1) {
       const next = globalPlaylist[currentIndex + 1]
-      playTrack(next.videoId, next.title, next.artist, next.cover, next.link)
+      playTrack(next.title, next.artist, next.cover, next.link)
     } else {
-      // Reached the end
       setIsPlaying(false)
     }
-  }, [currentTrackId, isLooping])
+  }, [currentTrackTitle, isLooping, playTrack])
 
   useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://www.youtube.com/iframe_api"
-    script.async = true
-    document.body.appendChild(script)
+    const audio = audioRef.current
+    if (!audio) return
 
-    window.onYouTubeIframeAPIReady = () => {
-      const element = document.getElementById('youtube-embed-container')
-      if (!element) return
-
-      playerRef.current = new window.YT.Player('youtube-embed-container', {
-        height: '0',
-        width: '0',
-        videoId: '',
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          rel: 0,
-          modestbranding: 1
-        },
-        events: {
-          onReady: () => {
-            setIsReady(true)
-          },
-          onStateChange: (event: any) => {
-            // YT.PlayerState.PLAYING is 1, PAUSED is 2, ENDED is 0
-            if (event.data === 1) {
-              setIsPlaying(true)
-            } else if (event.data === 2) {
-              setIsPlaying(false)
-            } else if (event.data === 0) {
-              // We must use a timeout to let state settle before calling next
-              setTimeout(() => {
-                const endedTrackId = playerRef.current?.getVideoData()?.video_id
-                // Use DOM event to trigger the callback so we get fresh state
-                window.dispatchEvent(new CustomEvent('okiso-track-ended'))
-              }, 100)
-            }
-          }
-        }
-      })
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime)
+    const handleDurationChange = () => setDuration(audio.duration)
+    const handleEnded = () => handleTrackEnd()
+    const handlePlay = () => setIsPlaying(true)
+    const handlePause = () => setIsPlaying(false)
+    const handleError = () => {
+      console.error("Audio playback error. The local file might be missing.");
+      setIsPlaying(false);
+      // Auto-skip on error could go here, but avoiding loops if everything fails.
     }
 
-    const onEndedListener = () => handleTrackEnd()
-    window.addEventListener('okiso-track-ended', onEndedListener)
+    audio.addEventListener('timeupdate', handleTimeUpdate)
+    audio.addEventListener('durationchange', handleDurationChange)
+    audio.addEventListener('ended', handleEnded)
+    audio.addEventListener('play', handlePlay)
+    audio.addEventListener('pause', handlePause)
+    audio.addEventListener('error', handleError)
 
     return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script)
-      }
-      window.removeEventListener('okiso-track-ended', onEndedListener)
+      audio.removeEventListener('timeupdate', handleTimeUpdate)
+      audio.removeEventListener('durationchange', handleDurationChange)
+      audio.removeEventListener('ended', handleEnded)
+      audio.removeEventListener('play', handlePlay)
+      audio.removeEventListener('pause', handlePause)
+      audio.removeEventListener('error', handleError)
     }
-  }, [])
+  }, [handleTrackEnd])
 
-  // Poll for current time
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying && isReady && playerRef.current) {
-      interval = setInterval(() => {
-        try {
-          setCurrentTime(playerRef.current.getCurrentTime() || 0);
-          setDuration(playerRef.current.getDuration() || 0);
-        } catch (e) {
-          // ignore
-        }
-      }, 500);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, isReady]);
-
-  const playTrack = useCallback((videoId: string, title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
+  const playTrack = useCallback((title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
     setCurrentTrackTitle(title)
     setCurrentTrackArtist(artist)
     setCurrentTrackCover(cover || null)
     setCurrentTrackLink(link || null)
-    setCurrentTrackId(videoId)
 
-    if (playerRef.current && isReady) {
-      if (currentTrackId !== videoId) {
-        playerRef.current.loadVideoById(videoId)
+    if (audioRef.current) {
+      if (currentTrackTitle !== title) {
+        audioRef.current.src = `/audio/${sanitizeFileName(title)}.mp3`
+        audioRef.current.play().catch(console.error)
         setIsPlaying(true)
       } else {
         // Toggle play pause
-        const state = playerRef.current.getPlayerState()
-        if (state === 1) {
-          playerRef.current.pauseVideo()
+        if (isPlaying) {
+          audioRef.current.pause()
         } else {
-          playerRef.current.playVideo()
+          audioRef.current.play().catch(console.error)
         }
       }
     }
-  }, [currentTrackId, isReady])
-
-  // Effect to automatically play if a track is selected but the player just became ready
-  useEffect(() => {
-    if (isReady && currentTrackId && playerRef.current) {
-      const state = playerRef.current.getPlayerState()
-      // If it's unstarted (-1) or ended (0) or paused (2), and we have a track ID, we should load it
-      if (state !== 1) {
-        playerRef.current.loadVideoById(currentTrackId)
-        setIsPlaying(true)
-      }
-    }
-  }, [isReady, currentTrackId])
+  }, [currentTrackTitle, isPlaying])
 
   const togglePlayPause = useCallback(() => {
-    if (playerRef.current && isReady) {
-      const state = playerRef.current.getPlayerState()
-      if (state === 1) {
-        playerRef.current.pauseVideo()
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
       } else {
-        playerRef.current.playVideo()
+        audioRef.current.play().catch(console.error)
       }
     }
-  }, [isReady])
+  }, [isPlaying])
 
   const closePlayer = useCallback(() => {
-    if (playerRef.current && isReady) {
-      playerRef.current.stopVideo()
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
     }
     setIsPlaying(false)
-    setCurrentTrackId(null)
+    setCurrentTrackTitle(null)
   }, [])
 
   const playNext = useCallback(() => {
-    const currentIndex = globalPlaylist.findIndex(t => t.videoId === currentTrackId)
+    const currentIndex = globalPlaylist.findIndex(t => t.title === currentTrackTitle)
     if (currentIndex >= 0 && currentIndex < globalPlaylist.length - 1) {
       const next = globalPlaylist[currentIndex + 1]
-      playTrack(next.videoId, next.title, next.artist, next.cover, next.link)
+      playTrack(next.title, next.artist, next.cover, next.link)
     }
-  }, [currentTrackId, playTrack])
+  }, [currentTrackTitle, playTrack])
 
   const playPrev = useCallback(() => {
-    if (playerRef.current && playerRef.current.getCurrentTime() > 3) {
-      // If played for more than 3s, restart track
-      playerRef.current.seekTo(0)
+    if (audioRef.current && audioRef.current.currentTime > 3) {
+      audioRef.current.currentTime = 0
       return
     }
-    const currentIndex = globalPlaylist.findIndex(t => t.videoId === currentTrackId)
+    const currentIndex = globalPlaylist.findIndex(t => t.title === currentTrackTitle)
     if (currentIndex > 0) {
       const prev = globalPlaylist[currentIndex - 1]
-      playTrack(prev.videoId, prev.title, prev.artist, prev.cover, prev.link)
+      playTrack(prev.title, prev.artist, prev.cover, prev.link)
     }
-  }, [currentTrackId, playTrack])
+  }, [currentTrackTitle, playTrack])
 
   const setVolume = useCallback((v: number) => {
     setVolumeState(v)
-    if (playerRef.current && isReady) {
-      playerRef.current.setVolume(v)
+    if (audioRef.current) {
+      audioRef.current.volume = v / 100
     }
-  }, [isReady])
+  }, [])
 
   const toggleLoop = useCallback(() => {
     setIsLooping(prev => !prev)
   }, [])
 
   const seekTo = useCallback((time: number) => {
-    if (playerRef.current && isReady) {
-      playerRef.current.seekTo(time, true)
+    if (audioRef.current) {
+      audioRef.current.currentTime = time
       setCurrentTime(time)
     }
-  }, [isReady])
+  }, [])
+
+  // Alias currentTrackId to title to avoid breaking existing components
+  const currentTrackId = currentTrackTitle;
 
   return (
     <MusicPlayerContext.Provider
@@ -275,8 +218,6 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       }}
     >
       {children}
-      {/* Invisible YouTube Player Container - Removed 'hidden' so it correctly initializes */}
-      <div id="youtube-embed-container" className="pointer-events-none opacity-0 absolute w-0 h-0"></div>
     </MusicPlayerContext.Provider>
   )
 }
