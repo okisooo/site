@@ -1,79 +1,101 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 export function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // Only show after initial mouse move
-
-  // Smooth springs for the cursor
-  const cursorX = useSpring(mousePosition.x, { stiffness: 150, damping: 15, mass: 0.1 });
-  const cursorY = useSpring(mousePosition.y, { stiffness: 150, damping: 15, mass: 0.1 });
+  const [isHidden, setIsHidden] = useState(true); // Hidden until mouse moves
+  const [isTextHover, setIsTextHover] = useState(false);
 
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      if (!isVisible) setIsVisible(true);
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      cursorX.set(e.clientX - 16); // Center the 32x32 cursor (16px offset)
-      cursorY.set(e.clientY - 16);
+    const cursorEl = cursorRef.current;
+    if (!cursorEl) return;
+
+    const updatePosition = (e: MouseEvent) => {
+      // Show cursor on first mouse move
+      if (isHidden) setIsHidden(false);
+      
+      // Hardware-accelerated 0-lag position updates
+      cursorEl.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    };
+
+    const handleMouseLeave = () => {
+      setIsHidden(true);
+    };
+
+    const handleMouseEnter = () => {
+      setIsHidden(false);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Expand cursor when hovering over clickable elements
-      if (
-        target.tagName.toLowerCase() === "a" ||
-        target.tagName.toLowerCase() === "button" ||
-        target.closest("a") ||
-        target.closest("button") ||
-        target.classList.contains("clickable") ||
-        target.style.cursor === "pointer"
-      ) {
-        setIsHovering(true);
-      } else {
+      if (!target) return;
+
+      // Detect if user is hovering over text fields/inputs
+      const isTextInput =
+        target.tagName.toLowerCase() === "input" ||
+        target.tagName.toLowerCase() === "textarea" ||
+        target.closest("[contenteditable='true']");
+
+      if (isTextInput) {
+        setIsTextHover(true);
         setIsHovering(false);
+      } else {
+        setIsTextHover(false);
+        // Detect clickables (links, buttons, styled clickables)
+        if (
+          target.tagName.toLowerCase() === "a" ||
+          target.tagName.toLowerCase() === "button" ||
+          target.closest("a") ||
+          target.closest("button") ||
+          target.classList.contains("clickable") ||
+          target.classList.contains("cursor-pointer") ||
+          target.style.cursor === "pointer"
+        ) {
+          setIsHovering(true);
+        } else {
+          setIsHovering(false);
+        }
       }
     };
 
-    window.addEventListener("mousemove", updateMousePosition);
+    window.addEventListener("mousemove", updatePosition, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("mouseenter", handleMouseEnter);
     window.addEventListener("mouseover", handleMouseOver);
 
     return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
+      window.removeEventListener("mousemove", updatePosition);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [cursorX, cursorY, isVisible]);
+  }, [isHidden]);
 
-  // Hide entirely on touch devices
+  // Hide on mobile/touch devices
   if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
     return null;
   }
 
-  if (!isVisible) return null;
-
   return (
-    <>
-      {/* The glowing trailing circle (following pointer) */}
-      <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border"
+    <div
+      ref={cursorRef}
+      className="pointer-events-none fixed top-0 left-0 z-[99999] w-8 h-8 transition-opacity duration-200"
+      style={{
+        transform: "translate3d(-100px, -100px, 0)", // offscreen initially
+        opacity: isHidden || isTextHover ? 0 : 1,
+        willChange: "transform",
+      }}
+    >
+      <img
+        src={isHovering ? "/cursors/link.gif" : "/cursors/pointer.gif"}
+        alt=""
+        className="w-full h-full object-contain"
         style={{
-          x: cursorX,
-          y: cursorY,
-          width: 32,
-          height: 32,
+          imageRendering: "pixelated", // Keep the cursor pixel art crisp
         }}
-        animate={{
-          scale: isHovering ? 1.6 : 1,
-          borderColor: isHovering ? "#FF7EB3" : "#7CC8F8",
-          backgroundColor: isHovering ? "rgba(255, 126, 179, 0.15)" : "rgba(124, 200, 248, 0.05)",
-          boxShadow: isHovering 
-            ? "0 0 20px rgba(255, 126, 179, 0.5), inset 0 0 8px rgba(255, 126, 179, 0.2)" 
-            : "0 0 12px rgba(124, 200, 248, 0.3), inset 0 0 6px rgba(124, 200, 248, 0.1)",
-        }}
-        transition={{ type: "spring", stiffness: 200, damping: 20, mass: 0.2 }}
       />
-    </>
+    </div>
   );
 }
