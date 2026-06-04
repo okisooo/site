@@ -123,12 +123,16 @@
   }
 
   @media (pointer: fine) {
-    body, html {
+    * {
       cursor: url('/cursors/pointer.gif') 0 0, url('/cursors/pointer.cur') 0 0, auto;
     }
 
     a, button, [role="button"], .clickable, select, input[type="submit"], input[type="button"], .cursor-pointer {
       cursor: url('/cursors/link.gif') 0 0, url('/cursors/link.cur') 0 0, pointer !important;
+    }
+
+    input, textarea, [contenteditable="true"] {
+      cursor: text;
     }
   }
 }
