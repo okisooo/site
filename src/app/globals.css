@@ -123,8 +123,12 @@
   }
 
   @media (pointer: fine) {
-    *, a, button, input {
-      cursor: none !important;
+    body, html {
+      cursor: url('/cursors/pointer.gif') 0 0, auto;
+    }
+
+    a, button, [role="button"], .clickable, select, input[type="submit"], input[type="button"] {
+      cursor: url('/cursors/link.gif') 0 0, pointer !important;
     }
   }
 }

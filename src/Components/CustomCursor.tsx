@@ -55,35 +55,24 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* The glowing trailing circle */}
+      {/* The glowing trailing circle (following pointer) */}
       <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full mix-blend-difference"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border"
         style={{
           x: cursorX,
           y: cursorY,
           width: 32,
           height: 32,
-          backgroundColor: "white",
         }}
         animate={{
-          opacity: isHovering ? 0.2 : 0.8,
-          scale: isHovering ? 2.5 : 1,
+          scale: isHovering ? 1.6 : 1,
+          borderColor: isHovering ? "#FF7EB3" : "#7CC8F8",
+          backgroundColor: isHovering ? "rgba(255, 126, 179, 0.15)" : "rgba(124, 200, 248, 0.05)",
+          boxShadow: isHovering 
+            ? "0 0 20px rgba(255, 126, 179, 0.5), inset 0 0 8px rgba(255, 126, 179, 0.2)" 
+            : "0 0 12px rgba(124, 200, 248, 0.3), inset 0 0 6px rgba(124, 200, 248, 0.1)",
         }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      />
-      {/* The exact dot point */}
-      <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[10000] rounded-full bg-white mix-blend-difference"
-        style={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
-          width: 8,
-          height: 8,
-        }}
-        animate={{
-          opacity: isHovering ? 0 : 1,
-        }}
-        transition={{ duration: 0.2 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20, mass: 0.2 }}
       />
     </>
   );
