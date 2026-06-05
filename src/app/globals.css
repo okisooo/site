@@ -123,8 +123,21 @@
   }
 
   @media (pointer: fine) {
-    *:not(input):not(textarea):not([contenteditable="true"]) {
-      cursor: none !important;
+    :root {
+      --cursor-pointer: url('/cursors/frames/pointer_0.png') 0 0, auto;
+      --cursor-link: url('/cursors/frames/link_0.png') 0 0, pointer;
+    }
+
+    * {
+      cursor: var(--cursor-pointer);
+    }
+
+    a, button, [role="button"], .clickable, select, input[type="submit"], input[type="button"], .cursor-pointer {
+      cursor: var(--cursor-link) !important;
+    }
+
+    input, textarea, [contenteditable="true"] {
+      cursor: text;
     }
   }
 }
