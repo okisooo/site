@@ -9,17 +9,29 @@ export function CustomCursor() {
     const cursorEl = cursorRef.current;
     if (!cursorEl) return;
 
+    let mouseX = -100;
+    let mouseY = -100;
     let isHidden = true;
     let isText = false;
     let isHovering = false;
+    let rafId: number;
 
-    // Track mouse position and visibility directly in DOM
+    // Track mouse coordinates passively (no layout thrashing)
     const updatePosition = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
       if (isHidden) {
         isHidden = false;
         cursorEl.style.opacity = isText ? "0" : "1";
       }
-      cursorEl.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    };
+
+    // Update position precisely matched to monitor refresh rate via RequestAnimationFrame
+    // This protects performance on high-polling gaming mice (1000Hz+) and low-end devices
+    const tick = () => {
+      cursorEl.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      rafId = requestAnimationFrame(tick);
     };
 
     const handleMouseLeave = () => {
@@ -36,7 +48,7 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       if (!target) return;
 
-      // Check for text inputs
+      // Detect if user is hovering over text fields/inputs
       const isTextInput =
         target.tagName.toLowerCase() === "input" ||
         target.tagName.toLowerCase() === "textarea" ||
@@ -49,7 +61,7 @@ export function CustomCursor() {
         isText = false;
         if (!isHidden) cursorEl.style.opacity = "1";
 
-        // Check for clickables
+        // Detect clickables
         const isClickable =
           target.tagName.toLowerCase() === "a" ||
           target.tagName.toLowerCase() === "button" ||
@@ -73,20 +85,25 @@ export function CustomCursor() {
       }
     };
 
+    // Use passive event listeners for scrolling and movement performance
     window.addEventListener("mousemove", updatePosition, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
-    window.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    document.addEventListener("mouseenter", handleMouseEnter, { passive: true });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
+
+    // Start the animation frame update loop
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("mousemove", updatePosition);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("mouseover", handleMouseOver);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
-  // Exclude touch devices
+  // Exclude touch devices entirely
   if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
     return null;
   }
@@ -99,6 +116,9 @@ export function CustomCursor() {
         transform: "translate3d(-100px, -100px, 0)", // offscreen initially
         opacity: 0,
         willChange: "transform",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        transformStyle: "preserve-3d",
       }}
     >
       {/* Standard cursor */}
