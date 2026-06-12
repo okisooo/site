@@ -25,8 +25,8 @@ const quicksand = Quicksand({
 
 export const metadata = {
   metadataBase: new URL('https://okiso.net'),
-  title: "OKISO ✦ Official Site",
-  description: "OKISO — Virtual artist, VOCALOID producer & VTuber. Explore music, releases, art, and more!",
+  title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
+  description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
   keywords: [
     "OKISO",
     "okiso",
@@ -44,8 +44,8 @@ export const metadata = {
     canonical: 'https://okiso.net'
   },
   openGraph: {
-    title: "OKISO ✦ Official Site",
-    description: "Virtual artist, VOCALOID producer & VTuber ♪",
+    title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
+    description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
     url: "https://okiso.net",
     images: [
       {
@@ -58,8 +58,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OKISO ✦ Official Site",
-    description: "Virtual artist, VOCALOID producer & VTuber — music, art & vibes ♪",
+    title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
+    description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
     images: ["https://okiso.net/easter_egg.jpg"]
   }
 };

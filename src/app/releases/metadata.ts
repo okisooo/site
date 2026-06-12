@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OKISO | FANTASIA & ETUDE | Latest Release",
+  title: "OKISO Music Discography | VOCALOID Releases Archive",
   description:
-    "FANTASIA & ETUDE - OKISO's latest album featuring a collaboration with Miku and GUMI. Listen to OKISO's music catalog.",
+    "Browse the complete music discography and releases archive of VOCALOID producer and VTuber OKISO. Explore albums, singles, tracklists, and Spotify links.",
   keywords: [
     "OKISO music",
     "FANTASIA & ETUDE album",

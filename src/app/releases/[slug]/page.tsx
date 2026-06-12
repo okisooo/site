@@ -33,13 +33,23 @@ export async function generateMetadata(props: any) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
     const url = `${siteUrl}/releases/${release.slug}`;
 
+    // Hyper-optimized SEO title (around 50-60 characters for SERP space)
+    const seoTitle = `OKISO — ${release.title} | VOCALOID Producer & VTuber`;
+    
+    // Hyper-optimized SEO description (around 120-160 characters for high CTR)
+    const baseDesc = release.description || `Official release page for ${release.title} by OKISO.`;
+    const seoDescription = baseDesc.length > 50 
+        ? baseDesc 
+        : `Listen to "${release.title}" (${release.year}) by virtual artist & VOCALOID producer OKISO. Stream on Spotify, watch the MV, and explore tracklists.`;
+
     return {
-        title: `OKISO — ${release.title}`,
-        description: release.description || `Official release page for ${release.title} by OKISO.`,
+        title: seoTitle,
+        description: seoDescription,
         openGraph: {
-            title: `OKISO — ${release.title}`,
-            description: release.description || `Official release page for ${release.title} by OKISO.`,
+            title: seoTitle,
+            description: seoDescription,
             url,
+            siteName: "OKISO",
             images: [release.img],
             type: release.albumType === 'album' ? 'music.album' : 'music.song',
             other: {
@@ -49,8 +59,8 @@ export async function generateMetadata(props: any) {
         },
         twitter: {
             card: "summary_large_image",
-            title: `OKISO — ${release.title}`,
-            description: release.description || `Official release page for ${release.title} by OKISO.`,
+            title: seoTitle,
+            description: seoDescription,
             images: [release.img],
         },
         alternates: {

@@ -2,9 +2,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OKISO | Upcoming Releases",
+  title: "OKISO | Upcoming Music Releases & Announcements",
   description:
-    "Stay updated on OKISO's upcoming music releases. Check back soon for new announcements and previews.",
+    "Stay updated on upcoming music releases, future announcements, and project teasers from virtual artist and VOCALOID producer OKISO.",
   keywords: [
     "OKISO upcoming",
     "OKISO new music",
