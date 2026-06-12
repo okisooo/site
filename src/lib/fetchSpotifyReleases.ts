@@ -210,7 +210,7 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       if (fs.existsSync(releasesFilePath)) {
         const fileContent = fs.readFileSync(releasesFilePath, 'utf8');
         // Extract the JSON array from the TypeScript file
-        const jsonMatch = fileContent.match(/export const releases: Release\[\] = (\[[\s\S]*\]);/);
+        const jsonMatch = fileContent.match(/export const staticReleases: Release\[\] = (\[[\s\S]*\]);/);
         if (jsonMatch && jsonMatch[1]) {
           existingReleases = JSON.parse(jsonMatch[1]);
         }
@@ -220,16 +220,15 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
     }
     
     // Build cache map: trackId -> YouTube Link
-    // TEMPORARILY DISABLED: We are deliberately wiping the cache so the bulletproof algorithm can fetch 100% accurate links.
     const cachedYoutubeLinks = new Map<string, string>();
-    // existingReleases.forEach(r => {
-    //   r.tracks?.forEach(t => {
-    //     if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
-    //       cachedYoutubeLinks.set(t.id, t.link);
-    //     }
-    //   });
-    // });
-    console.log(`Cache cleared for bulletproof re-fetch.`);
+    existingReleases.forEach(r => {
+      r.tracks?.forEach(t => {
+        if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
+          cachedYoutubeLinks.set(t.id, t.link);
+        }
+      });
+    });
+    console.log(`Loaded ${cachedYoutubeLinks.size} YouTube links from cache.`);
     // ---------------------
 
     // Step 2.6: Search YouTube Music for each track
