@@ -23,6 +23,39 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
 import { useTwitchLive } from '@/hooks/useTwitchLive';
 import { FeaturedVideo, useFeaturedVideos } from '@/hooks/useFeaturedVideos';
 
+const siteUrl = 'https://okiso.net';
+
+const musicGroupLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "OKISO",
+  "alternateName": "オキソ",
+  "url": siteUrl,
+  "image": "https://okiso.net/easter_egg.jpg",
+  "description": "OKISO is a VOCALOID Producer, VTuber and Artist creating original electronic and Japanese styled VOCALOID music.",
+  "sameAs": [
+    "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
+    "https://www.instagram.com/okisooo_/",
+    "https://github.com/okisooo",
+    "https://x.com/okisooo_",
+    "https://www.youtube.com/@okiso7",
+    "https://discord.gg/okiso",
+    "https://okiso.bandcamp.com/"
+  ]
+};
+
+const webSiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": siteUrl,
+  "name": "OKISO",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteUrl}/search?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
+
 export default function Home() {
   const { isLive } = useTwitchLive('okiso');
   const [showFeaturedWhileLive, setShowFeaturedWhileLive] = useState(false);
@@ -30,6 +63,7 @@ export default function Home() {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [loadVRM, setLoadVRM] = useState(false);
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -58,6 +92,14 @@ export default function Home() {
     }
   }, [videos, activeVideo]);
 
+  useEffect(() => {
+    // Defer loading of heavy 15MB 3D model to optimize page load performance & LCP
+    const timer = setTimeout(() => {
+      setLoadVRM(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const twitchParent = useMemo(() => {
     if (typeof window === 'undefined') return 'localhost';
     return window.location.hostname || 'localhost';
@@ -65,6 +107,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500 relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [musicGroupLd, webSiteLd] }) }}
+      />
 
       {/* ─── MASSIVE HERO ─── */}
       <section 
@@ -158,8 +204,18 @@ export default function Home() {
               {/* Massive ambient glow behind model */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-ba-pink/20 blur-[120px] rounded-full pointer-events-none mix-blend-overlay dark:mix-blend-lighten" />
 
-              <div className="w-full h-full relative z-10 pointer-events-auto cursor-grab active:cursor-grabbing">
-                <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
+              <div className="w-full h-full relative z-10 pointer-events-auto cursor-grab active:cursor-grabbing flex items-center justify-center">
+                {loadVRM ? (
+                  <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
+                ) : (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img 
+                      src="/hero_character.png" 
+                      alt="OKISO Character Preview" 
+                      className="max-h-[80%] w-auto object-contain select-none pointer-events-none transition-opacity duration-500 opacity-90"
+                    />
+                  </div>
+                )}
               </div>
               {/* Tag removed by user request for cleaner layout */}
             </motion.div>

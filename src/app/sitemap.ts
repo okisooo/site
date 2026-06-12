@@ -6,12 +6,14 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://okiso.net';
 
-  const releases = staticReleases.map((release) => ({
-    url: `${siteUrl}/releases/${release.slug}`,
-    lastModified: new Date(release.releaseDate),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }));
+  const releases = staticReleases
+    .filter((release) => release.slug)
+    .map((release) => ({
+      url: `${siteUrl}/releases/${release.slug}`,
+      lastModified: new Date(release.releaseDate),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    }));
 
   return [
     {

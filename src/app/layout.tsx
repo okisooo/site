@@ -1,6 +1,5 @@
 import { Nunito, Quicksand, Geist } from "next/font/google";
 import "./globals.css";
-import { staticReleases } from '@/data/releases';
 import { ThemeProvider } from "@/Components/ThemeProvider";
 import { ThemeToggle } from "@/Components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -70,68 +69,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteUrl = 'https://okiso.net';
-
-  const musicGroupLd = {
-    "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "OKISO",
-    "alternateName": "オキソ",
-    "url": siteUrl,
-    "image": "https://okiso.net/easter_egg.jpg",
-    "description": "OKISO is a VOCALOID Producer, VTuber and Artist creating original electronic and Japanese styled VOCALOID music.",
-    "sameAs": [
-      "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
-      "https://www.instagram.com/okisooo_/",
-      "https://github.com/okisooo",
-      "https://x.com/okisooo_",
-      "https://www.youtube.com/@okiso7",
-      "https://discord.gg/okiso",
-      "https://okiso.bandcamp.com/"
-    ]
-  };
-
-  const webSiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": siteUrl,
-    "name": "OKISO",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${siteUrl}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string"
-    }
-  };
-
-  const itemListLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "itemListElement": staticReleases.map((r, i) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "url": `${siteUrl}/releases/${r.slug || encodeURIComponent(r.title.toLowerCase().replace(/\s+/g, '-'))}`
-    }))
-  };
-
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": siteUrl
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Releases",
-        "item": `${siteUrl}/releases`
-      }
-    ]
-  };
-
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <head>
@@ -144,18 +81,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#7CC8F8" />
-
-        {/* MusicGroup JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupLd) }}
-        />
-
-        {/* Site-level JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [webSiteLd, itemListLd, breadcrumbLd] }) }}
-        />
 
         <link rel="icon" type="image/png" sizes="any" href="/icon.png?v=20260319" />
         <link rel="apple-touch-icon" href="/icon.png?v=20260319" />

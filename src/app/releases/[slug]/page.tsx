@@ -40,7 +40,18 @@ export async function generateMetadata(props: any) {
             title: `OKISO — ${release.title}`,
             description: release.description || `Official release page for ${release.title} by OKISO.`,
             url,
-            images: [release.img]
+            images: [release.img],
+            type: release.albumType === 'album' ? 'music.album' : 'music.song',
+            other: {
+                'music:musician': 'https://okiso.net',
+                'music:release_date': release.releaseDate,
+            }
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `OKISO — ${release.title}`,
+            description: release.description || `Official release page for ${release.title} by OKISO.`,
+            images: [release.img],
         },
         alternates: {
             canonical: url
@@ -56,7 +67,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
     const url = `${siteUrl}/releases/${release.slug}`;
 
-    const jsonLd: Record<string, unknown> = {
+    const albumLd: Record<string, unknown> = {
         "@context": "https://schema.org",
         "@type": "MusicAlbum",
         "name": release.title,
@@ -76,7 +87,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
 
     if (release.tracks && release.tracks.length > 0) {
         // safe to assert tracks exist because of the guard above
-        Object.assign(jsonLd, {
+        Object.assign(albumLd, {
             track: release.tracks.map(t => ({
                 "@type": "MusicRecording",
                 "name": t.title,
@@ -86,6 +97,35 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
             }))
         });
     }
+
+    const breadcrumbLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": siteUrl
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Releases",
+                "item": `${siteUrl}/releases`
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": release.title,
+                "item": url
+            }
+        ]
+    };
+
+    const jsonLd = {
+        "@graph": [albumLd, breadcrumbLd]
+    };
 
     // Helper to format ISO8601 durations like PT2M25S -> 2:25
     function formatDuration(iso?: string) {
