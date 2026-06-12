@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
 import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
+import { TrackLyricsToggle } from '@/Components/TrackLyricsToggle';
 
 // Pre-render all release pages at build time
 export async function generateStaticParams() {
@@ -170,13 +171,18 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
                         <a href={release.link} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#1DB954] text-black font-medium px-3 py-2 rounded-md hover:bg-[#1ed760] transition-colors">Listen on Spotify</a>
                     </div>
                     {release.tracks && release.tracks.length > 0 && (
-                        <div className="mt-4">
-                            <h2 className="font-semibold mb-2">Tracklist</h2>
-                            <ol className="list-decimal list-inside">
+                        <div className="mt-8 w-full max-w-xl">
+                            <h2 className="text-xl font-bold mb-3">Tracks</h2>
+                            <div className="flex flex-col border-t border-black/5 dark:border-white/5">
                                 {release.tracks.map(t => (
-                                    <li key={t.id || `${t.title}-${t.trackNumber}`}>{t.title}{t.duration ? ` — ${formatDuration(String(t.duration))}` : ''}</li>
+                                    <TrackLyricsToggle
+                                        key={t.id || `${t.title}-${t.trackNumber}`}
+                                        title={t.title}
+                                        durationStr={t.duration ? formatDuration(String(t.duration)) : undefined}
+                                        lyrics={t.lyrics}
+                                    />
                                 ))}
-                            </ol>
+                            </div>
                         </div>
                     )}
                 </div>

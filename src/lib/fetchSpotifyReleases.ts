@@ -41,6 +41,7 @@ interface ReleaseTrack {
   duration?: string; // ISO 8601 duration like PT3M22S
   trackNumber?: number;
   link?: string;
+  lyrics?: string;
 }
 
 interface Release {
@@ -219,16 +220,23 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       console.log('Failed to parse existing releases.ts for cache. Proceeding without cache.');
     }
     
-    // Build cache map: trackId -> YouTube Link
+    // Build cache map: trackId -> YouTube Link & Lyrics
     const cachedYoutubeLinks = new Map<string, string>();
+    const cachedLyrics = new Map<string, string>();
     existingReleases.forEach(r => {
       r.tracks?.forEach(t => {
         if (t.id && t.link && (t.link.includes('youtube.com') || t.link.includes('youtu.be'))) {
           cachedYoutubeLinks.set(t.id, t.link);
         }
+        if (t.id && t.lyrics) {
+          cachedLyrics.set(t.id, t.lyrics);
+        }
       });
     });
     console.log(`Loaded ${cachedYoutubeLinks.size} YouTube links from cache.`);
+    if (cachedLyrics.size > 0) {
+      console.log(`Loaded ${cachedLyrics.size} track lyrics from cache.`);
+    }
     // ---------------------
 
     // Step 2.6: Search YouTube Music for each track
@@ -302,6 +310,52 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       }
     }
 
+    // Step 2.7: Fetch lyrics from Musixmatch using ISRCs if API key is available
+    const musixmatchApiKey = process.env.MUSIXMATCH_API_KEY;
+    const lyricsMap = new Map<string, string>();
+    
+    if (musixmatchApiKey) {
+      console.log('Fetching lyrics from Musixmatch using ISRCs...');
+      let mMatchCount = 0;
+      for (const trackId of trackIdsArray) {
+        const isrc = isrcMap.get(trackId);
+        
+        // Skip if already in cache
+        if (cachedLyrics.has(trackId)) {
+          lyricsMap.set(trackId, cachedLyrics.get(trackId)!);
+          continue;
+        }
+
+        if (isrc) {
+          try {
+            const res = await fetch(`https://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=${musixmatchApiKey}&track_isrc=${isrc}`);
+            if (res.ok) {
+              const data = await res.json();
+              const lyricsBody = data.message?.body?.lyrics?.lyrics_body;
+              if (lyricsBody) {
+                lyricsMap.set(trackId, lyricsBody);
+                mMatchCount++;
+              }
+            }
+            // Delay to avoid rate limiting
+            await delay(300);
+          } catch (e) {
+            console.error(`Failed to fetch lyrics for track ${trackId}:`, e);
+          }
+        }
+      }
+      if (mMatchCount > 0) {
+        console.log(`Successfully fetched ${mMatchCount} new track lyrics from Musixmatch.`);
+      }
+    } else {
+      console.log('⚠️  MUSIXMATCH_API_KEY not found; skipping lyrics fetch. (Existing cached lyrics preserved)');
+      for (const trackId of trackIdsArray) {
+        if (cachedLyrics.has(trackId)) {
+          lyricsMap.set(trackId, cachedLyrics.get(trackId)!);
+        }
+      }
+    }
+
     // Map albumDetails to Release format
     const releases: Release[] = albumDetails.map((album) => ({
       id: album.id,
@@ -319,7 +373,8 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
         durationMs: t.duration_ms,
         duration: msToIsoDuration(t.duration_ms),
         trackNumber: t.track_number,
-        link: youtubeLinkMap.get(t.id) || t.external_urls?.spotify
+        link: youtubeLinkMap.get(t.id) || t.external_urls?.spotify,
+        lyrics: lyricsMap.get(t.id) || undefined
       })),
       popularity: album.popularity,
       totalTracks: album.tracks.total,
@@ -361,6 +416,7 @@ export interface Release {
     duration?: string;
     trackNumber?: number;
     link?: string;
+    lyrics?: string;
   }>;
   popularity?: number;
   totalTracks?: number;
