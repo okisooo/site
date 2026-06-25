@@ -26,7 +26,7 @@ const quicksand = Quicksand({
 export const metadata = {
   metadataBase: new URL('https://okiso.net'),
   title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-  description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
+  description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
   keywords: [
     "OKISO",
     "okiso",
@@ -45,11 +45,11 @@ export const metadata = {
   },
   openGraph: {
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
+    description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
     url: "https://okiso.net",
     images: [
       {
-        url: "https://okiso.net/easter_egg.jpg",
+        url: "https://okiso.net/og_image.png",
         alt: "OKISO Official Site"
       }
     ],
@@ -59,8 +59,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "Welcome to the creative archive of virtual artist, VTuber, and VOCALOID producer OKISO. Stream original electronic music, browse releases, and find social links.",
-    images: ["https://okiso.net/easter_egg.jpg"]
+    description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
+    images: ["https://okiso.net/og_image.png"]
   }
 };
 
@@ -82,8 +82,8 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#7CC8F8" />
 
-        <link rel="icon" type="image/png" sizes="any" href="/icon.png?v=20260319" />
-        <link rel="apple-touch-icon" href="/icon.png?v=20260319" />
+        <link rel="icon" type="image/png" sizes="48x48 96x96 192x192 512x512" href="/icon.png?v=20260626" />
+        <link rel="apple-touch-icon" href="/icon.png?v=20260626" />
       </head>
       <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

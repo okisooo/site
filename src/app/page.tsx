@@ -31,8 +31,8 @@ const musicGroupLd = {
   "name": "OKISO",
   "alternateName": "オキソ",
   "url": siteUrl,
-  "image": "https://okiso.net/easter_egg.jpg",
-  "description": "OKISO is a VOCALOID Producer, VTuber and Artist creating original electronic and Japanese styled VOCALOID music.",
+  "image": "https://okiso.net/og_image.png",
+  "description": "OKISO, at your command! A VTuber, VOCALOID producer, and virtual artist making original hyperpop, electronic, and Japanese-styled VOCALOID music.",
   "sameAs": [
     "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
     "https://www.instagram.com/okisooo_/",
@@ -210,7 +210,7 @@ export default function Home() {
                 ) : (
                   <div className="relative w-full h-full flex items-center justify-center">
                     <img 
-                      src="/hero_character.png" 
+                      src="/hero_character.webp" 
                       alt="OKISO Character Preview" 
                       className="max-h-[80%] w-auto object-contain select-none pointer-events-none transition-opacity duration-500 opacity-90"
                     />
