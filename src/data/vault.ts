@@ -33,10 +33,10 @@ export interface Version {
   kind: VerKind;
   minLevel: Level; // who can play this version
   /**
-   * Public/preview files: a static path like "/vault/vac/preview.mp3".
-   * Private files: an api.okiso.net id/path that returns a signed URL on auth.
+   * Only preview-mode public samples carry a direct url. Real versions get a
+   * short-lived signed URL from api.okiso.net at play time (see lib/vault.ts).
    */
-  src: string;
+  src?: string;
   note?: string;
   previewOf?: string; // id of the master this clip was cut from
   range?: [number, number]; // [startSec, endSec] — provenance of the preview cut

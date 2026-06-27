@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Lock, LogOut, KeyRound, Loader2 } from "lucide-react";
-import { LEVELS, vaultProjects, type Level, type Version } from "@/data/vault";
+import { LEVELS, vaultProjects, type Level, type VaultProject, type Version } from "@/data/vault";
 import {
   type Session,
   login,
@@ -11,6 +11,7 @@ import {
   clearSession,
   enterPreview,
   resolvePlayUrl,
+  fetchManifest,
   BackendUnavailable,
 } from "@/lib/vault";
 import { VaultStack } from "./VaultStack";
@@ -132,6 +133,24 @@ function VaultBrowser({ session, onLogout }: { session: Session; onLogout: () =>
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [projects, setProjects] = useState<VaultProject[]>(
+    session.preview ? vaultProjects : [],
+  );
+  const [manifestError, setManifestError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session.preview) return; // use mock data as-is
+    fetchManifest(session)
+      .then(setProjects)
+      .catch((err) => {
+        if (err instanceof BackendUnavailable) {
+          setManifestError("backend not reachable — showing cached preview");
+          setProjects(vaultProjects);
+        } else {
+          setManifestError(err instanceof Error ? err.message : "failed to load vault");
+        }
+      });
+  }, [session]);
 
   async function toggle(v: Version) {
     const audio = audioRef.current;
@@ -198,8 +217,16 @@ function VaultBrowser({ session, onLogout }: { session: Session; onLogout: () =>
       </div>
 
       {/* Stacks */}
+      {manifestError && (
+        <p className="text-xs font-bold text-ba-yellow mb-4 text-center">{manifestError}</p>
+      )}
+      {!session.preview && projects.length === 0 && !manifestError && (
+        <div className="flex items-center justify-center py-20 text-white/30">
+          <Loader2 size={20} className="animate-spin mr-2" /> loading vault…
+        </div>
+      )}
       <div className="space-y-5">
-        {vaultProjects.map((p) => (
+        {projects.map((p) => (
           <VaultStack
             key={p.slug}
             project={p}
@@ -212,7 +239,7 @@ function VaultBrowser({ session, onLogout }: { session: Session; onLogout: () =>
       </div>
 
       <p className="text-[11px] text-white/30 mt-10 text-center">
-        🔒 Private masters are served by api.okiso.net only after login — never shipped to this page.
+        Private masters served by api.okiso.net only after login — never shipped to this page.
       </p>
     </div>
   );

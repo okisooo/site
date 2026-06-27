@@ -15,10 +15,10 @@
 //   -> the project/version list filtered to what this user may see.
 //   Until this exists we render the local mock from data/vault.ts.
 
-import type { Level, Version } from "@/data/vault";
+import type { Level, VaultProject, Version } from "@/data/vault";
 import { LEVEL_RANK } from "@/data/vault";
 
-const API_BASE = "https://api.okiso.net";
+const API_BASE = "https://api.okiso.net/api/vault";
 const STORAGE_KEY = "okiso_vault_session";
 
 export interface Session {
@@ -60,7 +60,7 @@ export class BackendUnavailable extends Error {}
 export async function login(username: string, password: string): Promise<Session> {
   let res: Response;
   try {
-    res = await fetch(`${API_BASE}/vault/auth/login`, {
+    res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -98,20 +98,36 @@ export function canAccess(session: Session | null, v: Version): boolean {
   return have >= LEVEL_RANK[v.minLevel];
 }
 
+/** Fetch the version manifest the backend deems this user may see. */
+export async function fetchManifest(session: Session): Promise<VaultProject[]> {
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/manifest`, {
+      headers: { Authorization: `Bearer ${session.token}` },
+    });
+  } catch {
+    throw new BackendUnavailable("backend not connected");
+  }
+  if (res.status === 404 || res.status === 501) throw new BackendUnavailable("vault endpoint not deployed");
+  if (!res.ok) throw new Error("Failed to load vault.");
+  const data = (await res.json()) as { projects: VaultProject[] };
+  return data.projects ?? [];
+}
+
 /**
  * Resolve a playable URL for a version.
- * - public/static src ("/...") -> returned directly.
- * - private ("api:...") -> asks the backend for a signed URL (needs a real session).
+ * - local static src ("/...") -> returned directly (preview-mode sample only).
+ * - otherwise -> backend issues a short-lived signed URL after checking level.
  * Returns null when locked or unavailable (caller shows the locked state).
  */
 export async function resolvePlayUrl(
   session: Session | null,
   v: Version,
 ): Promise<string | null> {
-  if (v.src.startsWith("/") || v.src.startsWith("http")) return v.src; // public
-  if (!session || session.preview || !session.token) return null; // private, no real auth
+  if (v.src && (v.src.startsWith("/") || v.src.startsWith("http"))) return v.src;
+  if (!session || session.preview || !session.token) return null; // need real auth
   try {
-    const res = await fetch(`${API_BASE}/vault/url`, {
+    const res = await fetch(`${API_BASE}/url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
