@@ -1,5 +1,6 @@
 User-Agent: *
 Allow: /
 Disallow: /private/
+Disallow: /vault
 
 Sitemap: https://okiso.net/sitemap.xml
