@@ -18,7 +18,7 @@ interface UseFeaturedVideosResult {
   error: string | null;
 }
 
-const FEED_URL = 'https://api.okiso.net/api/media/website/videos/feed?limit=50';
+const FEED_URL = 'https://api.okiso.net/api/media?type=videos&sort=newest&limit=50';
 
 export function useFeaturedVideos(): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
@@ -44,7 +44,7 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
         }
 
         const payload = await response.json();
-        const rawItems: unknown[] = Array.isArray(payload?.videos) ? payload.videos : [];
+        const rawItems: unknown[] = Array.isArray(payload?.media) ? payload.media : (Array.isArray(payload?.videos) ? payload.videos : []);
 
         const mapped: Array<FeaturedVideo | null> = rawItems
           .map((item: unknown, index: number) => {
@@ -52,28 +52,32 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
               id?: string | number;
               title?: string;
               name?: string;
+              filename?: string;
               hlsUrl?: string;
               hasHlsPackage?: boolean;
               streamUrl?: string;
               url?: string;
+              directUrl?: string;
               sourceUrl?: string;
               poster?: string;
               thumbnail?: string;
               thumbnailUrl?: string;
               category?: string;
+              type?: string;
             };
 
             // Policy priority: hlsUrl -> streamUrl -> sourceUrl.
-            const streamUrl = raw.streamUrl || raw.url;
+            // Support both old and new API formats
+            const streamUrl = raw.streamUrl || raw.directUrl || raw.url;
             const src = raw.hlsUrl || streamUrl || raw.sourceUrl;
             if (!src) return null;
 
             return {
               id: String(raw.id ?? index + 1),
-              title: raw.title || raw.name || `VIDEO_${index + 1}`,
+              title: raw.title || raw.name || raw.filename || `VIDEO_${index + 1}`,
               src,
               poster: raw.poster || raw.thumbnail || raw.thumbnailUrl || undefined,
-              category: raw.category,
+              category: raw.category || raw.type,
               hlsUrl: raw.hlsUrl,
               streamUrl,
               hasHlsPackage: raw.hasHlsPackage,
