@@ -60,6 +60,7 @@ function LevelChip({ level }: { level: Level }) {
   const locked = level !== "public";
   return (
     <span
+      title={LEVEL_LABEL[level]}
       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-ba-pill text-[10px] font-bold uppercase tracking-wider border ${
         locked
           ? "bg-white/5 text-white/60 border-white/15"
@@ -67,7 +68,7 @@ function LevelChip({ level }: { level: Level }) {
       }`}
     >
       {LEVEL_ICON[level]}
-      {LEVEL_LABEL[level]}
+      <span className="hidden sm:inline">{LEVEL_LABEL[level]}</span>
     </span>
   );
 }
@@ -123,7 +124,7 @@ function VersionRow({
   const kind = KIND_META[v.kind];
   return (
     <div
-      className={`group relative flex items-center gap-4 rounded-ba p-3 md:p-4 border transition-colors ${
+      className={`group relative flex items-center gap-3 md:gap-4 rounded-ba p-3 md:p-4 border transition-colors ${
         allowed
           ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
           : "bg-white/[0.015] border-white/5"
@@ -149,8 +150,8 @@ function VersionRow({
         )}
       </button>
 
-      {/* Label + meta */}
-      <div className="min-w-0 w-40 md:w-52 shrink-0">
+      {/* Label + meta — takes full remaining width on mobile (waveform hidden) */}
+      <div className="min-w-0 flex-1 sm:flex-none sm:w-40 md:w-52 sm:shrink-0">
         <div className="flex items-center gap-2">
           <h4 className="text-sm font-bold text-white truncate">{v.label}</h4>
           {v.kind === "preview" && (
@@ -167,8 +168,8 @@ function VersionRow({
         </div>
       </div>
 
-      {/* Waveform */}
-      <div className="flex-1 min-w-0">
+      {/* Waveform — desktop only; on mobile the label owns the row */}
+      <div className="hidden sm:block flex-1 min-w-0">
         <WaveBars seed={v.id} progress={allowed && isPlaying ? progress : allowed ? 0 : 0} locked={!allowed} />
         {v.note && (
           <p className="text-[11px] text-white/40 mt-1 truncate">{v.note}</p>

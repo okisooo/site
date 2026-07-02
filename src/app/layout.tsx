@@ -70,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en" className={cn("font-sans", geist.variable)} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://api.okiso.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.okiso.net" />
