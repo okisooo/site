@@ -18,7 +18,7 @@ interface UseFeaturedVideosResult {
   error: string | null;
 }
 
-const FEED_URL = 'https://api.okiso.net/api/media?type=videos&sort=newest&limit=50';
+const FEED_URL = 'https://api.okiso.net/api/media/website/videos/feed?limit=50';
 
 export function useFeaturedVideos(): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
