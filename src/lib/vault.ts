@@ -38,8 +38,17 @@ export function loadSession(): Session | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Session) : null;
+    if (!raw) return null;
+    const session = JSON.parse(raw) as Session;
+    // Preview sessions from the pre-backend vault carry no real token. Clear
+    // them during migration instead of rendering a permanently broken browser.
+    if (!session.token || session.preview) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return session;
   } catch {
+    localStorage.removeItem(STORAGE_KEY);
     return null;
   }
 }
