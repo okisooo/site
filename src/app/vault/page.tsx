@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function VaultPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="vault-theme min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
       <VaultClient />
     </div>
   );

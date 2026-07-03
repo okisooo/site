@@ -362,4 +362,33 @@
   .vault-primary {
     @apply inline-flex items-center gap-2 rounded-ba-pill bg-ba-pink px-5 py-3 text-sm font-black uppercase tracking-wider text-white shadow-ba-glow-pink hover:bg-ba-pink-deep transition-colors disabled:opacity-40 disabled:cursor-not-allowed;
   }
+  .vault-secondary {
+    @apply inline-flex items-center gap-2 rounded-ba-pill border border-black/15 dark:border-white/15 bg-black/5 dark:bg-white/5 px-5 py-3 text-sm font-black uppercase tracking-wider text-black dark:text-white hover:border-ba-pink transition-colors;
+  }
+  .vault-panel {
+    @apply rounded-ba-lg border border-black/10 dark:border-white/10 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl p-5 md:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.18)];
+  }
+  .vault-manager-row {
+    @apply grid gap-3 items-end rounded-ba border border-black/10 dark:border-white/10 bg-black/[0.025] dark:bg-white/[0.03] p-3 md:grid-cols-[1.4fr_0.7fr_0.7fr_1.4fr_auto];
+  }
+  .vault-icon-button {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 text-black/50 dark:text-white/50 hover:border-ba-pink hover:text-ba-pink transition-colors;
+  }
+  .vault-danger {
+    @apply hover:border-ba-red hover:text-ba-red;
+  }
+  .vault-kicker {
+    @apply text-[10px] font-black uppercase tracking-[0.2em] text-ba-pink;
+  }
+  .vault-muted {
+    @apply text-black/50 dark:text-white/45;
+  }
+
+  /* The original vault was authored as dark-only. These scoped overrides let
+     its existing cards follow the site theme without affecting other pages. */
+  .vault-theme:not(.dark *) [class*="text-white"] { color: rgb(0 0 0 / 0.72) !important; }
+  .vault-theme:not(.dark *) .text-white { color: #000 !important; }
+  .vault-theme:not(.dark *) [class*="border-white"] { border-color: rgb(0 0 0 / 0.12) !important; }
+  .vault-theme:not(.dark *) [class*="bg-white/"] { background-color: rgb(0 0 0 / 0.035) !important; }
+  .vault-theme:not(.dark *) [class*="bg-zinc-950"] { background-color: rgb(255 255 255 / 0.92) !important; }
 }
