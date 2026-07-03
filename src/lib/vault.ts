@@ -29,6 +29,11 @@ export interface Session {
   preview?: boolean;
 }
 
+export interface VaultPermissions {
+  canUpload: boolean;
+  canManageAll: boolean;
+}
+
 export function loadSession(): Session | null {
   if (typeof window === "undefined") return null;
   try {
@@ -99,7 +104,7 @@ export function canAccess(session: Session | null, v: Version): boolean {
 }
 
 /** Fetch the version manifest the backend deems this user may see. */
-export async function fetchManifest(session: Session): Promise<VaultProject[]> {
+export async function fetchManifest(session: Session): Promise<{ projects: VaultProject[]; permissions: VaultPermissions }> {
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/manifest`, {
@@ -110,8 +115,56 @@ export async function fetchManifest(session: Session): Promise<VaultProject[]> {
   }
   if (res.status === 404 || res.status === 501) throw new BackendUnavailable("vault endpoint not deployed");
   if (!res.ok) throw new Error("Failed to load vault.");
-  const data = (await res.json()) as { projects: VaultProject[] };
-  return data.projects ?? [];
+  const data = (await res.json()) as { projects: VaultProject[]; permissions?: VaultPermissions };
+  return {
+    projects: data.projects ?? [],
+    permissions: data.permissions ?? { canUpload: session.level === "owner", canManageAll: session.level === "owner" },
+  };
+}
+
+async function vaultMutation(session: Session, path: string, init: RequestInit) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: { Authorization: `Bearer ${session.token}`, ...(init.headers || {}) },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null) as { error?: { message?: string } } | null;
+    throw new Error(data?.error?.message || "Vault update failed.");
+  }
+}
+
+export interface VaultUploadInput {
+  file: File;
+  projectSlug: string;
+  projectTitle: string;
+  label: string;
+  kind: Version["kind"];
+  minLevel: Level;
+  note: string;
+}
+
+export async function uploadVaultFile(session: Session, input: VaultUploadInput) {
+  const body = new FormData();
+  body.append("file", input.file);
+  body.append("projectTitle", input.projectTitle);
+  body.append("label", input.label);
+  body.append("kind", input.kind);
+  body.append("minLevel", input.minLevel);
+  body.append("note", input.note);
+  const query = new URLSearchParams({ dir: input.projectSlug, name: input.file.name });
+  await vaultMutation(session, `/upload?${query}`, { method: "POST", body });
+}
+
+export async function updateVaultVersion(session: Session, id: string, changes: Partial<Pick<Version, "label" | "note" | "kind" | "minLevel">>) {
+  await vaultMutation(session, `/versions/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(changes),
+  });
+}
+
+export async function deleteVaultVersion(session: Session, id: string) {
+  await vaultMutation(session, `/versions/${encodeURIComponent(id)}`, { method: "DELETE" });
 }
 
 /**

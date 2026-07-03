@@ -1,246 +1,128 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Lock, LogOut, KeyRound, Loader2 } from "lucide-react";
-import { LEVELS, vaultProjects, type Level, type VaultProject, type Version } from "@/data/vault";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Loader2, Lock, LogOut, UploadCloud, X } from "lucide-react";
+import { LEVEL_RANK, LEVELS, type Level, type VaultProject, type Version } from "@/data/vault";
 import {
-  type Session,
-  login,
-  loadSession,
-  clearSession,
-  enterPreview,
-  resolvePlayUrl,
-  fetchManifest,
   BackendUnavailable,
+  clearSession,
+  deleteVaultVersion,
+  fetchManifest,
+  loadSession,
+  login,
+  resolvePlayUrl,
+  type Session,
+  type VaultPermissions,
+  updateVaultVersion,
+  uploadVaultFile,
 } from "@/lib/vault";
 import { VaultStack } from "./VaultStack";
 
 export default function VaultClient() {
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setSession(loadSession());
-    setReady(true);
-  }, []);
-
+  useEffect(() => { setSession(loadSession()); setReady(true); }, []);
   if (!ready) return null;
   if (!session) return <VaultGate onAuthed={setSession} />;
   return <VaultBrowser session={session} onLogout={() => { clearSession(); setSession(null); }} />;
 }
 
-// ── Login gate ──────────────────────────────────────────────────────────────
-function VaultGate({ onAuthed }: { onAuthed: (s: Session) => void }) {
+function VaultGate({ onAuthed }: { onAuthed: (session: Session) => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [noBackend, setNoBackend] = useState(false);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError(null);
-    try {
-      const s = await login(username.trim(), password);
-      onAuthed(s);
-    } catch (err) {
-      if (err instanceof BackendUnavailable) {
-        setNoBackend(true);
-        setError(null);
-      } else {
-        setError(err instanceof Error ? err.message : "Login failed.");
-      }
-    } finally {
-      setBusy(false);
-    }
+  async function submit(event: React.FormEvent) {
+    event.preventDefault(); setBusy(true); setError(null);
+    try { onAuthed(await login(username.trim(), password)); }
+    catch (err) { setError(err instanceof BackendUnavailable ? "Vault backend is unavailable." : err instanceof Error ? err.message : "Login failed."); }
+    finally { setBusy(false); }
   }
-
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md rounded-ba-lg border border-white/10 bg-zinc-950/70 backdrop-blur-xl p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.5)]"
-      >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-11 h-11 rounded-full bg-ba-pink/15 border border-ba-pink/30 flex items-center justify-center text-ba-pink shadow-ba-glow-pink">
-            <Lock size={18} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black uppercase tracking-tight text-white">The Vault</h1>
-            <p className="text-[11px] text-white/45 font-bold uppercase tracking-widest">access required</p>
-          </div>
-        </div>
-
+    <main className="min-h-[75vh] flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-ba-lg border border-white/10 bg-zinc-950/80 backdrop-blur-xl p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.5)]">
+        <div className="w-12 h-12 mb-5 rounded-full bg-ba-pink/15 border border-ba-pink/30 flex items-center justify-center text-ba-pink"><Lock size={19} /></div>
+        <p className="text-[11px] text-ba-pink font-black uppercase tracking-[0.24em]">Private archive</p>
+        <h1 className="text-4xl font-black uppercase tracking-tighter text-white mt-1 mb-6">The Vault</h1>
         <form onSubmit={submit} className="space-y-3">
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="username"
-            autoComplete="username"
-            className="w-full rounded-ba bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-ba-pink/50 transition-colors"
-          />
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="password"
-            type="password"
-            autoComplete="current-password"
-            className="w-full rounded-ba bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-ba-pink/50 transition-colors"
-          />
+          <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" autoComplete="username" className="vault-field" />
+          <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" type="password" autoComplete="current-password" className="vault-field" />
           {error && <p className="text-xs font-bold text-ba-red">{error}</p>}
-          <button
-            type="submit"
-            disabled={busy || !username || !password}
-            className="w-full rounded-ba-pill bg-ba-pink text-white font-bold uppercase tracking-widest py-3 flex items-center justify-center gap-2 hover:bg-ba-pink-deep transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-ba-glow-pink"
-          >
-            {busy ? <Loader2 size={16} className="animate-spin" /> : <KeyRound size={16} />}
-            Enter
-          </button>
+          <button disabled={busy || !username || !password} className="vault-primary w-full">{busy && <Loader2 size={15} className="animate-spin" />} Enter vault</button>
         </form>
-
-        {noBackend && (
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-[11px] text-ba-yellow font-bold uppercase tracking-widest mb-1">
-              Backend not connected yet
-            </p>
-            <p className="text-xs text-white/45 mb-3">
-              Real login lives on api.okiso.net. Explore the design in preview mode — private files stay locked.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {LEVELS.map((lvl) => (
-                <button
-                  key={lvl}
-                  onClick={() => onAuthed(enterPreview(lvl as Level))}
-                  className="px-3 py-1.5 rounded-ba-pill text-xs font-bold uppercase tracking-wider border border-white/15 text-white/70 hover:border-ba-pink/50 hover:text-white transition-colors"
-                >
-                  preview · {lvl}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </motion.div>
-    </div>
+      </div>
+    </main>
   );
 }
 
-// ── Authed browser ──────────────────────────────────────────────────────────
 function VaultBrowser({ session, onLogout }: { session: Session; onLogout: () => void }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [projects, setProjects] = useState<VaultProject[]>(
-    session.preview ? vaultProjects : [],
-  );
-  const [manifestError, setManifestError] = useState<string | null>(null);
+  const [projects, setProjects] = useState<VaultProject[]>([]);
+  const [permissions, setPermissions] = useState<VaultPermissions>({ canUpload: false, canManageAll: false });
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (session.preview) return; // use mock data as-is
-    fetchManifest(session)
-      .then(setProjects)
-      .catch((err) => {
-        if (err instanceof BackendUnavailable) {
-          setManifestError("backend not reachable — showing cached preview");
-          setProjects(vaultProjects);
-        } else {
-          setManifestError(err instanceof Error ? err.message : "failed to load vault");
-        }
-      });
-  }, [session]);
-
-  async function toggle(v: Version) {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (playingId === v.id) {
-      audio.pause();
-      setPlayingId(null);
-      return;
-    }
-    const url = await resolvePlayUrl(session, v);
-    if (!url) return; // locked / unavailable
-    audio.src = url;
-    setProgress(0);
-    setPlayingId(v.id);
+  const refresh = useCallback(async () => {
+    setLoading(true);
     try {
-      await audio.play();
-    } catch {
-      setPlayingId(null);
-    }
-  }
-
+      const data = await fetchManifest(session);
+      setProjects(data.projects); setPermissions(data.permissions); setMessage(null);
+    } catch (err) { setMessage(err instanceof Error ? err.message : "Failed to load vault."); }
+    finally { setLoading(false); }
+  }, [session]);
+  useEffect(() => { void refresh(); }, [refresh]);
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const onTime = () => setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
-    const onEnd = () => {
-      setPlayingId(null);
-      setProgress(0);
-    };
-    audio.addEventListener("timeupdate", onTime);
-    audio.addEventListener("ended", onEnd);
-    return () => {
-      audio.removeEventListener("timeupdate", onTime);
-      audio.removeEventListener("ended", onEnd);
-    };
+    const audio = audioRef.current; if (!audio) return;
+    const tick = () => setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+    const ended = () => { setPlayingId(null); setProgress(0); };
+    audio.addEventListener("timeupdate", tick); audio.addEventListener("ended", ended);
+    return () => { audio.removeEventListener("timeupdate", tick); audio.removeEventListener("ended", ended); };
   }, []);
 
+  async function toggle(version: Version) {
+    const audio = audioRef.current; if (!audio) return;
+    if (playingId === version.id) { audio.pause(); setPlayingId(null); return; }
+    const url = await resolvePlayUrl(session, version); if (!url) return;
+    audio.src = url; setPlayingId(version.id); setProgress(0);
+    try { await audio.play(); } catch { setPlayingId(null); }
+  }
+  async function rename(version: Version) {
+    const label = window.prompt("Display name", version.label); if (!label || label.trim() === version.label) return;
+    try { await updateVaultVersion(session, version.id, { label: label.trim() }); await refresh(); }
+    catch (err) { setMessage(err instanceof Error ? err.message : "Rename failed."); }
+  }
+  async function remove(version: Version) {
+    if (!window.confirm(`Delete ${version.label}? This removes the stored file too.`)) return;
+    try { await deleteVaultVersion(session, version.id); await refresh(); }
+    catch (err) { setMessage(err instanceof Error ? err.message : "Delete failed."); }
+  }
+
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
+    <main className="w-full max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16">
       <audio ref={audioRef} preload="none" />
-
-      {/* Header */}
-      <div className="flex items-end justify-between border-b border-white/10 pb-5 mb-8">
-        <div>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white">
-            The Vault
-          </h1>
-          <p className="text-xs text-white/45 font-bold uppercase tracking-widest mt-2">
-            versions · demos · cuts
-          </p>
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 border-b-4 border-white pb-6 mb-8">
+        <div><p className="text-[11px] text-ba-pink font-black uppercase tracking-[0.24em]">Private audio workspace</p><h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-white leading-none">The Vault</h1><p className="text-xs text-white/45 font-bold uppercase tracking-widest mt-2">versions · demos · masters</p></div>
+        <div className="flex items-center gap-2">
+          {permissions.canUpload && <button onClick={() => setUploadOpen(true)} className="vault-primary"><UploadCloud size={15} /> Upload audio</button>}
+          <span className="px-3 py-2 rounded-ba-pill border border-white/15 text-xs font-bold text-white/65 uppercase">{session.name} · {session.level}</span>
+          <button onClick={onLogout} aria-label="Log out" className="p-2.5 rounded-full text-white/50 hover:bg-white/10 hover:text-white"><LogOut size={16} /></button>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-ba-pill border border-ba-pink/30 bg-ba-pink/10 text-ba-pink text-xs font-bold uppercase tracking-wider">
-            {session.preview ? "preview" : session.name} · {session.level}
-          </span>
-          <button
-            onClick={onLogout}
-            title="Log out"
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <LogOut size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Stacks */}
-      {manifestError && (
-        <p className="text-xs font-bold text-ba-yellow mb-4 text-center">{manifestError}</p>
-      )}
-      {!session.preview && projects.length === 0 && !manifestError && (
-        <div className="flex items-center justify-center py-20 text-white/30">
-          <Loader2 size={20} className="animate-spin mr-2" /> loading vault…
-        </div>
-      )}
-      <div className="space-y-5">
-        {projects.map((p) => (
-          <VaultStack
-            key={p.slug}
-            project={p}
-            session={session}
-            playingId={playingId}
-            progress={progress}
-            onToggle={toggle}
-          />
-        ))}
-      </div>
-
-      <p className="text-[11px] text-white/30 mt-10 text-center">
-        Private masters served by api.okiso.net only after login — never shipped to this page.
-      </p>
-    </div>
+      </header>
+      {uploadOpen && <VaultUploadPanel session={session} projects={projects} onClose={() => setUploadOpen(false)} onUploaded={async () => { setUploadOpen(false); await refresh(); }} />}
+      {message && <div className="mb-5 rounded-ba border border-ba-yellow/30 bg-ba-yellow/10 px-4 py-3 text-sm font-bold text-ba-yellow">{message}</div>}
+      {loading ? <div className="py-24 flex justify-center text-white/40"><Loader2 className="animate-spin" /></div> : projects.length === 0 ? <div className="rounded-ba-lg border border-dashed border-white/15 py-24 text-center"><UploadCloud className="mx-auto text-white/25 mb-3" /><p className="font-bold text-white">Nothing here yet</p><p className="text-sm text-white/40 mt-1">Upload the first version to start a project.</p></div> : <div className="space-y-5">{projects.map((project) => <VaultStack key={project.slug} project={project} session={session} playingId={playingId} progress={progress} onToggle={toggle} onRename={rename} onDelete={remove} />)}</div>}
+    </main>
   );
+}
+
+function VaultUploadPanel({ session, projects, onClose, onUploaded }: { session: Session; projects: VaultProject[]; onClose: () => void; onUploaded: () => Promise<void> }) {
+  const [file, setFile] = useState<File | null>(null), [slug, setSlug] = useState(projects[0]?.slug || ""), [title, setTitle] = useState(projects[0]?.title || ""), [label, setLabel] = useState(""), [note, setNote] = useState("");
+  const [kind, setKind] = useState<Version["kind"]>("wip"), [level, setLevel] = useState<Level>(session.level), [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
+  const allowed = LEVELS.filter((item) => LEVEL_RANK[item] <= LEVEL_RANK[session.level]);
+  async function submit(event: React.FormEvent) { event.preventDefault(); if (!file) return; setBusy(true); setError(null); try { await uploadVaultFile(session, { file, projectSlug: slug, projectTitle: title, label, kind, minLevel: level, note }); await onUploaded(); } catch (err) { setError(err instanceof Error ? err.message : "Upload failed."); } finally { setBusy(false); } }
+  function pickProject(next: string) { setSlug(next); const project = projects.find((item) => item.slug === next); if (project) setTitle(project.title); }
+  return <section className="mb-8 rounded-ba-lg border border-ba-pink/25 bg-zinc-950/90 backdrop-blur-xl p-5 md:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.45)]"><div className="flex justify-between mb-5"><div><h2 className="text-xl font-black uppercase text-white">Add to vault</h2><p className="text-xs text-white/45 mt-1">Files appear immediately after upload.</p></div><button onClick={onClose} aria-label="Close upload panel" className="text-white/45 hover:text-white"><X /></button></div><form onSubmit={submit} className="grid md:grid-cols-2 gap-3"><label className="md:col-span-2 rounded-ba border border-dashed border-white/20 bg-white/[0.03] p-6 text-center cursor-pointer hover:border-ba-pink/60"><UploadCloud className="mx-auto text-ba-pink mb-2" /><span className="text-sm font-bold text-white">{file?.name || "Choose an audio file"}</span><input type="file" accept="audio/*,.wav,.flac,.aiff,.aif,.m4a,.ogg" className="sr-only" onChange={(e) => { const next = e.target.files?.[0] || null; setFile(next); if (next) setLabel(next.name.replace(/\.[^.]+$/, "")); }} /></label><select value={slug} onChange={(e) => pickProject(e.target.value)} className="vault-field"><option value="">New project…</option>{projects.map((project) => <option key={project.slug} value={project.slug}>{project.title}</option>)}</select><input value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="project-folder" className="vault-field" required /><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Project title" className="vault-field" required /><input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Display name" className="vault-field" required /><select value={kind} onChange={(e) => setKind(e.target.value as Version["kind"])} className="vault-field">{["demo", "wip", "master", "preview"].map((item) => <option key={item}>{item}</option>)}</select><select value={level} onChange={(e) => setLevel(e.target.value as Level)} className="vault-field">{allowed.map((item) => <option key={item}>{item}</option>)}</select><input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note (optional)" className="vault-field md:col-span-2" />{error && <p className="text-xs font-bold text-ba-red md:col-span-2">{error}</p>}<button disabled={busy || !file} className="vault-primary md:col-span-2 justify-center">{busy && <Loader2 size={15} className="animate-spin" />} Upload to vault</button></form></section>;
 }

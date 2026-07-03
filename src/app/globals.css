@@ -351,3 +351,15 @@
   background-size: 100% 4px;
   pointer-events: none;
 }
+
+@layer components {
+  .vault-field {
+    @apply w-full rounded-ba bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white outline-none focus:border-ba-pink/60 transition-colors;
+  }
+  .vault-field option {
+    @apply bg-zinc-950 text-white;
+  }
+  .vault-primary {
+    @apply inline-flex items-center gap-2 rounded-ba-pill bg-ba-pink px-5 py-3 text-sm font-black uppercase tracking-wider text-white shadow-ba-glow-pink hover:bg-ba-pink-deep transition-colors disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+}

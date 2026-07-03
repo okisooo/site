@@ -40,6 +40,7 @@ export interface Version {
   note?: string;
   previewOf?: string; // id of the master this clip was cut from
   range?: [number, number]; // [startSec, endSec] — provenance of the preview cut
+  canManage?: boolean;
 }
 
 export interface VaultProject {

@@ -13,6 +13,8 @@ import {
   Users,
   Crown,
   Sparkles,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import type { Level, VaultProject, VerKind, Version } from "@/data/vault";
 import { LEVEL_LABEL } from "@/data/vault";
@@ -112,6 +114,8 @@ function VersionRow({
   isPlaying,
   progress,
   onToggle,
+  onRename,
+  onDelete,
 }: {
   v: Version;
   project: VaultProject;
@@ -119,6 +123,8 @@ function VersionRow({
   isPlaying: boolean;
   progress: number;
   onToggle: () => void;
+  onRename: () => void;
+  onDelete: () => void;
 }) {
   const allowed = canAccess(session, v);
   const kind = KIND_META[v.kind];
@@ -180,6 +186,12 @@ function VersionRow({
       <div className="shrink-0">
         <LevelChip level={v.minLevel} />
       </div>
+      {v.canManage && (
+        <div className="shrink-0 flex items-center gap-1">
+          <button onClick={onRename} aria-label={`Rename ${v.label}`} className="p-2 rounded-full text-white/45 hover:text-white hover:bg-white/10"><Pencil size={14} /></button>
+          <button onClick={onDelete} aria-label={`Delete ${v.label}`} className="p-2 rounded-full text-white/45 hover:text-ba-red hover:bg-ba-red/10"><Trash2 size={14} /></button>
+        </div>
+      )}
     </div>
   );
 }
@@ -199,12 +211,16 @@ export function VaultStack({
   playingId,
   progress,
   onToggle,
+  onRename,
+  onDelete,
 }: {
   project: VaultProject;
   session: Session | null;
   playingId: string | null;
   progress: number;
   onToggle: (v: Version) => void;
+  onRename: (v: Version) => void;
+  onDelete: (v: Version) => void;
 }) {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
@@ -286,6 +302,8 @@ export function VaultStack({
                     isPlaying={playingId === v.id}
                     progress={progress}
                     onToggle={() => onToggle(v)}
+                    onRename={() => onRename(v)}
+                    onDelete={() => onDelete(v)}
                   />
                 </motion.div>
               ))}
