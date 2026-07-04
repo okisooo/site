@@ -78,6 +78,9 @@ export default function ReleaseGrid() {
         <Link href="/upcoming" className="bg-ba-pink text-white border-4 border-ba-pink px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-ba-pink-deep hover:border-ba-pink-deep transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(255,126,179,0.3)] hover:shadow-none translate-y-0 hover:translate-y-2">
           UPCOMING RELEASES <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
+        <Link href="/vault" className="bg-black text-white border-4 border-black px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-zinc-900 transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(0,0,0,0.25)] hover:shadow-none translate-y-0 hover:translate-y-2">
+          THE VAULT <span aria-hidden className="text-ba-pink">✦</span> <span className="group-hover:translate-x-2 transition-transform">→</span>
+        </Link>
       </div>
 
       {/* Super Cute Popup Modal using Portal to escape stacking contexts */}
