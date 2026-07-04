@@ -112,12 +112,15 @@ export function canAccess(session: Session | null, v: Version): boolean {
   return have >= LEVEL_RANK[v.minLevel];
 }
 
-/** Fetch the version manifest the backend deems this user may see. */
-export async function fetchManifest(session: Session): Promise<{ projects: VaultProject[]; permissions: VaultPermissions }> {
+/**
+ * Fetch the version manifest. Works WITHOUT a session — the server answers at
+ * `public` level, listing locked versions (minus hidden ones).
+ */
+export async function fetchManifest(session: Session | null): Promise<{ projects: VaultProject[]; permissions: VaultPermissions }> {
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/manifest`, {
-      headers: { Authorization: `Bearer ${session.token}` },
+      headers: session?.token ? { Authorization: `Bearer ${session.token}` } : {},
     });
   } catch {
     throw new BackendUnavailable("backend not connected");
@@ -127,8 +130,31 @@ export async function fetchManifest(session: Session): Promise<{ projects: Vault
   const data = (await res.json()) as { projects: VaultProject[]; permissions?: VaultPermissions };
   return {
     projects: data.projects ?? [],
-    permissions: data.permissions ?? { canUpload: session.level === "owner", canManageAll: session.level === "owner" },
+    permissions: data.permissions ?? { canUpload: false, canManageAll: false },
   };
+}
+
+/** Public teaser stream URL — playable by anyone when v.hasSnippet. */
+export function snippetUrl(id: string): string {
+  return `${API_BASE}/snippet/${encodeURIComponent(id)}`;
+}
+
+/** Shareable deep link — opens the vault and focuses/plays this version. */
+export function shareUrl(id: string): string {
+  return `https://okiso.net/vault?t=${encodeURIComponent(id)}`;
+}
+
+/** Cut (or re-cut) the public 30s teaser for a version. Manage access required. */
+export async function cutSnippet(session: Session, id: string, start = 0, dur = 30) {
+  await vaultMutation(session, `/snippet`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, start, dur }),
+  });
+}
+
+export async function deleteSnippet(session: Session, id: string) {
+  await vaultMutation(session, `/snippet/${encodeURIComponent(id)}`, { method: "DELETE" });
 }
 
 async function vaultMutation(session: Session, path: string, init: RequestInit) {
@@ -164,7 +190,7 @@ export async function uploadVaultFile(session: Session, input: VaultUploadInput)
   await vaultMutation(session, `/upload?${query}`, { method: "POST", body });
 }
 
-export async function updateVaultVersion(session: Session, id: string, changes: Partial<Pick<Version, "label" | "note" | "kind" | "minLevel">>) {
+export async function updateVaultVersion(session: Session, id: string, changes: Partial<Pick<Version, "label" | "note" | "kind" | "minLevel" | "hidden">>) {
   await vaultMutation(session, `/versions/${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -178,22 +204,20 @@ export async function deleteVaultVersion(session: Session, id: string) {
 
 /**
  * Resolve a playable URL for a version.
- * - local static src ("/...") -> returned directly (preview-mode sample only).
- * - otherwise -> backend issues a short-lived signed URL after checking level.
- * Returns null when locked or unavailable (caller shows the locked state).
+ * Anonymous callers can resolve public versions — the server answers /url at
+ * `public` level without a token. Returns null when locked or unavailable.
  */
 export async function resolvePlayUrl(
   session: Session | null,
   v: Version,
 ): Promise<string | null> {
   if (v.src && (v.src.startsWith("/") || v.src.startsWith("http"))) return v.src;
-  if (!session || session.preview || !session.token) return null; // need real auth
   try {
     const res = await fetch(`${API_BASE}/url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.token}`,
+        ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
       },
       body: JSON.stringify({ id: v.id }),
     });

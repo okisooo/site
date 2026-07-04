@@ -41,6 +41,12 @@ export interface Version {
   previewOf?: string; // id of the master this clip was cut from
   range?: [number, number]; // [startSec, endSec] — provenance of the preview cut
   canManage?: boolean;
+  /** Server-computed: this version is above YOUR level (listed but not playable). */
+  locked?: boolean;
+  /** A public 30s teaser exists — playable by anyone, even when locked. */
+  hasSnippet?: boolean;
+  /** Only sent to managers: version is invisible to those below minLevel. */
+  hidden?: boolean;
 }
 
 export interface VaultProject {

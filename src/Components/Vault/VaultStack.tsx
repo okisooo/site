@@ -13,8 +13,7 @@ import {
   Users,
   Crown,
   Sparkles,
-  Pencil,
-  Trash2,
+  Link2,
 } from "lucide-react";
 import type { Level, VaultProject, VerKind, Version } from "@/data/vault";
 import { LEVEL_LABEL } from "@/data/vault";
@@ -58,15 +57,14 @@ const LEVEL_ICON: Record<Level, React.ReactNode> = {
   owner: <Crown size={11} />,
 };
 
-function LevelChip({ level }: { level: Level }) {
-  const locked = level !== "public";
+function LevelChip({ level, locked }: { level: Level; locked: boolean }) {
   return (
     <span
-      title={LEVEL_LABEL[level]}
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-ba-pill text-[10px] font-bold uppercase tracking-wider border ${
+      title={locked ? `${LEVEL_LABEL[level]} access needed` : LEVEL_LABEL[level]}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-ba-pill font-mono text-[10px] uppercase tracking-wider border ${
         locked
-          ? "bg-white/5 text-white/60 border-white/15"
-          : "bg-ba-pink/15 text-ba-pink border-ba-pink/30 shadow-ba-glow-pink"
+          ? "bg-white/5 text-white/50 border-white/15"
+          : "bg-ba-pink/15 text-ba-pink border-ba-pink/30"
       }`}
     >
       {LEVEL_ICON[level]}
@@ -79,14 +77,24 @@ function WaveBars({
   seed,
   progress,
   locked,
+  onSeek,
 }: {
   seed: string;
   progress: number; // 0..1
   locked: boolean;
+  onSeek?: (fraction: number) => void;
 }) {
   const bars = useBars(seed);
   return (
-    <div className="flex items-end gap-[2px] h-9 w-full overflow-hidden" aria-hidden>
+    <div
+      className={`flex items-end gap-[2px] h-9 w-full overflow-hidden ${onSeek && !locked ? "cursor-pointer" : ""}`}
+      aria-hidden
+      onClick={(e) => {
+        if (!onSeek || locked) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        onSeek(Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)));
+      }}
+    >
       {bars.map((b, i) => {
         const played = i / bars.length <= progress;
         return (
@@ -112,45 +120,58 @@ function VersionRow({
   project,
   session,
   isPlaying,
+  isSnippetPlay,
   progress,
   onToggle,
-  onRename,
-  onDelete,
+  onSeek,
+  onShare,
 }: {
   v: Version;
   project: VaultProject;
   session: Session | null;
   isPlaying: boolean;
+  isSnippetPlay: boolean;
   progress: number;
   onToggle: () => void;
-  onRename: () => void;
-  onDelete: () => void;
+  onSeek: (fraction: number) => void;
+  onShare: () => void;
 }) {
-  const allowed = canAccess(session, v);
+  // Server sends `locked`; fall back to a client-side check for mock data.
+  const locked = v.locked !== undefined ? v.locked : !canAccess(session, v);
+  const teasable = locked && v.hasSnippet;
   const kind = KIND_META[v.kind];
   return (
     <div
       className={`group relative flex items-center gap-3 md:gap-4 rounded-ba p-3 md:p-4 border transition-colors ${
-        allowed
+        !locked
           ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
-          : "bg-white/[0.015] border-white/5"
+          : "bg-white/[0.015] border-white/5 hover:bg-white/[0.03]"
       }`}
     >
-      {/* Play / lock */}
+      {/* Play / teaser / lock */}
       <button
         onClick={onToggle}
-        disabled={!allowed}
-        title={allowed ? (isPlaying ? "Pause" : "Play") : "Locked — higher access needed"}
+        title={
+          !locked
+            ? (isPlaying ? "Pause" : "Play")
+            : teasable
+              ? (isPlaying ? "Pause teaser" : "Play the 30s teaser")
+              : "Locked — sign in to play"
+        }
         className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-all ${
-          allowed
+          !locked
             ? "bg-ba-pink text-white hover:scale-105 active:scale-95 shadow-ba-glow-pink"
-            : "bg-white/5 text-white/30 cursor-not-allowed"
+            : teasable
+              ? "bg-transparent border-2 border-ba-pink/60 text-ba-pink hover:bg-ba-pink/10 hover:scale-105"
+              : "bg-white/5 text-white/30 hover:text-white/60"
         }`}
       >
-        {!allowed ? (
+        {locked && !teasable ? (
           <Lock size={15} />
         ) : isPlaying ? (
           <Pause size={15} fill="currentColor" />
+        ) : locked ? (
+          <Scissors size={14} />
         ) : (
           <Play size={15} fill="currentColor" className="ml-0.5" />
         )}
@@ -167,31 +188,41 @@ function VersionRow({
           )}
         </div>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
-          <span className={`px-1.5 py-0.5 rounded-ba-pill text-[10px] font-bold uppercase border ${kind.cls}`}>
+          <span className={`px-1.5 py-0.5 rounded-ba-pill font-mono text-[10px] uppercase border ${kind.cls}`}>
             {kind.label}
           </span>
-          <span className="text-[10px] text-white/40 font-mono">{fmt(v.date)}</span>
+          <span className="font-mono text-[10px] text-white/40">{fmt(v.date)}</span>
+          {isPlaying && isSnippetPlay && (
+            <span className="font-mono text-[10px] text-ba-pink uppercase tracking-wider">teaser · 30s</span>
+          )}
         </div>
       </div>
 
-      {/* Waveform — desktop only; on mobile the label owns the row */}
+      {/* Waveform — desktop only; click to seek while playing */}
       <div className="hidden sm:block flex-1 min-w-0">
-        <WaveBars seed={v.id} progress={allowed && isPlaying ? progress : allowed ? 0 : 0} locked={!allowed} />
+        <WaveBars
+          seed={v.id}
+          progress={isPlaying ? progress : 0}
+          locked={locked && !isPlaying}
+          onSeek={isPlaying ? onSeek : undefined}
+        />
         {v.note && (
           <p className="text-[11px] text-white/40 mt-1 truncate">{v.note}</p>
         )}
       </div>
 
-      {/* Access chip */}
-      <div className="shrink-0">
-        <LevelChip level={v.minLevel} />
+      {/* Share + access */}
+      <div className="shrink-0 flex items-center gap-1.5">
+        <button
+          onClick={onShare}
+          aria-label={`Copy share link for ${v.label}`}
+          title="Copy share link"
+          className="p-2 rounded-full text-white/30 hover:text-ba-pink hover:bg-ba-pink/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        >
+          <Link2 size={14} />
+        </button>
+        <LevelChip level={v.minLevel} locked={locked} />
       </div>
-      {v.canManage && (
-        <div className="shrink-0 flex items-center gap-1">
-          <button onClick={onRename} aria-label={`Rename ${v.label}`} className="p-2 rounded-full text-white/45 hover:text-white hover:bg-white/10"><Pencil size={14} /></button>
-          <button onClick={onDelete} aria-label={`Delete ${v.label}`} className="p-2 rounded-full text-white/45 hover:text-ba-red hover:bg-ba-red/10"><Trash2 size={14} /></button>
-        </div>
-      )}
     </div>
   );
 }
@@ -209,23 +240,30 @@ export function VaultStack({
   project,
   session,
   playingId,
+  playingSnippet,
   progress,
+  defaultOpen = false,
   onToggle,
-  onRename,
-  onDelete,
+  onSeek,
+  onShare,
 }: {
   project: VaultProject;
   session: Session | null;
   playingId: string | null;
+  playingSnippet: boolean;
   progress: number;
+  defaultOpen?: boolean;
   onToggle: (v: Version) => void;
-  onRename: (v: Version) => void;
-  onDelete: (v: Version) => void;
+  onSeek: (v: Version, fraction: number) => void;
+  onShare: (v: Version) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const reduce = useReducedMotion();
   const count = project.versions.length;
-  const publicCount = project.versions.filter((v) => v.minLevel === "public").length;
+  const openCount = project.versions.filter((v) => !v.locked).length;
+
+  // Deep-linked project opens once the prop arrives after the manifest loads.
+  React.useEffect(() => { if (defaultOpen) setOpen(true); }, [defaultOpen]);
 
   return (
     <div className="relative">
@@ -261,11 +299,11 @@ export function VaultStack({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white truncate">
+            <h3 className="vault-serif text-2xl md:text-3xl text-white truncate leading-tight">
               {project.title}
             </h3>
-            <p className="text-[11px] text-white/45 font-bold uppercase tracking-widest mt-0.5">
-              {count} version{count > 1 ? "s" : ""} · {publicCount} public
+            <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.2em] mt-0.5">
+              {count} version{count > 1 ? "s" : ""} · {openCount} open{openCount < count ? ` · ${count - openCount} locked` : ""}
             </p>
           </div>
           <ChevronDown
@@ -300,10 +338,11 @@ export function VaultStack({
                     project={project}
                     session={session}
                     isPlaying={playingId === v.id}
+                    isSnippetPlay={playingId === v.id && playingSnippet}
                     progress={progress}
                     onToggle={() => onToggle(v)}
-                    onRename={() => onRename(v)}
-                    onDelete={() => onDelete(v)}
+                    onSeek={(fraction) => onSeek(v, fraction)}
+                    onShare={() => onShare(v)}
                   />
                 </motion.div>
               ))}
