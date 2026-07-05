@@ -187,7 +187,7 @@ export default function Home() {
                     <FaPlay className="group-hover:animate-pulse" /> Latest Release
                   </a>
                   <div className="hidden md:block w-16 h-[2px] bg-black/20 dark:bg-white/20" />
-                  <span className="hidden md:block text-sm font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/40">Scroll Down</span>
+                  <span className="hidden md:block text-sm font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/70">Scroll Down</span>
                 </div>
               </motion.div>
             </div>
@@ -244,7 +244,7 @@ export default function Home() {
           <div className="w-full xl:w-7/12 flex flex-col gap-6 md:gap-12">
             <div className="flex items-center justify-between">
               <h2 className="text-[12vw] xl:text-[6vw] font-black leading-[0.9] uppercase tracking-tighter text-black dark:text-white">
-                {showingLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/20">{showingLive ? "Broadcast" : "Videos"}</span>
+                {showingLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/55">{showingLive ? "Broadcast" : "Videos"}</span>
               </h2>
             </div>
             {isLive && (
@@ -294,8 +294,8 @@ export default function Home() {
 
             {!showingLive && !videosLoading && !activeVideo && (
               <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
-                <p className="font-black uppercase tracking-widest text-black/60 dark:text-white/60">No website videos published yet.</p>
-                {videosError && <p className="mt-2 text-xs font-bold text-black/40 dark:text-white/40">Feed error: {videosError}</p>}
+                <p className="font-black uppercase tracking-widest text-black/60 dark:text-white/75">No website videos published yet.</p>
+                {videosError && <p className="mt-2 text-xs font-bold text-black/40 dark:text-white/70">Feed error: {videosError}</p>}
               </div>
             )}
 
@@ -318,7 +318,7 @@ export default function Home() {
           <div className="w-full xl:w-5/12 flex flex-col gap-6 md:gap-12">
             <div className="flex items-end justify-between border-b-8 border-black dark:border-white pb-4 md:pb-6 mt-8 xl:mt-0">
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Network</h2>
-              <span className="font-bold text-lg md:text-xl tracking-widest text-black/50 dark:text-white/50">LINKS // 06</span>
+              <span className="font-bold text-lg md:text-xl tracking-widest text-black/50 dark:text-white/70">LINKS // 06</span>
             </div>
 
             {/* Soft UI grid container */}
@@ -380,11 +380,11 @@ export default function Home() {
             </div>
 
             <div className="prose dark:prose-invert max-w-none space-y-6">
-              <p className="text-lg md:text-xl font-medium leading-relaxed text-black/80 dark:text-white/80">
+              <p className="text-lg md:text-xl font-medium leading-relaxed text-black/80 dark:text-white/90">
                 You are free to repost, remix, and reuse my content for creative purposes!
               </p>
 
-              <ul className="space-y-4 font-bold text-black/70 dark:text-white/70">
+              <ul className="space-y-4 font-bold text-black/70 dark:text-white/85">
                 <li className="flex items-start gap-4">
                   <span className="text-ba-pink text-2xl leading-none">✓</span>
                   <span><strong>Must include clear credit</strong> linking back to my official channels (OKISO)</span>
@@ -400,7 +400,7 @@ export default function Home() {
               </ul>
 
               <div className="mt-8 p-6 bg-black/5 dark:bg-white/5 rounded-2xl border-l-4 border-ba-pink">
-                <p className="text-sm md:text-base font-bold text-black/60 dark:text-white/60">
+                <p className="text-sm md:text-base font-bold text-black/60 dark:text-white/75">
                   By using my content, you agree to abide by these simple rules. Have fun creating!
                 </p>
               </div>
@@ -468,7 +468,7 @@ export default function Home() {
             </div>
             
             <div className="mt-8 p-6 bg-black/5 dark:bg-white/5 rounded-2xl border-l-4 border-ba-pink">
-              <p className="text-sm font-bold text-black/60 dark:text-white/60">
+              <p className="text-sm font-bold text-black/60 dark:text-white/75">
                 Business inquiries and collaborations welcome! Feel free to copy my handles and reach out directly.
               </p>
             </div>
