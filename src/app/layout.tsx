@@ -86,7 +86,12 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon.png?v=20260626" />
       </head>
       <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="okiso-theme"
+        >
           <TitleAnimator />
           <CustomCursor />
           <MusicPlayerProvider>
