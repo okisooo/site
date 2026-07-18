@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "update-releases": "tsx scripts/update-releases.ts",
+    "authorize-toolost": "tsx scripts/authorize-toolost.ts",
+    "test:releases": "tsx --test src/lib/fetchTooLostReleases.test.ts",
     "generate-sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {

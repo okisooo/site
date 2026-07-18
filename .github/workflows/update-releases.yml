@@ -1,4 +1,4 @@
-name: Update Spotify Releases
+name: Update Releases
 
 on:
   schedule:
@@ -19,7 +19,7 @@ permissions:
 jobs:
   update-releases:
     runs-on: ubuntu-latest
-    name: Update Spotify Releases Data
+    name: Update Release Catalog
     
     steps:
       - name: Checkout repository
@@ -40,6 +40,7 @@ jobs:
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          TOOLOST_ACCESS_TOKEN: ${{ secrets.TOOLOST_ACCESS_TOKEN }}
         run: npm run update-releases
           
       - name: Check for changes
@@ -60,7 +61,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add src/data/releases.ts
-          git commit -m "🎵 Auto-update Spotify releases data"
+          git commit -m "chore: sync release catalog"
           git push
 
       - name: Deploy updated site
