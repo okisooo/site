@@ -31,7 +31,7 @@ export async function generateMetadata(props: any) {
     const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
     if (!release) return { title: 'Release' };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
     const url = `${siteUrl}/releases/${release.slug}`;
 
     // Hyper-optimized SEO title (around 50-60 characters for SERP space)
@@ -75,7 +75,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
     const release = staticReleases.find(r => r.slug === awaitedParams.slug) as Release | undefined;
     if (!release) return notFound();
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
     const url = `${siteUrl}/releases/${release.slug}`;
 
     const albumLd: Record<string, unknown> = {
