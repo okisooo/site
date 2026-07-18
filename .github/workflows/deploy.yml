@@ -71,6 +71,11 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Publish extensionless OAuth callback
+        run: |
+          mkdir -p out/api/auth/callback
+          cp out/api/auth/callback.html out/api/auth/callback/index.html
+
       - name: Copy CNAME for GitHub Pages
         run: cp public/CNAME out/CNAME
 

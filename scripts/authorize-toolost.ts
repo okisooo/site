@@ -57,7 +57,11 @@ async function main() {
 
   const callbackUrl = new URL(callbackValue);
   const expectedRedirect = new URL(redirectUri);
-  if (callbackUrl.origin !== expectedRedirect.origin || callbackUrl.pathname !== expectedRedirect.pathname) {
+  const normalizePathname = (pathname: string) => pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  if (
+    callbackUrl.origin !== expectedRedirect.origin
+    || normalizePathname(callbackUrl.pathname) !== normalizePathname(expectedRedirect.pathname)
+  ) {
     throw new Error('Callback URL does not match TOOLOST_REDIRECT_URI.');
   }
   if (callbackUrl.searchParams.get('state') !== state) throw new Error('OAuth state did not match. Start again.');
