@@ -20,6 +20,8 @@ jobs:
   update-releases:
     runs-on: ubuntu-latest
     name: Update Release Catalog
+    env:
+      TOOLOST_REFRESH_ENABLED: ${{ secrets.TOOLOST_CLIENT_ID != '' && secrets.TOOLOST_REFRESH_TOKEN != '' }}
     
     steps:
       - name: Checkout repository
@@ -35,12 +37,43 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify refresh-token storage access
+        if: env.TOOLOST_REFRESH_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SITE_PAT }}
+        run: gh api "repos/${GITHUB_REPOSITORY}/actions/secrets/public-key" > /dev/null
+
+      - name: Refresh Too Lost access token
+        if: env.TOOLOST_REFRESH_ENABLED == 'true'
+        env:
+          TOOLOST_CLIENT_ID: ${{ secrets.TOOLOST_CLIENT_ID }}
+          TOOLOST_CLIENT_SECRET: ${{ secrets.TOOLOST_CLIENT_SECRET }}
+          TOOLOST_REFRESH_TOKEN: ${{ secrets.TOOLOST_REFRESH_TOKEN }}
+          TOOLOST_REFRESH_TOKEN_FILE: ${{ runner.temp }}/toolost-refresh-token
+        run: npm run refresh-toolost
+
+      - name: Save rotated Too Lost refresh token
+        if: env.TOOLOST_REFRESH_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SITE_PAT }}
+          TOOLOST_REFRESH_TOKEN_FILE: ${{ runner.temp }}/toolost-refresh-token
+        run: gh secret set TOOLOST_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" < "$TOOLOST_REFRESH_TOKEN_FILE"
+
+      - name: Use configured Too Lost access token
+        if: env.TOOLOST_REFRESH_ENABLED != 'true'
+        env:
+          TOOLOST_ACCESS_TOKEN_FALLBACK: ${{ secrets.TOOLOST_ACCESS_TOKEN }}
+        run: |
+          if [ -n "$TOOLOST_ACCESS_TOKEN_FALLBACK" ]; then
+            echo "::add-mask::$TOOLOST_ACCESS_TOKEN_FALLBACK"
+            echo "TOOLOST_ACCESS_TOKEN=$TOOLOST_ACCESS_TOKEN_FALLBACK" >> "$GITHUB_ENV"
+          fi
         
       - name: Update releases data
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-          TOOLOST_ACCESS_TOKEN: ${{ secrets.TOOLOST_ACCESS_TOKEN }}
         run: npm run update-releases
           
       - name: Check for changes
