@@ -28,6 +28,6 @@ if refresh returns `401`, repeat authorization and replace `TOOLOST_REFRESH_TOKE
 
 ## smart links
 
-too lost creates pre-save and stream-now links in its release-links dashboard, but its public api does not currently expose those urls. verified public links are stored in `src/data/tooLostSmartLinks.ts` and matched by spotify release id first, then too lost release id, then upc.
+too lost creates pre-save and stream-now links for each release, but its public api does not currently expose those urls. the release-links dashboard may omit older links, so verify them from each release detail page. verified public links are stored in `src/data/tooLostSmartLinks.ts` and matched by spotify release id first, then too lost release id, then upc.
 
-release pages and cards send listeners to the matching `too.fm` landing page. releases without an imported smart link continue to use spotify. do not automate against too lost's private dashboard endpoint; import new public links into the mapping after too lost creates them.
+release pages and cards send listeners to the matching `too.fm` landing page. releases outside too lost continue to use spotify. do not automate against too lost's private endpoints; import new public links into the mapping after too lost creates them.

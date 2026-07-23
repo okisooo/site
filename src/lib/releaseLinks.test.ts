@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import type { Release } from '@/data/releases';
+import { staticReleases, type Release } from '@/data/releases';
+import { tooLostSmartLinks } from '@/data/tooLostSmartLinks';
 import { getReleaseListenTarget, getTooLostSmartLink, isTooLostSmartLink } from './releaseLinks';
 
 function release(overrides: Partial<Release> = {}): Release {
@@ -49,4 +50,25 @@ test('accepts only canonical HTTPS too.fm links', () => {
   assert.equal(isTooLostSmartLink('http://too.fm/de90n0p'), false);
   assert.equal(isTooLostSmartLink('https://too.fm.example/de90n0p'), false);
   assert.equal(isTooLostSmartLink('not-a-url'), false);
+});
+
+test('maps every Too Lost website release to a unique smart link', () => {
+  assert.equal(tooLostSmartLinks.length, 30);
+  assert.equal(new Set(tooLostSmartLinks.map((entry) => entry.spotifyReleaseId)).size, 30);
+  assert.equal(new Set(tooLostSmartLinks.map((entry) => entry.tooLostReleaseId)).size, 30);
+  assert.equal(new Set(tooLostSmartLinks.map((entry) => entry.url)).size, 30);
+
+  const releasesById = new Map(staticReleases.map((item) => [item.id, item]));
+  for (const entry of tooLostSmartLinks) {
+    assert.ok(releasesById.has(entry.spotifyReleaseId), `missing website release ${entry.spotifyReleaseId}`);
+    assert.equal(isTooLostSmartLink(entry.url), true, `invalid smart link ${entry.url}`);
+  }
+});
+
+test('uses Spotify only for releases outside Too Lost', () => {
+  const spotifyFallbackTitles = staticReleases
+    .filter((item) => getReleaseListenTarget(item).label === 'Listen on Spotify')
+    .map((item) => item.title);
+
+  assert.deepEqual(spotifyFallbackTitles, ['VAC', 'リ：プレイ']);
 });
