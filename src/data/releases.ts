@@ -351,16 +351,24 @@ export const staticReleases: Release[] = [
     "totalTracks": 9,
     "genres": [
       "vocaloid"
-    ]
+    ],
+    "upc": "0609360670511",
+    "catalogNumber": "TOOLOST3000967652",
+    "label": "OKISO",
+    "releaseStatus": "live",
+    "sourceIds": {
+      "spotify": "3EYCF4DQCNVxsHq6Ep9FWl",
+      "toolost": "967652"
+    }
   },
   {
     "id": "1uOe2jivJX1Z4ZEz1DHKdp",
-    "title": "for a chance to look beyond the stars",
+    "title": "v0Id::PULSE",
     "year": "2026",
     "img": "https://i.scdn.co/image/ab67616d0000b273c97a7200f57f2513c78b36a1",
     "link": "https://open.spotify.com/album/1uOe2jivJX1Z4ZEz1DHKdp",
     "releaseDate": "2026-03-10",
-    "albumType": "album",
+    "albumType": "single",
     "slug": "v0idpulse-1uOe2j",
     "description": "v0Id::PULSE — single by OKISO.",
     "tracks": [
@@ -384,15 +392,15 @@ export const staticReleases: Release[] = [
       "Electronic/Drum & Bass",
       "vocaloid"
     ],
-    "upc": "0609360670511",
-    "catalogNumber": "TOOLOST3000967652",
+    "upc": "0609360578909",
+    "catalogNumber": "TOOLOST3000971898",
     "label": "OKISO",
     "primaryGenre": "Electronic",
     "secondaryGenre": "Experimental",
     "releaseStatus": "live",
     "sourceIds": {
       "spotify": "1uOe2jivJX1Z4ZEz1DHKdp",
-      "toolost": "967652"
+      "toolost": "971898"
     }
   },
   {
