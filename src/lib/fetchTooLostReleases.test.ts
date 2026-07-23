@@ -71,6 +71,31 @@ test('does not publish unmatched distributor releases', () => {
   ]);
 });
 
+test('prefers exact release identity over a shared track ISRC', () => {
+  const sharedIsrc = 'USABC1234567';
+  const singleWithSharedTrack: Release = {
+    ...spotifyRelease,
+    id: 'spotify-single',
+    title: 'Example Track',
+    albumType: 'single',
+    tracks: [{ title: 'Example Track', isrc: sharedIsrc }],
+  };
+  const albumWithMatchingIdentity: Release = {
+    ...spotifyRelease,
+    id: 'spotify-album',
+    tracks: [{ title: 'Different Track' }],
+  };
+
+  const result = mergeTooLostReleases(
+    [singleWithSharedTrack, albumWithMatchingIdentity],
+    [toolostRelease],
+  );
+
+  assert.equal(result.matched, 1);
+  assert.equal(result.releases.find((release) => release.id === 'spotify-album')?.sourceIds?.toolost, '73518');
+  assert.equal(result.releases.find((release) => release.id === 'spotify-single')?.sourceIds?.toolost, undefined);
+});
+
 test('requests every live release page with bearer authentication', async () => {
   const originalFetch = globalThis.fetch;
   const requestedPages: string[] = [];

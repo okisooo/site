@@ -5,7 +5,8 @@ the public site remains a static github pages export. release credentials and ap
 ## sources
 
 - too lost is the canonical source for live release metadata, upc, catalog number, label, genres, isrc, and track metadata.
-- spotify remains the public-link and playback enrichment source.
+- spotify remains the playback enrichment source and fallback public link.
+- imported too lost `too.fm` smart links are the preferred public links when available.
 - existing slugs, spotify links, artwork, durations, local audio, and manually verified lyrics survive each merge.
 - only too lost releases with `status=live` are requested. unmatched distributor rows are reported but never published automatically.
 
@@ -24,3 +25,9 @@ never add oauth values to `NEXT_PUBLIC_*`, `src/data/releases.ts`, screenshots, 
 run `npm run update-releases` locally, or dispatch the `update-releases` github action. the action exchanges `TOOLOST_REFRESH_TOKEN`, saves its rotated replacement with `SITE_PAT`, and passes the short-lived access token only to the sync step.
 
 if refresh returns `401`, repeat authorization and replace `TOOLOST_REFRESH_TOKEN`. tokens never enter the repository or action logs.
+
+## smart links
+
+too lost creates pre-save and stream-now links in its release-links dashboard, but its public api does not currently expose those urls. verified public links are stored in `src/data/tooLostSmartLinks.ts` and matched by spotify release id first, then too lost release id, then upc.
+
+release pages and cards send listeners to the matching `too.fm` landing page. releases without an imported smart link continue to use spotify. do not automate against too lost's private dashboard endpoint; import new public links into the mapping after too lost creates them.
