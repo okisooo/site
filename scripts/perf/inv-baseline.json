@@ -1,0 +1,145 @@
+{
+  "label": "baseline",
+  "route": "/rouge-noir",
+  "scrollMs": 6000,
+  "recalc": {
+    "n": 869,
+    "totalMs": 2763.5,
+    "elements": 205994
+  },
+  "invalidationReasons": [
+    [
+      "LayoutInvalidation::SVG changed",
+      29277
+    ],
+    [
+      "StyleRecalcInvalidation::Animation",
+      5382
+    ],
+    [
+      "LayoutInvalidation::Style changed",
+      2887
+    ],
+    [
+      "StyleRecalcInvalidation::Inline CSS style declaration was mutated",
+      2554
+    ],
+    [
+      "ScheduleStyleInvalidation::?",
+      281
+    ],
+    [
+      "LayoutInvalidation::Removed from layout",
+      280
+    ],
+    [
+      "StyleRecalcInvalidation::Node was inserted into tree",
+      276
+    ],
+    [
+      "LayoutInvalidation::Added to layout",
+      276
+    ],
+    [
+      "StyleRecalcInvalidation::Related style rule",
+      98
+    ],
+    [
+      "StyleInvalidatorInvalidation::Element has pending invalidation list",
+      93
+    ],
+    [
+      "StyleInvalidatorInvalidation::Invalidation set matched attribute",
+      92
+    ],
+    [
+      "StyleInvalidatorInvalidation::Invalidation set invalidates self",
+      5
+    ]
+  ],
+  "changedThings": [
+    [
+      "class:lenis",
+      2
+    ],
+    [
+      "class:lenis-smooth",
+      1
+    ],
+    [
+      "attr:data-solid",
+      1
+    ],
+    [
+      "attr:data-hidden",
+      1
+    ]
+  ],
+  "invalidatedNodes": [
+    [
+      "path",
+      15636
+    ],
+    [
+      "text",
+      12622
+    ],
+    [
+      "g class='rn-wheel-spin'",
+      1888
+    ],
+    [
+      "g class='rn-cone-spin'",
+      1888
+    ],
+    [
+      "g class='rn-ball-orbit'",
+      1888
+    ],
+    [
+      "DIV class='rn-reveal group relative flex aspect-[3/4] flex-c",
+      1352
+    ],
+    [
+      "circle",
+      1057
+    ],
+    [
+      "DIV class='rn-ticker flex shrink-0 items-center gap-8 whites",
+      944
+    ],
+    [
+      "#text",
+      828
+    ],
+    [
+      "DIV class='rn-float relative h-full w-full'",
+      472
+    ],
+    [
+      "SPAN class='rn-gold-text'",
+      472
+    ],
+    [
+      "BODY class='__variable_f3c8ef __variable_8f5f65 antialiased ",
+      370
+    ]
+  ],
+  "forcedRecalcStacks": [
+    [
+      "eval @ Observer.js:135",
+      423,
+      2074.7
+    ],
+    [
+      "setScroll @ lenis.mjs:539",
+      333,
+      358.5
+    ],
+    [
+      "_getComputedProperty @ CSSPlugin.js:204",
+      28,
+      8.5
+    ]
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "label": "no-css-anim",
+  "route": "/rouge-noir",
+  "scrollMs": 6000,
+  "recalc": {
+    "n": 688,
+    "totalMs": 2619.1,
+    "elements": 200317
+  },
+  "invalidationReasons": [
+    [
+      "StyleRecalcInvalidation::Inline CSS style declaration was mutated",
+      3691
+    ],
+    [
+      "StyleRecalcInvalidation::Animation",
+      1140
+    ],
+    [
+      "ScheduleStyleInvalidation::?",
+      365
+    ],
+    [
+      "LayoutInvalidation::Removed from layout",
+      361
+    ],
+    [
+      "StyleRecalcInvalidation::Node was inserted into tree",
+      357
+    ],
+    [
+      "LayoutInvalidation::Added to layout",
+      357
+    ],
+    [
+      "StyleRecalcInvalidation::Related style rule",
+      129
+    ],
+    [
+      "StyleInvalidatorInvalidation::Element has pending invalidation list",
+      121
+    ],
+    [
+      "StyleInvalidatorInvalidation::Invalidation set matched attribute",
+      119
+    ],
+    [
+      "LayoutInvalidation::Style changed",
+      55
+    ],
+    [
+      "StyleInvalidatorInvalidation::Invalidation set invalidates self",
+      8
+    ],
+    [
+      "StyleInvalidatorInvalidation::Invalidation set matched tagName",
+      2
+    ]
+  ],
+  "changedThings": [
+    [
+      "class:lenis",
+      4
+    ],
+    [
+      "class:lenis-smooth",
+      2
+    ],
+    [
+      "attr:data-solid",
+      1
+    ],
+    [
+      "attr:data-hidden",
+      1
+    ]
+  ],
+  "invalidatedNodes": [
+    [
+      "DIV class='rn-reveal group relative flex aspect-[3/4] flex-c",
+      2248
+    ],
+    [
+      "#text",
+      1071
+    ],
+    [
+      "BODY class='__variable_f3c8ef __variable_8f5f65 antialiased ",
+      480
+    ],
+    [
+      "ARTICLE class='rn-reveal group relative overflow-hidden roun",
+      432
+    ],
+    [
+      "DIV class='fixed bottom-6 right-6 z-50 group'",
+      238
+    ],
+    [
+      "DIV class='rn-charm-track flex gap-5 md:flex-nowrap md:pr-20",
+      212
+    ],
+    [
+      "DIV class='rn-reveal relative z-10'",
+      210
+    ],
+    [
+      "DIV class='rn-mood-rouge absolute inset-0'",
+      206
+    ],
+    [
+      "DIV class='rn-reveal group relative mx-auto overflow-hidden ",
+      200
+    ],
+    [
+      "DIV class='rn-reveal mb-12 text-center'",
+      199
+    ],
+    [
+      "DIV class='rn-reveal mb-10 max-w-2xl md:mb-14'",
+      157
+    ],
+    [
+      "DIV class='rn-reveal mb-10'",
+      147
+    ]
+  ],
+  "forcedRecalcStacks": [
+    [
+      "eval @ Observer.js:135",
+      183,
+      1143.4
+    ],
+    [
+      "setScroll @ lenis.mjs:539",
+      379,
+      682.7
+    ],
+    [
+      "_getComputedProperty @ CSSPlugin.js:204",
+      28,
+      18.2
+    ],
+    [
+      "get actualScroll @ lenis.mjs:966",
+      1,
+      0.8
+    ]
+  ]
+}

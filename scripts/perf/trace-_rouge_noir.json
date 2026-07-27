@@ -1,0 +1,206 @@
+{
+  "report": {
+    "route": "/rouge-noir",
+    "scrollMs": 8000,
+    "scrollHeight": 7785,
+    "traceEvents": 143409,
+    "frames": {
+      "n": 2857,
+      "p50": 2.157,
+      "p75": 3.709,
+      "p95": 8.442,
+      "p99": 41.159,
+      "worst": 139.03,
+      "over16_7": 65,
+      "over33": 42
+    },
+    "longTasks": {
+      "n": 34,
+      "worstMs": 134.33
+    },
+    "styleRecalc": {
+      "n": 768,
+      "totalMs": 4168.2,
+      "maxMs": 113.16,
+      "maxElements": 2187,
+      "totalElements": 260446
+    },
+    "layout": {
+      "n": 482,
+      "totalMs": 499.8,
+      "maxMs": 10.22,
+      "maxDirty": 53
+    },
+    "topEvents": [
+      {
+        "name": "RunTask",
+        "count": 44185,
+        "totalMs": 25701,
+        "maxMs": 134.33
+      },
+      {
+        "name": "FunctionCall",
+        "count": 4321,
+        "totalMs": 4426.3,
+        "maxMs": 121.64
+      },
+      {
+        "name": "UpdateLayoutTree",
+        "count": 768,
+        "totalMs": 4168.2,
+        "maxMs": 113.16
+      },
+      {
+        "name": "EventDispatch",
+        "count": 1383,
+        "totalMs": 3801.3,
+        "maxMs": 122.15
+      },
+      {
+        "name": "GPUTask",
+        "count": 808,
+        "totalMs": 2722.6,
+        "maxMs": 85.4
+      },
+      {
+        "name": "Paint",
+        "count": 1368,
+        "totalMs": 1123.1,
+        "maxMs": 11.73
+      },
+      {
+        "name": "Layerize",
+        "count": 412,
+        "totalMs": 996,
+        "maxMs": 57.48
+      },
+      {
+        "name": "FireAnimationFrame",
+        "count": 831,
+        "totalMs": 709.7,
+        "maxMs": 38.77
+      },
+      {
+        "name": "LatencyInfo.Flow",
+        "count": 521,
+        "totalMs": 572.4,
+        "maxMs": 50.21
+      },
+      {
+        "name": "Layout",
+        "count": 482,
+        "totalMs": 499.8,
+        "maxMs": 10.22
+      },
+      {
+        "name": "PrePaint",
+        "count": 468,
+        "totalMs": 446.5,
+        "maxMs": 12.52
+      },
+      {
+        "name": "Commit",
+        "count": 412,
+        "totalMs": 419.2,
+        "maxMs": 98.78
+      },
+      {
+        "name": "RasterTask",
+        "count": 2001,
+        "totalMs": 328.2,
+        "maxMs": 6.93
+      },
+      {
+        "name": "V8.GC_MC_BACKGROUND_MARKING",
+        "count": 28,
+        "totalMs": 65.2,
+        "maxMs": 6.64
+      },
+      {
+        "name": "TimerFire",
+        "count": 155,
+        "totalMs": 38.9,
+        "maxMs": 12.7
+      },
+      {
+        "name": "UpdateLayer",
+        "count": 9474,
+        "totalMs": 29.1,
+        "maxMs": 1.58
+      },
+      {
+        "name": "V8.GC_MC_INCREMENTAL",
+        "count": 32,
+        "totalMs": 28.6,
+        "maxMs": 11.19
+      },
+      {
+        "name": "ScrollLayer",
+        "count": 343,
+        "totalMs": 27.4,
+        "maxMs": 7.34
+      },
+      {
+        "name": "MajorGC",
+        "count": 3,
+        "totalMs": 26.4,
+        "maxMs": 11.25
+      },
+      {
+        "name": "V8.GC_MARK_COMPACTOR",
+        "count": 3,
+        "totalMs": 26.1,
+        "maxMs": 11.11
+      },
+      {
+        "name": "IntersectionObserverController::computeIntersections",
+        "count": 824,
+        "totalMs": 25.8,
+        "maxMs": 6.83
+      },
+      {
+        "name": "V8.GC_MC_INCREMENTAL_EMBEDDER_TRACING",
+        "count": 32,
+        "totalMs": 21.3,
+        "maxMs": 5.06
+      },
+      {
+        "name": "HitTest",
+        "count": 74,
+        "totalMs": 20.5,
+        "maxMs": 1.21
+      },
+      {
+        "name": "PaintImage",
+        "count": 471,
+        "totalMs": 19.7,
+        "maxMs": 2.35
+      },
+      {
+        "name": "V8.StackGuard",
+        "count": 48,
+        "totalMs": 18.8,
+        "maxMs": 8.03
+      },
+      {
+        "name": "V8.HandleInterrupts",
+        "count": 48,
+        "totalMs": 18.6,
+        "maxMs": 8.02
+      },
+      {
+        "name": "V8.GC_MC_BACKGROUND_SWEEPING",
+        "count": 12,
+        "totalMs": 12.1,
+        "maxMs": 1.72
+      },
+      {
+        "name": "MinorGC",
+        "count": 2,
+        "totalMs": 7.2,
+        "maxMs": 4.77
+      }
+    ]
+  },
+  "rawCount": 143409
+}

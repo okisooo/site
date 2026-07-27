@@ -1,0 +1,100 @@
+/* ─────────────────────────────────────────────────────────────
+   L1 · PRIMITIVES — raw scales. No semantics, no theme logic.
+   See docs/FRAMEWORK.md §1.
+
+   Colours are stored as SPACE-SEPARATED CHANNEL TRIPLETS so Tailwind
+   can compose alpha: rgb(var(--x) / <alpha-value>). This preserves the
+   ~131 existing `/alpha` utilities (bg-white/70) with zero call-site edits.
+
+   In hand-written CSS you MUST write rgb(var(--x)) — `color: var(--x)`
+   is a silent no-op. Paired `-c` (composed colour) forms are provided
+   for that case and are the only legal form in raw CSS.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── brand ramps (seeded from tailwind.config.ts, i.e. what actually renders) ── */
+  --c-pink: 255 126 179;          /* #FF7EB3 */
+  --c-pink-light: 255 184 212;    /* #FFB8D4 */
+  --c-pink-deep: 232 79 138;      /* #E84F8A */
+
+  --c-red: 255 77 77;             /* #FF4D4D */
+  --c-red-light: 255 179 179;     /* #FFB3B3 */
+  --c-red-deep: 204 0 0;          /* #CC0000 */
+
+  --c-yellow: 255 209 102;        /* #FFD166 */
+  --c-yellow-light: 255 229 160;  /* #FFE5A0 */
+  --c-lavender: 196 181 253;      /* #C4B5FD */
+  --c-lavender-light: 221 214 254;/* #DDD6FE */
+  --c-mint: 110 231 183;          /* #6EE7B7 */
+  --c-mint-light: 167 243 208;    /* #A7F3D0 */
+  --c-coral: 251 146 60;          /* #FB923C */
+
+  /* ── neutrals ── */
+  --c-white: 255 255 255;
+  --c-black: 0 0 0;
+  --c-offwhite: 250 251 255;      /* #FAFBFF */
+  --c-cream: 255 248 240;         /* #FFF8F0 */
+  --c-navy: 45 48 71;             /* #2D3047 */
+  --c-navy-soft: 74 78 106;       /* #4A4E6A */
+  --c-grey: 139 149 165;          /* #8B95A5 */
+
+  /* casino-noir ramp (rouge-noir scope) */
+  --c-obsidian: 6 7 9;
+  --c-crimson: 225 29 42;
+  --c-crimson-bright: 255 46 67;
+  --c-crimson-deep: 125 13 21;
+  --c-gold: 232 195 107;
+  --c-gold-bright: 247 226 171;
+  --c-gold-deep: 184 150 63;
+  --c-green-felt: 31 138 84;
+
+  /* ── space scale (marketing rhythm; dense pages override) ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-48: 12rem;
+
+  /* ── fluid type steps (clamp: mobile floor → 4K ceiling) ── */
+  --step--1: clamp(0.8rem, 0.77rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.35rem + 1.2vw, 2.25rem);
+  --step-3: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --step-4: clamp(2.6rem, 1.4rem + 5vw, 5.5rem);
+  --step-5: clamp(3.2rem, 0.8rem + 9vw, 9rem);
+  --step-hero: clamp(3.5rem, 0.5rem + 12vw, 12rem);
+
+  /* ── motion tokens ── */
+  --dur-instant: 100ms;
+  --dur-fast: 180ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+  --dur-cine: 900ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-spring: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+
+  /* ── radii ── */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 40px;
+  --radius-pill: 9999px;
+
+  /* ── z scale (single source of truth; see FRAMEWORK.md §5 step 6) ── */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-chrome: 50;
+  --z-player: 51;
+  --z-overlay: 90;
+  --z-modal: 100;
+  --z-entry: 200;
+}

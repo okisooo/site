@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────────────────────────
+   L4 · THEME SCOPES — per-route palettes.
+   See docs/FRAMEWORK.md §1 ("Theme scoping") and §4.
+
+   A scope re-points L2 semantics for its subtree. Because components only
+   ever read L2, a route can be completely re-skinned without forking a
+   single component.
+
+   Pairing: <ThemeScope name="vault" scheme="dark"> emits
+     data-theme-scope="vault" data-scheme="dark"
+   and the tailwind.config `darkMode: ["variant", [..., "&:is([data-scheme='dark'] *)"]]`
+   makes every existing `dark:` utility inside the subtree resolve — which is
+   what fixes the /vault white-on-white bug (FRAMEWORK.md §0 defect #3)
+   WITHOUT editing any .vault-* class.
+
+   Nothing consumes these selectors until migration step 5; defining them is
+   additive and inert.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── vault: dark-only editorial listening room ── */
+[data-theme-scope="vault"] {
+  --surface-0: var(--c-black);
+  --surface-1: 9 9 11;
+  --surface-2: 24 24 27;
+
+  --ink-1: var(--c-white);
+  --ink-2: 228 228 231;
+  --ink-3: 161 161 170;
+
+  --line-1: 255 255 255;
+  --line-strong: 255 255 255;
+
+  --accent: var(--c-pink);
+  --accent-ink: var(--c-white);
+
+  --surface-0-c: rgb(var(--surface-0));
+  --surface-1-c: rgb(var(--surface-1));
+  --ink-1-c: rgb(var(--ink-1));
+  --ink-3-c: rgb(var(--ink-3));
+  --accent-c: rgb(var(--accent));
+}
+
+/* ── rouge-noir: dark-only casino noir (crimson / gold / felt green) ──
+   Replaces the inline <style> block in RougeNoirClient (migration step 10).
+   Moving these out of the page has a second payoff: the tokens become
+   visible to Tailwind's content scanner, so `bg-accent` works instead of
+   every colour being an arbitrary `bg-[var(--rn-crimson)]`. */
+[data-theme-scope="rouge-noir"] {
+  --surface-0: var(--c-obsidian);
+  --surface-1: 13 15 22;
+  --surface-2: 20 24 38;
+
+  --ink-1: 237 230 214;
+  --ink-2: 200 195 182;
+  --ink-3: 138 143 158;
+
+  --line-1: 255 255 255;
+  --line-strong: var(--c-gold);
+
+  --accent: var(--c-crimson);
+  --accent-ink: var(--c-white);
+  --accent-2: var(--c-gold);
+
+  --focus-ring: var(--c-gold);
+
+  /* scope-local extras (no L2 role — casino-specific) */
+  --felt: var(--c-green-felt);
+  --gold-bright: var(--c-gold-bright);
+  --crimson-bright: var(--c-crimson-bright);
+
+  --surface-0-c: rgb(var(--surface-0));
+  --surface-1-c: rgb(var(--surface-1));
+  --ink-1-c: rgb(var(--ink-1));
+  --ink-3-c: rgb(var(--ink-3));
+  --accent-c: rgb(var(--accent));
+}
+
+/* A dark-only scope must also paint the document so the overscroll /
+   rubber-band gutter and the area behind the scrollbar match the page
+   instead of leaking the light body colour (FRAMEWORK.md §0 defect #11).
+   Applied by <RootScheme> on the <html> element, not by the wrapper div. */
+html[data-scheme="dark"] {
+  background-color: var(--surface-0-c);
+  color-scheme: dark;
+}

@@ -1,0 +1,65 @@
+/* ─────────────────────────────────────────────────────────────
+   L2 · SEMANTIC — role tokens. Components consume ONLY these.
+   See docs/FRAMEWORK.md §1.
+
+   Values are deliberately seeded to be PIXEL-IDENTICAL to what the site
+   renders today, so the commit that flips `body` onto these tokens is a
+   provable no-op:
+     light  surface-0 = #fff, ink-1 = #000   (was `bg-white text-black`)
+     dark   surface-0 = #000, ink-1 = #fff   (was `dark:bg-black dark:text-white`)
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* surfaces: 0 = page, 1 = card, 2 = raised/inset */
+  --surface-0: var(--c-white);
+  --surface-1: var(--c-white);
+  --surface-2: var(--c-cream);
+
+  /* ink: 1 = primary text, 2 = secondary, 3 = muted */
+  --ink-1: var(--c-black);
+  --ink-2: 51 51 51;
+  --ink-3: var(--c-grey);
+
+  /* lines */
+  --line-1: 0 0 0;
+  --line-strong: var(--c-black);
+
+  /* accent (brand hot colour) */
+  --accent: var(--c-pink);
+  --accent-ink: var(--c-white);
+  --accent-2: var(--c-red);
+
+  /* status */
+  --danger: var(--c-red-deep);
+  --focus-ring: var(--c-pink);
+
+  /* composed forms — the ONLY legal way to reference these in raw CSS */
+  --surface-0-c: rgb(var(--surface-0));
+  --surface-1-c: rgb(var(--surface-1));
+  --ink-1-c: rgb(var(--ink-1));
+  --ink-3-c: rgb(var(--ink-3));
+  --accent-c: rgb(var(--accent));
+}
+
+.dark,
+[data-scheme="dark"] {
+  --surface-0: var(--c-black);
+  --surface-1: 17 17 17;
+  --surface-2: 26 26 26;
+
+  --ink-1: var(--c-white);
+  --ink-2: 224 224 224;
+  --ink-3: var(--c-grey);
+
+  --line-1: 255 255 255;
+  --line-strong: var(--c-white);
+
+  --accent: var(--c-pink);
+  --accent-ink: var(--c-white);
+
+  --surface-0-c: rgb(var(--surface-0));
+  --surface-1-c: rgb(var(--surface-1));
+  --ink-1-c: rgb(var(--ink-1));
+  --ink-3-c: rgb(var(--ink-3));
+  --accent-c: rgb(var(--accent));
+}

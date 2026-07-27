@@ -1,0 +1,207 @@
+{
+  "report": {
+    "label": "no-cursor",
+    "route": "/rouge-noir",
+    "scrollMs": 8000,
+    "scrollHeight": 7785,
+    "traceEvents": 139730,
+    "frames": {
+      "n": 2814,
+      "p50": 1.648,
+      "p75": 4.16,
+      "p95": 12.399,
+      "p99": 22.99,
+      "worst": 194.781,
+      "over16_7": 75,
+      "over33": 7
+    },
+    "longTasks": {
+      "n": 9,
+      "worstMs": 190.139
+    },
+    "styleRecalc": {
+      "n": 892,
+      "totalMs": 1155.8,
+      "maxMs": 46.08,
+      "maxElements": 36,
+      "totalElements": 12935
+    },
+    "layout": {
+      "n": 580,
+      "totalMs": 848.7,
+      "maxMs": 16.8,
+      "maxDirty": 53
+    },
+    "topEvents": [
+      {
+        "name": "RunTask",
+        "count": 38281,
+        "totalMs": 26628.1,
+        "maxMs": 190.14
+      },
+      {
+        "name": "GPUTask",
+        "count": 689,
+        "totalMs": 4167.3,
+        "maxMs": 189.65
+      },
+      {
+        "name": "FunctionCall",
+        "count": 4697,
+        "totalMs": 2618.3,
+        "maxMs": 52.79
+      },
+      {
+        "name": "EventDispatch",
+        "count": 1437,
+        "totalMs": 1819.1,
+        "maxMs": 52.96
+      },
+      {
+        "name": "Paint",
+        "count": 1317,
+        "totalMs": 1713.9,
+        "maxMs": 36.02
+      },
+      {
+        "name": "Layerize",
+        "count": 502,
+        "totalMs": 1480,
+        "maxMs": 36.66
+      },
+      {
+        "name": "UpdateLayoutTree",
+        "count": 892,
+        "totalMs": 1155.8,
+        "maxMs": 46.08
+      },
+      {
+        "name": "FireAnimationFrame",
+        "count": 1009,
+        "totalMs": 920.3,
+        "maxMs": 21.32
+      },
+      {
+        "name": "Layout",
+        "count": 580,
+        "totalMs": 848.7,
+        "maxMs": 16.8
+      },
+      {
+        "name": "PrePaint",
+        "count": 562,
+        "totalMs": 589.6,
+        "maxMs": 14.28
+      },
+      {
+        "name": "Commit",
+        "count": 502,
+        "totalMs": 437.7,
+        "maxMs": 24.16
+      },
+      {
+        "name": "RasterTask",
+        "count": 1816,
+        "totalMs": 388.6,
+        "maxMs": 16.39
+      },
+      {
+        "name": "V8.GC_MC_BACKGROUND_MARKING",
+        "count": 20,
+        "totalMs": 153.5,
+        "maxMs": 29.25
+      },
+      {
+        "name": "LatencyInfo.Flow",
+        "count": 540,
+        "totalMs": 149.6,
+        "maxMs": 20.27
+      },
+      {
+        "name": "TimerFire",
+        "count": 156,
+        "totalMs": 40.3,
+        "maxMs": 11.65
+      },
+      {
+        "name": "HitTest",
+        "count": 78,
+        "totalMs": 40,
+        "maxMs": 3.81
+      },
+      {
+        "name": "UpdateLayer",
+        "count": 11027,
+        "totalMs": 37,
+        "maxMs": 1.77
+      },
+      {
+        "name": "MajorGC",
+        "count": 2,
+        "totalMs": 35.1,
+        "maxMs": 21.57
+      },
+      {
+        "name": "V8.GC_MARK_COMPACTOR",
+        "count": 2,
+        "totalMs": 34.8,
+        "maxMs": 21.34
+      },
+      {
+        "name": "ScrollLayer",
+        "count": 416,
+        "totalMs": 27.5,
+        "maxMs": 2.68
+      },
+      {
+        "name": "V8.StackGuard",
+        "count": 54,
+        "totalMs": 25.5,
+        "maxMs": 13.98
+      },
+      {
+        "name": "V8.HandleInterrupts",
+        "count": 54,
+        "totalMs": 25.2,
+        "maxMs": 13.98
+      },
+      {
+        "name": "PaintImage",
+        "count": 565,
+        "totalMs": 20.4,
+        "maxMs": 1.05
+      },
+      {
+        "name": "IntersectionObserverController::computeIntersections",
+        "count": 1004,
+        "totalMs": 18.5,
+        "maxMs": 0.48
+      },
+      {
+        "name": "V8.GC_MC_INCREMENTAL",
+        "count": 12,
+        "totalMs": 13.8,
+        "maxMs": 6.66
+      },
+      {
+        "name": "V8.GC_HEAP_EXTERNAL_SECOND_PASS_CALLBACKS",
+        "count": 2,
+        "totalMs": 11,
+        "maxMs": 10.95
+      },
+      {
+        "name": "V8.GC_MC_MARK",
+        "count": 2,
+        "totalMs": 10.6,
+        "maxMs": 8.16
+      },
+      {
+        "name": "V8.GC_MC_BACKGROUND_SWEEPING",
+        "count": 6,
+        "totalMs": 10.1,
+        "maxMs": 2.41
+      }
+    ]
+  },
+  "rawCount": 139730
+}

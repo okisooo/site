@@ -1,0 +1,68 @@
+/* ─────────────────────────────────────────────────────────────
+   L3 · COMPAT BRIDGE — shadcn / 21st.dev / reactbits var names → L2.
+   See docs/FRAMEWORK.md §1 and §6.
+
+   Pasted external components assume a shadcn token vocabulary
+   (bg-card, text-muted-foreground, bg-primary, border-input …). In this
+   repo those classes did not exist: only 4 of ~30 shadcn vars were ever
+   mapped into Tailwind (tailwind.config.ts:14-17). This file defines the
+   missing ones in terms of L2 semantics so a pasted component inherits
+   OKISO's identity instead of shipping its own palette.
+
+   DELIBERATELY NOT REDEFINED HERE: --background, --foreground, --border,
+   --ring. Those already exist in globals.css (the oklch block) and are
+   the only four wired into Tailwind, so touching them would make this
+   layer a visual change instead of an additive no-op. They get re-pointed
+   in migration step 4, once the ba-* drift is retired.
+
+   Alpha composition: values are channel triplets, consumed as
+   rgb(var(--card) / <alpha-value>).
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --card: var(--surface-1);
+  --card-foreground: var(--ink-1);
+
+  --popover: var(--surface-1);
+  --popover-foreground: var(--ink-1);
+
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-ink);
+
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--ink-1);
+
+  --muted: var(--surface-2);
+  --muted-foreground: var(--ink-3);
+
+  --accent-bg: var(--accent);
+  --accent-foreground: var(--accent-ink);
+
+  --destructive: var(--danger);
+  --destructive-foreground: var(--c-white);
+
+  --input: var(--line-1);
+}
+
+.dark,
+[data-scheme="dark"] {
+  --card: var(--surface-1);
+  --card-foreground: var(--ink-1);
+
+  --popover: var(--surface-1);
+  --popover-foreground: var(--ink-1);
+
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-ink);
+
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--ink-1);
+
+  --muted: var(--surface-2);
+  --muted-foreground: var(--ink-3);
+
+  --accent-bg: var(--accent);
+  --accent-foreground: var(--accent-ink);
+
+  --input: var(--line-1);
+}
