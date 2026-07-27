@@ -1,3 +1,10 @@
+/* Framework token layers — see docs/FRAMEWORK.md §1.
+   Order matters: primitives → semantic → compat bridge → theme scopes. */
+@import "../styles/primitives.css";
+@import "../styles/semantic.css";
+@import "../styles/compat.css";
+@import "../styles/scopes.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,7 +35,7 @@
 
 @layer base {
   body {
-    @apply font-ui antialiased overflow-x-hidden bg-background text-foreground;
+    @apply font-ui antialiased bg-background text-foreground;
   }
 
   h1,
@@ -48,21 +55,15 @@
   :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    /* card/popover/primary/secondary/muted/accent/destructive/input are now
+       owned by the L3 bridge (src/styles/compat.css) as channel triplets.
+       They were dead here — only background/foreground/border/ring were ever
+       mapped into Tailwind. Redeclaring them in this block would win the
+       cascade (Tailwind strips `@layer base`, so these land later in source
+       order than the @imports) and make `bg-card` compile to the invalid
+       `rgb(oklch(...) / <alpha>)`. Do not re-add them.
+       See docs/FRAMEWORK.md §1 (L3). */
     --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
     --chart-1: oklch(0.809 0.105 251.813);
     --chart-2: oklch(0.623 0.214 259.815);
@@ -83,21 +84,8 @@
   .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    /* See the :root note above — L3 bridge owns the rest. */
     --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
     --chart-1: oklch(0.809 0.105 251.813);
     --chart-2: oklch(0.623 0.214 259.815);
@@ -114,31 +102,82 @@
     --sidebar-ring: oklch(0.556 0 0);
   }
 
-  .theme {
-    --font-sans: var(--font-sans);
-  }
-
   html {
     @apply font-sans;
   }
 
+  /* Native cursors only. A custom cursor must never be driven from the root:
+     `cursor` and custom properties are inherited, so writing either on <html>
+     forces a full-document style recalc (~30ms per write). See docs/HANDOFF.md. */
   @media (pointer: fine) {
-    :root {
-      --cursor-pointer: url('/cursors/frames/pointer_0.png') 0 0, auto;
-      --cursor-link: url('/cursors/frames/link_0.png') 0 0, pointer;
+    a, button, [role="button"], .clickable, select, input[type="submit"], input[type="button"] {
+      cursor: pointer;
     }
+  }
 
-    * {
-      cursor: var(--cursor-pointer);
-    }
+  /* ── Animated grid background (src/Components/Backgrounds/AnimatedGrid.tsx) ──
+     Only `transform` and `opacity` are animated anywhere in this block. Those
+     are the two properties the compositor can run on its own; anything else
+     here would repaint a full-viewport layer every frame. Do not add a
+     mix-blend-mode — one on a full-viewport fixed layer was a measured
+     scroll-lag source on /rouge-noir. */
+  .okiso-grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    contain: strict;
+    transform: translateZ(0);
+  }
 
-    a, button, [role="button"], .clickable, select, input[type="submit"], input[type="button"], .cursor-pointer {
-      cursor: var(--cursor-link) !important;
-    }
+  /* Oversized by two tiles so no edge is ever exposed while drifting. */
+  .okiso-grid-drift {
+    position: absolute;
+    inset: -80px;
+    will-change: transform;
+    animation: okiso-grid-drift 48s linear infinite;
+  }
 
-    input, textarea, [contenteditable="true"] {
-      cursor: text;
+  .okiso-grid-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .okiso-grid-svg path {
+    stroke: rgba(156, 163, 175, 0.3);
+    stroke-width: 1;
+  }
+
+  :is(.dark) .okiso-grid-svg path {
+    stroke: rgba(255, 255, 255, 0.12);
+  }
+
+  .okiso-grid-base { opacity: 0.55; }
+  .okiso-grid-pulse-a { opacity: 0; animation: okiso-grid-pulse 16s ease-in-out infinite; }
+  .okiso-grid-pulse-b { opacity: 0; animation: okiso-grid-pulse 22s ease-in-out infinite -8s; }
+
+  /* Exactly one tile (40px), so the loop is seamless. */
+  @keyframes okiso-grid-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(40px, 40px, 0); }
+  }
+
+  @keyframes okiso-grid-pulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.5; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .okiso-grid-drift,
+    .okiso-grid-pulse-a,
+    .okiso-grid-pulse-b {
+      animation: none;
     }
+    /* Static state must still look deliberate, so the grid stays visible
+       rather than collapsing to the pulses' 0-opacity trough. */
+    .okiso-grid-pulse-a { opacity: 0.25; }
+    .okiso-grid-pulse-b { opacity: 0; }
   }
 }
 
@@ -393,3 +432,9 @@
     letter-spacing: -0.01em;
   }
 }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+

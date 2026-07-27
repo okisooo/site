@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { VRMLoaderPlugin, VRM } from '@pixiv/three-vrm';
 import * as THREE from 'three';
 
@@ -21,11 +22,21 @@ function CameraAdjuster() {
             const targetDistance = 2.0;
             const fitHeight = 1.5; // Zooms in on the character (fits torso and head)
             const fitWidth = 2.2;  // Fits wide T-pose model width + padding
-            
+
             const fovHeight = 2 * Math.atan(fitHeight / (2 * targetDistance)) * (180 / Math.PI);
             const fovWidth = 2 * Math.atan(fitWidth / (2 * targetDistance * aspect)) * (180 / Math.PI);
-            
-            camera.fov = Math.max(fovHeight, fovWidth);
+
+            // Fitting WIDTH by inflating the VERTICAL fov only stays sane while the
+            // canvas is roughly square. On a portrait phone (390x844, aspect 0.46)
+            // this formula returns ~100deg, and a 100deg vertical fov renders the
+            // model visibly stretched and distorted.
+            // Clamp it. Desktop resolves to ~61.5deg, so a 60deg ceiling leaves the
+            // existing framing effectively untouched; narrow viewports now crop the
+            // T-pose arms instead of distorting the whole figure, which is the
+            // normal trade for portrait framing.
+            const MAX_FOV = 60;
+            const MIN_FOV = 30;
+            camera.fov = Math.min(MAX_FOV, Math.max(MIN_FOV, Math.max(fovHeight, fovWidth)));
             camera.updateProjectionMatrix();
         }
     }, [size.width, size.height, camera]);
@@ -40,6 +51,9 @@ function VRMModel({ url }: VRMModelProps) {
 
     useEffect(() => {
         const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        loader.setDRACOLoader(dracoLoader);
         loader.register((parser) => new VRMLoaderPlugin(parser));
 
         loader.load(

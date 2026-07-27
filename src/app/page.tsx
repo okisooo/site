@@ -125,13 +125,19 @@ export default function Home() {
             height={40}
             className="absolute inset-0 h-full w-full mix-blend-overlay dark:mix-blend-color-dodge opacity-50 [mask-image:linear-gradient(to_bottom,white,transparent)]"
           />
-          <Marquee speed={40} gradient={false} autoFill>
+          {/* `overflow-hidden` is required, not cosmetic. react-fast-marquee's
+              container defaults to overflow-y:auto, and 25vw type overflows it
+              vertically (378px of content in a 320px box), which turns each
+              marquee into a real nested scroller. Wheel over one scrolls THAT box
+              natively before chaining to the page — the second source of the
+              scroll stutter. The third marquee on this page already had it. */}
+          <Marquee speed={40} gradient={false} autoFill className="overflow-hidden">
             <h1 className="text-[25vw] leading-none font-black uppercase whitespace-nowrap px-8 text-black dark:text-white">
               PRODUCER VTUBER
             </h1>
           </Marquee>
           <div className="-mt-[10vh]">
-            <Marquee speed={40} direction="right" gradient={false} autoFill>
+            <Marquee speed={40} direction="right" gradient={false} autoFill className="overflow-hidden">
               <h1 className="text-[25vw] leading-none font-black uppercase whitespace-nowrap px-8 text-transparent stroke-black dark:stroke-white" style={{ WebkitTextStroke: '4px currentColor' }}>
                 CREATIVE ARCHIVE
               </h1>
@@ -204,6 +210,14 @@ export default function Home() {
               {/* Massive ambient glow behind model */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-ba-pink/20 blur-[120px] rounded-full pointer-events-none mix-blend-overlay dark:mix-blend-lighten" />
 
+              {/* No `data-lenis-prevent` here. It tells Lenis to ignore wheel over
+                  this element, so the browser scrolls the page natively — unsmoothed
+                  — while the rest of the page is Lenis-smoothed. That reads as the
+                  smooth scroll "fighting" the normal one, and the model fills most
+                  of the hero, which is exactly where scrolling starts.
+                  It would only be justified if the viewer consumed the wheel, and it
+                  does not: OrbitControls is configured enableZoom={false} +
+                  enablePan={false}. Drag-to-rotate is pointer-driven and unaffected. */}
               <div className="w-full h-full relative z-10 pointer-events-auto cursor-grab active:cursor-grabbing flex items-center justify-center">
                 {loadVRM ? (
                   <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
@@ -357,6 +371,7 @@ export default function Home() {
           />
           {/* Modal Content */}
           <motion.div
+            data-lenis-prevent
             data-premid-modal="terms"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -417,6 +432,7 @@ export default function Home() {
             onClick={() => setIsContactOpen(false)}
           />
           <motion.div
+            data-lenis-prevent
             data-premid-modal="contact"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
