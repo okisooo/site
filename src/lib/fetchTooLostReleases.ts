@@ -151,15 +151,21 @@ function findMatch(releases: Release[], candidate: TooLostRelease): Release | un
     if (upcMatch) return upcMatch;
   }
 
+  const titleDateMatch = releases.find(
+    (release) =>
+      normalize(release.title) === normalize(candidate.title)
+      && release.releaseDate === candidate.releaseDate
+      && normalize(release.albumType) === normalize(candidate.type),
+  );
+  if (titleDateMatch) return titleDateMatch;
+
   const candidateIsrcs = new Set(candidate.tracks.map((track) => normalize(track.isrc)).filter(Boolean));
   if (candidateIsrcs.size > 0) {
     const isrcMatch = releases.find((release) => release.tracks?.some((track) => candidateIsrcs.has(normalize(track.isrc))));
     if (isrcMatch) return isrcMatch;
   }
 
-  return releases.find(
-    (release) => normalize(release.title) === normalize(candidate.title) && release.releaseDate === candidate.releaseDate,
-  );
+  return undefined;
 }
 
 function mergeTracks(existing: Release['tracks'], incoming: TooLostTrack[]): Release['tracks'] {

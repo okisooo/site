@@ -95,7 +95,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="48x48 96x96 192x192 512x512" href="/icon.png?v=20260626" />
         <link rel="apple-touch-icon" href="/icon.png?v=20260626" />
       </head>
-      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
+      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

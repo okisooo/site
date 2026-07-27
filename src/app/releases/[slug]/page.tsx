@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { staticReleases, type Release } from '@/data/releases';
 import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
 import { TrackLyricsToggle } from '@/Components/TrackLyricsToggle';
+import { getReleaseListenTarget } from '@/lib/releaseLinks';
 
 // Pre-render all release pages at build time
 export async function generateStaticParams() {
@@ -31,7 +32,7 @@ export async function generateMetadata(props: any) {
     const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
     if (!release) return { title: 'Release' };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
     const url = `${siteUrl}/releases/${release.slug}`;
 
     // Hyper-optimized SEO title (around 50-60 characters for SERP space)
@@ -75,8 +76,9 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
     const release = staticReleases.find(r => r.slug === awaitedParams.slug) as Release | undefined;
     if (!release) return notFound();
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okisooo.github.io';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://okiso.net';
     const url = `${siteUrl}/releases/${release.slug}`;
+    const listenTarget = getReleaseListenTarget(release);
 
     const albumLd: Record<string, unknown> = {
         "@context": "https://schema.org",
@@ -159,7 +161,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
             <h1 className="text-3xl font-bold mb-4">{release.title}</h1>
             <div className="flex gap-6 items-start">
                 <div className="w-[220px] relative">
-                    <a href={release.link} target="_blank" rel="noopener noreferrer">
+                    <a href={listenTarget.url} target="_blank" rel="noopener noreferrer">
                         <Image src={release.img} alt={`${release.title} artwork`} width={440} height={440} className="rounded-md shadow" />
                     </a>
                 </div>
@@ -168,7 +170,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
                     <p className="mb-4">{release.description}</p>
                     <div className="flex items-center gap-3">
                         <PlayReleaseButton release={release} />
-                        <a href={release.link} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#1DB954] text-black font-medium px-3 py-2 rounded-md hover:bg-[#1ed760] transition-colors">Listen on Spotify</a>
+                        <a href={listenTarget.url} target="_blank" rel="noopener noreferrer" className="inline-block bg-pink-500 text-white font-medium px-3 py-2 rounded-md hover:bg-pink-400 transition-colors">{listenTarget.label}</a>
                     </div>
                     {release.tracks && release.tracks.length > 0 && (
                         <div className="mt-8 w-full max-w-xl">

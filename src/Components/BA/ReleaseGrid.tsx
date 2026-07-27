@@ -7,6 +7,7 @@ import { Play, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
 import { createPortal } from 'react-dom';
+import { getReleaseListenTarget } from '@/lib/releaseLinks';
 
 export default function ReleaseGrid() {
   const [selectedRelease, setSelectedRelease] = React.useState<Release | null>(null);
@@ -125,12 +126,12 @@ export default function ReleaseGrid() {
                 <div className="flex flex-col gap-3">
                   <PlayReleaseButton release={selectedRelease} onClose={() => setSelectedRelease(null)} />
                   <a
-                    href={selectedRelease.link}
+                    href={getReleaseListenTarget(selectedRelease).url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-[#1DB954] to-[#1ed760] hover:shadow-[0_0_20px_rgba(29,185,84,0.4)] hover:scale-[1.02] active:scale-[0.98] text-black font-black uppercase tracking-[0.2em] text-center transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-ba-pink to-pink-400 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-[1.02] active:scale-[0.98] text-white font-black uppercase tracking-[0.2em] text-center transition-all shadow-lg flex items-center justify-center gap-2"
                   >
-                    Listen on Spotify
+                    {getReleaseListenTarget(selectedRelease).label}
                   </a>
                 </div>
               </motion.div>

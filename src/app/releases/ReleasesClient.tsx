@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
@@ -10,7 +10,7 @@ import { Play } from "lucide-react"
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { useScrollLock } from "@/motion/useScrollLock"
+import { getReleaseListenTarget } from "@/lib/releaseLinks"
 
 export default function ReleasesClient() {
   const [viewMode, setViewMode] = useState<'list' | 'orbit'>('list')
@@ -19,7 +19,20 @@ export default function ReleasesClient() {
 
   const selectedRelease = pinnedRelease ?? hoveredRelease
 
-  useScrollLock(viewMode === 'orbit' || !!pinnedRelease)
+  useEffect(() => {
+    // Only lock scrolling when in orbit mode or when a modal is open
+    if (viewMode === 'orbit' || pinnedRelease) {
+      document.body.style.overflow = "hidden"
+      document.body.style.height = "100vh"
+    } else {
+      document.body.style.overflow = "auto"
+      document.body.style.height = "auto"
+    }
+    return () => {
+      document.body.style.overflow = "auto"
+      document.body.style.height = "auto"
+    }
+  }, [viewMode, pinnedRelease])
 
   return (
     <div 
@@ -77,7 +90,7 @@ export default function ReleasesClient() {
 
       {/* ─── 3D ORBIT VIEW ─── */}
       {viewMode === 'orbit' && (
-        <div data-lenis-prevent className="absolute inset-0 w-full h-full bg-black">
+        <div className="absolute inset-0 w-full h-full bg-black">
           <Canvas camera={{ position: [-8, 2, 10], fov: 50 }}>
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />
@@ -112,12 +125,12 @@ export default function ReleasesClient() {
                 <div className="mt-2 flex gap-3 flex-wrap">
                   <PlayReleaseButton release={selectedRelease} />
                   <a
-                    href={selectedRelease.link}
+                    href={getReleaseListenTarget(selectedRelease).url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block bg-white text-black font-black uppercase tracking-widest px-6 py-3 rounded-full hover:bg-ba-pink hover:text-white transition-colors"
                   >
-                    LISTEN NOW
+                    {getReleaseListenTarget(selectedRelease).label}
                   </a>
                 </div>
               </div>
@@ -226,12 +239,12 @@ export default function ReleasesClient() {
               <div className="flex flex-col gap-3">
                 <PlayReleaseButton release={pinnedRelease} />
                 <a
-                  href={pinnedRelease.link}
+                  href={getReleaseListenTarget(pinnedRelease).url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-md bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold uppercase tracking-widest text-center transition-colors shadow-md"
+                  className="w-full py-3 rounded-md bg-ba-pink hover:bg-pink-400 text-white font-bold uppercase tracking-widest text-center transition-colors shadow-md"
                 >
-                  Listen on Spotify
+                  {getReleaseListenTarget(pinnedRelease).label}
                 </a>
               </div>
             </motion.div>
