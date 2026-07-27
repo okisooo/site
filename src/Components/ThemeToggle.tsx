@@ -14,7 +14,7 @@ export function ThemeToggle() {
     if (!mounted) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 group">
+        <div data-okiso-chrome="theme-toggle" className="fixed bottom-6 right-6 z-50 group">
             <div className="absolute inset-0 bg-ba-pink dark:bg-white rounded-full blur-[20px] opacity-30 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
             <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

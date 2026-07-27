@@ -1,19 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 import GridPattern from "@/Components/MagicUI/GridPattern";
+import { useScrollLock } from "@/motion/useScrollLock";
 
 export default function UpcomingClient() {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    document.body.style.height = "100vh";
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.height = "auto";
-    };
-  }, []);
+  useScrollLock(true);
 
   return (
     <div 

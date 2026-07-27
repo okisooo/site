@@ -42,7 +42,7 @@ export function TrackLyricsToggle({ title, durationStr, lyrics }: TrackLyricsTog
       </button>
       
       {isOpen && (
-        <div className="mt-2 mb-3 p-4 rounded-2xl bg-black/5 dark:bg-white/5 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-line text-black/70 dark:text-white/70 max-h-[300px] overflow-y-auto select-text border border-black/5 dark:border-white/5">
+        <div data-lenis-prevent className="mt-2 mb-3 p-4 rounded-2xl bg-black/5 dark:bg-white/5 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-line text-black/70 dark:text-white/70 max-h-[300px] overflow-y-auto select-text border border-black/5 dark:border-white/5">
           {lyrics}
         </div>
       )}

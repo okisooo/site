@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
@@ -10,6 +10,7 @@ import { Play } from "lucide-react"
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
+import { useScrollLock } from "@/motion/useScrollLock"
 
 export default function ReleasesClient() {
   const [viewMode, setViewMode] = useState<'list' | 'orbit'>('list')
@@ -18,20 +19,7 @@ export default function ReleasesClient() {
 
   const selectedRelease = pinnedRelease ?? hoveredRelease
 
-  useEffect(() => {
-    // Only lock scrolling when in orbit mode or when a modal is open
-    if (viewMode === 'orbit' || pinnedRelease) {
-      document.body.style.overflow = "hidden"
-      document.body.style.height = "100vh"
-    } else {
-      document.body.style.overflow = "auto"
-      document.body.style.height = "auto"
-    }
-    return () => {
-      document.body.style.overflow = "auto"
-      document.body.style.height = "auto"
-    }
-  }, [viewMode, pinnedRelease])
+  useScrollLock(viewMode === 'orbit' || !!pinnedRelease)
 
   return (
     <div 
@@ -89,7 +77,7 @@ export default function ReleasesClient() {
 
       {/* ─── 3D ORBIT VIEW ─── */}
       {viewMode === 'orbit' && (
-        <div className="absolute inset-0 w-full h-full bg-black">
+        <div data-lenis-prevent className="absolute inset-0 w-full h-full bg-black">
           <Canvas camera={{ position: [-8, 2, 10], fov: 50 }}>
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />

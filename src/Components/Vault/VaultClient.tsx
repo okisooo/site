@@ -44,7 +44,7 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="w-full max-w-sm rounded-ba-lg border border-white/10 bg-zinc-950 p-8" onClick={(e) => e.stopPropagation()}>
+      <div data-lenis-prevent className="w-full max-w-sm rounded-ba-lg border border-white/10 bg-zinc-950 p-8" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between mb-6">
           <div>
             <p className="font-mono text-[10px] text-ba-pink uppercase tracking-[0.3em]">members only</p>
@@ -288,7 +288,7 @@ function VaultManagerPanel({ session, projects, onSave, onDelete, onSnippet, onC
 }) {
   const manageable = projects.flatMap((project) => project.versions.filter((version) => version.canManage).map((version) => ({ project, version })));
   return (
-    <section className="vault-panel mb-8">
+    <section data-lenis-prevent className="vault-panel mb-8">
       <div className="flex items-start justify-between mb-5">
         <div>
           <p className="vault-kicker">Internal manager</p>
@@ -349,7 +349,7 @@ function VaultUploadPanel({ session, projects, onClose, onUploaded }: { session:
   async function submit(event: React.FormEvent) { event.preventDefault(); if (!file) return; setBusy(true); setError(null); try { await uploadVaultFile(session, { file, projectSlug: slug, projectTitle: title, label, kind, minLevel: level, note }); await onUploaded(); } catch (err) { setError(err instanceof Error ? err.message : "Upload failed."); } finally { setBusy(false); } }
   function pickProject(next: string) { setSlug(next); const project = projects.find((item) => item.slug === next); if (project) setTitle(project.title); }
   return (
-    <section className="mb-8 rounded-ba-lg border border-ba-pink/25 bg-zinc-950/90 backdrop-blur-xl p-5 md:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+    <section data-lenis-prevent className="mb-8 rounded-ba-lg border border-ba-pink/25 bg-zinc-950/90 backdrop-blur-xl p-5 md:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
       <div className="flex justify-between mb-5">
         <div><h2 className="vault-serif text-3xl text-white">add to the vault.</h2><p className="font-mono text-[10px] text-white/45 uppercase tracking-widest mt-1">files appear immediately</p></div>
         <button onClick={onClose} aria-label="Close upload panel" className="text-white/45 hover:text-white"><X /></button>

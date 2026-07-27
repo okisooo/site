@@ -15,6 +15,57 @@ export default {
         foreground: "var(--foreground)",
         border: "var(--border)",
         ring: "var(--ring)",
+
+        // ── FRAMEWORK L2 semantics (docs/FRAMEWORK.md §1) ──
+        // Channel triplets, so `/alpha` composition keeps working:
+        // bg-surface-0/70 → rgb(var(--surface-0) / 0.7)
+        surface: {
+          0: "rgb(var(--surface-0) / <alpha-value>)",
+          1: "rgb(var(--surface-1) / <alpha-value>)",
+          2: "rgb(var(--surface-2) / <alpha-value>)",
+        },
+        ink: {
+          1: "rgb(var(--ink-1) / <alpha-value>)",
+          2: "rgb(var(--ink-2) / <alpha-value>)",
+          3: "rgb(var(--ink-3) / <alpha-value>)",
+        },
+        line: {
+          DEFAULT: "rgb(var(--line-1) / <alpha-value>)",
+          strong: "rgb(var(--line-strong) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          ink: "rgb(var(--accent-ink) / <alpha-value>)",
+          2: "rgb(var(--accent-2) / <alpha-value>)",
+        },
+        danger: "rgb(var(--danger) / <alpha-value>)",
+
+        // ── FRAMEWORK L3 shadcn bridge (for pasted 21st.dev/shadcn parts) ──
+        card: {
+          DEFAULT: "rgb(var(--card) / <alpha-value>)",
+          foreground: "rgb(var(--card-foreground) / <alpha-value>)",
+        },
+        popover: {
+          DEFAULT: "rgb(var(--popover) / <alpha-value>)",
+          foreground: "rgb(var(--popover-foreground) / <alpha-value>)",
+        },
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "rgb(var(--secondary) / <alpha-value>)",
+          foreground: "rgb(var(--secondary-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+          foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
+        },
+        destructive: {
+          DEFAULT: "rgb(var(--destructive) / <alpha-value>)",
+          foreground: "rgb(var(--destructive-foreground) / <alpha-value>)",
+        },
+        input: "rgb(var(--input) / <alpha-value>)",
         // Blue Archive inspired palette (Red/White focus)
         "ba-red": "#FF4D4D",
         "ba-red-light": "#FFB3B3",
@@ -55,6 +106,42 @@ export default {
         "ba": "16px",
         "ba-lg": "24px",
         "ba-pill": "9999px",
+        // ── FRAMEWORK radii (docs/FRAMEWORK.md §1) ──
+        // Deliberately NOT named sm/md/lg/xl: those are Tailwind defaults and
+        // re-pointing them would silently restyle 17 existing call sites
+        // (rounded-lg 8px → 24px). Semantic names collide with nothing.
+        "chip": "var(--radius-sm)",
+        "card": "var(--radius-md)",
+        "panel": "var(--radius-lg)",
+        "hero": "var(--radius-xl)",
+        "pill": "var(--radius-pill)",
+      },
+      // ── FRAMEWORK fluid type steps ──
+      fontSize: {
+        "step--1": "var(--step--1)",
+        "step-0": "var(--step-0)",
+        "step-1": "var(--step-1)",
+        "step-2": "var(--step-2)",
+        "step-3": "var(--step-3)",
+        "step-4": "var(--step-4)",
+        "step-5": "var(--step-5)",
+        "step-hero": "var(--step-hero)",
+      },
+      // ── FRAMEWORK z scale: one source of truth, no more magic z-[51] ──
+      zIndex: {
+        base: "var(--z-base)",
+        raised: "var(--z-raised)",
+        sticky: "var(--z-sticky)",
+        chrome: "var(--z-chrome)",
+        player: "var(--z-player)",
+        overlay: "var(--z-overlay)",
+        modal: "var(--z-modal)",
+        entry: "var(--z-entry)",
+      },
+      transitionTimingFunction: {
+        "out-expo": "var(--ease-out-expo)",
+        "in-out-expo": "var(--ease-in-out-expo)",
+        spring: "var(--ease-spring)",
       },
       boxShadow: {
         "ba-soft": "0 4px 20px rgba(255, 77, 77, 0.15), 0 2px 8px rgba(0,0,0,0.05)",

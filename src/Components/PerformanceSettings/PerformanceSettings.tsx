@@ -40,6 +40,7 @@ export default function PerformanceSettings({ className = '' }: PerformanceSetti
   if (!isOpen) {
     return (
       <button
+        data-okiso-chrome="perf-settings"
         onClick={() => setIsOpen(true)}
         className={`${className} fixed bottom-4 right-4 z-50 p-2 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-white/70 hover:text-white transition-all`}
         title="Performance Settings"

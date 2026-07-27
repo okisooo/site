@@ -42,6 +42,8 @@ interface ReleaseTrack {
   trackNumber?: number;
   link?: string;
   lyrics?: string;
+  isrc?: string;
+  toolostId?: string;
 }
 
 interface Release {
@@ -58,11 +60,22 @@ interface Release {
   popularity?: number;
   totalTracks?: number;
   genres?: string[];
+  upc?: string;
+  catalogNumber?: string;
+  label?: string;
+  primaryGenre?: string;
+  secondaryGenre?: string;
+  releaseStatus?: 'live';
+  sourceIds?: {
+    spotify?: string;
+    toolost?: string;
+  };
 }
 
 import YTMusic from 'ytmusic-api';
 import fs from 'fs';
 import path from 'path';
+import { fetchTooLostReleases, mergeTooLostReleases } from './fetchTooLostReleases';
 
 async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -90,6 +103,20 @@ function msToIsoDuration(ms?: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `PT${minutes}M${seconds}S`;
+}
+
+function readExistingReleases(): Release[] {
+  const releasesFilePath = path.join(process.cwd(), 'src', 'data', 'releases.ts');
+  if (!fs.existsSync(releasesFilePath)) return [];
+
+  try {
+    const fileContent = fs.readFileSync(releasesFilePath, 'utf8');
+    const jsonMatch = fileContent.match(/export const staticReleases: Release\[\] = (\[[\s\S]*\]);/);
+    return jsonMatch?.[1] ? JSON.parse(jsonMatch[1]) : [];
+  } catch {
+    console.warn('Failed to parse existing releases.ts. Treating every release as new.');
+    return [];
+  }
 }
 
 async function getSpotifyAccessToken(): Promise<string> {
@@ -140,6 +167,15 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       nextUrl = data.next || null;
     }
 
+    const existingReleases = readExistingReleases();
+    const existingReleaseIds = new Set(existingReleases.map(release => release.id).filter(Boolean));
+    const newAlbums = allAlbums.filter(album => !existingReleaseIds.has(album.id));
+
+    console.log(`Found ${newAlbums.length} new releases; preserving ${existingReleases.length} verified releases.`);
+    if (newAlbums.length === 0) {
+      return existingReleases;
+    }
+
     // Fetch artist info for genres/popularity (single call)
     let artistGenres: string[] = [];
     try {
@@ -160,8 +196,8 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
     const concurrency = 6;
     const albumDetails: SpotifyAlbumDetails[] = [];
 
-    for (let i = 0; i < allAlbums.length; i += concurrency) {
-      const batch = allAlbums.slice(i, i + concurrency);
+    for (let i = 0; i < newAlbums.length; i += concurrency) {
+      const batch = newAlbums.slice(i, i + concurrency);
       const batchPromises = batch.map(a => fetch(`https://api.spotify.com/v1/albums/${a.id}?market=US`, {
         headers: { 'Authorization': `Bearer ${accessToken}` }
       }).then(res => {
@@ -203,23 +239,6 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       }
     }
 
-    // --- CACHING LOGIC ---
-    // Read the existing releases.ts to cache existing YouTube links and prevent API rate limiting
-    const releasesFilePath = path.join(process.cwd(), 'src', 'data', 'releases.ts');
-    let existingReleases: Release[] = [];
-    try {
-      if (fs.existsSync(releasesFilePath)) {
-        const fileContent = fs.readFileSync(releasesFilePath, 'utf8');
-        // Extract the JSON array from the TypeScript file
-        const jsonMatch = fileContent.match(/export const staticReleases: Release\[\] = (\[[\s\S]*\]);/);
-        if (jsonMatch && jsonMatch[1]) {
-          existingReleases = JSON.parse(jsonMatch[1]);
-        }
-      }
-    } catch (e) {
-      console.log('Failed to parse existing releases.ts for cache. Proceeding without cache.');
-    }
-    
     // Build cache map: trackId -> YouTube Link & Lyrics
     const cachedYoutubeLinks = new Map<string, string>();
     const cachedLyrics = new Map<string, string>();
@@ -357,7 +376,7 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
     }
 
     // Map albumDetails to Release format
-    const releases: Release[] = albumDetails.map((album) => ({
+    const newReleases: Release[] = albumDetails.map((album) => ({
       id: album.id,
       title: album.name,
       year: new Date(album.release_date).getFullYear().toString(),
@@ -382,6 +401,7 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
     }));
 
     // Sort by release date (newest first)
+    const releases = [...newReleases, ...existingReleases];
     releases.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
 
     return releases;
@@ -393,10 +413,28 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
 
 export async function updateReleasesData(): Promise<void> {
   try {
-    const releases = await fetchSpotifyReleases();
+    const existingReleases = readExistingReleases();
+    let releases = await fetchSpotifyReleases();
+
+    if (process.env.TOOLOST_ACCESS_TOKEN) {
+      const toolostCatalog = await fetchTooLostReleases();
+      const merge = mergeTooLostReleases(releases, toolostCatalog);
+      releases = merge.releases;
+      console.log(`Matched ${merge.matched}/${toolostCatalog.length} live Too Lost releases.`);
+      if (merge.unmatched.length > 0) {
+        console.warn(`Skipped ${merge.unmatched.length} Too Lost releases without a safe Spotify match.`);
+      }
+    } else {
+      console.log('TOOLOST_ACCESS_TOKEN not found; keeping Spotify-only release sync.');
+    }
+
+    if (JSON.stringify(releases) === JSON.stringify(existingReleases)) {
+      console.log('No release changes found. Existing verified data left untouched.');
+      return;
+    }
     
     // Generate the updated static data
-    const releasesDataContent = `// This file is auto-generated by the Spotify API update process
+    const releasesDataContent = `// This file is auto-generated by the release sync process
 // Last updated: ${new Date().toISOString()}
 
 export interface Release {
@@ -417,10 +455,22 @@ export interface Release {
     trackNumber?: number;
     link?: string;
     lyrics?: string;
+    isrc?: string;
+    toolostId?: string;
   }>;
   popularity?: number;
   totalTracks?: number;
   genres?: string[];
+  upc?: string;
+  catalogNumber?: string;
+  label?: string;
+  primaryGenre?: string;
+  secondaryGenre?: string;
+  releaseStatus?: 'live';
+  sourceIds?: {
+    spotify?: string;
+    toolost?: string;
+  };
 }
 
 export const staticReleases: Release[] = ${JSON.stringify(releases, null, 2)};

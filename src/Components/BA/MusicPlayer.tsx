@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPlay, FaPause } from 'react-icons/fa';
@@ -16,7 +16,7 @@ const MusicPlayer: React.FC = () => {
     useEffect(() => {
         audioRef.current = new Audio(TRACK_URL);
         audioRef.current.loop = true;
-        audioRef.current.preload = 'auto';
+        audioRef.current.preload = 'none';
 
         audioRef.current.addEventListener('error', (e) => {
             console.error("Audio playback error:", e);
