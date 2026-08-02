@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
@@ -64,6 +64,7 @@ export default function Home() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [loadVRM, setLoadVRM] = useState(false);
+  const vrmContainerRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -93,12 +94,65 @@ export default function Home() {
   }, [videos, activeVideo]);
 
   useEffect(() => {
-    // Defer loading of heavy 15MB 3D model to optimize page load performance & LCP
-    const timer = setTimeout(() => {
-      setLoadVRM(true);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
+    if (loadVRM) return;
+
+    // 1. Respect prefers-reduced-motion
+    if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    // 2. Never auto-load on a constrained connection
+    if (typeof navigator !== "undefined") {
+      const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      if (conn) {
+        if (conn.saveData) return;
+        if (["slow-2g", "2g", "3g"].includes(conn.effectiveType || "")) return;
+      }
+    }
+
+    // 3. Defer until the page is done painting.
+    //
+    // NOT an IntersectionObserver: this container lives in the hero, above the
+    // fold, so a visibility gate fires immediately on load and would pull 15MB
+    // *earlier* than the old timer did. Visibility is the wrong signal for an
+    // above-fold asset.
+    //
+    // Wait for the load event (LCP and critical resources settled), then for an
+    // idle callback, so the avatar never competes with first paint. Constrained
+    // and reduced-motion visitors fell out above and get the click affordance.
+    let idleId: number | undefined;
+    let cancelled = false;
+
+    const schedule = () => {
+      if (cancelled) return;
+      const ric = (window as unknown as {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      }).requestIdleCallback;
+      if (ric) {
+        idleId = ric(() => { if (!cancelled) setLoadVRM(true); }, { timeout: 3000 });
+      } else {
+        idleId = window.setTimeout(() => { if (!cancelled) setLoadVRM(true); }, 1200);
+      }
+    };
+
+    if (document.readyState === "complete") {
+      schedule();
+    } else {
+      window.addEventListener("load", schedule, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", schedule);
+      if (idleId !== undefined) {
+        const cic = (window as unknown as {
+          cancelIdleCallback?: (id: number) => void;
+        }).cancelIdleCallback;
+        if (cic) cic(idleId);
+        else window.clearTimeout(idleId);
+      }
+    };
+  }, [loadVRM]);
 
   const twitchParent = useMemo(() => {
     if (typeof window === 'undefined') return 'localhost';
@@ -218,16 +272,42 @@ export default function Home() {
                   It would only be justified if the viewer consumed the wheel, and it
                   does not: OrbitControls is configured enableZoom={false} +
                   enablePan={false}. Drag-to-rotate is pointer-driven and unaffected. */}
-              <div className="w-full h-full relative z-10 pointer-events-auto cursor-grab active:cursor-grabbing flex items-center justify-center">
+              <div 
+                ref={vrmContainerRef}
+                className={`w-full h-full relative z-10 pointer-events-auto flex items-center justify-center ${
+                  loadVRM ? "cursor-grab active:cursor-grabbing" : ""
+                }`}
+              >
                 {loadVRM ? (
                   <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
                 ) : (
-                  <div className="relative w-full h-full flex items-center justify-center">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Load interactive 3D model"
+                    onClick={() => setLoadVRM(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setLoadVRM(true);
+                      }
+                    }}
+                    className="relative w-full h-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ba-pink rounded-3xl group"
+                  >
                     <img 
                       src="/hero_character.webp" 
                       alt="OKISO Character Preview" 
-                      className="max-h-[80%] w-auto object-contain select-none pointer-events-none transition-opacity duration-500 opacity-90"
+                      className="max-h-[80%] w-auto object-contain select-none pointer-events-none transition-opacity duration-500 opacity-90 group-hover:opacity-100"
                     />
+                    {/* bottom-[15%], not bottom-4: this container runs to the
+                        hero's edge, which sits behind the diagonal marquee band,
+                        so a pill pinned to the bottom is invisible to exactly the
+                        visitors who need it (reduced-motion and slow connections,
+                        the only ones who see this state). */}
+                    <div className="absolute bottom-[22%] left-1/2 -translate-x-1/2 bg-black/60 dark:bg-white/10 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full border border-white/10 shadow-lg flex items-center gap-2 group-hover:bg-ba-pink group-hover:text-white transition-colors">
+                      <span className="w-2 h-2 rounded-full bg-ba-pink group-hover:bg-white animate-pulse" />
+                      Load Interactive 3D Model
+                    </div>
                   </div>
                 )}
               </div>
