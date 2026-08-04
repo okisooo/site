@@ -14,35 +14,35 @@ export function TrackLyricsToggle({ title, durationStr, lyrics }: TrackLyricsTog
 
   if (!lyrics) {
     return (
-      <div className="py-2.5 text-sm md:text-base border-b border-black/5 dark:border-white/5 flex justify-between items-center text-black/80 dark:text-white/80">
-        <span className="font-medium">{title}</span>
-        {durationStr && <span className="text-xs text-black/40 dark:text-white/40">{durationStr}</span>}
+      <div className="py-3 text-sm border-b border-[var(--tac-ink)]/15 dark:border-[var(--tac-bone)]/15 flex justify-between items-center text-[var(--tac-ink)] dark:text-[var(--tac-bone)]">
+        <span className="tac-display font-black uppercase text-xs tracking-wider">{title}</span>
+        {durationStr && <span className="tac-mono text-xs text-[var(--tac-steel)]">{durationStr}</span>}
       </div>
     );
   }
 
   return (
-    <div className="border-b border-black/5 dark:border-white/5 py-1.5">
+    <div className="border-b border-[var(--tac-ink)]/15 dark:border-[var(--tac-bone)]/15 py-1">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left py-1.5 text-sm md:text-base flex justify-between items-center hover:text-ba-pink transition-colors group"
+        className="w-full text-left py-2.5 flex justify-between items-center hover:text-[var(--tac-signal)] transition-colors group"
       >
-        <span className="font-bold flex items-center gap-2 text-black/80 dark:text-white/80 group-hover:text-ba-pink">
-          <FileText size={16} className="text-black/40 dark:text-white/40 group-hover:text-ba-pink" />
+        <span className="tac-display font-black text-xs uppercase tracking-wider flex items-center gap-2 text-[var(--tac-ink)] dark:text-[var(--tac-bone)] group-hover:text-[var(--tac-signal)]">
+          <FileText size={14} className="text-[var(--tac-steel)] group-hover:text-[var(--tac-signal)]" />
           {title}
         </span>
-        <div className="flex items-center gap-2.5">
-          {durationStr && <span className="text-xs text-black/40 dark:text-white/40">{durationStr}</span>}
+        <div className="flex items-center gap-3">
+          {durationStr && <span className="tac-mono text-xs text-[var(--tac-steel)]">{durationStr}</span>}
           {isOpen ? (
-            <ChevronUp size={16} className="text-ba-pink" />
+            <ChevronUp size={16} className="text-[var(--tac-signal)]" />
           ) : (
-            <ChevronDown size={16} className="text-black/40 dark:text-white/40 group-hover:text-ba-pink" />
+            <ChevronDown size={16} className="text-[var(--tac-steel)] group-hover:text-[var(--tac-signal)]" />
           )}
         </div>
       </button>
       
       {isOpen && (
-        <div data-lenis-prevent className="mt-2 mb-3 p-4 rounded-2xl bg-black/5 dark:bg-white/5 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-line text-black/70 dark:text-white/70 max-h-[300px] overflow-y-auto select-text border border-black/5 dark:border-white/5">
+        <div data-lenis-prevent className="mt-2 mb-3 p-4 bg-black/5 dark:bg-white/5 text-xs tac-mono leading-relaxed whitespace-pre-line text-[var(--tac-ink)] dark:text-[var(--tac-bone)] max-h-[300px] overflow-y-auto select-text border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18">
           {lyrics}
         </div>
       )}

@@ -20,7 +20,6 @@ import { LEVEL_LABEL } from "@/data/vault";
 import type { Session } from "@/lib/vault";
 import { canAccess } from "@/lib/vault";
 
-// Deterministic pseudo-waveform from an id so it's stable across renders.
 function useBars(seed: string, n = 56): number[] {
   return useMemo(() => {
     let h = 2166136261;
@@ -44,10 +43,10 @@ function fmt(date: string) {
 }
 
 const KIND_META: Record<VerKind, { label: string; cls: string }> = {
-  demo: { label: "demo", cls: "bg-ba-lavender/20 text-ba-lavender border-ba-lavender/30" },
-  wip: { label: "WIP", cls: "bg-ba-yellow/20 text-ba-yellow border-ba-yellow/30" },
-  master: { label: "master", cls: "bg-ba-mint/20 text-ba-mint border-ba-mint/30" },
-  preview: { label: "preview", cls: "bg-ba-pink/20 text-ba-pink border-ba-pink/30" },
+  demo: { label: "DEMO", cls: "border border-[var(--tac-steel)]/40 text-[var(--tac-steel)]" },
+  wip: { label: "WIP", cls: "border border-[var(--tac-ink)]/40 dark:border-[var(--tac-bone)]/40 text-[var(--tac-ink)] dark:text-[var(--tac-bone)]" },
+  master: { label: "MASTER", cls: "border border-[var(--tac-signal)] text-[var(--tac-signal)]" },
+  preview: { label: "PREVIEW", cls: "border border-[var(--tac-signal)]/60 text-[var(--tac-signal)]" },
 };
 
 const LEVEL_ICON: Record<Level, React.ReactNode> = {
@@ -61,10 +60,10 @@ function LevelChip({ level, locked }: { level: Level; locked: boolean }) {
   return (
     <span
       title={locked ? `${LEVEL_LABEL[level]} access needed` : LEVEL_LABEL[level]}
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-ba-pill font-mono text-[10px] uppercase tracking-wider border ${
+      className={`inline-flex items-center gap-1 px-2 py-0.5 tac-mono text-[10px] uppercase tracking-wider border ${
         locked
-          ? "bg-white/5 text-white/50 border-white/15"
-          : "bg-ba-pink/15 text-ba-pink border-ba-pink/30"
+          ? "border-[var(--tac-steel)]/30 text-[var(--tac-steel)]"
+          : "border-[var(--tac-signal)]/50 text-[var(--tac-signal)]"
       }`}
     >
       {LEVEL_ICON[level]}
@@ -80,7 +79,7 @@ function WaveBars({
   onSeek,
 }: {
   seed: string;
-  progress: number; // 0..1
+  progress: number;
   locked: boolean;
   onSeek?: (fraction: number) => void;
 }) {
@@ -100,12 +99,12 @@ function WaveBars({
         return (
           <span
             key={i}
-            className={`flex-1 rounded-full transition-colors duration-150 ${
+            className={`flex-1 transition-colors duration-150 ${
               locked
-                ? "bg-white/10"
+                ? "bg-[var(--tac-steel)]/15"
                 : played
-                  ? "bg-ba-pink shadow-[0_0_6px_rgba(255,126,179,0.6)]"
-                  : "bg-white/20"
+                  ? "bg-[var(--tac-signal)]"
+                  : "bg-[var(--tac-ink)]/20 dark:bg-[var(--tac-bone)]/20"
             }`}
             style={{ height: `${Math.round(b * 100)}%` }}
           />
@@ -136,16 +135,15 @@ function VersionRow({
   onSeek: (fraction: number) => void;
   onShare: () => void;
 }) {
-  // Server sends `locked`; fall back to a client-side check for mock data.
   const locked = v.locked !== undefined ? v.locked : !canAccess(session, v);
   const teasable = locked && v.hasSnippet;
   const kind = KIND_META[v.kind];
   return (
     <div
-      className={`group relative flex items-center gap-3 md:gap-4 rounded-ba p-3 md:p-4 border transition-colors ${
+      className={`group relative flex items-center gap-3 md:gap-4 p-3 md:p-4 border transition-colors ${
         !locked
-          ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
-          : "bg-white/[0.015] border-white/5 hover:bg-white/[0.03]"
+          ? "bg-black/5 dark:bg-white/5 border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 hover:border-[var(--tac-signal)]/40"
+          : "bg-black/2 dark:bg-white/2 border-[var(--tac-ink)]/10 dark:border-[var(--tac-bone)]/10"
       }`}
     >
       {/* Play / teaser / lock */}
@@ -158,12 +156,14 @@ function VersionRow({
               ? (isPlaying ? "Pause teaser" : "Play the 30s teaser")
               : "Locked — sign in to play"
         }
-        className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-all ${
-          !locked
-            ? "bg-ba-pink text-white hover:scale-105 active:scale-95 shadow-ba-glow-pink"
-            : teasable
-              ? "bg-transparent border-2 border-ba-pink/60 text-ba-pink hover:bg-ba-pink/10 hover:scale-105"
-              : "bg-white/5 text-white/30 hover:text-white/60"
+        className={`shrink-0 w-10 h-10 flex items-center justify-center transition-colors ${
+          isPlaying || (locked && teasable && isPlaying)
+            ? "bg-[var(--tac-signal)] text-white border border-[var(--tac-signal)]"
+            : !locked
+              ? "bg-[var(--tac-ink)] text-[var(--tac-bone)] dark:bg-[var(--tac-bone)] dark:text-[var(--tac-ink)] hover:bg-[var(--tac-signal)] hover:text-white border border-transparent"
+              : teasable
+                ? "border border-[var(--tac-signal)] text-[var(--tac-signal)] hover:bg-[var(--tac-signal)] hover:text-white"
+                : "border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 text-[var(--tac-steel)]"
         }`}
       >
         {locked && !teasable ? (
@@ -177,28 +177,28 @@ function VersionRow({
         )}
       </button>
 
-      {/* Label + meta — takes full remaining width on mobile (waveform hidden) */}
+      {/* Label + meta */}
       <div className="min-w-0 flex-1 sm:flex-none sm:w-40 md:w-52 sm:shrink-0">
         <div className="flex items-center gap-2">
-          <h4 className="text-sm font-bold text-white truncate">{v.label}</h4>
+          <h4 className="tac-display font-black text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase truncate">{v.label}</h4>
           {v.kind === "preview" && (
             <span title={v.range ? `cut ${fmtRange(v.range)} from ${cutSource(project, v)}` : "preview cut"}>
-              <Scissors size={12} className="text-ba-pink shrink-0" />
+              <Scissors size={12} className="text-[var(--tac-signal)] shrink-0" />
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
-          <span className={`px-1.5 py-0.5 rounded-ba-pill font-mono text-[10px] uppercase border ${kind.cls}`}>
+          <span className={`px-1.5 py-0.5 tac-mono text-[10px] uppercase ${kind.cls}`}>
             {kind.label}
           </span>
-          <span className="font-mono text-[10px] text-white/40">{fmt(v.date)}</span>
+          <span className="tac-mono text-[10px] text-[var(--tac-steel)]">{fmt(v.date)}</span>
           {isPlaying && isSnippetPlay && (
-            <span className="font-mono text-[10px] text-ba-pink uppercase tracking-wider">teaser · 30s</span>
+            <span className="tac-mono text-[10px] text-[var(--tac-signal)] uppercase tracking-wider">TEASER · 30S</span>
           )}
         </div>
       </div>
 
-      {/* Waveform — desktop only; click to seek while playing */}
+      {/* Waveform */}
       <div className="hidden sm:block flex-1 min-w-0">
         <WaveBars
           seed={v.id}
@@ -207,7 +207,7 @@ function VersionRow({
           onSeek={isPlaying ? onSeek : undefined}
         />
         {v.note && (
-          <p className="text-[11px] text-white/40 mt-1 truncate">{v.note}</p>
+          <p className="tac-mono text-[11px] text-[var(--tac-steel)] mt-1 truncate uppercase">{v.note}</p>
         )}
       </div>
 
@@ -217,7 +217,7 @@ function VersionRow({
           onClick={onShare}
           aria-label={`Copy share link for ${v.label}`}
           title="Copy share link"
-          className="p-2 rounded-full text-white/30 hover:text-ba-pink hover:bg-ba-pink/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+          className="p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
         >
           <Link2 size={14} />
         </button>
@@ -262,58 +262,54 @@ export function VaultStack({
   const count = project.versions.length;
   const openCount = project.versions.filter((v) => !v.locked).length;
 
-  // Deep-linked project opens once the prop arrives after the manifest loads.
   React.useEffect(() => { if (defaultOpen) setOpen(true); }, [defaultOpen]);
 
   return (
     <div className="relative">
-      {/* Collapsed: fanned deck header */}
       <button
         onClick={() => setOpen((o) => !o)}
         className="relative w-full text-left"
         aria-expanded={open}
       >
-        {/* fanned cards behind */}
         {!open &&
           Array.from({ length: Math.min(count - 1, 3) }).map((_, i) => (
             <div
               key={i}
               aria-hidden
-              className="absolute inset-0 rounded-ba-lg border border-white/10 bg-white/[0.02]"
+              className="absolute inset-0 border border-[var(--tac-ink)]/15 dark:border-[var(--tac-bone)]/15 bg-black/5 dark:bg-white/5"
               style={{
                 transform: reduce
                   ? undefined
-                  : `translateY(${(i + 1) * 7}px) scale(${1 - (i + 1) * 0.025}) rotate(${(i % 2 ? 1 : -1) * (i + 1) * 0.6}deg)`,
+                  : `translateY(${(i + 1) * 6}px) scale(${1 - (i + 1) * 0.02})`,
                 zIndex: -i - 1,
               }}
             />
           ))}
 
-        <div className="relative flex items-center gap-4 rounded-ba-lg border border-white/10 bg-zinc-950/60 backdrop-blur-md p-4 md:p-5 hover:border-ba-pink/40 transition-colors">
-          <div className="w-14 h-14 rounded-ba overflow-hidden shrink-0 ring-1 ring-white/10 bg-black flex items-center justify-center">
+        <div className="tac-plate relative flex items-center gap-4 p-4 md:p-5 hover:border-[var(--tac-signal)] transition-colors">
+          <div className="w-12 h-12 overflow-hidden shrink-0 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black flex items-center justify-center">
             {project.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={project.cover} alt={project.title} className="w-full h-full object-cover" />
             ) : (
-              <Disc3 className="text-white/40" />
+              <Disc3 className="text-[var(--tac-steel)]" />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="vault-serif text-2xl md:text-3xl text-white truncate leading-tight">
+            <h3 className="tac-display font-black text-xl md:text-2xl text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase truncate leading-tight">
               {project.title}
             </h3>
-            <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.2em] mt-0.5">
-              {count} version{count > 1 ? "s" : ""} · {openCount} open{openCount < count ? ` · ${count - openCount} locked` : ""}
+            <p className="tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-[0.2em] mt-1">
+              {count} VERSION{count > 1 ? "S" : ""} · {openCount} OPEN{openCount < count ? ` · ${count - openCount} LOCKED` : ""}
             </p>
           </div>
           <ChevronDown
             size={20}
-            className={`text-white/50 shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            className={`text-[var(--tac-steel)] shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
           />
         </div>
       </button>
 
-      {/* Expanded: version timeline */}
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
@@ -323,7 +319,7 @@ export function VaultStack({
             transition={{ duration: reduce ? 0 : 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div className="relative pl-4 mt-3 space-y-2 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-px before:bg-white/10">
+            <div className="relative pl-4 mt-3 space-y-2 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-px before:bg-[var(--tac-signal)]">
               {project.versions.map((v, i) => (
                 <motion.div
                   key={v.id}
@@ -332,7 +328,7 @@ export function VaultStack({
                   transition={{ delay: reduce ? 0 : i * 0.05 }}
                   className="relative"
                 >
-                  <span className="absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-ba-pink shadow-ba-glow-pink" />
+                  <span className="absolute -left-3.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[var(--tac-signal)]" />
                   <VersionRow
                     v={v}
                     project={project}
