@@ -18,14 +18,18 @@ export default function ReleaseGrid() {
   return (
     <div className="w-full flex flex-col gap-12 lg:gap-24">
       {/* Heavy Title Context */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-8 border-black pb-6 gap-8">
-        <h2 className="text-[12vw] xl:text-[8vw] font-black leading-[0.8] tracking-tighter uppercase">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 pb-6 gap-8">
+        <h2 className="tac-h2">
           AUDIO <br />
-          <span className="text-black/20">ARCHIVE</span>
+          <span className="tac-h2-dim">ARCHIVE</span>
         </h2>
-        <div className="flex flex-col text-right">
-          <span className="font-bold text-xl tracking-widest text-black/50">SONGS // {staticReleases.length}</span>
-          <span className="font-bold text-sm tracking-[0.2em] text-ba-pink">VOCALOID_RECORDS</span>
+        <div className="flex flex-col md:text-right">
+          <span className="tac-mono text-xs font-bold tracking-[0.25em] text-[var(--tac-steel)] uppercase">
+            SONGS // {staticReleases.length}
+          </span>
+          <span className="tac-mono text-[10px] tracking-[0.3em] text-[var(--tac-signal)] uppercase">
+            VOCALOID_RECORDS
+          </span>
         </div>
       </div>
 
@@ -35,35 +39,35 @@ export default function ReleaseGrid() {
           <button
             key={release.id}
             onClick={() => setSelectedRelease(release)}
-            className="group relative block w-full aspect-square md:aspect-auto md:h-[600px] border-8 border-white bg-white shadow-[0_30px_60px_rgba(0,0,0,0.1)] rounded-[32px] md:rounded-[48px] overflow-hidden text-left"
+            className="tac-plate group relative block w-full aspect-square md:aspect-auto md:h-[520px] border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black overflow-hidden text-left transition-transform duration-300 hover:-translate-y-1"
           >
             {/* The Image Image */}
             <div className="absolute inset-0 w-full h-full overflow-hidden">
               <img
                 src={release.img}
                 alt={release.title}
-                className="w-full h-full object-cover transform group-hover:scale-110 group-hover:rotate-2 transition-transform duration-[1s] ease-out"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out opacity-80 group-hover:opacity-90"
               />
               {/* Heavy Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity duration-300" />
             </div>
 
             {/* Giant Title on Hover */}
-            <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-10 text-white translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+            <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-10 text-white">
               <div className="flex justify-between items-start">
-                <div className="bg-white/20 backdrop-blur-xl px-6 py-2 rounded-full border border-white/30 text-white font-bold tracking-widest uppercase text-sm shadow-xl">
+                <div className="tac-mono text-[10px] font-bold tracking-[0.25em] uppercase text-white bg-black/60 border border-white/25 px-3 py-1">
                   {release.year}
                 </div>
-                <div className="w-16 h-16 bg-ba-pink rounded-full flex items-center justify-center text-white scale-0 group-hover:scale-100 transition-transform duration-500 delay-100 shadow-[0_0_30px_rgba(255,126,179,0.8)]">
-                  <Play fill="currentColor" size={24} className="ml-1" />
+                <div className="w-12 h-12 bg-[var(--tac-signal)] text-white flex items-center justify-center scale-0 group-hover:scale-100 transition-transform duration-300 border border-white/30">
+                  <Play fill="currentColor" size={20} className="ml-0.5" />
                 </div>
               </div>
 
               <div>
-                <p className="text-xl font-bold uppercase tracking-widest text-white/70 mb-2 truncate">
-                  {release.albumType} {'//'} {release.tracks?.length || 1} TRACKS
+                <p className="tac-mono text-xs font-bold uppercase tracking-[0.25em] text-[var(--tac-bone)]/80 mb-2 truncate">
+                  {release.year} {'//'} {release.albumType} {'//'} {release.tracks?.length || 1} TRACKS
                 </p>
-                <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none drop-shadow-2xl">
+                <h3 className="font-display font-black text-3xl md:text-5xl uppercase tracking-tighter leading-none text-white">
                   {release.title}
                 </h3>
               </div>
@@ -73,14 +77,14 @@ export default function ReleaseGrid() {
       </div>
 
       <div className="flex flex-col md:flex-row justify-center items-center w-full mt-4 gap-6">
-        <Link href="/releases" className="bg-white text-black border-4 border-black px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-2">
-          VIEW FULL DISCOGRAPHY <span className="group-hover:translate-x-2 transition-transform">→</span>
+        <Link href="/releases" className="tac-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] px-6 py-4 border border-[var(--tac-ink)]/30 dark:border-[var(--tac-bone)]/30 bg-[var(--tac-ink)] text-[var(--tac-bone)] dark:bg-[var(--tac-bone)] dark:text-[var(--tac-ink)] hover:bg-[var(--tac-signal)] hover:text-white dark:hover:bg-[var(--tac-signal)] dark:hover:text-white transition-colors flex gap-3 items-center group">
+          VIEW FULL DISCOGRAPHY <span className="group-hover:translate-x-1 transition-transform">→</span>
         </Link>
-        <Link href="/upcoming" className="bg-ba-pink text-white border-4 border-ba-pink px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-ba-pink-deep hover:border-ba-pink-deep transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(255,126,179,0.3)] hover:shadow-none translate-y-0 hover:translate-y-2">
-          UPCOMING RELEASES <span className="group-hover:translate-x-2 transition-transform">→</span>
+        <Link href="/upcoming" className="tac-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] px-6 py-4 border border-[var(--tac-signal)] bg-[var(--tac-signal)] text-white hover:bg-[#c40e24] transition-colors flex gap-3 items-center group">
+          UPCOMING RELEASES <span className="group-hover:translate-x-1 transition-transform">→</span>
         </Link>
-        <Link href="/vault" className="bg-black text-white border-4 border-black px-8 py-5 md:px-12 md:py-6 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest hover:bg-zinc-900 transition-colors flex gap-4 items-center group shadow-[0_20px_40px_rgba(0,0,0,0.25)] hover:shadow-none translate-y-0 hover:translate-y-2">
-          THE VAULT <span aria-hidden className="text-ba-pink">✦</span> <span className="group-hover:translate-x-2 transition-transform">→</span>
+        <Link href="/vault" className="tac-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] px-6 py-4 border border-[var(--tac-ink)]/30 dark:border-[var(--tac-bone)]/30 bg-transparent text-[var(--tac-ink)] dark:text-[var(--tac-bone)] hover:border-[var(--tac-signal)] hover:text-[var(--tac-signal)] transition-colors flex gap-3 items-center group">
+          THE VAULT <span aria-hidden className="text-[var(--tac-signal)]">✦</span> <span className="group-hover:translate-x-1 transition-transform">→</span>
         </Link>
       </div>
 
@@ -92,33 +96,33 @@ export default function ReleaseGrid() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4"
               onClick={() => setSelectedRelease(null)}
             >
               <motion.div
                 data-premid-release-title={selectedRelease.title}
                 data-premid-release-cover={selectedRelease.img}
-                initial={{ scale: 0.9, y: 20, opacity: 0 }}
-                animate={{ scale: 1, y: 0, opacity: 1 }}
-                exit={{ scale: 0.9, y: 20, opacity: 0 }}
-                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-md bg-white dark:bg-[#111] rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-black/10 dark:border-white/10 overflow-hidden"
+                className="tac-plate relative w-full max-w-md bg-[var(--tac-bone)] dark:bg-[#0c0c0e] text-[var(--tac-ink)] p-6 md:p-8 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 overflow-hidden"
               >
                 <button
                   onClick={() => setSelectedRelease(null)}
-                  className="absolute top-4 right-4 p-2 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full transition-colors z-10"
+                  className="absolute top-4 right-4 p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 hover:bg-[var(--tac-signal)] hover:border-[var(--tac-signal)] hover:text-white transition-colors z-10"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
 
-                <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-6 shadow-lg border-2 border-black/5 dark:border-white/5">
+                <div className="relative w-full aspect-square overflow-hidden mb-6 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20">
                   <img src={selectedRelease.img} alt={selectedRelease.title} className="w-full h-full object-cover" />
                 </div>
 
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl md:text-3xl font-black tracking-tighter uppercase mb-1">{selectedRelease.title}</h3>
-                  <p className="text-black/50 dark:text-white/50 font-bold tracking-widest text-sm uppercase">
+                  <h3 className="font-display text-2xl md:text-3xl font-black tracking-tight uppercase mb-1 text-[var(--tac-ink)]">{selectedRelease.title}</h3>
+                  <p className="tac-mono text-xs font-bold tracking-[0.2em] uppercase text-[var(--tac-steel)]">
                     {selectedRelease.year} {'//'} {selectedRelease.albumType}
                   </p>
                 </div>
@@ -129,7 +133,7 @@ export default function ReleaseGrid() {
                     href={getReleaseListenTarget(selectedRelease).url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-ba-pink to-pink-400 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:scale-[1.02] active:scale-[0.98] text-white font-black uppercase tracking-[0.2em] text-center transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-[var(--tac-ink)] text-[var(--tac-bone)] dark:bg-[var(--tac-bone)] dark:text-[var(--tac-ink)] hover:bg-[var(--tac-signal)] hover:text-white dark:hover:bg-[var(--tac-signal)] dark:hover:text-white tac-mono text-xs font-bold uppercase tracking-[0.2em] text-center transition-colors flex items-center justify-center gap-2 border border-current"
                   >
                     {getReleaseListenTarget(selectedRelease).label}
                   </a>

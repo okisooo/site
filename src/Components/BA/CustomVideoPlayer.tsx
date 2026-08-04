@@ -369,8 +369,8 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
   };
 
   const playerContainerClass = isCinemaMode
-    ? 'relative z-[1] group w-full max-w-6xl aspect-video overflow-hidden flex flex-col bg-black rounded-[24px] md:rounded-[32px] border border-white/20 shadow-[0_30px_120px_rgba(0,0,0,0.8)]'
-    : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center rounded-[16px] md:rounded-[24px] ${className}`;
+    ? 'relative z-[1] group w-full max-w-6xl aspect-video overflow-hidden flex flex-col bg-black border border-white/20'
+    : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center border border-[var(--tac-ink)]/20 ${className}`;
 
   return (
     <div className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
@@ -378,7 +378,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         <button
           aria-label="Close cinema mode"
           onClick={() => setIsCinemaMode(false)}
-          className="absolute inset-0 bg-black/80 backdrop-blur-xl z-0"
+          className="absolute inset-0 bg-black/90 z-0"
         />
       )}
 
@@ -391,19 +391,19 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         } : {})}
       >
         {hlsErrorToast && (
-          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-red-500/90 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg backdrop-blur-md animate-in fade-in zoom-in duration-300">
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-[var(--tac-signal)] text-white tac-mono text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 border border-white/20">
             {hlsErrorToast}
           </div>
         )}
         {/* Top Bar - Clean System UI */}
         <div className="absolute top-0 left-0 w-full p-4 md:p-6 z-20 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
           <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
-            <span className="font-bold text-xs md:text-sm text-white tracking-widest uppercase drop-shadow-md">
+            <div className="w-2.5 h-2.5 bg-[var(--tac-signal)] animate-pulse" />
+            <span className="tac-mono text-[10px] md:text-xs text-white tracking-[0.25em] uppercase">
               REC // {title}
             </span>
           </div>
-          <div className="font-bold text-xs md:text-sm text-white/50 tracking-widest bg-white/10 px-3 py-1 rounded-full backdrop-blur-md">
+          <div className="tac-mono text-[10px] text-white/60 tracking-[0.2em] uppercase bg-black/80 border border-white/20 px-3 py-1">
             {hlsGenerating && hlsReady === false ? 'OPTIMIZING VIDEO...' : usedFallbackSource ? 'SOURCE FALLBACK' : 'SYS.VOD.01'}
           </div>
         </div>
@@ -411,7 +411,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         {/* Loading Spinner */}
         {isBuffering && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="w-12 h-12 border-4 border-white/20 border-t-[#FF7EB3] rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-2 border-white/20 border-t-[var(--tac-signal)] animate-spin"></div>
           </div>
         )}
 
@@ -456,32 +456,32 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
         {/* Play/Pause Overlay Centered */}
         {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 bg-black/20 backdrop-blur-[2px]">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 bg-black/30">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] transform transition-transform hover:scale-110"
+              className="w-16 h-16 bg-[#101014] text-white border border-white/40 flex items-center justify-center transform transition-transform hover:scale-105"
             >
-              <Play size={32} className="ml-2" />
+              <Play size={28} className="ml-1" />
             </motion.div>
           </div>
         )}
 
         {/* Bottom Controls Bar */}
         <div className={`absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-all duration-300 ${isPlaying ? 'opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0' : 'opacity-100 translate-y-0'}`}>
-          <div className="flex items-center gap-3 md:gap-5 text-white max-w-4xl mx-auto bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/20">
+          <div className="flex items-center gap-3 md:gap-4 text-white max-w-4xl mx-auto bg-[#101014] p-3 md:p-4 border border-white/18">
             <button
               onClick={togglePlay}
-              className="p-3 hover:bg-white text-white hover:text-black rounded-full transition-colors"
+              className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
-              {isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-1" />}
+              {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
             </button>
 
             <button
               onClick={toggleMute}
-              className="p-3 hover:bg-white text-white hover:text-black rounded-full transition-colors"
+              className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
-              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
 
             <input
@@ -491,15 +491,15 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
               step={0.01}
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="w-20 md:w-28 h-2 appearance-none rounded-full cursor-pointer accent-[#FF7EB3]"
+              className="w-20 md:w-28 h-1.5 appearance-none cursor-pointer accent-[#e6112b]"
               style={{
-                background: `linear-gradient(to right, #FF7EB3 ${(isMuted ? 0 : volume) * 100}%, rgba(255,255,255,0.2) ${(isMuted ? 0 : volume) * 100}%)`
+                background: `linear-gradient(to right, #e6112b ${(isMuted ? 0 : volume) * 100}%, rgba(255,255,255,0.2) ${(isMuted ? 0 : volume) * 100}%)`
               }}
               aria-label="Volume"
             />
 
             <div className="flex-1 flex items-center gap-3">
-              <span className="text-xs font-bold tracking-wider text-white/80 min-w-[42px]">{formatTime(currentTime)}</span>
+              <span className="tac-mono text-[10px] font-bold tracking-[0.2em] text-white/80 min-w-[44px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
                 min={0}
@@ -507,30 +507,30 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
                 step={0.1}
                 value={Math.min(currentTime, duration || 0)}
                 onChange={handleSeek}
-                className="flex-1 h-2 appearance-none rounded-full cursor-pointer accent-[#FF7EB3]"
+                className="flex-1 h-1.5 appearance-none cursor-pointer accent-[#e6112b]"
                 style={{
-                  background: `linear-gradient(to right, #FF7EB3 ${duration ? (currentTime / duration) * 100 : 0}%, rgba(255,255,255,0.2) ${duration ? (currentTime / duration) * 100 : 0}%)`
+                  background: `linear-gradient(to right, #e6112b ${duration ? (currentTime / duration) * 100 : 0}%, rgba(255,255,255,0.2) ${duration ? (currentTime / duration) * 100 : 0}%)`
                 }}
                 aria-label="Playback progress"
               />
-              <span className="text-xs font-bold tracking-wider text-white/80 min-w-[42px]">{formatTime(duration)}</span>
+              <span className="tac-mono text-[10px] font-bold tracking-[0.2em] text-white/80 min-w-[44px] text-center">{formatTime(duration)}</span>
             </div>
 
             {hlsLevels.length > 0 && (
               <div className="relative">
                 <button
                   onClick={() => setShowSettings(!showSettings)}
-                  className={`p-3 rounded-full transition-colors flex items-center gap-2 ${showSettings ? 'bg-white text-black' : 'hover:bg-white text-white hover:text-black'}`}
+                  className={`p-2.5 border border-white/20 transition-colors flex items-center gap-2 ${showSettings ? 'bg-white text-black' : 'hover:bg-white text-white hover:text-black'}`}
                   aria-label="Video Quality"
                 >
-                  <Settings size={20} />
-                  <span className="text-xs font-bold w-10 hidden md:inline-block text-center mr-1">
+                  <Settings size={18} />
+                  <span className="tac-mono text-[10px] font-bold w-10 hidden md:inline-block text-center mr-1">
                     {currentLevel === -1 ? 'AUTO' : hlsLevels.find(l => l.id === currentLevel)?.name || 'AUTO'}
                   </span>
                 </button>
 
                 {showSettings && (
-                  <div className="absolute bottom-full right-0 mb-4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-2 min-w-[120px] flex flex-col gap-1 z-50 shadow-2xl">
+                  <div className="absolute bottom-full right-0 mb-3 bg-[#101014] border border-white/20 p-2 min-w-[120px] flex flex-col gap-1 z-50">
                     <button
                       onClick={() => {
                         if (hlsRef.current) hlsRef.current.currentLevel = -1;
@@ -538,7 +538,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
                         setShowSettings(false);
                         try { localStorage.setItem('okiso_hls_quality', '-1'); } catch { }
                       }}
-                      className={`px-4 py-2 text-sm font-bold rounded-xl text-left transition-colors ${currentLevel === -1 ? 'bg-[#FF7EB3] text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                      className={`px-3 py-1.5 tac-mono text-[10px] font-bold text-left uppercase tracking-[0.15em] transition-colors ${currentLevel === -1 ? 'bg-[var(--tac-signal)] text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                     >
                       Auto
                     </button>
@@ -551,7 +551,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
                           setShowSettings(false);
                           try { localStorage.setItem('okiso_hls_quality', String(level.id)); } catch { }
                         }}
-                        className={`px-4 py-2 text-sm font-bold rounded-xl text-left transition-colors ${currentLevel === level.id ? 'bg-[#FF7EB3] text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 tac-mono text-[10px] font-bold text-left uppercase tracking-[0.15em] transition-colors ${currentLevel === level.id ? 'bg-[var(--tac-signal)] text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                       >
                         {level.name}
                       </button>
@@ -563,17 +563,17 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
             <button
               onClick={toggleCinemaMode}
-              className="p-3 hover:bg-white text-white hover:text-black rounded-full transition-colors"
+              className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
               aria-label={isCinemaMode ? 'Exit cinema mode' : 'Enter cinema mode'}
             >
-              {isCinemaMode ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+              {isCinemaMode ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
             </button>
 
             <button
               onClick={toggleFullScreen}
-              className="p-3 hover:bg-white text-white hover:text-black rounded-full transition-colors"
+              className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
-              <Maximize size={20} />
+              <Maximize size={18} />
             </button>
           </div>
         </div>

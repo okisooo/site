@@ -167,7 +167,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-ba-pink selection:text-white transition-colors duration-500 relative">
+    <div
+      className={`${tacDisplay.variable} ${tacMono.variable} ${tacCjk.variable} min-h-screen bg-transparent text-black dark:text-white overflow-x-hidden font-display selection:bg-[#e6112b] selection:text-white transition-colors duration-500 relative`}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [musicGroupLd, webSiteLd] }) }}
@@ -243,34 +245,43 @@ export default function Home() {
       </div>
 
       {/* ─── MEDIA & SOCIAL SHOWCASE ─── */}
-      <section id="social" className="pt-24 md:pt-40 pb-12 md:pb-20 px-4 md:px-12 max-w-[2200px] mx-auto z-20 relative transition-colors duration-500">
+      <section id="social" className="tac-section">
         <div className="flex flex-col xl:flex-row gap-12 md:gap-24">
 
           {/* Main Video Feature */}
-          <div className="w-full xl:w-7/12 flex flex-col gap-6 md:gap-12">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[12vw] xl:text-[6vw] font-black leading-[0.9] uppercase tracking-tighter text-black dark:text-white">
-                {showingLive ? "Live" : "Featured"} <br /> <span className="text-black/20 dark:text-white/55">{showingLive ? "Broadcast" : "Videos"}</span>
+          <div className="w-full xl:w-7/12 flex flex-col gap-6 md:gap-10">
+            <div>
+              <div className="tac-sec-head">
+                <span className="tac-sec-index">003</span>
+                <span className="tac-rule" />
+                <span className="tac-sec-label">{showingLive ? "Broadcast / 配信" : "Feed / 映像"}</span>
+              </div>
+              <h2 className="tac-h2">
+                {showingLive ? "Live" : "Featured"}
+                <br />
+                <span className="tac-h2-dim">{showingLive ? "Broadcast" : "Videos"}</span>
               </h2>
             </div>
             {isLive && (
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowFeaturedWhileLive(false)}
-                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${!showFeaturedWhileLive ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                  data-on={!showFeaturedWhileLive}
+                  className="tac-toggle"
                 >
                   Live Broadcast
                 </button>
                 <button
                   onClick={() => setShowFeaturedWhileLive(true)}
-                  className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-colors ${showFeaturedWhileLive ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/15 hover:bg-white dark:hover:bg-white/10'}`}
+                  data-on={showFeaturedWhileLive}
+                  className="tac-toggle"
                 >
                   Featured Videos
                 </button>
               </div>
             )}
             {(isLive || videosLoading || activeVideo) && (
-              <div className={`w-full aspect-video rounded-[24px] md:rounded-[40px] bg-black shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[8px] md:border-[16px] border-white dark:border-ba-dark-soft relative group`}>
+              <div className="tac-plate tac-plate-mark group relative w-full aspect-video bg-black p-1.5 md:p-2">
                 {showingLive ? (
                   <iframe
                     src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`}
@@ -311,9 +322,10 @@ export default function Home() {
                   <button
                     key={video.id}
                     onClick={() => setActiveVideo(video)}
-                    className={`text-left px-4 py-3 rounded-2xl border transition-colors ${activeVideo?.id === video.id ? 'bg-ba-pink text-white border-ba-pink' : 'bg-white/70 dark:bg-white/5 border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10'}`}
+                    data-on={activeVideo?.id === video.id}
+                    className="tac-toggle truncate text-left"
                   >
-                    <p className="font-bold text-sm uppercase tracking-wide truncate">{video.title}</p>
+                    <p className="truncate">{video.title}</p>
                   </button>
                 ))}
               </div>
@@ -322,13 +334,18 @@ export default function Home() {
 
           {/* Social Ecosystem */}
           <div className="w-full xl:w-5/12 flex flex-col gap-6 md:gap-12">
-            <div className="flex items-end justify-between border-b-8 border-black dark:border-white pb-4 md:pb-6 mt-8 xl:mt-0">
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Network</h2>
-              <span className="font-bold text-lg md:text-xl tracking-widest text-black/50 dark:text-white/70">LINKS // 06</span>
+            <div className="mt-8 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 border-b border-[rgb(16_16_20_/_0.22)] pb-4 dark:border-[rgb(240_240_237_/_0.18)] md:pb-6 xl:mt-0">
+              <h2 className="tac-h2 tac-h2-sub">Network</h2>
+              <span className="tac-sec-label">Links // 06</span>
             </div>
 
             {/* Soft UI grid container */}
-            <div className="bg-white dark:bg-[#111] rounded-[24px] md:rounded-[40px] p-4 md:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.05)] border border-black/5 dark:border-white/5 h-full flex flex-col justify-center transition-colors">
+            <div className="tac-plate tac-plate-mark flex h-full flex-col justify-center p-4 md:p-10">
+              <div className="tac-sec-head">
+                <span className="tac-sec-index">004</span>
+                <span className="tac-rule" />
+                <span className="tac-sec-label">Channels / 経路</span>
+              </div>
               <SocialGrid />
             </div>
           </div>
@@ -337,19 +354,34 @@ export default function Home() {
       </section>
 
       {/* ─── AUDIO ARCHIVE SHOWCASE ─── */}
-      <section id="archive" className="pb-24 md:pb-40 pt-12 md:pt-20 px-4 md:px-12 max-w-[2200px] mx-auto z-20 relative">
+      <section id="archive" className="tac-section">
+        <div className="tac-sec-head">
+          <span className="tac-sec-index">005</span>
+          <span className="tac-rule" />
+          <span className="tac-sec-label">Archive / 記録</span>
+        </div>
         <ReleaseGrid />
       </section>
 
       {/* ─── MASSIVE FOOTER ─── */}
-      <footer id="contact" className="bg-black dark:bg-[#050505] text-white w-full py-32 md:py-48 px-8 flex flex-col items-center justify-center relative overflow-hidden mt-20 transition-colors">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,var(--tw-gradient-stops))] from-ba-pink/30 via-transparent to-transparent opacity-50 mix-blend-screen pointer-events-none" />
-        <h1 className="text-[25vw] font-black uppercase leading-[0.75] tracking-tighter z-10 text-center text-white/90 drop-shadow-[0_0_50px_rgba(255,126,179,0.3)]">
-          OKISO
-        </h1>
-        <div className="relative z-10 mt-12 md:mt-24 flex flex-wrap justify-center gap-6 md:gap-12 text-sm md:text-xl font-bold tracking-[0.2em] uppercase text-white/50">
-          <button onClick={() => setIsTermsOpen(true)} className="hover:text-white hover:drop-shadow-[0_0_10px_white] transition-all uppercase">Terms</button>
-          <button onClick={() => setIsContactOpen(true)} className="hover:text-white hover:drop-shadow-[0_0_10px_white] transition-all uppercase">Contact</button>
+      {/* No pink glow and no drop-shadow: this language has one signal colour and
+          no soft light. The wordmark is set flush-left and cropped by the edge
+          rather than centred, matching the hero's ghost. */}
+      <footer id="contact" className="tac-footer">
+        <div className="tac-sec-head">
+          <span className="tac-sec-index">006</span>
+          <span className="tac-rule" />
+          <span className="tac-sec-label">End of transmission</span>
+        </div>
+        <h2 className="tac-footer-mark">OKISO</h2>
+        <div className="tac-footer-rule" />
+        <div className="tac-footer-row">
+          <span>© {new Date().getFullYear()} OKISO · オキソ</span>
+          <span className="flex flex-wrap items-center gap-5">
+            <button onClick={() => setIsTermsOpen(true)} className="tac-footer-link">Terms</button>
+            <button onClick={() => setIsContactOpen(true)} className="tac-footer-link">Contact</button>
+            <span>SYSTEM.ARCHIVE.ONLINE</span>
+          </span>
         </div>
       </footer>
 
@@ -368,7 +400,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white dark:bg-[#111] text-black dark:text-white w-full max-w-2xl rounded-[24px] md:rounded-[40px] p-8 md:p-12 shadow-[0_40px_80px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10"
+            className="tac-modal tac-plate tac-plate-mark"
           >
             <div className="flex justify-between items-start mb-8">
               <div>
@@ -429,7 +461,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white dark:bg-[#111] text-black dark:text-white w-full max-w-xl rounded-[24px] md:rounded-[40px] p-8 md:p-12 shadow-[0_40px_80px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10"
+            className="tac-modal tac-plate tac-plate-mark"
           >
             <div className="flex justify-between items-start mb-8">
               <div>
