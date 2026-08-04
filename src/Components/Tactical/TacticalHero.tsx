@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * Tactical hero — "techwear editorial" per the Endfield/ZZZ reference.
@@ -203,20 +203,37 @@ export default function TacticalHero({
   nav?: React.ReactNode;
   className?: string;
 }) {
+  const reduced = useReducedMotion();
+  /* Hero assembles as the boot overlay wipes away. Zero delay when the boot is
+     skipped, so reduced-motion users never wait on an animation they can't see. */
+  const D = reduced ? 0 : 1.5;
+
   return (
     <section className={`tac-hero ${className}`} aria-label="OKISO">
       {/* ── background stack ── */}
-      <div className="tac-bg" aria-hidden>
+      <motion.div
+        className="tac-bg"
+        aria-hidden
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9, delay: D + 0.08, ease: "easeOut" }}
+      >
         <ContourField />
         <ShardField />
         <DotMatrix />
         <div className="tac-scanlines" />
-      </div>
+      </motion.div>
 
       {/* ghosted display type, behind everything readable */}
-      <div className="tac-ghost" aria-hidden>
+      <motion.div
+        className="tac-ghost"
+        aria-hidden
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={{ opacity: 0.075, scale: 1 }}
+        transition={{ duration: 1.1, delay: D, ease: [0.16, 1, 0.3, 1] }}
+      >
         <span>OKISO</span>
-      </div>
+      </motion.div>
 
       {/* ── top HUD rail ── */}
       <div className="tac-rail tac-rail-top">
@@ -243,7 +260,7 @@ export default function TacticalHero({
           className="tac-col-left"
           initial="initial"
           animate="animate"
-          transition={{ staggerChildren: 0.07, delayChildren: 0.1 }}
+          transition={{ staggerChildren: 0.07, delayChildren: D + 0.1 }}
         >
           <motion.div variants={RISE} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="flex items-center gap-3">
             <span className="tac-index">002</span>
@@ -251,13 +268,22 @@ export default function TacticalHero({
             <span className="tac-mono text-[10px] tracking-[0.3em] text-[var(--tac-steel)]">ARCHIVE / オキソ</span>
           </motion.div>
 
-          <motion.h1
-            variants={RISE}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="tac-display"
-          >
-            OKISO
-          </motion.h1>
+          {/* Split per character so the wordmark stamps in letter by letter.
+              Each letter is its own overflow-clipped column, so they rise from
+              behind a mask instead of sliding over the layout. */}
+          <h1 className="tac-display" aria-label="OKISO">
+            {"OKISO".split("").map((ch, i) => (
+              <span key={i} className="tac-char" aria-hidden>
+                <motion.span
+                  initial={{ y: "108%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.72, delay: D + 0.12 + i * 0.055, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {ch}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
 
           <motion.p
             variants={RISE}

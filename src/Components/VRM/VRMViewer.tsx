@@ -105,10 +105,15 @@ export default function VRMViewer({ modelUrl, className, height = '100%' }: VRMV
     return (
         <div className={className} style={{ height, position: 'relative' }}>
             {!isLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-ba z-10">
-                    <div className="flex flex-col items-center gap-3">
-                        <div className="w-10 h-10 border-4 border-ba-red/30 border-t-ba-red rounded-full animate-spin" />
-                        <span className="text-sm font-display font-bold text-ba-muted">Loading model...</span>
+                /* Tactical, not frosted glass. A white blurred pill over the hero
+                   composition broke the whole aesthetic at the worst possible
+                   moment — the first seconds after the boot sequence. */
+                <div className="absolute inset-0 z-10 flex items-end justify-start p-4">
+                    <div className="flex items-center gap-2 border border-white/15 bg-[#0c0c0e]/85 px-3 py-2">
+                        <span className="h-1.5 w-1.5 animate-pulse bg-[#e6112b]" />
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#eceae5]">
+                            Loading subject
+                        </span>
                     </div>
                 </div>
             )}

@@ -229,6 +229,43 @@
   letter-spacing: -0.05em;
   text-transform: uppercase;
   margin: 0;
+  display: flex;
+}
+
+/* Per-letter mask column. overflow:hidden is what makes the letters rise from
+   behind an edge rather than slide across the page.
+   The padding/negative-margin pair is not optional: at line-height 0.82 the
+   column is SHORTER than the glyphs, so overflow sliced the overshoot off every
+   round letter and "OKISO" rendered as "CKISC". The padding gives the glyph
+   room inside the mask; the negative margin takes the space back out of layout
+   so the tight display leading is preserved. */
+.tac-char {
+  display: block;
+  /* Never shrink. The parent column is max-width capped, so with the default
+     flex-shrink:1 these letter boxes were squeezed narrower than their glyphs
+     and overflow:hidden cropped the ink — the leftmost worst, which is why only
+     the first O lost its right side. */
+  flex: 0 0 auto;
+  overflow: hidden;
+  line-height: 1;
+  padding-block: 0.24em 0.3em;
+  margin-block: -0.24em -0.3em;
+}
+
+/* Tracking must NOT live on the glyph inside a mask column. letter-spacing
+   shrinks each character's advance width, the column is sized to that advance,
+   and overflow:hidden then slices the right edge off every glyph — "OKISO"
+   rendered as "CKISC" because each O lost its right side. Reset the spacing on
+   the glyph and re-create the tight display tracking by overlapping the columns
+   instead, which moves boxes rather than cropping ink. */
+.tac-char > span {
+  display: block;
+  letter-spacing: normal;
+  will-change: transform;
+}
+
+.tac-char + .tac-char {
+  margin-left: -0.02em;
 }
 
 .tac-lede {
@@ -361,6 +398,86 @@
 
 /* Nothing in the hero may push the page sideways. */
 .tac-hero { max-width: 100vw; }
+
+/* ── boot sequence ────────────────────────────────────────── */
+
+.tac-boot {
+  position: fixed;
+  inset: 0;
+  /* Above every piece of persistent chrome — the theme toggle sits at z-50 and
+     was floating on top of the boot screen, which broke the illusion. */
+  z-index: 9999;
+  background: #0c0c0e;
+  color: #eceae5;
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  will-change: clip-path;
+}
+
+.tac-boot-inner {
+  width: min(100%, 460px);
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.tac-boot-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #74747e;
+  margin-bottom: 1.1rem;
+}
+
+.tac-boot-mark {
+  width: 8px;
+  height: 8px;
+  background: #e6112b;
+}
+
+.tac-boot-lines {
+  list-style: none;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.tac-boot-lines li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #eceae5;
+}
+
+.tac-boot-ok {
+  color: #e6112b;
+  font-weight: 700;
+}
+
+.tac-boot-meter {
+  height: 3px;
+  width: 100%;
+  background: rgb(236 234 229 / 0.14);
+  overflow: hidden;
+}
+
+.tac-boot-meter-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #e6112b;
+  transform-origin: left center;
+}
+
+.tac-boot-pct {
+  margin-top: 0.6rem;
+  color: #74747e;
+  font-variant-numeric: tabular-nums;
+}
 
 /* ── ink band (replaces the old pink kinetic divider) ─────── */
 

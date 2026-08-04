@@ -6,6 +6,7 @@ import { Archivo, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
 import TacticalHero from "@/Components/Tactical/TacticalHero";
+import TacticalBoot from "@/Components/Tactical/TacticalBoot";
 import CustomVideoPlayer from "@/Components/BA/CustomVideoPlayer";
 import SocialGrid from "@/Components/BA/SocialGrid";
 import ReleaseGrid from "@/Components/BA/ReleaseGrid";
@@ -15,11 +16,9 @@ import GridPattern from "@/Components/MagicUI/GridPattern";
 
 const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
   ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center w-full h-full min-h-[600px]">
-      <div className="w-16 h-16 border-4 border-black/10 dark:border-white/10 dark:border-t-white border-t-black rounded-full animate-spin" />
-    </div>
-  ),
+  // Nothing here: the hero already shows the static character plate underneath,
+  // so a spinner would just flash a competing loading state on top of it.
+  loading: () => null,
 });
 
 import { useTwitchLive } from '@/hooks/useTwitchLive';
@@ -173,6 +172,8 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [musicGroupLd, webSiteLd] }) }}
       />
+
+      <TacticalBoot />
 
       {/* ─── TACTICAL HERO ─── */}
       <TacticalHero
