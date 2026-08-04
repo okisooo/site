@@ -1,0 +1,467 @@
+/* ─────────────────────────────────────────────────────────────
+   TACTICAL — techwear/editorial layer for the okiso.net home page.
+   Reference family: Arknights Endfield / ZZZ key art, "tactical abstract".
+
+   Palette discipline is the whole trick: a near-monochrome base with ONE hot
+   signal colour spent on under ~5% of pixels. The moment red is used for
+   decoration instead of signal, this stops reading as a system and starts
+   reading as a poster.
+
+   Motion rule inherited from docs/HANDOFF.md: transform and opacity only.
+   ───────────────────────────────────────────────────────────── */
+
+.tac-hero {
+  --tac-bone: #eceae5;
+  --tac-ink: #101014;
+  --tac-steel: #74747e;
+  --tac-signal: #e6112b;
+  --tac-acid: #cbff2e;
+  --font-tac-body: var(--font-tac-display);
+
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--tac-bone);
+  color: var(--tac-ink);
+  isolation: isolate;
+  padding: clamp(1rem, 2.4vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+}
+
+:is(.dark) .tac-hero {
+  --tac-bone: #0c0c0e;
+  --tac-ink: #f0f0ed;
+  --tac-steel: #6e6e78;
+}
+
+/* ── background stack ─────────────────────────────────────── */
+
+.tac-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  contain: strict;
+}
+
+.tac-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fine horizontal ruling. NOT CRT scanlines — this is drafting-paper ruling,
+   which is why it is 3px pitch and barely visible rather than 2px and glowing. */
+.tac-scanlines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(23, 23, 26, 0.035) 0px,
+    rgba(23, 23, 26, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+:is(.dark) .tac-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(240, 240, 237, 0.035) 0px,
+    rgba(240, 240, 237, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Ghost wordmark: enormous, cropped by the viewport, barely there. */
+.tac-ghost {
+  position: absolute;
+  left: -6vw;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
+  font-family: var(--font-tac-display), system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 34vw;
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+  color: var(--tac-ink);
+  opacity: 0.075;
+}
+
+/* Backing plate behind the subject: a dark field with a halftone dither so the
+   avatar sits *inside* the composition instead of floating on the page. */
+.tac-subject-plate {
+  position: absolute;
+  inset: 8% -4% 12% 6%;
+  background:
+    radial-gradient(120% 90% at 60% 30%, rgb(16 16 20 / 0.9), rgb(16 16 20 / 0.72) 55%, rgb(16 16 20 / 0.35) 100%);
+  clip-path: polygon(14% 0, 100% 6%, 92% 100%, 0 88%);
+}
+
+.tac-subject-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(236 234 229 / 0.5) 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0.28;
+  mask-image: linear-gradient(115deg, #000 0%, transparent 62%);
+  -webkit-mask-image: linear-gradient(115deg, #000 0%, transparent 62%);
+}
+
+/* ── HUD rails ────────────────────────────────────────────── */
+
+.tac-rail {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* wrap, not clip: the rail sat flush against the hero's padding edge, so any
+     metric shift (no scrollbar, different font rasterisation) pushed the last
+     nav item past `overflow: hidden` and sliced it in half. */
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-block: 0.5rem;
+}
+
+.tac-rail-top {
+  border-bottom: 1px solid rgb(23 23 26 / 0.12);
+}
+
+.tac-rail-bottom {
+  margin-top: auto;
+  border-top: 1px solid rgb(23 23 26 / 0.12);
+}
+
+:is(.dark) .tac-rail-top,
+:is(.dark) .tac-rail-bottom {
+  border-color: rgb(240 240 237 / 0.14);
+}
+
+.tac-mono {
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.tac-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--tac-ink);
+  border: 1px solid rgb(23 23 26 / 0.16);
+  padding: 0.34rem 0.7rem;
+}
+
+:is(.dark) .tac-chip {
+  border-color: rgb(240 240 237 / 0.18);
+}
+
+.tac-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--tac-signal);
+  /* opacity only — compositor-cheap */
+  animation: tac-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes tac-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* ── composition grid ─────────────────────────────────────── */
+
+.tac-grid {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding-block: clamp(1.5rem, 4vh, 3rem);
+}
+
+@media (min-width: 900px) {
+  .tac-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(1rem, 3vw, 3rem);
+  }
+}
+
+.tac-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 1.6vh, 1.35rem);
+  max-width: 46ch;
+}
+
+.tac-index {
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--tac-signal);
+}
+
+.tac-rule {
+  height: 1px;
+  width: clamp(28px, 5vw, 64px);
+  background: currentColor;
+  opacity: 0.28;
+}
+
+.tac-display {
+  font-family: var(--font-tac-display), system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(4.5rem, 13vw, 12rem);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.tac-lede {
+  font-family: var(--font-tac-body), system-ui, sans-serif;
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  line-height: 1.55;
+  max-width: 38ch;
+  margin: 0;
+}
+
+.tac-readout {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--tac-steel);
+  padding-top: 0.35rem;
+}
+
+.tac-readout b {
+  color: var(--tac-ink);
+  font-weight: 700;
+}
+
+.tac-sep {
+  width: 1px;
+  height: 10px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+/* ── subject frame ────────────────────────────────────────── */
+
+.tac-col-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(320px, 52vh, 620px);
+}
+
+.tac-subject {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 4 / 5;
+}
+
+.tac-subject-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tac-vlabel {
+  position: absolute;
+  right: -0.25rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: right center;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--tac-steel);
+  white-space: nowrap;
+}
+
+/* ── annotation callouts ──────────────────────────────────── */
+
+.tac-callout {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  z-index: 4;
+}
+
+.tac-callout[data-align="right"] {
+  flex-direction: row-reverse;
+}
+
+/* Callouts straddle the dark subject plate and the bone background, so neither
+   an ink nor a bone label works alone. The label gets its own dark chip (HUD
+   furniture, period-correct) and the leader line is signal red, which is the
+   one colour legible against both. */
+.tac-callout-line {
+  width: clamp(24px, 4vw, 56px);
+  height: 1px;
+  background: var(--tac-signal);
+  opacity: 0.9;
+}
+
+.tac-callout .tac-mono {
+  background: rgb(16 16 20 / 0.88);
+  color: #eceae5;
+  padding: 0.32rem 0.55rem;
+  border: 1px solid rgb(236 234 229 / 0.16);
+}
+
+.tac-callout .tac-mono span { color: inherit; }
+.tac-callout .tac-mono span:first-child { color: #9a9aa4; }
+
+.tac-c1 { left: -0.5rem; top: 16%; }
+.tac-c2 { right: -0.5rem; top: 34%; }
+.tac-c3 { left: -0.5rem; bottom: 22%; }
+
+@media (max-width: 899px) {
+  /* Callouts overhang the frame; on narrow screens that causes horizontal
+     overflow, so stack them all on the left edge reading inward rather than
+     hiding the annotation entirely — the annotation IS the aesthetic. */
+  .tac-c1, .tac-c2, .tac-c3 {
+    left: 0.25rem;
+    right: auto;
+    max-width: calc(100% - 0.5rem);
+  }
+  .tac-callout[data-align="right"] { flex-direction: row; }
+  .tac-c2 { top: 46%; }
+  .tac-callout-line { width: 16px; }
+  .tac-vlabel { display: none; }
+  .tac-ghost { font-size: 52vw; opacity: 0.06; }
+
+  /* The top rail runs out of room well before the links do; let it wrap
+     instead of clipping "SOCIAL" and "CONTACT" off the viewport. */
+  .tac-rail-top { flex-wrap: wrap; row-gap: 0.5rem; }
+  .tac-rail-top > * { min-width: 0; }
+}
+
+/* Nothing in the hero may push the page sideways. */
+.tac-hero { max-width: 100vw; }
+
+/* ── ink band (replaces the old pink kinetic divider) ─────── */
+
+.tac-band {
+  position: relative;
+  z-index: 30;
+  width: 110vw;
+  margin-left: -5vw;
+  margin-top: -3.5rem;
+  transform: skewY(-1.6deg);
+  transform-origin: left;
+  background: #101014;
+  border-block: 1px solid rgb(236 234 229 / 0.16);
+  padding-block: 0.85rem;
+  overflow: hidden;
+}
+
+.tac-band-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-inline: 2rem;
+  white-space: nowrap;
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: clamp(0.7rem, 1vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #eceae5;
+}
+
+.tac-band-dim { color: #74747e; }
+.tac-band-sig { color: #e6112b; }
+
+.tac-band-dot {
+  width: 5px;
+  height: 5px;
+  background: #e6112b;
+  flex-shrink: 0;
+}
+
+/* ── controls ─────────────────────────────────────────────── */
+
+/* Square, not pill. The reference has no rounded shapes anywhere — softening
+   the buttons is the fastest way to lose the whole aesthetic. */
+.tac-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  background: var(--tac-ink);
+  color: var(--tac-bone);
+  border: 1px solid var(--tac-ink);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.tac-cta:hover {
+  background: var(--tac-signal);
+  border-color: var(--tac-signal);
+  color: #fff;
+}
+
+.tac-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.4rem;
+  background: transparent;
+  color: var(--tac-ink);
+  border: 1px solid rgb(23 23 26 / 0.22);
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+:is(.dark) .tac-cta-ghost { border-color: rgb(240 240 237 / 0.24); }
+
+.tac-cta-ghost:hover {
+  border-color: var(--tac-signal);
+  color: var(--tac-signal);
+}
+
+.tac-navlink {
+  font-family: var(--font-tac-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tac-steel);
+  transition: color 0.18s ease;
+}
+
+.tac-navlink:hover { color: var(--tac-signal); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tac-dot { animation: none; }
+}

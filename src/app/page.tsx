@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { Archivo, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
+import TacticalHero from "@/Components/Tactical/TacticalHero";
 import CustomVideoPlayer from "@/Components/BA/CustomVideoPlayer";
 import SocialGrid from "@/Components/BA/SocialGrid";
 import ReleaseGrid from "@/Components/BA/ReleaseGrid";
@@ -22,6 +24,13 @@ const VRMViewer = dynamic(() => import("@/Components/VRM/VRMViewer"), {
 
 import { useTwitchLive } from '@/hooks/useTwitchLive';
 import { FeaturedVideo, useFeaturedVideos } from '@/hooks/useFeaturedVideos';
+
+/* Tactical type stack. Archivo 900 is the display face — a heavy grotesk holds
+   the reference's weight where a condensed one would read as sport, not system.
+   JetBrains Mono carries the entire annotation layer; Noto Sans JP the CJK marks. */
+const tacDisplay = Archivo({ subsets: ["latin"], weight: ["400", "500", "700", "900"], variable: "--font-tac-display" });
+const tacMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-mono" });
+const tacCjk = Noto_Sans_JP({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-cjk" });
 
 const siteUrl = 'https://okiso.net';
 
@@ -64,7 +73,6 @@ export default function Home() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [loadVRM, setLoadVRM] = useState(false);
-  const vrmContainerRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -166,166 +174,69 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [musicGroupLd, webSiteLd] }) }}
       />
 
-      {/* ─── MASSIVE HERO ─── */}
-      <section 
-        className="relative w-full h-[100svh] min-h-[800px] flex flex-col justify-between overflow-hidden bg-white/20 dark:bg-black/10 shadow-2xl z-20 backdrop-blur-3xl transition-colors duration-500"
-        style={{ clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 3.492vw), 0 100%)" }}
-      >
-
-        {/* Kinetic Background Typography */}
-        <div className="absolute inset-0 pointer-events-none flex flex-col justify-center overflow-hidden z-0 opacity-[0.08] dark:opacity-[0.06]">
-          <GridPattern
-            width={40}
-            height={40}
-            className="absolute inset-0 h-full w-full mix-blend-overlay dark:mix-blend-color-dodge opacity-50 [mask-image:linear-gradient(to_bottom,white,transparent)]"
-          />
-          {/* `overflow-hidden` is required, not cosmetic. react-fast-marquee's
-              container defaults to overflow-y:auto, and 25vw type overflows it
-              vertically (378px of content in a 320px box), which turns each
-              marquee into a real nested scroller. Wheel over one scrolls THAT box
-              natively before chaining to the page — the second source of the
-              scroll stutter. The third marquee on this page already had it. */}
-          <Marquee speed={40} gradient={false} autoFill className="overflow-hidden">
-            <h1 className="text-[25vw] leading-none font-black uppercase whitespace-nowrap px-8 text-black dark:text-white">
-              PRODUCER VTUBER
-            </h1>
-          </Marquee>
-          <div className="-mt-[10vh]">
-            <Marquee speed={40} direction="right" gradient={false} autoFill className="overflow-hidden">
-              <h1 className="text-[25vw] leading-none font-black uppercase whitespace-nowrap px-8 text-transparent stroke-black dark:stroke-white" style={{ WebkitTextStroke: '4px currentColor' }}>
-                CREATIVE ARCHIVE
-              </h1>
-            </Marquee>
-          </div>
-        </div>
-
-        {/* Top Header Row */}
-        <header className="relative z-30 w-full max-w-[2200px] mx-auto p-6 md:p-8 flex justify-between items-center text-sm md:text-xl font-bold uppercase tracking-widest">
-          <div className="flex items-center gap-4 bg-white/50 dark:bg-black/20 backdrop-blur-md px-6 py-3 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
-            <span className="w-3 h-3 bg-ba-pink rounded-full animate-pulse shadow-[0_0_10px_rgba(255,126,179,0.8)]" />
-            LIVE_SYSTEM // 2026
-          </div>
-
-          {/* Slide-out Navigation Menu */}
-          <div className="group relative z-40 flex justify-end">
-            <div className="flex items-center bg-white/50 dark:bg-black/20 backdrop-blur-md rounded-full border border-black/5 dark:border-white/5 shadow-sm transition-all duration-[800ms] ease-in-out overflow-hidden pr-1 hover:bg-white/80 dark:hover:bg-black/40">
-              <div className="flex items-center gap-6 md:gap-8 overflow-hidden max-w-0 opacity-0 px-0 group-hover:max-w-[500px] group-hover:opacity-100 group-hover:pl-8 group-hover:pr-4 transition-all duration-[800ms] ease-in-out whitespace-nowrap">
-                <a href="#archive" className="hover:text-ba-pink transition-colors">ARCHIVE</a>
-                <a href="#social" className="hover:text-ba-pink transition-colors">SOCIAL</a>
-                <button onClick={() => setIsContactOpen(true)} className="hover:text-ba-pink transition-colors">CONTACT</button>
-              </div>
-              <div className="w-10 h-10 md:w-12 md:h-12 flex flex-col justify-center items-center gap-[5px] cursor-pointer bg-black/5 dark:bg-white/5 rounded-full my-1 ml-1 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-[800ms]">
-                <div className="w-5 h-[2px] rounded-full bg-black dark:bg-white transition-all duration-[800ms] ease-in-out group-hover:-translate-x-1.5 group-hover:w-3 group-hover:bg-ba-pink" />
-                <div className="w-5 h-[2px] rounded-full bg-black dark:bg-white transition-all duration-[800ms] ease-in-out group-hover:bg-ba-pink" />
-                <div className="w-5 h-[2px] rounded-full bg-black dark:bg-white transition-all duration-[800ms] ease-in-out group-hover:translate-x-1.5 group-hover:w-3 group-hover:bg-ba-pink" />
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Hero Content */}
-        <div className="relative z-20 flex-1 w-full flex flex-col lg:flex-row">
-
-          {/* Left: Bounded Typography */}
-          <div className="w-full max-w-[2200px] mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center lg:justify-end pb-0 lg:pb-32 z-30 pointer-events-none">
-            <div className="w-full lg:w-[50%]">
-              <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="pointer-events-auto"
-              >
-                <h1 className="text-[20vw] lg:text-[15vw] leading-[0.75] font-black uppercase tracking-tighter mix-blend-multiply dark:mix-blend-normal">
-                  OKISO
-                </h1>
-                <p className="mt-8 text-lg md:text-2xl lg:text-3xl font-medium max-w-2xl text-black/70 dark:text-white/70 leading-snug">
-                  at your command!
-                </p>
-
-                <div className="mt-12 flex items-center gap-4 md:gap-6">
-                  <a href="#archive" className="bg-black dark:bg-white text-white dark:text-black px-8 md:px-10 py-5 rounded-full text-sm md:text-xl font-bold uppercase tracking-widest hover:bg-ba-pink dark:hover:bg-ba-pink dark:hover:text-white transition-all transform hover:scale-105 flex items-center gap-4 group shadow-xl">
-                    <FaPlay className="group-hover:animate-pulse" /> Latest Release
-                  </a>
-                  <div className="hidden md:block w-16 h-[2px] bg-black/20 dark:bg-white/20" />
-                  <span className="hidden md:block text-sm font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/70">Scroll Down</span>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Right: VRM Viewer (Anchored to right half) */}
-          <div className="w-full h-[50vh] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[50vw] lg:h-full flex items-center justify-center z-10 pointer-events-none">
-            <motion.div
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 w-full h-full flex flex-col justify-center items-center"
+      {/* ─── TACTICAL HERO ─── */}
+      <TacticalHero
+        className={`${tacDisplay.variable} ${tacMono.variable} ${tacCjk.variable}`}
+        nav={
+          <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 md:gap-x-6">
+            <a href="#archive" className="tac-navlink">Archive</a>
+            <a href="#social" className="tac-navlink">Social</a>
+            <button onClick={() => setIsContactOpen(true)} className="tac-navlink">Contact</button>
+          </nav>
+        }
+        subject={
+          loadVRM ? (
+            <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
+          ) : (
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label="Load interactive 3D model"
+              onClick={() => setLoadVRM(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setLoadVRM(true);
+                }
+              }}
+              className="group relative flex h-full w-full cursor-pointer items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tac-signal)]"
             >
-              {/* Massive ambient glow behind model */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-ba-pink/20 blur-[120px] rounded-full pointer-events-none mix-blend-overlay dark:mix-blend-lighten" />
-
-              {/* No `data-lenis-prevent` here. It tells Lenis to ignore wheel over
-                  this element, so the browser scrolls the page natively — unsmoothed
-                  — while the rest of the page is Lenis-smoothed. That reads as the
-                  smooth scroll "fighting" the normal one, and the model fills most
-                  of the hero, which is exactly where scrolling starts.
-                  It would only be justified if the viewer consumed the wheel, and it
-                  does not: OrbitControls is configured enableZoom={false} +
-                  enablePan={false}. Drag-to-rotate is pointer-driven and unaffected. */}
-              <div 
-                ref={vrmContainerRef}
-                className={`w-full h-full relative z-10 pointer-events-auto flex items-center justify-center ${
-                  loadVRM ? "cursor-grab active:cursor-grabbing" : ""
-                }`}
-              >
-                {loadVRM ? (
-                  <VRMViewer modelUrl="/model.vrm" className="w-full h-full" />
-                ) : (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    aria-label="Load interactive 3D model"
-                    onClick={() => setLoadVRM(true)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setLoadVRM(true);
-                      }
-                    }}
-                    className="relative w-full h-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ba-pink rounded-3xl group"
-                  >
-                    <img 
-                      src="/hero_character.webp" 
-                      alt="OKISO Character Preview" 
-                      className="max-h-[80%] w-auto object-contain select-none pointer-events-none transition-opacity duration-500 opacity-90 group-hover:opacity-100"
-                    />
-                    {/* bottom-[15%], not bottom-4: this container runs to the
-                        hero's edge, which sits behind the diagonal marquee band,
-                        so a pill pinned to the bottom is invisible to exactly the
-                        visitors who need it (reduced-motion and slow connections,
-                        the only ones who see this state). */}
-                    <div className="absolute bottom-[22%] left-1/2 -translate-x-1/2 bg-black/60 dark:bg-white/10 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full border border-white/10 shadow-lg flex items-center gap-2 group-hover:bg-ba-pink group-hover:text-white transition-colors">
-                      <span className="w-2 h-2 rounded-full bg-ba-pink group-hover:bg-white animate-pulse" />
-                      Load Interactive 3D Model
-                    </div>
-                  </div>
-                )}
-              </div>
-              {/* Tag removed by user request for cleaner layout */}
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Dynamic Scroll Edge */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-ba-dark/50 to-transparent pointer-events-none z-30" />
-      </section>
+              <img
+                src="/hero_character.webp"
+                alt="OKISO Character Preview"
+                className="pointer-events-none max-h-full w-auto select-none object-contain opacity-95 transition-opacity duration-500 group-hover:opacity-100"
+              />
+              <span className="tac-mono absolute bottom-[6%] left-1/2 flex -translate-x-1/2 items-center gap-2 border border-[var(--tac-ink)]/25 bg-[var(--tac-bone)]/85 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--tac-ink)] backdrop-blur-sm transition-colors group-hover:border-[var(--tac-signal)] group-hover:text-[var(--tac-signal)]">
+                <span className="h-1.5 w-1.5 bg-[var(--tac-signal)]" />
+                Load 3D Model
+              </span>
+            </div>
+          )
+        }
+      >
+        <a href="#archive" className="tac-cta">
+          <FaPlay className="text-[10px]" /> Latest Release
+        </a>
+        <a href="#social" className="tac-cta-ghost">
+          Channels
+        </a>
+      </TacticalHero>
 
       {/* ─── KINETIC DIVIDER ─── */}
-      <div className="w-[110vw] -ml-[5vw] bg-ba-pink py-4 md:py-8 overflow-hidden flex origin-left transform -skew-y-2 relative z-30 shadow-[0_20px_50px_rgba(255,126,179,0.3)] -mt-16 md:-mt-24 border-y-8 border-black dark:border-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <Marquee speed={60} gradient={false} autoFill className="overflow-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex items-center whitespace-nowrap gap-4 md:gap-8 px-4 md:px-8 text-black font-black text-2xl md:text-4xl tracking-widest uppercase overflow-hidden py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      {/* Ink band, not the old pink one. A saturated pink slab directly under a
+          near-monochrome hero broke the palette discipline the whole look
+          depends on — red stays the only signal colour, spent sparingly. */}
+      <div className={`tac-band ${tacMono.variable}`}>
+        <Marquee speed={38} gradient={false} autoFill className="overflow-hidden">
+          <div className="tac-band-row">
             <span>SYSTEM.ARCHIVE.ONLINE</span>
-            <span className="w-3 h-3 md:w-5 md:h-5 bg-black rounded-full shadow-sm flex-shrink-0" />
+            <span className="tac-band-dot" />
+            <span className="tac-band-dim">音 CH.01</span>
+            <span className="tac-band-dot" />
+            <span>OKISO // オキソ</span>
+            <span className="tac-band-dot" />
+            <span className="tac-band-sig">● REC</span>
+            <span className="tac-band-dot" />
           </div>
         </Marquee>
       </div>

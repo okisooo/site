@@ -4,6 +4,7 @@
 @import "../styles/semantic.css";
 @import "../styles/compat.css";
 @import "../styles/scopes.css";
+@import "../styles/tactical.css";
 
 @tailwind base;
 @tailwind components;
