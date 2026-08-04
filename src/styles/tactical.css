@@ -53,6 +53,164 @@
   height: 100%;
 }
 
+/* ── living geometry ──────────────────────────────────────────
+   Everything below animates transform or opacity only, so it runs on the
+   compositor and never touches layout or paint. Nothing here is decorative
+   noise: each motion implies the system is measuring something. */
+
+/* Parallax depth layers. JS writes transform directly on these (leaf writes,
+   measured at ~0ms) — never a custom property on the root. */
+.tac-plx {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Ambient drift lives on a SEPARATE nested element from the pointer parallax.
+   They cannot share one node: JS writing element.style.transform overrides the
+   CSS animation on that same element, which left the page completely still
+   whenever the mouse wasn't moving. Nested, the two transforms compose — the
+   scene breathes on its own and the pointer adds to it. */
+.tac-amb {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.tac-amb-1 { animation: tac-float-1 41s ease-in-out infinite; }
+.tac-amb-2 { animation: tac-float-2 29s ease-in-out infinite; }
+.tac-amb-3 { animation: tac-float-3 53s ease-in-out infinite; }
+
+/* Long, low-amplitude, and all three start and end at identity so they loop
+   without a seam. Different periods so the layers never resynchronise. */
+@keyframes tac-float-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(-0.9%, 0.7%, 0) rotate(-0.25deg); }
+  66% { transform: translate3d(0.7%, -0.5%, 0) rotate(0.2deg); }
+}
+
+@keyframes tac-float-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  40% { transform: translate3d(1.1%, 0.6%, 0) rotate(0.3deg); }
+  75% { transform: translate3d(-0.6%, -0.8%, 0) rotate(-0.18deg); }
+}
+
+@keyframes tac-float-3 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-1.4%, -1%, 0); }
+}
+
+/* The ghost wordmark drifts too, slowest of all, so the whole frame is alive.
+   On the inner span, NOT .tac-ghost: that element is a motion.div whose entrance
+   writes an inline transform, which would clobber this animation. */
+.tac-ghost > span {
+  display: block;
+  animation: tac-float-3 67s ease-in-out infinite;
+}
+
+/* Contours breathe — a slow lateral drift, one tile's worth, seamless. */
+.tac-drift-slow { animation: tac-drift 34s ease-in-out infinite; }
+.tac-drift-rev { animation: tac-drift-rev 46s ease-in-out infinite; }
+
+@keyframes tac-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-1.6%, 0.6%, 0); }
+}
+
+@keyframes tac-drift-rev {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(1.2%, -0.5%, 0); }
+}
+
+/* Scan rings. transform-box:view-box + explicit origin is mandatory on SVG
+   groups — fill-box resolves `center` against the group's own bbox and the
+   rotation lands in the wrong place (see docs/HANDOFF.md, the ball orbit). */
+.tac-spin-ring {
+  transform-box: view-box;
+  transform-origin: 1268px 252px;
+  animation: tac-spin 28s linear infinite;
+}
+
+.tac-spin-ring-rev {
+  transform-box: view-box;
+  transform-origin: 1268px 252px;
+  animation: tac-spin 44s linear infinite reverse;
+}
+
+.tac-spin-small {
+  transform-box: view-box;
+  transform-origin: 222px 196px;
+  animation: tac-spin 22s linear infinite reverse;
+}
+
+@keyframes tac-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Signal elements pulse on their own clocks so the composition never feels
+   metronomic. */
+.tac-blink-a { animation: tac-blink 3.1s steps(1, end) infinite; }
+.tac-blink-b { animation: tac-blink 4.7s steps(1, end) infinite 0.6s; }
+.tac-blink-c { animation: tac-blink 2.3s steps(1, end) infinite 1.1s; }
+
+@keyframes tac-blink {
+  0%, 62% { opacity: 1; }
+  63%, 70% { opacity: 0.15; }
+  71%, 100% { opacity: 1; }
+}
+
+/* Dither blocks flicker like refreshing data. */
+.tac-flicker { animation: tac-flicker 5.5s ease-in-out infinite; }
+.tac-flicker-2 { animation: tac-flicker 7.3s ease-in-out infinite 1.4s; }
+
+@keyframes tac-flicker {
+  0%, 100% { opacity: 0.72; }
+  40% { opacity: 0.28; }
+  55% { opacity: 0.9; }
+}
+
+/* A red index sliding along the tick ruler — the one element that reads as an
+   instrument actively taking a measurement. */
+.tac-ruler-head {
+  transform-box: view-box;
+  animation: tac-ruler 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes tac-ruler {
+  0%, 8% { transform: translateX(0); }
+  50%, 58% { transform: translateX(660px); }
+  100% { transform: translateX(0); }
+}
+
+/* Scan bar sweeping the subject plate. */
+.tac-scan-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tac-signal), transparent);
+  opacity: 0.85;
+  will-change: transform;
+  animation: tac-sweep 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes tac-sweep {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  6% { opacity: 0.85; }
+  50% { transform: translateY(var(--tac-sweep-dist, 460px)); opacity: 0.85; }
+  56% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tac-drift-slow, .tac-drift-rev, .tac-spin-ring, .tac-spin-ring-rev,
+  .tac-spin-small, .tac-blink-a, .tac-blink-b, .tac-blink-c,
+  .tac-flicker, .tac-flicker-2, .tac-ruler-head, .tac-scan-sweep,
+  .tac-amb-1, .tac-amb-2, .tac-amb-3, .tac-ghost > span {
+    animation: none;
+  }
+  .tac-scan-sweep { opacity: 0; }
+}
+
 /* Fine horizontal ruling. NOT CRT scanlines — this is drafting-paper ruling,
    which is why it is 3px pitch and barely visible rather than 2px and glowing. */
 .tac-scanlines {
@@ -99,6 +257,7 @@
    avatar sits *inside* the composition instead of floating on the page. */
 .tac-subject-plate {
   position: absolute;
+  overflow: hidden;
   inset: 8% -4% 12% 6%;
   background:
     radial-gradient(120% 90% at 60% 30%, rgb(16 16 20 / 0.9), rgb(16 16 20 / 0.72) 55%, rgb(16 16 20 / 0.35) 100%);

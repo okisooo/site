@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 /**
@@ -34,7 +34,8 @@ function ContourField() {
       const phase = rand(i + 7) * Math.PI * 2;
       const yBase = 40 + i * 46;
       const pts: string[] = [];
-      for (let x = 0; x <= 1600; x += 40) {
+      // Overdraw past the viewBox so the drift never exposes a path end.
+      for (let x = -160; x <= 1760; x += 40) {
         const y = yBase + Math.sin(x / 220 + phase) * amp + Math.sin(x / 90 + phase * 2) * (amp * 0.25);
         pts.push(`${x},${y.toFixed(1)}`);
       }
@@ -44,9 +45,11 @@ function ContourField() {
 
   return (
     <svg className="tac-layer" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice" aria-hidden>
-      {paths.map((p, i) => (
-        <path key={i} d={p.d} fill="none" stroke="var(--tac-ink)" strokeWidth="1" strokeOpacity={p.o} />
-      ))}
+      <g className="tac-drift-slow">
+        {paths.map((p, i) => (
+          <path key={i} d={p.d} fill="none" stroke="var(--tac-ink)" strokeWidth="1" strokeOpacity={p.o} />
+        ))}
+      </g>
     </svg>
   );
 }
@@ -73,7 +76,16 @@ function DotMatrix() {
   return (
     <svg className="tac-layer" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMid slice" aria-hidden>
       {blocks.map((d, i) => (
-        <rect key={i} x={d.cx} y={d.cy} width="4" height="4" fill="var(--tac-ink)" fillOpacity="0.72" />
+        <rect
+          key={i}
+          className={i % 3 === 0 ? "tac-flicker" : i % 3 === 1 ? "tac-flicker-2" : undefined}
+          x={d.cx}
+          y={d.cy}
+          width="4"
+          height="4"
+          fill="var(--tac-ink)"
+          fillOpacity="0.72"
+        />
       ))}
     </svg>
   );
@@ -111,29 +123,33 @@ function ShardField() {
       </g>
       {/* signal red: slivers, bars and one solid block. Spent, not sprinkled. */}
       <g fill="var(--tac-signal)">
-        <polygon points="1386,96 1478,124 1404,158" />
+        <polygon className="tac-blink-a" points="1386,96 1478,124 1404,158" />
         <polygon points="120,486 236,512 180,540" opacity="0.85" />
         <rect x="1120" y="612" width="140" height="6" />
-        <rect x="0" y="246" width="190" height="6" />
+        <rect className="tac-blink-c" x="0" y="246" width="190" height="6" />
         <rect x="1470" y="300" width="6" height="120" />
-        <rect x="286" y="120" width="56" height="56" opacity="0.9" />
+        <rect className="tac-blink-b" x="286" y="120" width="56" height="56" opacity="0.9" />
       </g>
       <g fill="none" stroke="var(--tac-signal)" strokeWidth="1.5" strokeOpacity="0.9">
         <polyline points="1180,660 1240,660 1268,632" />
         <polyline points="420,60 470,60 496,86" />
       </g>
-      {/* wireframe rings — "scan" motif */}
+      {/* wireframe rings — "scan" motif, counter-rotating */}
       <g fill="none" stroke="var(--tac-ink)" strokeOpacity="0.4">
         <circle cx="1268" cy="252" r="86" />
-        <circle cx="1268" cy="252" r="52" strokeDasharray="3 5" />
-        <circle cx="222" cy="196" r="38" strokeDasharray="2 6" />
-        <circle cx="1268" cy="252" r="120" strokeDasharray="1 9" strokeOpacity="0.6" />
+        <circle className="tac-spin-ring" cx="1268" cy="252" r="52" strokeDasharray="3 5" />
+        <circle className="tac-spin-small" cx="222" cy="196" r="38" strokeDasharray="2 6" />
+        <circle className="tac-spin-ring-rev" cx="1268" cy="252" r="120" strokeDasharray="1 9" strokeOpacity="0.6" />
       </g>
-      {/* tick ruler — technical measurement furniture */}
+      {/* tick ruler with a travelling index */}
       <g stroke="var(--tac-ink)" strokeOpacity="0.45" strokeWidth="1">
         {Array.from({ length: 32 }, (_, i) => (
           <line key={i} x1={40 + i * 22} y1={676} x2={40 + i * 22} y2={i % 5 === 0 ? 660 : 668} />
         ))}
+      </g>
+      <g className="tac-ruler-head">
+        <rect x="36" y="654" width="2" height="26" fill="var(--tac-signal)" />
+        <polygon points="30,648 44,648 37,656" fill="var(--tac-signal)" />
       </g>
     </svg>
   );
@@ -208,6 +224,51 @@ export default function TacticalHero({
      skipped, so reduced-motion users never wait on an animation they can't see. */
   const D = reduced ? 0 : 1.5;
 
+  const plx1 = useRef<HTMLDivElement>(null);
+  const plx2 = useRef<HTMLDivElement>(null);
+  const plx3 = useRef<HTMLDivElement>(null);
+
+  /* Pointer parallax. Writes `transform` directly on three leaf layers inside a
+     single rAF — leaf transform writes measured at 0ms, versus ~30ms for any
+     inherited/custom property written on the root (docs/HANDOFF.md).
+     Skipped entirely for coarse pointers and reduced motion: there is no cursor
+     to follow on touch, and it would just be a wasted listener. */
+  useEffect(() => {
+    if (reduced) return;
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    let raf = 0;
+    let tx = 0;
+    let ty = 0;
+    const layers: Array<[React.RefObject<HTMLDivElement | null>, number]> = [
+      [plx1, 14],
+      [plx2, 26],
+      [plx3, 38],
+    ];
+
+    const apply = () => {
+      raf = 0;
+      for (const [ref, depth] of layers) {
+        const el = ref.current;
+        if (el) el.style.transform = `translate3d(${tx * depth}px, ${ty * depth}px, 0)`;
+      }
+    };
+
+    const onMove = (e: PointerEvent) => {
+      // -0.5..0.5 from centre
+      tx = e.clientX / window.innerWidth - 0.5;
+      ty = e.clientY / window.innerHeight - 0.5;
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [reduced]);
+
   return (
     <section className={`tac-hero ${className}`} aria-label="OKISO">
       {/* ── background stack ── */}
@@ -218,9 +279,23 @@ export default function TacticalHero({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.9, delay: D + 0.08, ease: "easeOut" }}
       >
-        <ContourField />
-        <ShardField />
-        <DotMatrix />
+        {/* .tac-plx carries the pointer transform (JS), .tac-amb the ambient
+            drift (CSS). Separate nodes so they compose instead of overwriting. */}
+        <div ref={plx1} className="tac-plx">
+          <div className="tac-amb tac-amb-1">
+            <ContourField />
+          </div>
+        </div>
+        <div ref={plx2} className="tac-plx">
+          <div className="tac-amb tac-amb-2">
+            <ShardField />
+          </div>
+        </div>
+        <div ref={plx3} className="tac-plx">
+          <div className="tac-amb tac-amb-3">
+            <DotMatrix />
+          </div>
+        </div>
         <div className="tac-scanlines" />
       </motion.div>
 
@@ -318,7 +393,9 @@ export default function TacticalHero({
         {/* right: the subject, framed like a scanned target */}
         <div className="tac-col-right">
           <div className="tac-subject">
-            <div className="tac-subject-plate" aria-hidden />
+            <div className="tac-subject-plate" aria-hidden>
+              <span className="tac-scan-sweep" />
+            </div>
             <TargetFrame />
             <Callout label="MODEL" value="OKISO" className="tac-c1" />
             <Callout label="BUILD" value="v2.6" className="tac-c2" align="right" />
