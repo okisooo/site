@@ -1,0 +1,755 @@
+.root {
+  --archive-bone: #eceae5;
+  --archive-ink: #101014;
+  --archive-void: #0c0c0e;
+  --archive-steel: #74747e;
+  --archive-signal: #e6112b;
+  --tac-bone: var(--archive-bone);
+  --tac-ink: var(--archive-ink);
+  --tac-steel: var(--archive-steel);
+  --tac-signal: var(--archive-signal);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  color: var(--archive-bone);
+  background: var(--archive-void);
+  font-family: var(--font-archive-display), sans-serif;
+}
+
+.root::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0 0 auto auto;
+  width: 41vw;
+  height: 100%;
+  background: var(--archive-ink);
+  clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.root::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 8vw;
+  width: 1px;
+  height: 100%;
+  background: color-mix(in srgb, var(--archive-bone) 17%, transparent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 62px;
+  margin-inline: clamp(18px, 3vw, 52px);
+  border-bottom: 1px solid color-mix(in srgb, var(--archive-bone) 22%, transparent);
+  font-family: var(--font-archive-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+:global(body):has(.root) :global([data-okiso-chrome="theme-toggle"]) {
+  display: none;
+}
+
+.backLink,
+.labStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.backLink {
+  min-height: 44px;
+  color: inherit;
+  transition: color 120ms linear;
+}
+
+.backLink:hover {
+  color: var(--archive-signal);
+}
+
+.labStatus {
+  color: color-mix(in srgb, var(--archive-bone) 60%, transparent);
+}
+
+.labStatus > span {
+  width: 7px;
+  height: 7px;
+  background: var(--archive-signal);
+}
+
+.intro {
+  padding: clamp(18px, 2.7vh, 34px) clamp(18px, 3vw, 52px) 0;
+}
+
+.kicker,
+.activeSummary,
+.cardEyebrow,
+.cardFooter,
+.dossierTopline,
+.dossierMeta,
+.genreLine,
+.trackPreview,
+.controls {
+  font-family: var(--font-archive-mono), monospace;
+  text-transform: uppercase;
+}
+
+.kicker {
+  margin: 0 0 7px;
+  color: var(--archive-signal);
+  font-size: clamp(9px, 0.75vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
+
+.titleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 25vw);
+  align-items: end;
+  gap: 32px;
+}
+
+.titleRow h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.12em;
+  margin: 0;
+  font-size: clamp(54px, 8.4vw, 142px);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.72;
+  text-transform: uppercase;
+}
+
+.titleRow h1 span {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--archive-bone) 72%, transparent);
+}
+
+.activeSummary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 13px;
+  padding-left: 14px;
+  border-left: 4px solid var(--archive-signal);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  line-height: 1.3;
+}
+
+.activeSummary strong {
+  overflow: hidden;
+  color: var(--archive-bone);
+  font-family: var(--font-archive-display), sans-serif;
+  font-size: clamp(16px, 1.45vw, 24px);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activeSummary span:last-child {
+  grid-column: 2;
+  color: color-mix(in srgb, var(--archive-bone) 55%, transparent);
+}
+
+.railRegion {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin-top: clamp(20px, 3.5vh, 38px);
+}
+
+.axis {
+  position: absolute;
+  z-index: -1;
+  top: 48%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: color-mix(in srgb, var(--archive-bone) 25%, transparent);
+}
+
+.axis::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  background: var(--archive-signal);
+  transform: translateX(-50%);
+}
+
+.releaseTrack {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--archive-gap);
+  width: max-content;
+  min-height: 100%;
+  padding-inline: calc((100vw - var(--archive-card-width)) / 2);
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.releaseTrack:active {
+  cursor: grabbing;
+}
+
+.cardPosition {
+  flex: 0 0 var(--archive-card-width);
+  width: var(--archive-card-width);
+  transform-origin: 50% 34%;
+}
+
+.releaseCard {
+  display: block;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.cardArtwork {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--archive-ink);
+  border: 1px solid color-mix(in srgb, var(--archive-bone) 34%, transparent);
+}
+
+.cardArtwork::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 0 solid var(--archive-signal);
+  pointer-events: none;
+  transition: border-width 110ms linear;
+}
+
+.cardPosition[data-active="true"] .cardArtwork::after {
+  border-width: 4px;
+}
+
+.coverImage {
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.artworkCut {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 18%;
+  aspect-ratio: 1;
+  background: var(--archive-void);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.cardOrdinal {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  color: var(--archive-bone);
+  font-family: var(--font-archive-display), sans-serif;
+  font-size: clamp(26px, 3vw, 48px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  mix-blend-mode: difference;
+}
+
+.cardCopy {
+  display: block;
+  padding-top: 12px;
+}
+
+.cardEyebrow,
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: color-mix(in srgb, var(--archive-bone) 58%, transparent);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.cardTitle {
+  display: -webkit-box;
+  min-height: 1.85em;
+  margin: 8px 0 7px;
+  overflow: hidden;
+  font-size: clamp(22px, 2.15vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.052em;
+  line-height: 0.93;
+  text-transform: uppercase;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cardPosition[data-active="true"] .cardFooter span:last-child {
+  color: var(--archive-signal);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(120px, 32vw) auto;
+  align-items: center;
+  gap: 24px;
+  min-height: 64px;
+  margin-inline: clamp(18px, 3vw, 52px);
+  border-top: 1px solid color-mix(in srgb, var(--archive-bone) 22%, transparent);
+  color: color-mix(in srgb, var(--archive-bone) 58%, transparent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.controls p {
+  margin: 0;
+}
+
+.progress {
+  height: 3px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--archive-bone) 16%, transparent);
+}
+
+.progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--archive-signal);
+  transform-origin: left center;
+  transition: transform 180ms ease-out;
+}
+
+.paging {
+  display: flex;
+  gap: 7px;
+}
+
+.iconButton {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  transition: color 110ms linear, background-color 110ms linear, border-color 110ms linear;
+}
+
+.iconButton:hover:not(:disabled),
+.iconButton:active:not(:disabled) {
+  color: var(--archive-bone);
+  background: var(--archive-signal);
+  border-color: var(--archive-signal);
+}
+
+.iconButton:disabled {
+  opacity: 0.24;
+  cursor: not-allowed;
+}
+
+.backLink:focus-visible,
+.releaseCard:focus-visible,
+.iconButton:focus-visible,
+.primaryLink:focus-visible,
+.textLink:focus-visible,
+.dossier :global(.tac-cta):focus-visible {
+  outline: 3px solid var(--archive-signal);
+  outline-offset: 4px;
+}
+
+.dossierBackdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 44px);
+  background: color-mix(in srgb, var(--archive-void) 88%, transparent);
+}
+
+.dossier {
+  position: relative;
+  width: min(1180px, 100%);
+  max-height: calc(100svh - clamp(24px, 6vw, 88px));
+  overflow: auto;
+  color: var(--archive-ink);
+  background: var(--archive-bone);
+  border: 1px solid var(--archive-bone);
+  overscroll-behavior: contain;
+}
+
+.dossier::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(80px, 11vw, 160px);
+  aspect-ratio: 1;
+  background: var(--archive-signal);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+.dossierHandle {
+  display: none;
+}
+
+.dossierTopline {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 58px;
+  padding-inline: clamp(16px, 2.3vw, 34px);
+  border-bottom: 1px solid color-mix(in srgb, var(--archive-ink) 22%, transparent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.dossierTopline .iconButton {
+  color: var(--archive-ink);
+}
+
+.dossierGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+  padding: clamp(18px, 3vw, 44px);
+}
+
+.dossierArtwork {
+  position: relative;
+  align-self: start;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--archive-ink);
+}
+
+.dossierContent {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.dossierMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding-bottom: 13px;
+  border-bottom: 4px solid var(--archive-signal);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.dossierTitle {
+  max-width: 12ch;
+  margin: clamp(22px, 4vh, 42px) 0 12px;
+  font-size: clamp(46px, 6.1vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.78;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.genreLine {
+  margin: 0;
+  color: var(--archive-steel);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.dossierActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(24px, 4vh, 42px);
+}
+
+.dossier :global(.tac-cta),
+.primaryLink {
+  min-height: 44px;
+}
+
+.primaryLink,
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-archive-mono), monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.primaryLink {
+  padding: 0 16px;
+  color: var(--archive-bone);
+  background: var(--archive-ink);
+  border: 1px solid var(--archive-ink);
+}
+
+.primaryLink:hover {
+  background: var(--archive-signal);
+  border-color: var(--archive-signal);
+}
+
+.textLink {
+  min-height: 44px;
+  color: var(--archive-steel);
+}
+
+.textLink:hover {
+  color: var(--archive-signal);
+}
+
+.trackPreview {
+  display: grid;
+  margin: auto 0 0;
+  padding: clamp(22px, 4vh, 40px) 0 0;
+  list-style: none;
+}
+
+.trackPreview li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 34px;
+  padding-block: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--archive-ink) 16%, transparent);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.trackPreview strong {
+  overflow: hidden;
+  font-family: var(--font-archive-display), sans-serif;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .root {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  }
+
+  .root::before {
+    width: 62vw;
+  }
+
+  .header {
+    min-height: 52px;
+  }
+
+  .labStatus {
+    font-size: 0;
+  }
+
+  .labStatus::after {
+    content: "prototype";
+    font-size: 9px;
+  }
+
+  .intro {
+    padding-top: 15px;
+  }
+
+  .titleRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .titleRow h1 {
+    display: block;
+    font-size: clamp(48px, 15.4vw, 76px);
+    line-height: 0.75;
+  }
+
+  .titleRow h1 span {
+    display: block;
+  }
+
+  .activeSummary {
+    position: absolute;
+    top: 70px;
+    right: 18px;
+    width: min(42vw, 170px);
+  }
+
+  .activeSummary strong {
+    font-size: 14px;
+  }
+
+  .railRegion {
+    margin-top: 17px;
+  }
+
+  .cardTitle {
+    font-size: 23px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    min-height: 56px;
+  }
+
+  .controls p {
+    display: none;
+  }
+
+  .dossierBackdrop {
+    align-items: end;
+    padding: 10px 10px 0;
+  }
+
+  .dossier {
+    max-height: calc(100svh - 10px);
+    border-bottom: 0;
+  }
+
+  .dossierHandle {
+    display: grid;
+    height: 34px;
+    place-items: center;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .dossierHandle span {
+    width: 44px;
+    height: 3px;
+    background: color-mix(in srgb, var(--archive-ink) 34%, transparent);
+  }
+
+  .dossierTopline {
+    min-height: 48px;
+  }
+
+  .dossierGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding-top: 14px;
+  }
+
+  .dossierArtwork {
+    width: min(60vw, 280px);
+  }
+
+  .dossierTitle {
+    margin-top: 12px;
+    font-size: clamp(42px, 14vw, 68px);
+  }
+
+  .trackPreview {
+    padding-top: 22px;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 761px) {
+  .titleRow h1 {
+    font-size: clamp(54px, 7vw, 100px);
+  }
+
+  .intro {
+    padding-top: 14px;
+  }
+
+  .railRegion {
+    margin-top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .cardArtwork::after,
+  .iconButton,
+  .progress span {
+    transition-duration: 1ms;
+  }
+
+  .releaseTrack {
+    cursor: default;
+    touch-action: auto;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .dossierBackdrop {
+    background: var(--archive-void);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .header,
+  .controls,
+  .cardArtwork,
+  .dossier,
+  .trackPreview li {
+    border-color: currentColor;
+  }
+
+  .cardEyebrow,
+  .cardFooter,
+  .controls,
+  .labStatus {
+    color: var(--archive-bone);
+  }
+}
+
+@media (forced-colors: active) {
+  .root,
+  .dossier,
+  .primaryLink,
+  .iconButton {
+    forced-color-adjust: auto;
+  }
+
+  .cardArtwork,
+  .dossier,
+  .primaryLink,
+  .iconButton {
+    border: 2px solid CanvasText;
+  }
+}

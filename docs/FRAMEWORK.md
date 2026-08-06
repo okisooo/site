@@ -9,6 +9,11 @@ palette with one hot accent, extreme type contrast.
 Tool reference (skill install, library links, constraints):
 `D:\SecondBrain\vault\20-shared\premium-frontend-toolkit.md`.
 
+The visual/token spine in this document is now paired with
+[`INTERACTION-FRAMEWORK.md`](./INTERACTION-FRAMEWORK.md). That companion turns
+the Apple interaction audit into an OKISO-specific behavior contract and is the
+gate for any whole-site redesign.
+
 ---
 
 ## 0. Why — verified defects this framework exists to fix
