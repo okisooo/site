@@ -19,6 +19,7 @@ export default function AnimatedGrid() {
 
   return (
     <div
+      data-okiso-chrome="background"
       className="fixed inset-0 z-0 pointer-events-none contain-strict overflow-hidden select-none"
       aria-hidden="true"
     >

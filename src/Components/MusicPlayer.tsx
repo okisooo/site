@@ -27,6 +27,7 @@ export function MusicPlayer() {
 
   return (
     <div
+      data-okiso-chrome="music-player"
       className={`${tacDisplay.variable} ${tacMono.variable} [--tac-bone:#eceae5] [--tac-ink:#101014] [--tac-steel:#74747e] [--tac-signal:#e6112b] dark:[--tac-bone:#0c0c0e] dark:[--tac-ink:#f0f0ed] dark:[--tac-steel:#6e6e78] fixed bottom-6 left-1/2 -translate-x-1/2 z-[51] transition-all duration-300 ${
         currentTrackId ? "translate-y-0 opacity-100 scale-100" : "translate-y-[150%] opacity-0 scale-95 pointer-events-none"
       }`}

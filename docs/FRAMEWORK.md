@@ -14,6 +14,10 @@ The visual/token spine in this document is now paired with
 the Apple interaction audit into an OKISO-specific behavior contract and is the
 gate for any whole-site redesign.
 
+The current candidate art direction is preserved separately in
+[`SOFT-ORBIT-DIRECTION.md`](./SOFT-ORBIT-DIRECTION.md). Its prototype is a saved,
+unfinished review artifact—not approval to migrate or deploy live routes.
+
 ---
 
 ## 0. Why — verified defects this framework exists to fix

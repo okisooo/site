@@ -10,6 +10,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Review-only soft-orbit lab owns its atmosphere and player while mounted. */
+body.soft-orbit-active {
+  background: #0f0d17 !important;
+}
+
+body.soft-orbit-active [data-okiso-chrome="theme-toggle"],
+body.soft-orbit-active [data-okiso-chrome="music-player"],
+body.soft-orbit-active [data-okiso-chrome="background"] {
+  display: none !important;
+}
+
 :root {
   /* Blue Archive / Deep Dark Red palette */
   --ba-red: #FF3333;
