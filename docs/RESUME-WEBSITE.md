@@ -61,9 +61,19 @@ download helper's 16 offline tests pass. all four expressions load in the viewer
 desktop and 390px phone checks show a clean composition, correct credits/links,
 and no horizontal overflow or captured browser warnings/errors. all eight hero
 prints load, including the new work. screenshots: `S:\Codex\outputs\2026-09-13\skeb-ykhs9`.
-deployment is the remaining step. lint remains skipped in the existing build;
+source `3d240ad` passed deployment build `34718963685`, including all 32 tests;
+Pages rollout `34719039421` passed (asset commit `9ab043c`). the live gallery shows
+the new work, all four expressions and the verified artist/work links; the live
+homepage includes the new print. the completed-list collection is now fully included.
+lint remains skipped in the existing build;
 no physical-device or operating-system reduced-motion test was performed this pass.
 verified method: `S:\SymLinks\CodexHome\skills\skeb-download\references\browser-downloads.md`.
+
+the temporary preview was stopped. automatic approval review rejected cleanup of
+this run's `uv-cache`, `node-jiti`, `tsx-samue` and `skill-tests` directories with
+"blocked by policy". they remain at `S:\tmp\codex\skeb-direct-20260913`, totaling
+125,807,694 bytes. do not retry that deletion through another mechanism; older
+blocked cleanup targets remain unchanged. verification logs and scripts are retained.
 
 ## deployed pose refinement / 2026-09-13
 
