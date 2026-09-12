@@ -35,12 +35,11 @@ the intended starting point, not a fresh checkout from the last commit.
 
 ## immediate next action
 
-publish the verified committed release through the existing github pages workflow,
-then verify `https://okiso.net`. deployment is now authorized;
-older statements below about missing authorization describe earlier requests.
-preserve unrelated local audio and utility changes. the live branch has the same
-34-release catalog, with formatting differences in the two newest entries; retain
-the upstream catalog during integration.
+the website is deployed at `https://okiso.net` as of 2026-09-12. the launch request
+is complete for the six ready gallery works. older statements below about missing
+authorization or pending publishing describe earlier checks. preserve unrelated
+local audio and utility changes; they were excluded from this release. the live
+catalog retains all 34 upstream releases.
 
 the skeb gallery and idle-motion request is implemented except for one delivery.
 the user explicitly corrected
@@ -79,8 +78,20 @@ archive on a 390px phone viewport without horizontal overflow. viewport reset;
 no warnings/errors were captured. the original intermittent video blackout is
 still not reproduced. lint remains skipped; no physical-device check was run.
 
-remote ci and post-deployment verification are next. logs are in
-`S:\tmp\codex\site-launch-20260912`. localhost:3000 serves this clean export.
+source release: `c1e46bb3a9d6d0f7f3748f975358f0798afab0bf`. deployment workflow
+`34683894229` and pages rollout `34683962097` both passed; published asset commit
+`af77b57a447b3081241ab40f646ff159c44abd2d`. live checks passed for 43 pages and 64
+resources, including every shipped gallery image, the web model, scripts/styles,
+robots/sitemap and correct canonicals. audio byte ranges returned 206. the live
+editorial home and gallery are present; GODISH played past 6 seconds and TENSEI
+RINGO past 12 seconds at 1920 x 1080 with visible frames. the public vault feed
+loaded its visible collections. playback was stopped after testing.
+
+report: `S:\Codex\outputs\2026-09-12\site-launch\live-checks.json`. action logs
+remain under `S:\tmp\codex\site-launch-20260912`. the temporary release checkout
+and preview are disposable after verification; the working source in
+`D:\GitHub\site` has been fast-forwarded to the published release while preserving
+unrelated dirty files. the @ykhs9 delivery is the outstanding gallery addition.
 
 ## gallery and idle motion / 2026-09-12
 

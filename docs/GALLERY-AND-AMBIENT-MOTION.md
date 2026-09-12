@@ -1,6 +1,8 @@
 # gallery and ambient motion / 2026-09-12
 
-local candidate; not deployed. the user requested all their skeb commissions in
+deployed at `https://okiso.net/gallery` on 2026-09-12 with six works and sixteen
+versions. @ykhs9 work 16 remains pending its converted delivery. the user requested
+all their skeb commissions in
 a gallery that can grow, plus more idle motion using saved references. they
 explicitly corrected the initial folder-based lookup: **skeb is the collection
 authority**. loose files outside skeb are not additions for this pass.
@@ -101,6 +103,9 @@ data do not belong in public assets.
 - no physical-device performance profiling or os-level reduced-motion emulation.
   the future twelve-work pagination threshold is not exercised by this six-work
   catalog. lint remains skipped in the existing build configuration. no remote
-  ci, commit, push or deployment. the @ykhs9 addition is still outstanding.
+  ci, commit, push or deployment occurred in that initial gallery check. the
+  subsequent launch passed both remote workflows and live checks for all 43
+  pages and 64 resources, including all gallery files. the @ykhs9 addition is
+  still outstanding.
 
 scratch/check logs: `S:\tmp\codex\site-gallery-20260912`.

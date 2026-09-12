@@ -1,5 +1,12 @@
 # website release review / 2026-09-12
 
+published at `https://okiso.net`. source `c1e46bb`, asset commit `af77b57a`;
+deployment [34683894229](https://github.com/okisooo/site/actions/runs/34683894229)
+and pages [34683962097](https://github.com/okisooo/site/actions/runs/34683962097)
+both succeeded. live verification passed for 43 pages and 64 resources, correct
+canonicals, all gallery images, the character model and audio byte ranges.
+the six ready works are live; @ykhs9 work 16 remains pending its delivery file.
+
 candidate prepared from `feat/home-tactical` at `9c7f516`, with intentional
 uncommitted website work. preview: http://localhost:3000/. on 2026-09-12 the user
 authorized launch: "lets continue, i wanna get it deployed today". commit the scoped
@@ -46,7 +53,7 @@ gallery search and framed artwork selection, dismissal, phone menu and archive
 filtering. no horizontal overflow or captured browser warnings/errors in those
 checks. lint remains skipped. the six ready gallery works are the stated launch
 assumption; the seventh delivery remains a follow-up. remote ci and live checks
-are pending publication.
+subsequently passed as recorded above.
 
 ## previous local verification
 
