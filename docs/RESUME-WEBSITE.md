@@ -58,10 +58,20 @@ browser checks covered both wave beats, studio pose switching, responsive handed
 and the unobscured phone greeting. global pause held the hero at 877 rendered
 frames; resume advanced it to 888. no new production warnings/errors were captured.
 the dev server had reported the existing `/icon.png` public/app-file conflict;
-that did not recur in the static production preview. deployment is pending.
+that did not recur in the static production preview. source `4bc214e` is deployed:
+deployment `34716233139` and pages rollout `34716303177` both passed; published
+asset commit `d9c74b8`. live desktop and phone checks confirmed the forward-facing
+palm and unobscured phone hand, a loaded animated model (723 frames at capture),
+no horizontal overflow, and no captured warnings/errors. the temporary preview
+was stopped and the browser remains on the live homepage with its viewport reset.
 lint remains skipped; no physical-device or operating-system reduced-motion test.
 screenshots: `S:\Codex\outputs\2026-09-13\site-natural-pose\`.
 logs and skeleton inspection: `S:\tmp\codex\site-natural-pose-20260913\`.
+automatic approval review blocked removal of this run's `node-compile-cache`,
+`node-jiti`, and `tsx-samue` temporary directories with "blocked by policy".
+their combined 466,255 bytes remain under the scratch path above. do not retry
+that deletion through another mechanism; earlier blocked cleanup targets remain
+unchanged too. verification logs and screenshots are retained.
 the @ykhs9 Skeb download is still pending; its blocker and archive destination
 below remain current. do not restart that blocked download as part of posing.
 
