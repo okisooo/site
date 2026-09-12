@@ -48,14 +48,20 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
     let disposed = false, failed = false, inView = true, frame = 0, last = 0, elapsed = 0, renderedFrames = 0;
     let renderer: WebGLRenderer | undefined, controls: OrbitControls | undefined, vrm: VRM | undefined;
     let previousFraming = "", previousPose = "", previousExpression = "";
-    let dolly = false;
+    let dolly = false, waveStart = 0;
     const cameraDestination = new Vector3(), targetDestination = new Vector3();
     const controller = new AbortController();
     const scene = new Scene();
     const camera = new PerspectiveCamera(hero ? 30 : 32, 1, .1, 30);
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const q = (x: number, y: number, z: number) => new Quaternion().setFromEuler(new Euler(x, y, z)).toArray();
+    const compactLayout = window.matchMedia("(max-width: 700px)");
+    const twistAxis = new Vector3(1, 0, 0);
+    const palmAxis = new Vector3(0, 1, 0);
+    const waveWrist = new Quaternion().setFromEuler(new Euler(.35, .05, -.07));
+    const waveRotation = new Quaternion();
+    const q = (x: number, y: number, z: number, twist = 0) => new Quaternion().setFromEuler(new Euler(x, y, z))
+      .multiply(new Quaternion().setFromAxisAngle(twistAxis, twist)).toArray();
     setState("loading"); setProgress(0);
 
     const render = (time: number) => {
@@ -85,20 +91,45 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
         if (camera.position.distanceTo(cameraDestination) < .002) dolly = false;
       }
       if (vrm) {
-        if (previousPose !== settings.pose) {
+        // On phones the artist card sits on the left; greet from the open side.
+        const waveSide = hero && compactLayout.matches ? "left" : "right";
+        const waveSign = waveSide === "left" ? -1 : 1;
+        const poseKey = `${settings.pose}-${waveSide}`;
+        if (previousPose !== poseKey) {
+          const waving = settings.pose === "wave";
+          if (waving) waveStart = elapsed;
+          const waveQ = (x: number, y: number, z: number, twist = 0) => q(x, y * waveSign, z * waveSign, twist);
+          waveWrist.setFromEuler(new Euler(.35, .05 * waveSign, -.07 * waveSign));
           vrm.humanoid.resetNormalizedPose();
           vrm.humanoid.setNormalizedPose({
             leftUpperArm: { rotation: q(0, 0, 1.15) },
-            rightUpperArm: { rotation: q(hero ? -.1 : 0, 0, hero ? -.3 : settings.pose === "wave" ? .65 : -1.15) },
+            rightUpperArm: { rotation: q(0, 0, -1.15) },
             leftLowerArm: { rotation: q(0, -.1, .12) },
-            rightLowerArm: { rotation: hero ? q(-.3, .05, 1.75) : q(settings.pose === "wave" ? -.6 : 0, .1, settings.pose === "wave" ? .65 : -.12) },
+            rightLowerArm: { rotation: q(0, .1, -.12) },
+            leftHand: { rotation: q(0, 0, .05) },
+            rightHand: { rotation: q(0, 0, -.05) },
+            ...(waving ? {
+              [`${waveSide}UpperArm`]: { rotation: waveQ(-.12, -.08, -.55) },
+              // Turn the forearm along its own axis after bending the elbow.
+              [`${waveSide}LowerArm`]: { rotation: waveQ(-.18, .08, 2.05, .9) },
+              [`${waveSide}Hand`]: { rotation: waveWrist.toArray() },
+              [`${waveSide}IndexProximal`]: { rotation: waveQ(0, .12, -.025) },
+              [`${waveSide}MiddleProximal`]: { rotation: waveQ(0, .025, -.045) },
+              [`${waveSide}RingProximal`]: { rotation: waveQ(0, -.09, -.09) },
+              [`${waveSide}LittleProximal`]: { rotation: waveQ(0, -.18, -.14) },
+              [`${waveSide}IndexIntermediate`]: { rotation: waveQ(0, 0, -.045) },
+              [`${waveSide}MiddleIntermediate`]: { rotation: waveQ(0, 0, -.06) },
+              [`${waveSide}RingIntermediate`]: { rotation: waveQ(0, 0, -.08) },
+              [`${waveSide}LittleIntermediate`]: { rotation: waveQ(0, 0, -.1) },
+              [`${waveSide}ThumbMetacarpal`]: { rotation: waveQ(.1, -.12, .12) },
+            } : {}),
             ...(hero ? {
               hips: { rotation: q(0, -.05, -.025) },
               leftUpperLeg: { rotation: q(0, 0, .025) },
               rightUpperLeg: { rotation: q(.035, 0, -.035) },
             } : {}),
           });
-          previousPose = settings.pose;
+          previousPose = poseKey;
         }
         if (previousExpression !== settings.expression) {
           for (const name of ["happy", "relaxed"]) vrm.expressionManager?.setValue(name, name === settings.expression ? (hero ? .16 : .8) : 0);
@@ -106,7 +137,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
         }
         const head = vrm.humanoid.getNormalizedBoneNode("head");
         const chest = vrm.humanoid.getNormalizedBoneNode("chest");
-        const hand = vrm.humanoid.getNormalizedBoneNode("rightHand");
+        const hand = vrm.humanoid.getNormalizedBoneNode(`${waveSide}Hand`);
         if (hero && moving) {
           const blend = 1 - Math.exp(-delta * 2.5);
           pointer.x += (pointer.targetX - pointer.x) * blend;
@@ -118,7 +149,16 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
           head.rotation.z = hero ? .025 + Math.sin(elapsed * .5) * .012 : 0;
         }
         if (chest) chest.rotation.x = Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
-        if (hand) hand.rotation.z = settings.pose === "wave" ? Math.sin(elapsed * (hero ? 1.7 : 5)) * (hero ? .12 : .18) : 0;
+        // Two soft beats, then a resting palm. The envelope eases in and out at zero.
+        const greeting = (elapsed - waveStart) % 7.5;
+        const waveEnvelope = greeting < 2.4 ? Math.sin(greeting / 2.4 * Math.PI) ** 2 : 0;
+        const wave = Math.sin(greeting / 2.4 * Math.PI * 4) * .16 * waveEnvelope;
+        // Wave across the palm's plane, preserving its forward-facing rest rotation.
+        if (hand && settings.pose === "wave") hand.quaternion.copy(waveWrist).multiply(waveRotation.setFromAxisAngle(palmAxis, wave * waveSign));
+        if (settings.pose === "wave") {
+          const upperArm = vrm.humanoid.getNormalizedBoneNode(`${waveSide}UpperArm`);
+          if (upperArm) upperArm.rotation.z = (-.55 + wave * .1) * waveSign;
+        }
         if (hero) {
           const hips = vrm.humanoid.getNormalizedBoneNode("hips");
           if (hips) hips.rotation.z = -.025 + Math.sin(elapsed * .5) * .012;

@@ -33,7 +33,39 @@ the intended starting point, not a fresh checkout from the last commit.
   the next concrete action updated here before every handoff. do not use old
   july/august handoffs to restart the design.
 
-## current update / 2026-09-13
+## current pose refinement / 2026-09-13
+
+the user said the 3d wave looked sideways and asked for repeated visual refinement.
+`CharacterStudio.tsx` now lowers the greeting elbow and turns the palm toward the
+camera, distributing the turn between forearm and wrist. softly separated, slightly
+curled fingers replace the flat hand. wrist movement uses the palm-normal axis and
+a smooth 2.4-second two-beat greeting followed by rest in a 7.5-second cycle; the
+shoulder follows slightly. selecting wave starts a new greeting. hero and studio
+share the pose. the phone hero mirrors it to the open side, because the artist
+card otherwise obscured the raised hand. layout and original model remain intact.
+
+iterations checked the whole hero, a close portrait, both sides of the arm, finger
+spacing, and the phone composition. a local skeleton check confirmed the normalized
+finger-spread direction before the final spacing adjustment. the shared MCP hub
+was checked in lean mode; no Blender backend or session changes were needed.
+reference: the VRM humanoid/finger hierarchy at
+`https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm-1.0/humanoid.md`.
+visual greeting reference (not downloaded or published):
+`https://icons8.kr/photos/photo/front-view-of-a-happy-man-waving--5f9fa2fa8b6588000145e500`.
+
+all 32 tests, the type-checked production build and seo audit passed. production
+browser checks covered both wave beats, studio pose switching, responsive handedness
+and the unobscured phone greeting. global pause held the hero at 877 rendered
+frames; resume advanced it to 888. no new production warnings/errors were captured.
+the dev server had reported the existing `/icon.png` public/app-file conflict;
+that did not recur in the static production preview. deployment is pending.
+lint remains skipped; no physical-device or operating-system reduced-motion test.
+screenshots: `S:\Codex\outputs\2026-09-13\site-natural-pose\`.
+logs and skeleton inspection: `S:\tmp\codex\site-natural-pose-20260913\`.
+the @ykhs9 Skeb download is still pending; its blocker and archive destination
+below remain current. do not restart that blocked download as part of posing.
+
+## deployed art-wall update / 2026-09-13
 
 the user requested a fuller commission background on entry and no moving graphics
 over the footer. deployed source `23a0e34` replaces the two-panel hero montage with eight
