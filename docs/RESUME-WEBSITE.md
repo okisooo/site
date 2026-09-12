@@ -36,7 +36,7 @@ the intended starting point, not a fresh checkout from the last commit.
 ## current update / 2026-09-13
 
 the user requested a fuller commission background on entry and no moving graphics
-over the footer. the candidate replaces the two-panel hero montage with eight
+over the footer. deployed source `23a0e34` replaces the two-panel hero montage with eight
 staggered prints from six credited artists, including the looping engawa animation.
 `HeroCommissionWall.tsx` uses existing web assets and the ambient visibility hook.
 the page graphics now live inside `ed-content-stage`, clipped and faded before
@@ -48,9 +48,12 @@ overlap with the footer. all eight print images loaded, global pause froze them
 and used the still animation frame, and resume restored running movement and the
 animated WebP. dialog layering was verified after keeping the new content wrapper
 out of its own stacking context. no captured browser errors/warnings. all 32 tests,
-the type-checked production build and seo audit passed. deployment is in progress;
-do not call this candidate live until verified. lint remains skipped; no physical
-device or operating-system reduced-motion test was performed.
+the type-checked production build and seo audit passed. deployment `34715291748`
+and pages rollout `34715365494` passed; published asset commit `4ea05b7`. live
+checks verified all eight loaded prints, running drift, the animated WebP, a ready
+3d hero and zero footer overlap/viewport overflow, with no captured errors/warnings.
+the local preview was stopped and the browser is on the live homepage. lint remains
+skipped; no physical-device or operating-system reduced-motion test was performed.
 
 the signed-in Skeb completed list was checked through its end again: six deliveries.
 @ykhs9 work 16 is still the missing site addition (one 2000 x 1500 PSD, displayed 8 MB).
@@ -72,6 +75,9 @@ exception did not overcome the separate Chrome download block.
 
 screenshots: `S:\Codex\outputs\2026-09-13\site-art-wall\`.
 build/test logs: `S:\tmp\codex\site-art-wall-20260913\`.
+automatic approval review rejected cleanup of this run's `uv-cache` (1,795,101
+bytes) and download-inventory scratch files with "blocked by policy". they remain
+at that scratch path; do not retry their deletion using another mechanism.
 
 ## deployed hero update / 2026-09-12
 
