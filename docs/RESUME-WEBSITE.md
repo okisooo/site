@@ -35,8 +35,8 @@ the intended starting point, not a fresh checkout from the last commit.
 
 ## immediate next action
 
-prepare the exact committed release, run its checks, publish through the existing
-github pages workflow, and verify `https://okiso.net`. deployment is now authorized;
+publish the verified committed release through the existing github pages workflow,
+then verify `https://okiso.net`. deployment is now authorized;
 older statements below about missing authorization describe earlier requests.
 preserve unrelated local audio and utility changes. the live branch has the same
 34-release catalog, with formatting differences in the two newest entries; retain
@@ -56,10 +56,31 @@ chrome download settings; do not circumvent the block or use a SAMPLE preview
 as the delivered image. once the file arrives, inspect/prepare its derivatives,
 add the seventh gallery work, then repeat asset/build/seo checks and review.
 do not call the full skeb collection complete before that addition. the user was
-asked whether to launch with the six ready works or wait for the new delivery;
-release preparation can continue while that preference is pending.
+asked whether to launch with the six ready works or wait for the new delivery.
+with no revised timing supplied during release preparation, the assistant stated
+the launch assumption: publish the six ready works today and add the newest
+delivery when its file is available. this is not a claim of a complete collection.
 the existing white/red design, 1.9-second opening and video recovery
 remain intact; the user's intermittent codex video blackout is not confirmed fixed.
+
+## clean release verification / 2026-09-12
+
+the 117-file candidate was committed as `a7f9182` and integrated with main in
+`604939b` on `codex/deploy-editorial-20260912`. the isolated release checkout is
+`S:\tmp\codex\site-launch-20260912\release`; it includes no changed audio files,
+unrelated utilities, raw art intermediates or local environment credentials.
+the catalog is byte-identical to the current upstream version.
+
+fresh `npm ci`, all 32 tests, production build (51 resources, types checked), seo
+(39 indexable pages, 34 releases, 4 noindex routes, 105 tracks) and dependency audit
+(zero known vulnerabilities) passed. the clean browser preview loaded the model,
+played PRODIGY to 6 seconds, opened credited gallery variants and filtered the
+archive on a 390px phone viewport without horizontal overflow. viewport reset;
+no warnings/errors were captured. the original intermittent video blackout is
+still not reproduced. lint remains skipped; no physical-device check was run.
+
+remote ci and post-deployment verification are next. logs are in
+`S:\tmp\codex\site-launch-20260912`. localhost:3000 serves this clean export.
 
 ## gallery and idle motion / 2026-09-12
 

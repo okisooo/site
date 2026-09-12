@@ -32,6 +32,22 @@ source changes and their fixture tests, but no live oauth setup or credential
 operation. the release-refresh workflow's local change is only its node version.
 no backend, private vault data or analytics integration is part of this release.
 
+## clean launch verification / 2026-09-12
+
+the 117-file manifest was staged explicitly and verified; commit `a7f9182` contains
+the candidate. integration commit `604939b` retains upstream's release catalog
+exactly and has no audio changes relative to main. a fresh install, all 32 tests,
+production export with type validation (51 resources), seo audit (39 indexable
+pages, 34 releases, 4 noindex routes, 105 tracks), and dependency audit (zero known
+vulnerabilities) passed in an isolated checkout on s:.
+
+the clean browser preview verified music playback, rendered the character model,
+gallery search and framed artwork selection, dismissal, phone menu and archive
+filtering. no horizontal overflow or captured browser warnings/errors in those
+checks. lint remains skipped. the six ready gallery works are the stated launch
+assumption; the seventh delivery remains a follow-up. remote ci and live checks
+are pending publication.
+
 ## previous local verification
 
 - all 32 local tests passed, including video recovery and gallery asset checks.
