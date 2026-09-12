@@ -12,9 +12,14 @@
     "authorize-toolost": "tsx scripts/authorize-toolost.ts",
     "refresh-toolost": "tsx scripts/refresh-toolost-token.ts",
     "test:releases": "tsx --test src/lib/fetchTooLostReleases.test.ts src/lib/releaseLinks.test.ts src/lib/tooLostOAuth.test.ts",
+    "audit:seo": "tsx scripts/audit-seo.ts",
+    "test:design": "tsx --test src/lib/siteDesign.test.ts src/lib/videoRecovery.test.ts",
+    "test:assets": "tsx --test src/lib/artAssets.test.ts",
+    "test:deployment": "tsx --test src/lib/deploymentConfig.test.ts",
     "generate-sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
+    "@designcodeio/threeui": "0.3.0",
     "@pixiv/three-vrm": "^3.5.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
@@ -25,12 +30,12 @@
     "hls.js": "^1.6.15",
     "lenis": "^1.3.25",
     "lucide-react": "^0.554.0",
-    "next": "15.1.7",
+    "next": "15.5.25",
     "next-themes": "^0.4.6",
     "ogl": "^1.0.11",
     "radix-ui": "^1.4.3",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "~19.1.9",
+    "react-dom": "~19.1.9",
     "react-fast-marquee": "^1.6.5",
     "react-icons": "^5.5.0",
     "react-use-lanyard": "^0.3.6",
@@ -49,10 +54,13 @@
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
     "eslint": "^9",
-    "eslint-config-next": "15.1.7",
-    "postcss": "^8",
+    "eslint-config-next": "15.5.25",
+    "postcss": "^8.5.28",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.15.7",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "$postcss"
   }
 }

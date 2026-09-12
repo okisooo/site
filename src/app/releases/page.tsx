@@ -1,6 +1,8 @@
 import { metadata } from "./metadata";
 import ReleasesClient from "./ReleasesClient";
 import { staticReleases } from "@/data/releases";
+import { jsonLd } from "@/lib/seo";
+import { releaseCard } from "@/lib/releasePresentation";
 
 export { metadata };
 
@@ -40,9 +42,9 @@ export default function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@graph": [itemListLd, breadcrumbLd] }) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd({ "@context": "https://schema.org", "@graph": [itemListLd, breadcrumbLd] }) }}
       />
-      <ReleasesClient />
+      <ReleasesClient catalog={staticReleases.map(releaseCard)} />
     </>
   );
 }

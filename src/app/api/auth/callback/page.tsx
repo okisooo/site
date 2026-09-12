@@ -36,13 +36,13 @@ export default function TooLostCallbackPage() {
   };
 
   return (
-    <main className="min-h-screen bg-ba-cream text-black dark:bg-black dark:text-white flex items-center justify-center px-6 py-16">
-      <section className="w-full max-w-2xl border-4 border-black/10 dark:border-white/15 rounded-[2rem] bg-white dark:bg-[#111] p-8 md:p-12 shadow-2xl">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-ba-pink mb-5">
+    <div className="ed-page">
+      <section className="ed-empty">
+        <p className="ed-label">
           release sync // secure handoff
         </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.88] mb-8">
-          authorization<br />received.
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
+          {callback.kind === 'ready' ? 'authorization received.' : callback.kind === 'error' ? 'authorization paused.' : 'authorization.'}
         </h1>
 
         {callback.kind === 'loading' && <p className="font-mono text-sm">checking callback…</p>}
@@ -61,7 +61,7 @@ export default function TooLostCallbackPage() {
             <button
               type="button"
               onClick={copyCallback}
-              className="w-full rounded-full bg-ba-pink px-6 py-4 font-black uppercase tracking-widest text-white transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ba-pink/40"
+              className="ed-button"
             >
               {copied ? 'callback copied' : 'copy callback url'}
             </button>
@@ -71,6 +71,6 @@ export default function TooLostCallbackPage() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

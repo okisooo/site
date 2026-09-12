@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Play,
@@ -19,20 +19,6 @@ import type { Level, VaultProject, VerKind, Version } from "@/data/vault";
 import { LEVEL_LABEL } from "@/data/vault";
 import type { Session } from "@/lib/vault";
 import { canAccess } from "@/lib/vault";
-
-function useBars(seed: string, n = 56): number[] {
-  return useMemo(() => {
-    let h = 2166136261;
-    for (let i = 0; i < seed.length; i++) h = (h ^ seed.charCodeAt(i)) * 16777619;
-    const out: number[] = [];
-    let s = h >>> 0;
-    for (let i = 0; i < n; i++) {
-      s = (s * 1103515245 + 12345) & 0x7fffffff;
-      out.push(0.18 + (s % 1000) / 1000 * 0.82);
-    }
-    return out;
-  }, [seed, n]);
-}
 
 function fmt(date: string) {
   return new Date(date).toLocaleDateString(undefined, {
@@ -72,46 +58,15 @@ function LevelChip({ level, locked }: { level: Level; locked: boolean }) {
   );
 }
 
-function WaveBars({
-  seed,
-  progress,
-  locked,
-  onSeek,
-}: {
-  seed: string;
+function PlaybackProgress({ label, progress, locked, onSeek }: {
+  label: string;
   progress: number;
   locked: boolean;
   onSeek?: (fraction: number) => void;
 }) {
-  const bars = useBars(seed);
-  return (
-    <div
-      className={`flex items-end gap-[2px] h-9 w-full overflow-hidden ${onSeek && !locked ? "cursor-pointer" : ""}`}
-      aria-hidden
-      onClick={(e) => {
-        if (!onSeek || locked) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        onSeek(Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)));
-      }}
-    >
-      {bars.map((b, i) => {
-        const played = i / bars.length <= progress;
-        return (
-          <span
-            key={i}
-            className={`flex-1 transition-colors duration-150 ${
-              locked
-                ? "bg-[var(--tac-steel)]/15"
-                : played
-                  ? "bg-[var(--tac-signal)]"
-                  : "bg-[var(--tac-ink)]/20 dark:bg-[var(--tac-bone)]/20"
-            }`}
-            style={{ height: `${Math.round(b * 100)}%` }}
-          />
-        );
-      })}
-    </div>
-  );
+  return <input className="ed-vault-seek" type="range" aria-label={`Seek ${label}`}
+    min="0" max="1" step="0.001" value={progress} disabled={locked || !onSeek}
+    onChange={(event) => onSeek?.(Number(event.target.value))} />;
 }
 
 function VersionRow({
@@ -140,7 +95,7 @@ function VersionRow({
   const kind = KIND_META[v.kind];
   return (
     <div
-      className={`group relative flex items-center gap-3 md:gap-4 p-3 md:p-4 border transition-colors ${
+      className={`ed-vault-version group relative flex items-center gap-3 md:gap-4 p-3 md:p-4 border transition-colors ${
         !locked
           ? "bg-black/5 dark:bg-white/5 border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 hover:border-[var(--tac-signal)]/40"
           : "bg-black/2 dark:bg-white/2 border-[var(--tac-ink)]/10 dark:border-[var(--tac-bone)]/10"
@@ -199,9 +154,9 @@ function VersionRow({
       </div>
 
       {/* Waveform */}
-      <div className="hidden sm:block flex-1 min-w-0">
-        <WaveBars
-          seed={v.id}
+      <div className="ed-vault-progress flex-1 min-w-0">
+        <PlaybackProgress
+          label={v.label}
           progress={isPlaying ? progress : 0}
           locked={locked && !isPlaying}
           onSeek={isPlaying ? onSeek : undefined}
@@ -217,7 +172,7 @@ function VersionRow({
           onClick={onShare}
           aria-label={`Copy share link for ${v.label}`}
           title="Copy share link"
-          className="p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+          className="p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] opacity-100 transition-colors"
         >
           <Link2 size={14} />
         </button>
@@ -265,7 +220,7 @@ export function VaultStack({
   React.useEffect(() => { if (defaultOpen) setOpen(true); }, [defaultOpen]);
 
   return (
-    <div className="relative">
+    <div className="relative ed-vault-stack">
       <button
         onClick={() => setOpen((o) => !o)}
         className="relative w-full text-left"

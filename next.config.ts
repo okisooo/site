@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
+  // Optional local build destination. With static export, Next uses a custom
+  // distDir for the exported site and retains .next for its compilation cache.
+  distDir: process.env.OKISO_EXPORT_DIR || ".next",
   // Required for GitHub Pages
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   images: {
@@ -20,9 +23,6 @@ const nextConfig: NextConfig = {
   eslint: {
     // Old ZZZ/Urban files still on disk cause lint errors; safe to ignore during build
     ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
 };
 

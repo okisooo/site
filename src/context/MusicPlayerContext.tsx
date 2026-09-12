@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react'
+import type { PlaylistTrack } from '@/lib/localPlaylist'
 
 interface MusicPlayerContextType {
   currentTrackId: string | null
@@ -21,29 +22,13 @@ interface MusicPlayerContextType {
   playNext: () => void
   playPrev: () => void
   seekTo: (time: number) => void
+  canPlayTrack: (title: string) => boolean
 }
-
-import { staticReleases } from '@/data/releases'
-
-// Build a global playlist from all available releases
-const sanitizeFileName = (name: string) => name.replace(/[\/\\?%*:|"<>]/g, '-').trim()
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
 
-export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
-  const globalPlaylist = React.useMemo(() => {
-    return staticReleases.flatMap(r => 
-      (r.tracks || []).map(t => {
-        return {
-          title: t.title,
-          artist: 'OKISO',
-          cover: r.img,
-          link: r.link,
-          audioSrc: `/audio/${sanitizeFileName(t.title)}.mp3`
-        }
-      })
-    )
-  }, [])
+export function MusicPlayerProvider({ children, playlist: globalPlaylist }: { children: React.ReactNode, playlist: PlaylistTrack[] }) {
+  const canPlayTrack = useCallback((title: string) => globalPlaylist.some(track => track.title === title), [globalPlaylist])
 
   const [currentTrackTitle, setCurrentTrackTitle] = useState<string | null>(null)
   const [currentTrackArtist, setCurrentTrackArtist] = useState<string | null>(null)
@@ -61,11 +46,19 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio()
+      audioRef.current.preload = 'none'
       audioRef.current.volume = volume / 100
+    }
+    return () => {
+      audioRef.current?.pause()
+      audioRef.current?.removeAttribute('src')
+      audioRef.current = null
     }
   }, [])
 
   const playTrack = useCallback((title: string, artist: string = 'OKISO', cover?: string, link?: string) => {
+    const track = globalPlaylist.find(track => track.title === title)
+    if (!track) return
     setCurrentTrackTitle(title)
     setCurrentTrackArtist(artist)
     setCurrentTrackCover(cover || null)
@@ -73,9 +66,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
 
     if (audioRef.current) {
       if (currentTrackTitle !== title) {
-        audioRef.current.src = `/audio/${sanitizeFileName(title)}.mp3`
+        audioRef.current.src = track.audioSrc
         audioRef.current.play().catch(console.error)
-        setIsPlaying(true)
       } else {
         // Toggle play pause
         if (isPlaying) {
@@ -85,7 +77,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         }
       }
     }
-  }, [currentTrackTitle, isPlaying])
+  }, [currentTrackTitle, isPlaying, globalPlaylist])
 
   const handleTrackEnd = useCallback(() => {
     if (isLooping && audioRef.current) {
@@ -211,6 +203,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         isLooping,
         currentTime,
         duration,
+        canPlayTrack,
         playTrack,
         togglePlayPause,
         closePlayer,

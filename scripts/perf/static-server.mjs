@@ -1,8 +1,9 @@
 // Serves the Next static export in D:/GitHub/site/out on :3000 so the
 // production bundle can be profiled the same way the dev server was.
 import { createServer } from "node:http";
-import { readFile, stat } from "node:fs/promises";
-import { join, extname, normalize } from "node:path";
+import { stat } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { join, extname, resolve as resolvePath, sep } from "node:path";
 
 import { fileURLToPath } from "node:url";
 const ROOT = join(fileURLToPath(new URL("../../", import.meta.url)), "out");
@@ -17,13 +18,15 @@ const TYPES = {
 };
 
 async function resolve(urlPath) {
-  const clean = normalize(decodeURIComponent(urlPath.split("?")[0])).replace(/^(\.\.[/\\])+/, "");
+  const clean = decodeURIComponent(urlPath.split("?")[0]);
   const candidates = [
     join(ROOT, clean),
     join(ROOT, clean + ".html"),
     join(ROOT, clean, "index.html"),
   ];
   for (const c of candidates) {
+    const target = resolvePath(c);
+    if (target !== resolvePath(ROOT) && !target.startsWith(resolvePath(ROOT) + sep)) continue;
     try {
       const s = await stat(c);
       if (s.isFile()) return c;
@@ -33,15 +36,32 @@ async function resolve(urlPath) {
 }
 
 createServer(async (req, res) => {
-  const file = (await resolve(req.url)) || join(ROOT, "404.html");
   try {
-    const body = await readFile(file);
-    res.writeHead(200, {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return res.writeHead(405).end();
+    const found = await resolve(req.url || '/');
+    const file = found || join(ROOT, "404.html");
+    const { size } = await stat(file);
+    const headers = {
       "Content-Type": TYPES[extname(file).toLowerCase()] || "application/octet-stream",
       "Cache-Control": "no-store",
-    });
-    res.end(body);
+      "Accept-Ranges": "bytes",
+    };
+    let start = 0, end = size - 1, status = found ? 200 : 404;
+    if (found && req.headers.range) {
+      const range = /^bytes=(\d+)-(\d*)$/.exec(req.headers.range);
+      if (!range || Number(range[1]) >= size || (range[2] && Number(range[2]) < Number(range[1]))) {
+        return res.writeHead(416, { 'Content-Range': `bytes */${size}` }).end();
+      }
+      start = Number(range[1]);
+      end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+      status = 206;
+      headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
+    }
+    headers['Content-Length'] = end - start + 1;
+    res.writeHead(status, headers);
+    if (req.method === 'HEAD' || size === 0) return res.end();
+    createReadStream(file, { start, end }).on('error', () => res.destroy()).pipe(res);
   } catch {
-    res.writeHead(404).end("not found");
+    res.writeHead(400).end("invalid request");
   }
-}).listen(3000, () => console.log("prod export on http://localhost:3000"));
+}).listen(Number(process.env.PORT || 3000), process.env.HOST || '127.0.0.1', () => console.log(`prod export on http://${process.env.HOST || '127.0.0.1'}:${process.env.PORT || 3000}`));

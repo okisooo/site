@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "The Vault | OKISO",
   description: "Demos, versions and cuts — straight from the source.",
   robots: { index: false, follow: false },
+  alternates: { canonical: "https://okiso.net/vault" },
 };
 
 export default function VaultPage() {

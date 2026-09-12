@@ -1,4 +1,4 @@
-const TOOLOST_TOKEN_URL = 'https://toolost.com/oauth/token';
+const DEFAULT_TOOLOST_TOKEN_URL = 'https://toolost.com/oauth/token';
 
 export interface TooLostTokenSet {
   accessToken: string;
@@ -26,6 +26,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function numericSeconds(value: unknown): number | undefined {
+  const parsed = typeof value === 'number'
+    ? value
+    : typeof value === 'string' && value.trim() !== ''
+      ? Number(value)
+      : Number.NaN;
+
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
 async function requestToken(
   client: TooLostOAuthClient,
   parameters: URLSearchParams,
@@ -40,7 +50,8 @@ async function requestToken(
     headers.set('Authorization', `Basic ${Buffer.from(`${client.clientId}:${client.clientSecret}`).toString('base64')}`);
   }
 
-  const response = await (client.fetcher || fetch)(TOOLOST_TOKEN_URL, {
+  const tokenUrl = process.env.TOOLOST_TOKEN_URL || DEFAULT_TOOLOST_TOKEN_URL;
+  const response = await (client.fetcher || fetch)(tokenUrl, {
     method: 'POST',
     headers,
     body: parameters,
@@ -58,7 +69,7 @@ async function requestToken(
   return {
     accessToken: payload.access_token,
     refreshToken: typeof payload.refresh_token === 'string' ? payload.refresh_token : undefined,
-    expiresIn: typeof payload.expires_in === 'number' ? payload.expires_in : undefined,
+    expiresIn: numericSeconds(payload.expires_in),
   };
 }
 

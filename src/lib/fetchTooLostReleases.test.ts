@@ -128,3 +128,49 @@ test('requests every live release page with bearer authentication', async () => 
     globalThis.fetch = originalFetch;
   }
 });
+
+test('accepts the current nested response shape and snake-case release fields', async () => {
+  const originalFetch = globalThis.fetch;
+
+  globalThis.fetch = (async () => new Response(
+    JSON.stringify({
+      status: 'success',
+      data: {
+        releases: [{
+          ...toolostRelease,
+          id: toolostRelease.id.toString(),
+          catalogNumber: undefined,
+          catalog_number: 'OKISO-002',
+          primaryGenre: undefined,
+          primary_genre: 'Electronic',
+          secondaryGenre: undefined,
+          secondary_genre: 'Experimental',
+          releaseDate: undefined,
+          release_date: '2025-04-03',
+          tracks: [{
+            id: '98341',
+            title: 'Example Track',
+            isrc: 'USABC1234567',
+            lyrics: 'example lyrics',
+          }],
+        }],
+        meta: { total: 1, page: 1, per_page: 100 },
+      },
+    }),
+    { status: 200, headers: { 'content-type': 'application/json' } },
+  )) as typeof fetch;
+
+  try {
+    const releases = await fetchTooLostReleases('test-access-token');
+    assert.equal(releases.length, 1);
+    assert.equal(releases[0].id, 73518);
+    assert.equal(releases[0].catalogNumber, 'OKISO-002');
+    assert.equal(releases[0].primaryGenre, 'Electronic');
+    assert.equal(releases[0].secondaryGenre, 'Experimental');
+    assert.equal(releases[0].releaseDate, '2025-04-03');
+    assert.equal(releases[0].tracks[0].id, 98341);
+    assert.equal(releases[0].tracks[0].lyrics.content, 'example lyrics');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

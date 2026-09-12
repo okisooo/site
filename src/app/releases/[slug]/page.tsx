@@ -1,226 +1,50 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import { staticReleases, type Release } from "@/data/releases";
+import { ArrowUpRight } from "lucide-react";
+import { staticReleases } from "@/data/releases";
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { TrackLyricsToggle } from "@/Components/TrackLyricsToggle";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
-import { Archivo, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
-
-const tacDisplay = Archivo({ subsets: ["latin"], weight: ["400", "500", "700", "900"], variable: "--font-tac-display" });
-const tacMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-mono" });
-const tacCjk = Noto_Sans_JP({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-cjk" });
+import { jsonLd, releaseDescription, releaseMetadata, releaseStructuredData } from "@/lib/seo";
+import { releaseCard } from "@/lib/releasePresentation";
 
 export async function generateStaticParams() {
-    return staticReleases
-        .filter(r => r.slug)
-        .map(r => ({ slug: r.slug as string }));
+  return staticReleases.filter((release) => release.slug).map((release) => ({ slug: release.slug as string }));
 }
-
-export async function generateMetadata(props: any) {
-    const maybeParams = props?.params;
-    function isPromise(v: any) {
-        return !!v && typeof v === "object" && typeof v.then === "function";
-    }
-    let slug;
-    if (isPromise(maybeParams)) {
-        const awaited = await maybeParams;
-        slug = awaited.slug;
-    } else {
-        slug = maybeParams?.slug;
-    }
-
-    const release = staticReleases.find(r => r.slug === slug) as Release | undefined;
-    if (!release) return { title: "Release" };
-
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://okiso.net";
-    const url = `${siteUrl}/releases/${release.slug}`;
-
-    const seoTitle = `OKISO — ${release.title} | VOCALOID Producer & VTuber`;
-    const baseDesc = release.description || `Official release page for ${release.title} by OKISO.`;
-    const seoDescription = baseDesc.length > 50
-        ? baseDesc
-        : `Listen to "${release.title}" (${release.year}) by virtual artist & VOCALOID producer OKISO. Stream on Spotify, watch the MV, and explore tracklists.`;
-
-    return {
-        title: seoTitle,
-        description: seoDescription,
-        openGraph: {
-            title: seoTitle,
-            description: seoDescription,
-            url,
-            siteName: "OKISO",
-            images: [release.img],
-            type: release.albumType === "album" ? "music.album" : "music.song",
-            other: {
-                "music:musician": "https://okiso.net",
-                "music:release_date": release.releaseDate,
-            }
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: seoTitle,
-            description: seoDescription,
-            images: [release.img],
-        },
-        alternates: {
-            canonical: url
-        }
-    };
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const release = staticReleases.find((item) => item.slug === slug);
+  if (!release) return { title: "Release not found", robots: { index: false } };
+  return releaseMetadata(release);
 }
-
+function formatDuration(iso?: string) {
+  if (!iso) return "";
+  return `${iso.match(/(\d+)M/)?.[1] || "0"}:${(iso.match(/(\d+)S/)?.[1] || "0").padStart(2, "0")}`;
+}
 export default async function ReleasePage({ params }: { params: Promise<{ slug: string }> }) {
-    const awaitedParams = await params;
-    const release = staticReleases.find(r => r.slug === awaitedParams.slug) as Release | undefined;
-    if (!release) return notFound();
-
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://okiso.net";
-    const url = `${siteUrl}/releases/${release.slug}`;
-    const listenTarget = getReleaseListenTarget(release);
-
-    const albumLd: Record<string, unknown> = {
-        "@context": "https://schema.org",
-        "@type": "MusicAlbum",
-        "name": release.title,
-        "byArtist": {
-            "@type": "MusicGroup",
-            "name": "OKISO",
-            "sameAs": [
-                "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm",
-            ]
-        },
-        "datePublished": release.releaseDate,
-        "image": release.img,
-        "url": url,
-        "description": release.description || ""
-    };
-
-    if (release.tracks && release.tracks.length > 0) {
-        Object.assign(albumLd, {
-            track: release.tracks.map(t => ({
-                "@type": "MusicRecording",
-                "name": t.title,
-                "duration": t.duration,
-                "position": t.trackNumber,
-                "url": t.link
-            }))
-        });
-    }
-
-    const breadcrumbLd = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": siteUrl
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Releases",
-                "item": `${siteUrl}/releases`
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": release.title,
-                "item": url
-            }
-        ]
-    };
-
-    const jsonLd = {
-        "@graph": [albumLd, breadcrumbLd]
-    };
-
-    function formatDuration(iso?: string) {
-        if (!iso) return "";
-        const m = iso.match(/(\d+)M/);
-        const s = iso.match(/(\d+)S/);
-        const mins = m ? m[1] : "0";
-        const secs = s ? s[1].padStart(2, "0") : "00";
-        return `${mins}:${secs}`;
-    }
-
-    return (
-        <div
-            data-premid-page="release"
-            data-premid-release-title={release.title}
-            data-premid-release-cover={release.img}
-            className={`${tacDisplay.variable} ${tacMono.variable} ${tacCjk.variable} w-full min-h-screen bg-[var(--tac-bone)] text-[var(--tac-ink)] dark:bg-[#0c0c0e] dark:text-[#f0f0ed] transition-colors duration-500 py-16 px-6 md:px-12`}
-        >
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-            <div className="max-w-4xl mx-auto">
-                <div className="mb-8">
-                    <Link href="/releases" className="tac-cta-ghost">
-                        ← Back to Discography
-                    </Link>
-                </div>
-
-                <div className="tac-sec-head mb-2">
-                    <span className="tac-sec-index">001</span>
-                    <span className="tac-rule" />
-                    <span className="tac-sec-label">{release.year} {"//"} {release.albumType}</span>
-                </div>
-
-                <h1 className="tac-h2 mb-8">{release.title}</h1>
-
-                <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-8 items-start">
-                    <div className="tac-plate relative aspect-square overflow-hidden border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18">
-                        <a href={listenTarget.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                            <Image src={release.img} alt={`${release.title} artwork`} fill className="object-cover" />
-                        </a>
-                    </div>
-
-                    <div className="flex flex-col gap-6">
-                        <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-[0.2em]">
-                            RELEASED: {release.releaseDate} ({release.year})
-                        </p>
-
-                        {release.description && (
-                            <p className="tac-mono text-xs md:text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] leading-relaxed uppercase tracking-wider">
-                                {release.description}
-                            </p>
-                        )}
-
-                        <div className="flex flex-wrap items-center gap-4">
-                            <PlayReleaseButton release={release} />
-                            <a
-                                href={listenTarget.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="tac-cta-ghost"
-                            >
-                                {listenTarget.label}
-                            </a>
-                        </div>
-
-                        {release.tracks && release.tracks.length > 0 && (
-                            <div className="mt-6 w-full">
-                                <div className="tac-sec-head mb-3">
-                                    <span className="tac-sec-label">Tracklist ({release.tracks.length})</span>
-                                </div>
-                                <div className="flex flex-col border-t border-[var(--tac-ink)]/15 dark:border-[var(--tac-bone)]/15">
-                                    {release.tracks.map(t => (
-                                        <TrackLyricsToggle
-                                            key={t.id || `${t.title}-${t.trackNumber}`}
-                                            title={t.title}
-                                            durationStr={t.duration ? formatDuration(String(t.duration)) : undefined}
-                                            lyrics={t.lyrics}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+  const { slug } = await params;
+  const release = staticReleases.find((item) => item.slug === slug);
+  if (!release) return notFound();
+  const target = getReleaseListenTarget(release);
+  const related = staticReleases.filter((item) => item.slug && item.slug !== release.slug).slice(0, 3);
+  return <article className="ed-page ed-release-detail" data-premid-page="release" data-premid-release-title={release.title} data-premid-release-cover={release.img}>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(releaseStructuredData(release)) }} />
+    <Link href="/releases" className="ed-text-link">← all releases</Link>
+    <header className="ed-page-heading"><div><span className="ed-label">okiso / {release.albumType} / {release.year}</span><h1>{release.title}</h1></div></header>
+    <div className="ed-release-body">
+      <div className="ed-detail-art"><a href={target.url} target="_blank" rel="noopener noreferrer"><img src={release.img} alt={`${release.title} artwork`} width="600" height="600" fetchPriority="high" /></a>
+        <div className="ed-panel-label"><span>{release.albumType} / {(release.tracks?.length || 1)} {(release.tracks?.length || 1) === 1 ? "track" : "tracks"}</span><time dateTime={release.releaseDate}>{release.releaseDate}</time></div></div>
+      <div><p className="ed-release-description">{releaseDescription(release)}</p>
+        {release.label && <p className="ed-release-credits">released by {release.label}{release.primaryGenre ? ` · ${release.primaryGenre}` : ""}</p>}
+        <div className="ed-quick-actions"><PlayReleaseButton release={releaseCard(release)} /><a href={target.url} target="_blank" rel="noopener noreferrer" className="ed-button">{target.label}<ArrowUpRight size={16} /></a></div>
+        {release.tracks && release.tracks.length > 0 && <section className="ed-tracklist" aria-labelledby="tracks"><h2 id="tracks">tracks{release.tracks.some((track) => track.lyrics) ? " & lyrics" : ""} / {release.tracks.length}</h2>
+          {release.tracks.map((track) => <TrackLyricsToggle key={track.id || `${track.title}-${track.trackNumber}`} title={track.title} durationStr={track.duration ? formatDuration(String(track.duration)) : undefined} lyrics={track.lyrics} />)}
+        </section>}
+      </div>
+    </div>
+    <nav className="ed-related" aria-label="More releases by OKISO"><header className="ed-section-heading"><h2>keep listening.</h2><Link className="ed-text-link" href="/releases">full archive <ArrowUpRight size={16} /></Link></header>
+      <div className="ed-release-grid">{related.map((item) => <div key={item.slug} className="ed-release-card"><Link href={`/releases/${item.slug}`}><div className="ed-release-image"><img src={item.img} alt={`${item.title} cover`} width="320" height="320" loading="lazy" /></div><div className="ed-release-meta"><span>{item.albumType}</span><span>{item.year}</span></div><h3>{item.title}</h3></Link></div>)}</div>
+    </nav>
+  </article>;
 }

@@ -17,6 +17,7 @@ body.soft-orbit-active {
 
 body.soft-orbit-active [data-okiso-chrome="theme-toggle"],
 body.soft-orbit-active [data-okiso-chrome="music-player"],
+body.soft-orbit-active [data-okiso-chrome="perf-settings"],
 body.soft-orbit-active [data-okiso-chrome="background"] {
   display: none !important;
 }

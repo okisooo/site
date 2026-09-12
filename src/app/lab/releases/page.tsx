@@ -1,18 +1,7 @@
 import type { Metadata } from "next"
-import { Archivo, JetBrains_Mono } from "next/font/google"
-import FluidReleasesLab from "./FluidReleasesLab"
-
-const display = Archivo({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-archive-display",
-})
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-archive-mono",
-})
+import ReleasesClient from "@/app/releases/ReleasesClient"
+import { staticReleases } from "@/data/releases"
+import { releaseCard } from "@/lib/releasePresentation"
 
 export const metadata: Metadata = {
   title: "Release interaction lab | OKISO",
@@ -22,8 +11,6 @@ export const metadata: Metadata = {
 
 export default function ReleasesLabPage() {
   return (
-    <div className={`${display.variable} ${mono.variable}`}>
-      <FluidReleasesLab />
-    </div>
+    <ReleasesClient catalog={staticReleases.map(releaseCard)} />
   )
 }

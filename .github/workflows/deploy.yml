@@ -6,6 +6,9 @@ on:
     # If the releases data or source changes we redeploy
     paths:
       - 'src/**'
+      - 'public/**'
+      - 'scripts/**'
+      - 'next.config.ts'
       - 'package*.json'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
@@ -28,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22.19.0'
           cache: 'npm'
 
       - name: Cache Next.js build
@@ -58,18 +61,21 @@ jobs:
           echo "Running update script..."
           npm run update-releases || { echo "Update script failed"; exit 1; }
 
-      - name: Generate sitemap
-        run: npm run generate-sitemap
-
-      # Remove dynamic sitemap route (static export only)
-      - name: Remove dynamic sitemap route (static export only)
-        run: rm -f src/app/sitemap.xml/route.ts
+      - name: Verify website regressions
+        run: |
+          npm run test:design
+          npm run test:releases
+          npm run test:assets
+          npm run test:deployment
 
       # Build always uses the working tree (updated even if not yet pushed)
       - name: Build Next.js site (static export)
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Verify exported SEO and shared website shell
+        run: npm run audit:seo
 
       - name: Publish extensionless OAuth callback
         run: |

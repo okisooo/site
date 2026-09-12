@@ -46,3 +46,16 @@ test('keeps basic authentication support for confidential clients', async () => 
     },
   });
 });
+
+test('normalizes oauth expiry values returned as strings', async () => {
+  const token = await refreshTooLostAccessToken({
+    clientId: 'public-client-id',
+    refreshToken: 'current-refresh-token',
+    fetcher: async () => new Response(JSON.stringify({
+      ...tokenResponse,
+      expires_in: '1296000',
+    }), { status: 200 }),
+  });
+
+  assert.equal(token.expiresIn, 1_296_000);
+});

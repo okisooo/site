@@ -6,7 +6,7 @@ import { useMusicPlayer } from "@/context/MusicPlayerContext"
 import type { Release } from "@/data/releases"
 
 export function PlayReleaseButton({ release, onClose }: { release: Release, onClose?: () => void }) {
-  const { playTrack, currentTrackId, isPlaying, togglePlayPause } = useMusicPlayer()
+  const { playTrack, currentTrackId, isPlaying, togglePlayPause, canPlayTrack } = useMusicPlayer()
   
   const trackTitle = release.tracks?.[0]?.title || release.title
   const trackLink = release.link
@@ -22,6 +22,9 @@ export function PlayReleaseButton({ release, onClose }: { release: Release, onCl
   }
 
   const isActive = currentTrackId === trackTitle
+
+  // Each release surface keeps its verified streaming link alongside this button.
+  if (!canPlayTrack(trackTitle)) return null
 
   return (
     <button

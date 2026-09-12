@@ -1,6 +1,6 @@
 import type { Release } from '@/data/releases';
 
-const TOOLOST_API_BASE_URL = 'https://api.toolost.com/v1';
+const DEFAULT_TOOLOST_API_BASE_URL = 'https://api.toolost.com/v1';
 
 export interface TooLostTrack {
   id: number;
@@ -45,32 +45,62 @@ function nullableString(value: unknown): string | null {
   return typeof value === 'string' ? value : null;
 }
 
+function positiveInteger(...values: unknown[]): number | undefined {
+  for (const value of values) {
+    const parsed = typeof value === 'number'
+      ? value
+      : typeof value === 'string' && value.trim() !== ''
+        ? Number(value)
+        : Number.NaN;
+
+    if (Number.isInteger(parsed) && parsed > 0) return parsed;
+  }
+
+  return undefined;
+}
+
+function numericId(value: unknown): number | undefined {
+  const parsed = positiveInteger(value);
+  return parsed && Number.isSafeInteger(parsed) ? parsed : undefined;
+}
+
 function parseTrack(value: unknown): TooLostTrack | null {
-  if (!isRecord(value) || typeof value.id !== 'number') return null;
+  if (!isRecord(value)) return null;
+
+  const id = numericId(value.id);
+  if (!id) return null;
 
   const lyrics = isRecord(value.lyrics) ? value.lyrics : {};
   return {
-    id: value.id,
+    id,
     title: nullableString(value.title),
     isrc: nullableString(value.isrc),
-    lyrics: { content: nullableString(lyrics.content) },
+    lyrics: {
+      content: typeof value.lyrics === 'string'
+        ? value.lyrics
+        : nullableString(lyrics.content),
+    },
   };
 }
 
 function parseRelease(value: unknown): TooLostRelease | null {
-  if (!isRecord(value) || typeof value.id !== 'number' || value.status !== 'live') return null;
+  if (!isRecord(value)) return null;
+
+  const id = numericId(value.id);
+  const status = typeof value.status === 'string' ? value.status.toLocaleLowerCase('en') : '';
+  if (!id || status !== 'live') return null;
 
   return {
-    id: value.id,
+    id,
     type: typeof value.type === 'string' ? value.type : 'release',
     status: 'live',
     title: nullableString(value.title),
     upc: nullableString(value.upc),
-    catalogNumber: nullableString(value.catalogNumber),
+    catalogNumber: nullableString(value.catalogNumber ?? value.catalog_number),
     label: nullableString(value.label),
-    primaryGenre: nullableString(value.primaryGenre),
-    secondaryGenre: nullableString(value.secondaryGenre),
-    releaseDate: nullableString(value.releaseDate),
+    primaryGenre: nullableString(value.primaryGenre ?? value.primary_genre),
+    secondaryGenre: nullableString(value.secondaryGenre ?? value.secondary_genre),
+    releaseDate: nullableString(value.releaseDate ?? value.release_date),
     tracks: Array.isArray(value.tracks)
       ? value.tracks.map(parseTrack).filter((track): track is TooLostTrack => track !== null)
       : [],
@@ -78,15 +108,43 @@ function parseRelease(value: unknown): TooLostRelease | null {
 }
 
 function parseReleasePage(value: unknown): TooLostReleasePage {
-  if (!isRecord(value) || !Array.isArray(value.data)) {
+  if (!isRecord(value)) {
     throw new Error('Too Lost returned an invalid releases response.');
   }
 
-  const currentPage = typeof value.currentPage === 'number' ? value.currentPage : 1;
-  const totalPages = typeof value.totalPages === 'number' ? value.totalPages : currentPage;
+  const body = value.data;
+  const nestedBody = isRecord(body) ? body : undefined;
+  const releases = Array.isArray(body)
+    ? body
+    : nestedBody && Array.isArray(nestedBody.releases)
+      ? nestedBody.releases
+      : undefined;
+
+  if (!releases) throw new Error('Too Lost returned an invalid releases response.');
+
+  const nestedMeta = nestedBody && isRecord(nestedBody.meta) ? nestedBody.meta : undefined;
+  const topLevelMeta = isRecord(value.meta) ? value.meta : undefined;
+  const meta = nestedMeta || topLevelMeta || nestedBody || value;
+  const currentPage = positiveInteger(
+    meta.currentPage,
+    meta.current_page,
+    meta.page,
+    value.currentPage,
+    value.current_page,
+  ) || 1;
+  const totalItems = positiveInteger(meta.total, meta.totalItems, meta.total_items);
+  const perPage = positiveInteger(meta.perPage, meta.per_page, value.perPage, value.per_page) || 100;
+  const totalPages = positiveInteger(
+    meta.totalPages,
+    meta.total_pages,
+    meta.lastPage,
+    meta.last_page,
+    value.totalPages,
+    value.total_pages,
+  ) || (totalItems ? Math.ceil(totalItems / perPage) : currentPage);
 
   return {
-    data: value.data.map(parseRelease).filter((release): release is TooLostRelease => release !== null),
+    data: releases.map(parseRelease).filter((release): release is TooLostRelease => release !== null),
     currentPage,
     totalPages,
   };
@@ -95,12 +153,13 @@ function parseReleasePage(value: unknown): TooLostReleasePage {
 export async function fetchTooLostReleases(accessToken = process.env.TOOLOST_ACCESS_TOKEN): Promise<TooLostRelease[]> {
   if (!accessToken) throw new Error('TOOLOST_ACCESS_TOKEN is not configured.');
 
+  const apiBaseUrl = process.env.TOOLOST_API_BASE_URL || DEFAULT_TOOLOST_API_BASE_URL;
   const releases: TooLostRelease[] = [];
   let page = 1;
   let totalPages = 1;
 
   do {
-    const url = new URL(`${TOOLOST_API_BASE_URL}/releases`);
+    const url = new URL(`${apiBaseUrl.replace(/\/+$/, '')}/releases`);
     url.searchParams.set('status', 'live');
     url.searchParams.set('page', page.toString());
     url.searchParams.set('perPage', '100');
@@ -124,8 +183,15 @@ export async function fetchTooLostReleases(accessToken = process.env.TOOLOST_ACC
 
     const result = parseReleasePage(await response.json());
     releases.push(...result.data);
+    if (result.currentPage < page) {
+      throw new Error('Too Lost returned non-advancing release pagination.');
+    }
     page = result.currentPage + 1;
     totalPages = result.totalPages;
+
+    if (totalPages > 1_000) {
+      throw new Error('Too Lost returned an unreasonable release page count.');
+    }
 
     const quotaRemaining = response.headers.get('x-api-quota-remaining');
     if (quotaRemaining) console.log(`Too Lost quota remaining: ${quotaRemaining}`);

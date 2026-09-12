@@ -65,10 +65,10 @@ test('maps every Too Lost website release to a unique smart link', () => {
   }
 });
 
-test('uses Spotify only for releases outside Too Lost', () => {
+test('uses Spotify when a verified Too Lost smart link is unavailable', () => {
   const spotifyFallbackTitles = staticReleases
     .filter((item) => getReleaseListenTarget(item).label === 'Listen on Spotify')
     .map((item) => item.title);
 
-  assert.deepEqual(spotifyFallbackTitles, ['VAC', 'リ：プレイ']);
+  assert.deepEqual(spotifyFallbackTitles, ['VESSEL FOR OBSESSION', 'DEADEND', 'VAC', 'リ：プレイ']);
 });

@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2, Settings } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2, RotateCcw, Settings } from 'lucide-react';
 import Hls from 'hls.js';
+import { useScrollLock } from '@/motion/useScrollLock';
+import { trapDialogTab } from '@/lib/dialogKeyboard';
+import { captureVideoPlayback, restoreVideoPlayback, watchVideoReturn, type VideoPlaybackSnapshot } from '@/lib/videoRecovery';
 
 interface CustomVideoPlayerProps {
   src: string;
@@ -25,6 +28,7 @@ function formatTime(seconds: number) {
 
 export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, poster, title = 'ARCHIVE.MP4', className = '', autoPlay = false }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cinemaCloseRef = useRef<HTMLButtonElement>(null);
   const previousVolumeRef = useRef(1);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isMuted, setIsMuted] = useState(autoPlay);
@@ -32,6 +36,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isCinemaMode, setIsCinemaMode] = useState(false);
+  useScrollLock(isCinemaMode);
   const [hasPlayed, setHasPlayed] = useState(autoPlay);
   const [resolvedSrc, setResolvedSrc] = useState(src);
   const [hlsReady, setHlsReady] = useState<boolean | null>(null);
@@ -44,6 +49,19 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
   const [showSettings, setShowSettings] = useState(false);
   const [hlsErrorToast, setHlsErrorToast] = useState<string | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [playbackGeneration, setPlaybackGeneration] = useState(0);
+  const pendingPlayback = useRef<VideoPlaybackSnapshot | null>(null);
+
+  const restorePicture = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // Repeated repair clicks during loading must not replace the saved position.
+    pendingPlayback.current ??= captureVideoPlayback(video);
+    video.pause();
+    setIsBuffering(true);
+    setHlsErrorToast(null);
+    setPlaybackGeneration((generation) => generation + 1);
+  }, []);
 
   // Initialize saved quality from localStorage on mount
   useEffect(() => {
@@ -58,8 +76,8 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
   useEffect(() => {
     if (!isCinemaMode) return;
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const opener = document.activeElement as HTMLElement | null;
+    cinemaCloseRef.current?.focus();
 
     // Boost z-index of the parent section to escape stacking context traps
     const parentSection = videoRef.current?.closest('section');
@@ -78,7 +96,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = originalOverflow;
+      opener?.focus({ preventScroll: true });
       if (parentSection) {
         parentSection.style.zIndex = originalZIndex;
       }
@@ -263,16 +281,23 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
       // Standard MP4
       video.src = resolvedSrc;
     }
-  }, [resolvedSrc]);
+  }, [resolvedSrc, playbackGeneration]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) return watchVideoReturn(video, restorePicture);
+  }, [resolvedSrc, playbackGeneration, restorePicture]);
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
+      if (!videoRef.current.paused) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play();
+        videoRef.current.play().catch(() => {
+          setIsPlaying(false);
+          setHlsErrorToast('couldn’t play — try restore picture');
+        });
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -286,6 +311,16 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     if (videoRef.current) {
       setDuration(videoRef.current.duration || 0);
       videoRef.current.volume = volume;
+      if (pendingPlayback.current) {
+        const saved = pendingPlayback.current;
+        pendingPlayback.current = null;
+        setIsBuffering(false);
+        restoreVideoPlayback(videoRef.current, saved).catch(() => {
+          setIsPlaying(false);
+          setHlsErrorToast('picture restored — press play to resume');
+        });
+        return;
+      }
       if (autoPlay) {
         videoRef.current.play().catch(() => {
           setIsPlaying(false);
@@ -373,9 +408,10 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     : `relative z-[1] group w-full h-full overflow-hidden flex flex-col bg-black justify-center items-center border border-[var(--tac-ink)]/20 ${className}`;
 
   return (
-    <div className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'}>
+    <div className={isCinemaMode ? 'fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-8' : 'w-full h-full'} role={isCinemaMode ? 'dialog' : undefined} aria-modal={isCinemaMode || undefined} aria-label={isCinemaMode ? `${title} cinema mode` : undefined} onKeyDown={isCinemaMode ? trapDialogTab : undefined}>
       {isCinemaMode && (
         <button
+          ref={cinemaCloseRef}
           aria-label="Close cinema mode"
           onClick={() => setIsCinemaMode(false)}
           className="absolute inset-0 bg-black/90 z-0"
@@ -383,7 +419,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
       )}
 
       <div 
-        className={playerContainerClass}
+        className={`ed-video-player ${playerContainerClass}`}
         {...(hasPlayed && isPlaying ? {
           'data-premid-title': title,
           'data-premid-paused': !isPlaying,
@@ -396,15 +432,15 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
           </div>
         )}
         {/* Top Bar - Clean System UI */}
-        <div className="absolute top-0 left-0 w-full p-4 md:p-6 z-20 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+        <div className="ed-video-top absolute top-0 left-0 w-full p-4 md:p-6 z-20 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
           <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 bg-[var(--tac-signal)] animate-pulse" />
+            <div className={`w-2.5 h-2.5 bg-[var(--tac-signal)] ${isPlaying ? 'animate-pulse' : ''}`} />
             <span className="tac-mono text-[10px] md:text-xs text-white tracking-[0.25em] uppercase">
-              REC // {title}
+              {title}
             </span>
           </div>
           <div className="tac-mono text-[10px] text-white/60 tracking-[0.2em] uppercase bg-black/80 border border-white/20 px-3 py-1">
-            {hlsGenerating && hlsReady === false ? 'OPTIMIZING VIDEO...' : usedFallbackSource ? 'SOURCE FALLBACK' : 'SYS.VOD.01'}
+            {hlsGenerating && hlsReady === false ? 'optimizing video…' : usedFallbackSource ? 'original source' : isPlaying ? 'playing' : 'video'}
           </div>
         </div>
 
@@ -417,13 +453,14 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
         {/* Video Element */}
         <video
+          key={playbackGeneration}
           ref={videoRef}
           poster={poster}
           className="w-full aspect-video object-contain"
           loop
-          autoPlay={autoPlay}
+          autoPlay={autoPlay && playbackGeneration === 0}
           playsInline
-          preload="auto"
+          preload="metadata"
           crossOrigin="anonymous"
           disablePictureInPicture
           muted={isMuted}
@@ -432,7 +469,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
           onSeeking={handleSeeking}
           onSeeked={handleSeeked}
           onWaiting={() => setIsBuffering(true)}
-          onPlaying={() => setIsBuffering(false)}
+          onPlaying={() => { setIsBuffering(false); setHlsErrorToast(null); }}
           onVolumeChange={() => {
             if (videoRef.current) {
               setVolume(videoRef.current.volume);
@@ -468,10 +505,11 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         )}
 
         {/* Bottom Controls Bar */}
-        <div className={`absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-all duration-300 ${isPlaying ? 'opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0' : 'opacity-100 translate-y-0'}`}>
-          <div className="flex items-center gap-3 md:gap-4 text-white max-w-4xl mx-auto bg-[#101014] p-3 md:p-4 border border-white/18">
+        <div className={`ed-video-controls absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-all duration-300 ${isPlaying ? 'opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0' : 'opacity-100 translate-y-0'}`}>
+          <div className="ed-video-transport flex items-center gap-3 md:gap-4 text-white max-w-4xl mx-auto bg-[#101014] p-3 md:p-4 border border-white/18">
             <button
               onClick={togglePlay}
+              aria-label={isPlaying ? 'Pause video' : 'Play video'}
               className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
               {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
@@ -479,6 +517,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
             <button
               onClick={toggleMute}
+              aria-label={isMuted ? 'Unmute video' : 'Mute video'}
               className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
@@ -498,7 +537,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
               aria-label="Volume"
             />
 
-            <div className="flex-1 flex items-center gap-3">
+            <div className="ed-video-seek flex-1 flex items-center gap-3">
               <span className="tac-mono text-[10px] font-bold tracking-[0.2em] text-white/80 min-w-[44px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
@@ -562,6 +601,13 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
             )}
 
             <button
+              onClick={restorePicture}
+              aria-label="Restore video picture"
+              title="restore picture · keep your place"
+              className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
+            ><RotateCcw size={18} /></button>
+
+            <button
               onClick={toggleCinemaMode}
               className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
               aria-label={isCinemaMode ? 'Exit cinema mode' : 'Enter cinema mode'}
@@ -571,6 +617,7 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
 
             <button
               onClick={toggleFullScreen}
+              aria-label="Fullscreen video"
               className="p-2.5 border border-white/20 hover:bg-white text-white hover:text-black transition-colors"
             >
               <Maximize size={18} />

@@ -1,13 +1,11 @@
-import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  robots: {
-    index: false,
-    follow: false,
-  },
+  title: "Authorization callback | OKISO",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "https://okiso.net/api/auth/callback" },
 };
 
-export default function TooLostCallbackLayout({ children }: { children: ReactNode }) {
+export default function CallbackLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

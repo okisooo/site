@@ -1,13 +1,15 @@
-import { Nunito, Quicksand, Geist_Mono } from "next/font/google";
+import { Archivo, Nunito, Quicksand, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "@/styles/editorial.css";
+import "@/styles/editorial-motion.css";
+import "@/styles/gallery.css";
+import SiteFrame from "@/Components/Editorial/SiteFrame";
 import { ThemeProvider } from "@/Components/ThemeProvider";
-import { ThemeToggle } from "@/Components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
-import { MusicPlayer } from "@/Components/MusicPlayer";
-import { TitleAnimator } from "@/Components/TitleAnimator";
-import AnimatedGrid from "@/Components/Backgrounds/AnimatedGrid";
 import { SmoothScrollProvider } from "@/motion/SmoothScrollProvider";
+import { getLocalPlaylist } from "@/lib/localPlaylist";
 
 // Technical mono for HUD labels / metadata annotation (docs/FRAMEWORK.md §5 step 2).
 // tailwind.config mapped `font-mono` to `var(--font-geist-mono)`, which was defined
@@ -15,24 +17,27 @@ import { SmoothScrollProvider } from "@/motion/SmoothScrollProvider";
 // (The previous Geist *sans* here was downloaded on every page and never rendered:
 // fontFamily.sans was never extended, so `font-sans` resolved to the system stack.)
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
+const editorial = Archivo({ subsets: ["latin"], variable: "--font-editorial", display: "swap" });
 
 const nunito = Nunito({
+  preload: false,
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["700", "800", "900"],
 });
 
 const quicksand = Quicksand({
+  preload: false,
   variable: "--font-ui",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL('https://okiso.net'),
   title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-  description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
+  description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
   keywords: [
     "OKISO",
     "okiso",
@@ -51,7 +56,7 @@ export const metadata = {
   },
   openGraph: {
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
+    description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
     url: "https://okiso.net",
     images: [
       {
@@ -65,9 +70,24 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO, at your command! ✦ VTuber, VOCALOID producer, and virtual artist making hyperpop and electronic music. New releases, live streams, and every link in one place.",
+    description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
     images: ["https://okiso.net/og_image.png"]
-  }
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  appleWebApp: {
+    capable: true,
+    title: "OKISO",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -80,51 +100,22 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://api.okiso.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.okiso.net" />
-        <meta charSet="UTF-8" />
-        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-        {/* Pinch-zoom stays enabled. `maximum-scale=1.0, user-scalable=no` was a
-            WCAG 1.4.4 failure and blocked zooming into artwork and release covers.
-            If iOS input auto-zoom shows up, fix it with 16px form fonts, not by
-            locking the viewport. */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#7CC8F8" />
 
         <link rel="icon" type="image/png" sizes="48x48 96x96 192x192 512x512" href="/icon.png?v=20260626" />
         <link rel="apple-touch-icon" href="/icon.png?v=20260626" />
       </head>
-      <body suppressHydrationWarning className={`${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
+      <body suppressHydrationWarning className={`${editorial.variable} ${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
           storageKey="okiso-theme"
         >
-          <TitleAnimator />
-          {/* z-0: paints above the body background, below the z-[1] content wrapper. */}
-          <AnimatedGrid />
-          <MusicPlayerProvider>
-            <MusicPlayer />
-
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:text-black focus:p-4">Skip to content</a>
+          <MusicPlayerProvider playlist={getLocalPlaylist()}>
           <SmoothScrollProvider>
-            <div className="relative z-[1] min-h-screen flex flex-col overflow-x-clip">
-              <header className="sr-only">
-                <h1>OKISO オキソ | VOCALOID Producer / VTuber</h1>
-                <nav>{/* Navigation links */}</nav>
-              </header>
-
-              <main className="flex-grow relative w-full flex flex-col">
-                {children}
-              </main>
-
-              <footer className="sr-only">
-                <p>© {new Date().getFullYear()} オキソ. All rights reserved.</p>
-              </footer>
-            </div>
+            <SiteFrame>{children}</SiteFrame>
           </SmoothScrollProvider>
-          <ThemeToggle />
           </MusicPlayerProvider>
         </ThemeProvider>
       </body>

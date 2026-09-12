@@ -54,7 +54,7 @@ export default function Page() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({ "@graph": [videoGameLd, breadcrumbLd] }),
+          __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [videoGameLd, breadcrumbLd] }),
         }}
       />
       <div className={`${rnDisplay.variable} ${rnBody.variable}`}>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { EditorialDialog } from "@/Components/Editorial/EditorialDialog";
 import { Link2, Loader2, Lock, LogIn, LogOut, Save, Scissors, Settings2, Trash2, UploadCloud, X } from "lucide-react";
 import { LEVEL_RANK, LEVELS, type Level, type VaultProject, type Version } from "@/data/vault";
 import {
@@ -22,20 +22,14 @@ import {
   uploadVaultFile,
 } from "@/lib/vault";
 import { VaultStack } from "./VaultStack";
-import { Archivo, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
-
-const tacDisplay = Archivo({ subsets: ["latin"], weight: ["400", "500", "700", "900"], variable: "--font-tac-display" });
-const tacMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-mono" });
-const tacCjk = Noto_Sans_JP({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-cjk" });
 
 export default function VaultClient() {
   const [session, setSession] = useState<Session | null>(null);
-  const [ready, setReady] = useState(false);
-  useEffect(() => { setSession(loadSession()); setReady(true); }, []);
+  useEffect(() => { setSession(loadSession()); }, []);
   // render immediately for SSR/paint
 
   return (
-    <div className={`${tacDisplay.variable} ${tacMono.variable} ${tacCjk.variable} min-h-screen bg-[var(--tac-bone)] text-[var(--tac-ink)] dark:bg-[#0c0c0e] dark:text-[#f0f0ed] transition-colors duration-500`}>
+    <div className="ed-vault">
       <VaultBrowser session={session} onAuthed={setSession} onLogout={() => { clearSession(); setSession(null); }} />
     </div>
   );
@@ -54,27 +48,22 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
     finally { setBusy(false); }
   }
   return (
-    <div className="tac-modal-back" onClick={onClose} role="dialog" aria-modal="true">
-      <div data-lenis-prevent className="tac-modal tac-plate tac-plate-mark w-full max-w-sm p-8" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <p className="tac-mono text-[10px] text-[var(--tac-signal)] uppercase tracking-[0.3em]">MEMBERS ONLY</p>
-            <h2 className="tac-display text-3xl md:text-4xl font-black uppercase tracking-tight text-[var(--tac-ink)] dark:text-[var(--tac-bone)] mt-1">Unlock Access</h2>
-          </div>
-          <button onClick={onClose} aria-label="Close" className="p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 hover:bg-[var(--tac-signal)] hover:text-white transition-colors"><X size={18} /></button>
-        </div>
+    <EditorialDialog title="unlock access" onClose={onClose}>
+      <div>
         <form onSubmit={submit} className="space-y-4">
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="USERNAME"
+            placeholder="username"
+            aria-label="Username"
             autoComplete="username"
             className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2.5 text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono"
           />
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="PASSWORD"
+            placeholder="password"
+            aria-label="Password"
             type="password"
             autoComplete="current-password"
             className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2.5 text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono"
@@ -84,7 +73,7 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
         </form>
         <p className="tac-mono text-[10px] text-[var(--tac-steel)] mt-4 leading-relaxed uppercase tracking-wider">Friends, collaborators and the artist get keys. Everyone else still gets the public shelf.</p>
       </div>
-    </div>
+    </EditorialDialog>
   );
 }
 
@@ -199,82 +188,33 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
   const openCount = projects.reduce((acc, p) => acc + p.versions.filter((v) => !v.locked).length, 0);
 
   return (
-    <main className="w-full max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-20">
+    <div className="ed-page">
       <audio ref={audioRef} preload="none" />
       {loginOpen && <LoginModal onAuthed={(s) => { onAuthed(s); }} onClose={() => setLoginOpen(false)} />}
 
-      {/* Navigation header */}
-      <div className="flex justify-between items-center mb-8">
-        <Link href="/" className="tac-cta-ghost bg-[var(--tac-bone)] dark:bg-[#0c0c0e]">
-          ← Back
-        </Link>
-        <Link href="/releases" className="tac-cta">
-          Releases →
-        </Link>
-      </div>
-
-      {/* Editorial header */}
-      <header className="mb-12 md:mb-16">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div>
-            <div className="tac-sec-head">
-              <span className="tac-sec-index">007</span>
-              <span className="tac-rule" />
-              <span className="tac-sec-label">ARCHIVE / 秘密</span>
-            </div>
-            <h1 className="tac-h2">
-              THE VAULT
-              <br />
-              <span className="tac-h2-dim">DEMOS & CUTS</span>
-            </h1>
-            <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-[0.2em] mt-4">
-              demos · versions · cuts — straight from the source
-            </p>
-          </div>
-          <div className="flex flex-col items-start md:items-end gap-3 pt-2">
-            {session ? (
-              <div className="flex items-center gap-2">
-                <span className="tac-chip border-[var(--tac-signal)] text-[var(--tac-signal)]">
-                  {session.name} · {session.level}
-                </span>
-                <button onClick={onLogout} aria-label="Log out" className="p-2 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] transition-colors"><LogOut size={15} /></button>
-              </div>
-            ) : (
-              <button onClick={() => setLoginOpen(true)} className="tac-cta-ghost"><LogIn size={14} /> UNLOCK</button>
-            )}
-            {session && permissions.canUpload && (
-              <div className="flex items-center gap-2">
-                <button onClick={() => setUploadOpen(true)} className="tac-cta"><UploadCloud size={14} /> UPLOAD</button>
-                <button onClick={() => setManageOpen((open) => !open)} className="tac-cta-ghost"><Settings2 size={14} /> MANAGE</button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Stats strip */}
-        <div className="flex flex-wrap items-center gap-6 mt-8 pt-6 border-t border-[rgb(16_16_20_/_0.22)] dark:border-[rgb(240_240_237_/_0.18)]">
-          <Stat n={projects.length} label="projects" />
-          <Stat n={trackCount} label="tracks" />
-          <Stat n={openCount} label="open to you" />
-          {!session && (
-            <button onClick={() => setLoginOpen(true)} className="ml-auto tac-mono text-[10px] text-[var(--tac-steel)] hover:text-[var(--tac-signal)] uppercase tracking-[0.2em] transition-colors inline-flex items-center gap-1.5">
-              <Lock size={10} /> SOME TRACKS ARE LOCKED — GOT A KEY?
-            </button>
-          )}
+      <header className="ed-page-heading ed-vault-heading">
+        <div><span className="ed-label">behind the releases / demos & cuts</span><h1>the vault.</h1><p>alternate versions, unfinished ideas, and the parts you don’t hear on the record.</p></div>
+        <div className="ed-vault-actions flex flex-col gap-3">
+          {session ? <div className="flex items-center gap-3"><span className="ed-label">{session.name} · {session.level}</span><button onClick={onLogout} aria-label="Log out" className="ed-icon-button"><LogOut size={16} /></button></div> : <button onClick={() => setLoginOpen(true)} className="ed-button"><LogIn size={16} />unlock access</button>}
+          {session && permissions.canUpload && <div className="flex flex-wrap gap-2"><button onClick={() => setUploadOpen(true)} className="ed-button"><UploadCloud size={16} />upload</button><button onClick={() => setManageOpen((open) => !open)} className="ed-button"><Settings2 size={16} />manage</button></div>}
         </div>
       </header>
+      <div className="ed-vault-stats" aria-busy={loading}>
+        {loading ? <span className="ed-label">loading the collection…</span> : !message && <><Stat n={projects.length} label="projects" /><Stat n={trackCount} label="tracks" /><Stat n={openCount} label="open to you" /></>}
+        {!session && <button onClick={() => setLoginOpen(true)} className="inline-flex gap-2 items-center"><Lock size={13} />have a key? unlock your collection</button>}
+      </div>
 
       {uploadOpen && session && <VaultUploadPanel session={session} projects={projects} onClose={() => setUploadOpen(false)} onUploaded={async () => { setUploadOpen(false); await refresh(); }} />}
       {manageOpen && session && <VaultManagerPanel session={session} projects={projects} onSave={saveVersion} onDelete={remove} onSnippet={snippet} onClose={() => setManageOpen(false)} />}
-      {message && <div className="mb-5 tac-plate p-4 border-l-4 border-l-[var(--tac-signal)] tac-mono text-xs font-bold text-[var(--tac-signal)] uppercase tracking-wider">{message}</div>}
+      {message && <div className="ed-empty" role="alert"><h2>the vault couldn’t load.</h2><p>{message}</p><button className="ed-button" onClick={() => void refresh()}>try again</button></div>}
 
       {loading ? (
         <div className="py-24 flex justify-center text-[var(--tac-steel)]"><Loader2 className="animate-spin" /></div>
-      ) : projects.length === 0 ? (
+      ) : message ? null : projects.length === 0 ? (
         <div className="tac-plate border-dashed py-24 text-center">
           <UploadCloud className="mx-auto text-[var(--tac-steel)] mb-3" />
           <h2 className="tac-display font-black text-2xl uppercase tracking-tight text-[var(--tac-ink)] dark:text-[var(--tac-bone)]">Nothing here yet</h2>
-          <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-widest mt-2">First drop coming soon</p>
+          <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-widest mt-2">public tracks will appear here when published</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -295,17 +235,13 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
         </div>
       )}
 
-      <footer className="mt-16 pt-6 border-t border-[rgb(16_16_20_/_0.22)] dark:border-[rgb(240_240_237_/_0.18)] flex items-center justify-between">
-        <p className="tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-[0.2em]">Lossless where it counts. Private where it matters.</p>
-        <p className="tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-[0.2em]">okiso.net</p>
-      </footer>
 
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[var(--tac-signal)] text-white tac-mono text-xs uppercase tracking-widest border border-white/30">
+        <div role="status" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[var(--tac-signal)] text-white tac-mono text-xs uppercase tracking-widest border border-white/30">
           {toast}
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

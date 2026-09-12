@@ -1,17 +1,8 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { staticReleases, type Release } from '@/data/releases';
-import { Play, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PlayReleaseButton } from '@/Components/PlayReleaseButton';
-import { createPortal } from 'react-dom';
-import { getReleaseListenTarget } from '@/lib/releaseLinks';
+import { staticReleases } from '@/data/releases';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function ReleaseGrid() {
-  const [selectedRelease, setSelectedRelease] = React.useState<Release | null>(null);
-
   // Let's grab the top 4 releases
   const recentReleases = staticReleases.slice(0, 4);
 
@@ -36,16 +27,17 @@ export default function ReleaseGrid() {
       {/* Grid of Huge Albums */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
         {recentReleases.map((release) => (
-          <button
+          <Link
             key={release.id}
-            onClick={() => setSelectedRelease(release)}
+            href={`/releases/${release.slug}`}
             className="tac-plate group relative block w-full aspect-square md:aspect-auto md:h-[520px] border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black overflow-hidden text-left transition-transform duration-300 hover:-translate-y-1"
           >
             {/* The Image Image */}
             <div className="absolute inset-0 w-full h-full overflow-hidden">
               <img
                 src={release.img}
-                alt={release.title}
+                alt=""
+                loading="lazy"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out opacity-80 group-hover:opacity-90"
               />
               {/* Heavy Vignette */}
@@ -59,7 +51,7 @@ export default function ReleaseGrid() {
                   {release.year}
                 </div>
                 <div className="w-12 h-12 bg-[var(--tac-signal)] text-white flex items-center justify-center scale-0 group-hover:scale-100 transition-transform duration-300 border border-white/30">
-                  <Play fill="currentColor" size={20} className="ml-0.5" />
+                  <ArrowUpRight size={22} />
                 </div>
               </div>
 
@@ -72,7 +64,7 @@ export default function ReleaseGrid() {
                 </h3>
               </div>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
 
@@ -88,62 +80,6 @@ export default function ReleaseGrid() {
         </Link>
       </div>
 
-      {/* Super Cute Popup Modal using Portal to escape stacking contexts */}
-      {typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {selectedRelease && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4"
-              onClick={() => setSelectedRelease(null)}
-            >
-              <motion.div
-                data-premid-release-title={selectedRelease.title}
-                data-premid-release-cover={selectedRelease.img}
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={(e) => e.stopPropagation()}
-                className="tac-plate relative w-full max-w-md bg-[var(--tac-bone)] dark:bg-[#0c0c0e] text-[var(--tac-ink)] p-6 md:p-8 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 overflow-hidden"
-              >
-                <button
-                  onClick={() => setSelectedRelease(null)}
-                  className="absolute top-4 right-4 p-2 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20 hover:bg-[var(--tac-signal)] hover:border-[var(--tac-signal)] hover:text-white transition-colors z-10"
-                >
-                  <X size={18} />
-                </button>
-
-                <div className="relative w-full aspect-square overflow-hidden mb-6 border border-[var(--tac-ink)]/20 dark:border-[var(--tac-bone)]/20">
-                  <img src={selectedRelease.img} alt={selectedRelease.title} className="w-full h-full object-cover" />
-                </div>
-
-                <div className="text-center mb-8">
-                  <h3 className="font-display text-2xl md:text-3xl font-black tracking-tight uppercase mb-1 text-[var(--tac-ink)]">{selectedRelease.title}</h3>
-                  <p className="tac-mono text-xs font-bold tracking-[0.2em] uppercase text-[var(--tac-steel)]">
-                    {selectedRelease.year} {'//'} {selectedRelease.albumType}
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <PlayReleaseButton release={selectedRelease} onClose={() => setSelectedRelease(null)} />
-                  <a
-                    href={getReleaseListenTarget(selectedRelease).url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-3.5 bg-[var(--tac-ink)] text-[var(--tac-bone)] dark:bg-[var(--tac-bone)] dark:text-[var(--tac-ink)] hover:bg-[var(--tac-signal)] hover:text-white dark:hover:bg-[var(--tac-signal)] dark:hover:text-white tac-mono text-xs font-bold uppercase tracking-[0.2em] text-center transition-colors flex items-center justify-center gap-2 border border-current"
-                  >
-                    {getReleaseListenTarget(selectedRelease).label}
-                  </a>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
     </div>
   );
 }
