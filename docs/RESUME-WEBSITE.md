@@ -33,7 +33,39 @@ the intended starting point, not a fresh checkout from the last commit.
   the next concrete action updated here before every handoff. do not use old
   july/august handoffs to restart the design.
 
-## current pose refinement / 2026-09-13
+## current skeb follow-through / 2026-09-13
+
+the original is downloaded and verified at
+`D:\FOLDERS\Commissions\Bought\OKISO\ykhs9@skeb\4029552-1.psd`.
+8,492,720 bytes, PSD 2000 x 1500 with embedded ICC; SHA-256
+`86357a11fd8bcaeb5df81eafb56aa1eb1d79f6c1267b607af2252ab317edbbc1`.
+the artist-folder manifest records verification without private links.
+
+the user was correct that this had worked before. recovered the September 10
+successful task `01a0887d-3d3f-7d23-ad9d-ac55abb6b0ab`: click Download(Raw),
+capture the visible signed attachment URL, then download it directly outside the
+browser's file-handling path. the exact fresh URL worked through `save_delivery.py`
+in about 1.4 seconds, including validation. no popup, settings change, cookies or
+framework internals were needed. the private request JSON was removed and the
+browser returned to the request page. the skill now leads with this verified route;
+its package validation passes. earlier manual-save/blocker claims below are historical
+and superseded by this completed transfer; do not repeat those detours.
+
+four character-expression layers were individually composited with the common
+background, mascot, frame and artist message/signature preserved. the raw PSD is
+untouched. eight new web assets live in the existing s: gallery junction; the
+catalog now has seven works / twenty versions (all six verified Skeb works plus
+sobu). the new piece also occupies one of the hero's existing eight print positions.
+all four asset checks, production build/types (51 resources), SEO audit and the
+download helper's 16 offline tests pass. all four expressions load in the viewer;
+desktop and 390px phone checks show a clean composition, correct credits/links,
+and no horizontal overflow or captured browser warnings/errors. all eight hero
+prints load, including the new work. screenshots: `S:\Codex\outputs\2026-09-13\skeb-ykhs9`.
+deployment is the remaining step. lint remains skipped in the existing build;
+no physical-device or operating-system reduced-motion test was performed this pass.
+verified method: `S:\SymLinks\CodexHome\skills\skeb-download\references\browser-downloads.md`.
+
+## deployed pose refinement / 2026-09-13
 
 the user said the 3d wave looked sideways and asked for repeated visual refinement.
 `CharacterStudio.tsx` now lowers the greeting elbow and turns the palm toward the
@@ -72,8 +104,8 @@ automatic approval review blocked removal of this run's `node-compile-cache`,
 their combined 466,255 bytes remain under the scratch path above. do not retry
 that deletion through another mechanism; earlier blocked cleanup targets remain
 unchanged too. verification logs and screenshots are retained.
-the @ykhs9 Skeb download is still pending; its blocker and archive destination
-below remain current. do not restart that blocked download as part of posing.
+the @ykhs9 delivery was pending during pose work; the successful download above
+supersedes that earlier blocker.
 
 ## deployed art-wall update / 2026-09-13
 

@@ -6,7 +6,7 @@ import { useAmbientVisibility } from "./AmbientMotion";
 // Curated positions keep the portraits visible around the character and sleeves.
 const editions = [
   ["7mmchan", 0], ["sobu", 0], ["amaxa", 0], ["suyosuyo", 0],
-  ["engawa110", 0], ["kou768", 0], ["suyosuyo", 3], ["sobu", 1],
+  ["engawa110", 0], ["kou768", 0], ["ykhs9", 0], ["sobu", 1],
 ] as const;
 
 export default function HeroCommissionWall() {

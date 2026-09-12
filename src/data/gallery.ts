@@ -29,9 +29,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in the signed-in completed list on 2026-09-12.
+// Skeb work/creator identities verified in the signed-in completed list, September 12–13, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'ykhs9', artist: 'ykhs9', title: 'on repeat.', medium: 'illustration',
+    description: 'OKISO in a graphic red-and-mint music illustration by ykhs9.',
+    artistUrl: 'https://skeb.jp/@ykhs9', workUrl: 'https://skeb.jp/@ykhs9/works/16',
+    small: '/art/gallery/ykhs9-thumb.webp', width: 1280, height: 960,
+    variants: [variant('ykhs9', 'open smile', 1280, 960), variant('ykhs9-expression-2', 'eyes closed', 1280, 960), variant('ykhs9-expression-3', 'soft smile', 1280, 960), variant('ykhs9-expression-4', 'quiet smile', 1280, 960)] },
   { ...commissionArt[0], medium: 'illustration', artistUrl: 'https://skeb.jp/@suyosuyo', workUrl: 'https://skeb.jp/@suyosuyo/works/65',
     variants: [original(commissionArt[0]), variant('suyosuyo-portrait', 'alternate expression', 1150, 1800), variant('suyosuyo-message', 'artist message', 1150, 1800), variant('suyosuyo-thanks', 'thank-you portrait', 1280, 1280)] },
   { id: 'kou768', artist: 'kou768', title: 'suited up.', medium: 'illustration',

@@ -1,7 +1,8 @@
-# gallery and ambient motion / 2026-09-12
+# gallery and ambient motion / updated 2026-09-13
 
-deployed at `https://okiso.net/gallery` on 2026-09-12 with six works and sixteen
-versions. @ykhs9 work 16 remains pending its converted delivery. the user requested
+initially deployed at `https://okiso.net/gallery` on 2026-09-12 with six works and
+sixteen versions. the September 13 addition brings it to seven works and twenty
+versions with @ykhs9 work 16's four original expression variants. the user requested
 all their skeb commissions in
 a gallery that can grow, plus more idle motion using saved references. they
 explicitly corrected the initial folder-based lookup: **skeb is the collection
@@ -17,7 +18,7 @@ and creator to skeb.
 
 | artist handle | verified work | gallery state |
 | --- | --- | --- |
-| @ykhs9 | https://skeb.jp/@ykhs9/works/16 | pending converted delivery file; 2000 x 1500 psd shown on skeb |
+| @ykhs9 | https://skeb.jp/@ykhs9/works/16 | included with four expressions from the verified 2000 x 1500 PSD |
 | @suyosuyo | https://skeb.jp/@suyosuyo/works/65 | included with expression/message variants |
 | @7mmchan | https://skeb.jp/@7mmchan/works/25 | included with delivered variants |
 | @engawa110 | https://skeb.jp/@engawa110/works/2026 | included; original spinning animation and message version |
@@ -26,25 +27,28 @@ and creator to skeb.
 
 the previously approved sobu (@sobsocks) commission remains included with its
 line-art version. it is not claimed to be a skeb commission; no invented profile
-or work URL was added. current gallery: **six works / sixteen versions** (five
-skeb works plus sobu). the missing @ykhs9 delivery will make seven works.
+or work URL was added. current gallery: **seven works / twenty versions** (six
+Skeb works plus sobu).
 
-## exact outstanding action
+## September 13 delivery completed
 
-on 2026-09-13 the user allowed Chrome's existing download folder for this one
-delivery, then moving the verified file to `S:\Codex\outputs\2026-09-13\skeb\`.
-the matching Download(Raw) button reached the signed attachment URL, but Chrome
-returned ERR_BLOCKED_BY_CLIENT; no file appeared in the checked Downloads directory.
-the user was asked to finish the raw download manually and provide the saved path.
-the earlier download-settings restriction is a separate failure; do not ask again
-for this file's storage exception or bypass either restriction. no SAMPLE preview
-was substituted and no file was sent to Photopea. the installed `skeb-download`
-skill records both the valid exception and the unfinished transfer.
+the user confirmed the original archive as `D:\FOLDERS\Commissions\Bought\OKISO`.
+the raw button's observed signed URL was fetched directly using the installed
+`skeb-download` helper. transfer and validation took about 1.4 seconds. the browser
+file-handling error did not represent an HTTP denial from Skeb; no browser settings
+or protections were changed. the skill now records this verified route.
 
-when the delivery arrives: inspect it, create right-sized derivatives in the
-existing gallery assets directory, add its record and verified skeb links to
-`src/data/gallery.ts`, rerun asset tests/build/seo, and review the new card/viewer.
-do not call the whole skeb collection complete before this work is added.
+original: `D:\FOLDERS\Commissions\Bought\OKISO\ykhs9@skeb\4029552-1.psd`,
+8,492,720 bytes, 2000 x 1500, with embedded ICC profile. SHA-256:
+`86357a11fd8bcaeb5df81eafb56aa1eb1d79f6c1267b607af2252ab317edbbc1`.
+the private request input was removed after verification; the archive manifest
+contains public provenance and verification only.
+
+all four expression layers were rendered with their shared background, mascot,
+frame and artist signature/message intact. web versions are 1280 x 960, with
+480 x 360 thumbnails; the original layered file is unchanged. the new commission
+also replaces a duplicate artist's variant in the existing eight-print hero wall.
+full composites and variant inventory: `S:\Codex\outputs\2026-09-13\skeb-ykhs9`.
 
 ## implemented
 
@@ -88,10 +92,11 @@ separate web derivatives. it retains the source animation's 31 frames / 1400ms
 timing. artwork files are under the image budgets checked by `test:assets`.
 the source/derivative inventory stays outside public assets at
 `S:\Codex\outputs\2026-09-12\site-gallery\asset-inventory.json`.
-the current collection's 34 image resources total 4,480,610 bytes across all
-versions and animation files; this is not the initial-page download size.
+the initial collection's 34 image resources totaled 4,480,610 bytes across all
+versions and animation files; the new work adds eight right-sized WebPs. these
+totals are not the initial-page download size.
 the checked full-page preview is saved as `gallery-preview.png` in that output
-folder. the signed-in chrome requests tab is left available for the missing file.
+folder. the signed-in Chrome requests tab is left on the completed delivery page.
 
 future additions use skeb to verify the creator and work, then add one catalog
 record per commission and group its versions. raw psd files and private request
@@ -109,11 +114,11 @@ data do not belong in public assets.
   bounds changed during idle animation. no browser errors/warnings were captured
   in these checks. viewport overrides were reset.
 - no physical-device performance profiling or os-level reduced-motion emulation.
-  the future twelve-work pagination threshold is not exercised by this six-work
+  the future twelve-work pagination threshold is not exercised by this seven-work
   catalog. lint remains skipped in the existing build configuration. no remote
   ci, commit, push or deployment occurred in that initial gallery check. the
   subsequent launch passed both remote workflows and live checks for all 43
-  pages and 64 resources, including all gallery files. the @ykhs9 addition is
-  still outstanding.
+  pages and 64 resources, including all gallery files. the @ykhs9 addition's
+  current verification and deployment are recorded in `RESUME-WEBSITE.md`.
 
 scratch/check logs: `S:\tmp\codex\site-gallery-20260912`.
