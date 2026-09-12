@@ -36,8 +36,8 @@ the intended starting point, not a fresh checkout from the last commit.
 ## immediate next action
 
 the latest user request adds automatic animated commissions, a sharper posed 3d
-hero, and more visible background movement. the implementation is locally verified
-and ready for the existing deployment workflow. it reuses `CharacterStudio` in a
+hero, and more visible background movement. the update is deployed at `https://okiso.net`
+from source `76d1dcd`. it reuses `CharacterStudio` in a
 hero mode, with a raised-hand pose, breathing, blinks, subtle head/pointer response,
 and a lossless image fallback. it starts after the first idle opportunity without
 extending the 1.9-second opening. the existing optimized vrm is 9,065,872 bytes;
@@ -56,7 +56,13 @@ gallery loops and alternate versions, and pause/resume. rendered-frame counts st
 fixed offscreen and behind the studio; global pause held the hero at 3 frames, and
 resume advanced it to 97 while the groove/montage animations switched back to running.
 no captured warnings/errors; no physical-device or os-level reduced-motion test.
-logs: `S:\tmp\codex\site-living-hero-20260912`. remote rollout verification is next.
+deployment `34686788955` and pages rollout `34686845733` both passed; published
+asset commit `d5328c1`. live checks confirmed the model loaded and advanced from
+4 to 1530 rendered frames, the groove animation was running, and the gallery used
+the loaded animated WebP automatically. the hero canvas was removed on gallery
+navigation. the temporary local preview was stopped, and the browser is left on
+the live homepage. screenshots: `S:\Codex\outputs\2026-09-12\living-hero\`.
+logs: `S:\tmp\codex\site-living-hero-20260912`.
 
 the user's follow-up restores the discord widget as their profile, replacing the
 generic "come hang out" headline and activity teaser. `334d6a0` presents the live
