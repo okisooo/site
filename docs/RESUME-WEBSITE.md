@@ -53,7 +53,13 @@ their original credits remain in the gallery. asset tests, build/types and SEO
 pass. desktop/390px checks confirm both images load and animate, with no overflow;
 the phone mascot has zero overlap with the artist credit. ambient pause freezes
 both accents. the sticker opens the seven-work gallery, and the listening card's
-next control still selects VAC. no captured warnings/errors. deployment is next.
+next control still selects VAC. no captured warnings/errors. source `f2fda80`
+is live: deployment `34725180978` and Pages rollout `34725238791` both passed
+(asset commit `f0f1803`). all 32 website tests passed remotely. the live homepage
+shows both loaded, animated cutouts and the correct gallery link, with no overflow
+or captured warnings/errors. live evidence: `elements/live-checks.json` in the
+output folder. the local preview is stopped; the browser shows the live homepage
+with its viewport reset.
 screenshots are in the elements output folder; logs in
 `S:\tmp\codex\site-cutouts-20260913`. existing blocked cleanup paths are untouched.
 
