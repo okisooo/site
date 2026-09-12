@@ -48,10 +48,21 @@ export const staticReleases: Release[] = [
     "albumType": "single",
     "slug": "vessel-for-obsession-5ZSV0O",
     "description": "VESSEL FOR OBSESSION — single by OKISO.",
-    "tracks": [{ "id": "6poUByc7pnplcgPJoYJNy4", "title": "VESSEL FOR OBSESSION", "durationMs": 106907, "duration": "PT1M47S", "trackNumber": 1, "link": "https://open.spotify.com/track/6poUByc7pnplcgPJoYJNy4" }],
+    "tracks": [
+      {
+        "id": "6poUByc7pnplcgPJoYJNy4",
+        "title": "VESSEL FOR OBSESSION",
+        "durationMs": 106907,
+        "duration": "PT1M47S",
+        "trackNumber": 1,
+        "link": "https://open.spotify.com/track/6poUByc7pnplcgPJoYJNy4"
+      }
+    ],
     "popularity": 0,
     "totalTracks": 1,
-    "genres": ["vocaloid"]
+    "genres": [
+      "vocaloid"
+    ]
   },
   {
     "id": "6bQWrF7V9gOYRFJ85hDZ5L",
@@ -63,10 +74,21 @@ export const staticReleases: Release[] = [
     "albumType": "single",
     "slug": "deadend-6bQWrF",
     "description": "DEADEND — single by OKISO.",
-    "tracks": [{ "id": "6quIBltzKLAY9FIUFWBFW6", "title": "DEADEND", "durationMs": 100666, "duration": "PT1M41S", "trackNumber": 1, "link": "https://open.spotify.com/track/6quIBltzKLAY9FIUFWBFW6" }],
+    "tracks": [
+      {
+        "id": "6quIBltzKLAY9FIUFWBFW6",
+        "title": "DEADEND",
+        "durationMs": 100666,
+        "duration": "PT1M41S",
+        "trackNumber": 1,
+        "link": "https://open.spotify.com/track/6quIBltzKLAY9FIUFWBFW6"
+      }
+    ],
     "popularity": 0,
     "totalTracks": 1,
-    "genres": ["vocaloid"]
+    "genres": [
+      "vocaloid"
+    ]
   },
   {
     "id": "1n3y33L9KIRz3oYxbWLlOf",
