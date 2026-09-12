@@ -59,7 +59,13 @@ wave/at-ease switching and portrait framing work. the background hero held at
 then resume restored movement. no production warnings/errors were captured.
 the development server's existing icon.png conflict did not recur in production.
 the final desktop camera-centering adjustment was rebuilt and passed SEO again.
-deployment and live verification are the remaining steps. lint remains skipped;
+source `b7dba40` is live: deployment `34724171301` and Pages rollout `34724224004`
+both passed; asset commit `e49ad94`. live checks confirm the new reach/camera pose,
+an animated ready model, all eight loaded art prints, zero horizontal overflow and
+no captured warnings/errors. the browser is left on the live homepage with its
+viewport reset; the local preview has been stopped. tablet 768 x 1024 also passed
+the local composition/overflow check. verification records:
+`S:\Codex\outputs\2026-09-13\site-reach-pose\checks.json`. lint remains skipped;
 no physical-device or operating-system reduced-motion test was performed.
 existing blocked cleanup paths remain untouched; process caches reuse the existing
 s: pose scratch location. no new dependencies or original-model edits.
