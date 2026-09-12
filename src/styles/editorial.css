@@ -197,14 +197,28 @@
 .ed-channels strong { display: block; font-size: 25px; font-weight: 500; letter-spacing: -.035em; line-height: 1; }
 .ed-channels > a > svg { width: 32px; height: 32px; padding: 7px; border: 1px solid var(--ed-line); border-radius: 50%; }
 .ed-channels small { display: block; font-size: 11px; margin-top: 5px; }
-.ed-discord-card { display: flex; align-items: center; gap: 14px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 8px; border-left: 3px solid var(--ed-accent); width: 100%; padding: 18px; margin-bottom: 12px; text-align: left; box-shadow: inset 0 1px 0 var(--ed-highlight), var(--ed-shadow); }
-.ed-discord-card img { border: 3px solid #ffffff90; border-radius: 6px; outline: 1px solid var(--ed-edge); flex-shrink: 0; }
-.ed-discord-card > span { flex: 1; min-width: 0; }
-.ed-discord-card strong { display: block; font-size: 25px; line-height: 1.1; letter-spacing: -.05em; }
-.ed-discord-card small { display: block; font-size: 10px; margin-block: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed-discord-card { display: flex; flex-direction: column; gap: 18px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 8px; border-top: 3px solid var(--ed-accent); width: 100%; padding: 18px; margin-bottom: 12px; text-align: left; box-shadow: inset 0 1px 0 var(--ed-highlight), var(--ed-shadow); }
+.ed-discord-platform, .ed-discord-platform > span { display: flex; align-items: center; gap: 7px; }
+.ed-discord-platform { justify-content: space-between; width: 100%; color: var(--ed-muted); font: 10px var(--font-mono), monospace; }
+.ed-discord-identity { display: flex; align-items: center; gap: 17px; width: 100%; }
+.ed-discord-avatar { position: relative; display: block; width: 64px; height: 64px; flex: 0 0 auto; }
+.ed-discord-avatar-image { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; outline: 1px solid var(--ed-edge); outline-offset: 2px; }
+.ed-discord-decoration { position: absolute; width: 120%; height: 120%; max-width: none; inset: -10%; pointer-events: none; }
+.ed-discord-status { position: absolute; right: -1px; bottom: -1px; width: 16px; height: 16px; border: 3px solid var(--ed-white); border-radius: 50%; background: #747f8d; }
+.ed-discord-status[data-status="online"] { background: #23824f; }
+.ed-discord-status[data-status="idle"] { background: #ad7b18; }
+.ed-discord-status[data-status="dnd"] { background: #c93743; }
+.ed-discord-status[data-status="dnd"]::after { content: ""; position: absolute; height: 2px; width: 6px; background: white; top: 4px; left: 2px; }
+.ed-discord-details { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.ed-discord-details strong { display: block; font-size: 25px; line-height: 1.1; letter-spacing: -.04em; overflow-wrap: anywhere; }
+.ed-discord-handle { color: var(--ed-muted); font: 12px var(--font-mono), monospace; overflow-wrap: anywhere; margin: 0; }
+.ed-discord-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.ed-discord-badges img { display: block; width: 20px; height: 20px; object-fit: contain; }
+.ed-discord-custom-status { width: 100%; padding-top: 13px; border-top: 1px solid var(--ed-line); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 .ed-discord-card:hover { background: var(--ed-accent-soft); }
-.ed-discord-profile { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; }
-.ed-discord-profile strong { font-size: 24px; font-weight: 700; }
+.ed-discord-profile { display: flex; gap: 24px; align-items: center; padding: 8px 4px; margin-bottom: 24px; }
+.ed-discord-profile .ed-discord-avatar { width: 88px; height: 88px; }
+.ed-discord-profile strong { font-size: 30px; font-weight: 700; }
 .ed-page { padding: 28px 0 56px; }
 .ed-page-heading { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; padding: 18px 0 28px; border-bottom: 1px solid var(--ed-line); margin-bottom: 24px; }
 .ed-page-heading h1 { font-size: clamp(55px, 8.8vw, 122px); font-weight: 500; line-height: .95; letter-spacing: -.065em; margin-top: 20px; overflow-wrap: anywhere; }
