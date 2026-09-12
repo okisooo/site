@@ -88,10 +88,12 @@ RINGO past 12 seconds at 1920 x 1080 with visible frames. the public vault feed
 loaded its visible collections. playback was stopped after testing.
 
 report: `S:\Codex\outputs\2026-09-12\site-launch\live-checks.json`. action logs
-remain under `S:\tmp\codex\site-launch-20260912`. the temporary release checkout
-and preview are disposable after verification; the working source in
+remain under `S:\tmp\codex\site-launch-20260912`. after verification, the temporary
+preview process was stopped and its isolated checkout, install and build outputs
+were removed. the browser is left on the live gallery. the working source in
 `D:\GitHub\site` has been fast-forwarded to the published release while preserving
-unrelated dirty files. the @ykhs9 delivery is the outstanding gallery addition.
+all 110 unrelated audio modifications and the other dirty files. the @ykhs9
+delivery is the outstanding gallery addition.
 
 ## gallery and idle motion / 2026-09-12
 
