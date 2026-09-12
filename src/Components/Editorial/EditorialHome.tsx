@@ -12,6 +12,7 @@ import { useTwitchLive } from "@/hooks/useTwitchLive";
 import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
+import HeroCommissionWall from "./HeroCommissionWall";
 import { AmbientArtwork } from "./AmbientMotion";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
@@ -47,7 +48,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
     <section className="ed-cover" aria-label="Meet OKISO">
       <div className="ed-cover-kicker"><span>virtual artist & vocaloid producer</span><span>official website / {latest.year}</span></div>
       <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop.<br />electronic.<br />and everything<br />in between.</span><ArrowDown size={26} /></div></div>
-      <div className="ed-collage-strip ed-commission-montage ed-idle" aria-hidden="true"><img className="ed-kinetic-layer" src="/art/sobu-640.webp" alt="" width="640" height="830" decoding="async" /><img className="ed-kinetic-layer" src="/art/suyosuyo-640.webp" alt="" width="640" height="1002" decoding="async" /></div>
+      <HeroCommissionWall />
       <AmbientArtwork hero />
       <div className="ed-character"><img className="ed-hero-fallback" src="/hero_character.png" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" />{heroMounted && <HeroModel hero active={!modelOpen} />}</div>
       <article className="ed-latest-card">

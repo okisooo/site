@@ -33,7 +33,47 @@ the intended starting point, not a fresh checkout from the last commit.
   the next concrete action updated here before every handoff. do not use old
   july/august handoffs to restart the design.
 
-## immediate next action
+## current update / 2026-09-13
+
+the user requested a fuller commission background on entry and no moving graphics
+over the footer. the candidate replaces the two-panel hero montage with eight
+staggered prints from six credited artists, including the looping engawa animation.
+`HeroCommissionWall.tsx` uses existing web assets and the ambient visibility hook.
+the page graphics now live inside `ed-content-stage`, clipped and faded before
+the footer; the footer keeps its own contained waves. the 1.9-second opening,
+posed hero and existing content remain in place. obsolete collage CSS was removed.
+
+desktop and 390px phone checks showed no horizontal overflow and zero background
+overlap with the footer. all eight print images loaded, global pause froze them
+and used the still animation frame, and resume restored running movement and the
+animated WebP. dialog layering was verified after keeping the new content wrapper
+out of its own stacking context. no captured browser errors/warnings. all 32 tests,
+the type-checked production build and seo audit passed. deployment is in progress;
+do not call this candidate live until verified. lint remains skipped; no physical
+device or operating-system reduced-motion test was performed.
+
+the signed-in Skeb completed list was checked through its end again: six deliveries.
+@ykhs9 work 16 is still the missing site addition (one 2000 x 1500 PSD, displayed 8 MB).
+the user authorized Chrome's existing download folder for this one file, then moving
+the verified original to `S:\Codex\outputs\2026-09-13\skeb\`. a normal Download(Raw)
+click reached the signed file link, but Chrome returned ERR_BLOCKED_BY_CLIENT; no
+new file appeared in the checked Downloads directory. the user has been asked to
+download the raw delivery manually and provide its path. do not ask for the same
+storage exception again, bypass the browser block, publish a SAMPLE preview, or
+claim the new work was downloaded. the existing `skeb-download` skill was updated
+with the scoped exception and observed failure; its package validation passed.
+the helper still has no verified end-to-end Skeb transfer.
+
+the user then reaffirmed `D:\FOLDERS\Commissions\Bought\OKISO` as the originals
+archive. its existing artist folders were checked against the Skeb inventory;
+the missing delivery was not present. use that confirmed archive for the original,
+with web derivatives on s:. this destination is recorded in the skill; the storage
+exception did not overcome the separate Chrome download block.
+
+screenshots: `S:\Codex\outputs\2026-09-13\site-art-wall\`.
+build/test logs: `S:\tmp\codex\site-art-wall-20260913\`.
+
+## deployed hero update / 2026-09-12
 
 the latest user request adds automatic animated commissions, a sharper posed 3d
 hero, and more visible background movement. the update is deployed at `https://okiso.net`

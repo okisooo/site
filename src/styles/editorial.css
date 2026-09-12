@@ -88,8 +88,6 @@
 .ed-masthead h1 { font-size: clamp(140px, 19.5vw, 266px); font-weight: 600; color: var(--ed-red); letter-spacing: -.085em; line-height: .82; margin-left: -.015em; }
 .ed-masthead > div { font-size: 13px; font-weight: 500; line-height: 1.25; width: 170px; padding-top: 12px; }
 .ed-masthead > div svg { margin-top: 16px; }
-.ed-collage-strip { position: absolute; inset: 296px 0 auto; height: 490px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding-block: 6px; border-block: 1px solid var(--ed-ink); overflow: hidden; background: var(--ed-paper); }
-.ed-collage-strip img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: .55; }
 .ed-character { position: absolute; z-index: 4; width: 65%; height: 1040px; left: 17%; top: 0; pointer-events: none; }
 .ed-character img { width: 100%; height: 100%; object-fit: contain; object-position: center top; filter: drop-shadow(3px 8px 5px #25262428); }
 .ed-latest-card { position: absolute; z-index: 5; top: 290px; left: 32px; width: 26%; padding: 5px 5px 5px 14px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 5px 10px 10px 5px; box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-float-shadow); transform: rotate(-3deg); }
@@ -370,7 +368,6 @@
   .ed-deck-info h2 { font-size: 18px; }
   .ed-vault-teaser-title { font-size: 34px; }
   .ed-portrait-stamp { left: 25%; width: 135px; bottom: 65px; }
-  .ed-collage-strip { top: 255px; height: 480px; }
   .ed-release-card h3, .ed-release-card h2 { font-size: 20px; }
   .ed-release-meta { flex-wrap: wrap; gap: 2px 8px; }
   .ed-release-body { gap: 24px; }
@@ -389,8 +386,6 @@
   .ed-masthead h1 { font-size: 24vw; }
   .ed-masthead > div { display: none; }
   .ed-character { width: 108%; height: 740px; left: 5%; top: 126px; }
-  .ed-collage-strip { top: 245px; height: 470px; grid-template-columns: 1fr 1fr; }
-  .ed-collage-strip img:last-child { display: none; }
   .ed-latest-card { width: 46%; max-width: 200px; top: 374px; left: 13px; padding-left: 10px; }
   .ed-latest-card::before { left: 3px; width: 3px; }
   .ed-latest-caption h2 { font-size: clamp(21px, 5vw, 28px); }
@@ -484,9 +479,6 @@
   .ed-player-controls .ed-icon-button { width: 40px; min-width: 40px; }
 }
 /* Commission editions and the on-demand character room share the core materials. */
-.ed-commission-montage { grid-template-columns: 1fr 1fr; }
-.ed-commission-montage img { filter: none; opacity: .62; object-position: center 24%; }
-.ed-commission-montage img:last-child { display: block; }
 .ed-commission-sticker { position: absolute; z-index: 6; left: 25%; bottom: 64px; width: 178px; transform: rotate(5deg); transition: transform .3s; }
 .ed-commission-sticker img { width: 100%; height: auto; filter: drop-shadow(0 2px 0 white) drop-shadow(0 8px 9px #28282c25); }
 .ed-commission-sticker > span { display: flex; align-items: center; justify-content: center; gap: 5px; font: 8px var(--font-geist-mono); background: var(--ed-white); border: 1px solid var(--ed-line); border-radius: 3px; padding: 6px; margin: 0 12px; }

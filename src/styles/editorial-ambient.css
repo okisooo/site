@@ -8,26 +8,39 @@
 
 /* Moving print marks and fine record grooves stay behind the editorial content. */
 .ed-ambient-artwork { pointer-events: none; overflow: hidden; color: var(--ed-accent); }
-.ed-page-artwork { position: fixed; inset: 0; z-index: -1; }
+.ed-content-stage { position: relative; }
+.ed-page-artwork { position: absolute; inset: 0; z-index: -1; mask-image: linear-gradient(to bottom, transparent, #000 160px, #000 calc(100% - 240px), transparent); }
+.ed-page-artwork .ed-kinetic-lines { height: min(1400px, 100%); top: 30%; opacity: .07; }
 .ed-kinetic-lines { position: absolute; width: 150%; height: 110%; left: -25%; top: 15%; stroke: currentColor; stroke-width: 1.15; opacity: .10; animation: ed-grooves-drift 22s ease-in-out infinite alternate; }
 .ed-kinetic-mark { position: absolute; width: 250px; height: 250px; top: 18%; right: -115px; stroke: currentColor; opacity: .19; animation: ed-record-turn 30s linear infinite; }
 .ed-kinetic-stripes { position: absolute; width: 180px; height: 440px; top: 48%; left: -120px; background: repeating-linear-gradient(135deg, transparent 0 15px, currentColor 15px 17px, transparent 17px 32px); opacity: .09; animation: ed-stripes-drift 15s ease-in-out infinite alternate; }
 .ed-hero-artwork { position: absolute; inset: 0; z-index: 1; }
-.ed-hero-artwork .ed-kinetic-lines { top: 21%; height: 66%; stroke-width: 1.4; opacity: .22; animation-duration: 17s; }
+.ed-hero-artwork .ed-kinetic-lines { top: 52%; height: 42%; stroke-width: 1.4; opacity: .12; animation-duration: 17s; }
 .ed-hero-artwork .ed-kinetic-mark { width: 210px; height: 210px; top: 67%; right: auto; left: 10%; opacity: .55; animation-duration: 24s; }
 .ed-hero-artwork .ed-kinetic-stripes { width: 170px; left: auto; right: -65px; top: 23%; height: 390px; opacity: .24; animation-delay: -7s; }
-.ed-commission-montage img { height: calc(100% + 36px); margin-top: -18px; animation: ed-artwork-drift 11s ease-in-out infinite alternate; }
-.ed-commission-montage img:last-child { animation-duration: 14s; animation-delay: -8s; }
+.ed-commission-wall { position: absolute; top: 268px; bottom: 70px; left: 0; right: 0; overflow: hidden; pointer-events: none; background: #e5e5e8; mask-image: linear-gradient(to bottom, #000 88%, transparent); }
+.ed-commission-wall-grid { position: absolute; inset: -50px -9% -75px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; transform: rotate(-8deg); }
+.ed-wall-print { min-height: 0; min-width: 0; padding: 7px; background: var(--ed-white); border: 1px solid var(--ed-edge); box-shadow: 0 6px 14px #28282c18; animation: ed-print-float 12s ease-in-out infinite alternate; }
+.ed-wall-print:nth-child(even) { animation-delay: -7s; animation-duration: 15s; }
+.ed-wall-print:nth-child(3n) { animation-delay: -4s; animation-duration: 17s; }
+.ed-wall-print img { width: 100%; height: calc(100% - 23px); object-fit: cover; object-position: center 25%; opacity: .86; }
+.ed-wall-print > span { display: flex; justify-content: space-between; gap: 8px; padding: 7px 2px 0; font: 8px/1 var(--font-geist-mono); color: var(--ed-muted); white-space: nowrap; }
 .ed-idle .ed-kinetic-layer { animation-play-state: paused; }
 .core-site[data-ambient-motion="true"] .ed-idle[data-idle-active] .ed-kinetic-layer { animation-play-state: running; }
 .core-site:has([role="dialog"]) .ed-idle .ed-kinetic-layer { animation-play-state: paused; }
 @keyframes ed-record-turn { to { transform: rotate(360deg); } }
 @keyframes ed-grooves-drift { from { transform: translate(-14px, -22px) rotate(-3deg); } to { transform: translate(22px, 28px) rotate(3deg); } }
 @keyframes ed-stripes-drift { from { transform: translateY(-34px); } to { transform: translateY(34px); } }
-@keyframes ed-artwork-drift { from { transform: translateY(-14px) scale(1.035); } to { transform: translateY(14px) scale(1.035); } }
+@keyframes ed-print-float { from { transform: translateY(-9px) rotate(-1deg); } to { transform: translateY(9px) rotate(1deg); } }
+@media (min-width: 701px) and (max-width: 1000px) { .ed-commission-wall { top: 246px; } }
 @media (max-width: 700px) {
+  .ed-commission-wall { top: 240px; bottom: auto; height: 480px; }
+  .ed-commission-wall-grid { inset: -50px -35% -80px; gap: 9px; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); transform: rotate(-9deg); }
+  .ed-wall-print { padding: 4px; }
+  .ed-wall-print > span { font-size: 6px; }
+  .ed-wall-print > span > span:last-child { display: none; }
   .ed-hero-artwork .ed-kinetic-mark { width: 130px; height: 130px; top: 64%; left: 3%; }
-  .ed-hero-artwork .ed-kinetic-lines { top: 25%; height: 48%; }
+  .ed-hero-artwork .ed-kinetic-lines { top: 49%; height: 22%; }
   .ed-hero-artwork .ed-kinetic-stripes { top: 28%; right: -100px; }
   .ed-page-artwork .ed-kinetic-mark { width: 160px; height: 160px; right: -100px; }
 }

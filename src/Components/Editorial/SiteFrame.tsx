@@ -52,7 +52,6 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
   </>;
 
   return <AmbientMotionContext.Provider value={ambient.enabled}><div className="core-site" data-opening={opening || undefined} data-ambient-motion={ambient.enabled}>
-    <AmbientArtwork />
     {opening && <EditorialOpening key={openingTake} onFinish={() => setOpening(false)} />}
     <header className="ed-nav" data-editorial-background onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
       <Link href="/" className="ed-logo" aria-label="OKISO home" onClick={() => setMenuOpen(false)}>okiso<span aria-hidden="true">↗</span></Link>
@@ -71,7 +70,10 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
         <a href="/#watch" onClick={() => setMenuOpen(false)}>watch<ArrowUpRight size={18} /></a>
       </nav>}
     </header>
-    <main id="main-content" data-editorial-background>{children}</main>
+    <div className="ed-content-stage">
+      <AmbientArtwork />
+      <main id="main-content" data-editorial-background>{children}</main>
+    </div>
     <footer className="ed-footer" data-editorial-background>
       <AmbientWaves />
       <div className="ed-footer-top"><Link href="/" className="ed-footer-logo">okiso<span>↗</span></Link><p>virtual artist.<br />very real music.</p>

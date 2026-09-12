@@ -31,12 +31,15 @@ skeb works plus sobu). the missing @ykhs9 delivery will make seven works.
 
 ## exact outstanding action
 
-the user was asked to save @ykhs9 work 16's converted delivery under
-`S:\Codex\outputs\2026-09-12\site-gallery\` and report when ready. browser security
-policy blocked `chrome://settings/downloads`, preventing selection of the required
-download destination. do not bypass that blocked settings action with another
-browser-control mechanism. no stock SAMPLE preview was stripped or substituted,
-and no file was sent to photopea or another external editor.
+on 2026-09-13 the user allowed Chrome's existing download folder for this one
+delivery, then moving the verified file to `S:\Codex\outputs\2026-09-13\skeb\`.
+the matching Download(Raw) button reached the signed attachment URL, but Chrome
+returned ERR_BLOCKED_BY_CLIENT; no file appeared in the checked Downloads directory.
+the user was asked to finish the raw download manually and provide the saved path.
+the earlier download-settings restriction is a separate failure; do not ask again
+for this file's storage exception or bypass either restriction. no SAMPLE preview
+was substituted and no file was sent to Photopea. the installed `skeb-download`
+skill records both the valid exception and the unfinished transfer.
 
 when the delivery arrives: inspect it, create right-sized derivatives in the
 existing gallery assets directory, add its record and verified skeb links to
@@ -57,6 +60,9 @@ do not call the whole skeb collection complete before this work is added.
   still. originals, embedded artist messages and colors remain
   intact. no generated or replacement artwork.
 - the hero now uses the original 3d character with a pose, blinking and breathing.
+  the sept 13 revision adds eight drifting commission prints behind it; the animated
+  print respects ambient pause and visibility. page graphics are confined to the
+  main content and fade out before the footer, preventing footer text overlap.
   sticker movement, sleeve reflections and printed background graphics use local
   transforms. an artist-credit strip moves on the gallery. a contained footer
   wave panel reuses the existing react bits `Waves.tsx` from the saved toolkit.
