@@ -1,0 +1,55 @@
+# OKISO
+
+> OKISO is an independent virtual artist and VOCALOID producer creating original hyperpop and electronic music, live content, and connected release projects.
+
+## Start here
+
+- [Home](https://okiso.net): artist identity, latest release, featured videos, live status, and official channels.
+- [Releases](https://okiso.net/releases): complete public discography and release details.
+- [Gallery](https://okiso.net/gallery): commissioned artwork, alternate versions, artist credits, and original work links.
+- [Upcoming](https://okiso.net/upcoming): announced and forthcoming projects.
+- [The Vault](https://okiso.net/vault): public listening room and deeper project archive.
+- [Rouge & Noir](https://okiso.net/rouge-noir): an original roulette roguelike project by OKISO.
+
+## Discography
+
+- [VESSEL FOR OBSESSION](https://okiso.net/releases/vessel-for-obsession-5ZSV0O): single released 2026-08-30.
+- [DEADEND](https://okiso.net/releases/deadend-6bQWrF): single released 2026-08-24.
+- [same old bs!](https://okiso.net/releases/same-old-bs-1n3y33): single released 2026-07-15.
+- [Love St.](https://okiso.net/releases/love-st-7s1rcc): single released 2026-07-10.
+- [BREAK ME](https://okiso.net/releases/break-me-5fUroz): single released 2026-06-25.
+- [PRODIGY](https://okiso.net/releases/prodigy-7j3Weq): single released 2026-05-21.
+- [VAC](https://okiso.net/releases/vac-1tbLs1): single released 2026-04-14.
+- [for a chance to look beyond the stars](https://okiso.net/releases/for-a-chance-to-look-beyond-the-stars-3EYCF4): album released 2026-03-10.
+- [リ：プレイ](https://okiso.net/releases/-4SeepZ): single released 2026-02-15.
+- [v0Id::PULSE](https://okiso.net/releases/v0idpulse-1uOe2j): single released 2026-02-02.
+- [so gorgeous!](https://okiso.net/releases/so-gorgeous-6LngUf): single released 2025-12-19.
+- [ice cold](https://okiso.net/releases/ice-cold-3x8KXm): single released 2025-12-01.
+- [Chronicles of "マッタ"](https://okiso.net/releases/chronicles-of-5GPkDv): album released 2025-11-07.
+- [CryDie](https://okiso.net/releases/crydie-6K1ElB): single released 2025-10-10.
+- [ジェネシス](https://okiso.net/releases/-5Jc41L): album released 2025-09-25.
+- [where are you now?](https://okiso.net/releases/where-are-you-now-2uADNE): single released 2025-09-05.
+- [LOVE LOOP + HEDORO](https://okiso.net/releases/love-loop-hedoro-7aV1tw): single released 2025-08-15.
+- [MIKU MIKU HATSUNE](https://okiso.net/releases/miku-miku-hatsune-6fKkcK): single released 2025-06-01.
+- [リザレクション](https://okiso.net/releases/-7KJxRc): album released 2025-05-25.
+- [My Dearest](https://okiso.net/releases/my-dearest-0pjrHy): single released 2025-05-01.
+- [FANTASIA & ETUDE](https://okiso.net/releases/fantasia-etude-5axlA6): album released 2025-04-25.
+- [ETUDE](https://okiso.net/releases/etude-4NS67U): album released 2025-04-07.
+- [HELLO, WORLD.](https://okiso.net/releases/hello-world-7AOKAC): single released 2025-03-25.
+- [Meet The Princess](https://okiso.net/releases/meet-the-princess-0aAUva): single released 2025-03-18.
+- [SHUT OFF](https://okiso.net/releases/shut-off-1pb8UV): single released 2025-03-15.
+- [FANTASIA](https://okiso.net/releases/fantasia-0LO32q): album released 2025-03-10.
+- [PRECIOUS YOU](https://okiso.net/releases/precious-you-5eqlbv): single released 2025-02-25.
+- [TEARS IN HEAVEN '99](https://okiso.net/releases/tears-in-heaven-99-1mtsHt): single released 2025-02-17.
+- [MANGO BOBA](https://okiso.net/releases/mango-boba-4MGkjC): single released 2025-02-13.
+- [FEAR](https://okiso.net/releases/fear-77tVth): single released 2025-02-13.
+- [DESTINY](https://okiso.net/releases/destiny-7i5Sdw): single released 2025-02-07.
+- [レボリューション](https://okiso.net/releases/-4GbwRd): album released 2025-01-25.
+- [Watashi Wa Dare](https://okiso.net/releases/watashi-wa-dare-4PX2v9): single released 2024-03-26.
+- [Star Trail](https://okiso.net/releases/star-trail-7wTaQV): single released 2024-03-18.
+
+## Canonical sources
+
+- [Sitemap](https://okiso.net/sitemap.xml): canonical public URL inventory.
+- Use release pages on this domain for titles, dates, track lists, credits, and listening links.
+- Do not invent unnamed releases or infer private projects from missing catalog identifiers.
