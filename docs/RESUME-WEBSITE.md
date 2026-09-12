@@ -33,6 +33,37 @@ the intended starting point, not a fresh checkout from the last commit.
   the next concrete action updated here before every handoff. do not use old
   july/august handoffs to restart the design.
 
+## illustration-inspired hero pose / 2026-09-13
+
+the user requested the PSD's alternate expressions, an illustration-inspired 3d
+pose with stronger camera perspective, and redeployment. the four PSD expressions
+were already exported and live in the gallery in `3d240ad`; no duplicates were added.
+
+`CharacterStudio.tsx` now has a reach pose: one open hand toward the lens, the other
+across the chest, turned hips/spine, a counter-tilted head and asymmetric legs.
+forearm twist distributes the palm rotation so the wrists remain relaxed. the hero
+uses a closer 64-degree perspective, a slight camera roll, soft pointer parallax
+and slow camera drift with its existing breathing/blinking. the phone camera is
+composed separately to keep the face clear of the artist card. the shared character
+room exposes reach alongside wave and at ease; its drag/framing controls remain.
+the original model, four art variants and existing collage files are unchanged.
+
+four visual pose/camera iterations corrected the first limp wrist and an overly
+vertical stop gesture, then refined the phone framing. screenshots and supporting
+rig calculations: `S:\Codex\outputs\2026-09-13\site-reach-pose` and
+`S:\tmp\codex\site-reach-pose-20260913`. all 32 tests, the production build/types
+(51 resources) and SEO audit pass. desktop and phone checks verified the pose,
+clear face/hand framing and no horizontal overflow. the character-room reach,
+wave/at-ease switching and portrait framing work. the background hero held at
+2567 frames while the studio was open; settled ambient pause held at 2571 frames,
+then resume restored movement. no production warnings/errors were captured.
+the development server's existing icon.png conflict did not recur in production.
+the final desktop camera-centering adjustment was rebuilt and passed SEO again.
+deployment and live verification are the remaining steps. lint remains skipped;
+no physical-device or operating-system reduced-motion test was performed.
+existing blocked cleanup paths remain untouched; process caches reuse the existing
+s: pose scratch location. no new dependencies or original-model edits.
+
 ## current skeb follow-through / 2026-09-13
 
 the original is downloaded and verified at

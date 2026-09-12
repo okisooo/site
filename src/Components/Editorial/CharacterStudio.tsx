@@ -9,13 +9,13 @@ import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 
 type Expression = "neutral" | "happy" | "relaxed";
-type StudioOptions = { expression: Expression; pose: "relaxed" | "wave"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
+type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
 const DEFAULTS: StudioOptions = { expression: "neutral", pose: "relaxed", framing: "full", motion: true, turntable: false, saver: true };
 
 export default function CharacterStudio({ hero = false, active = true }: { hero?: boolean; active?: boolean }) {
   const ambient = useContext(AmbientMotionContext);
   const canvasHost = useRef<HTMLDivElement>(null);
-  const [options, setOptions] = useState<StudioOptions>(() => hero ? { ...DEFAULTS, pose: "wave", expression: "happy" } : DEFAULTS);
+  const [options, setOptions] = useState<StudioOptions>(() => hero ? { ...DEFAULTS, pose: "reach", expression: "happy" } : DEFAULTS);
   const current = useRef(options);
   current.current = { ...options, motion: options.motion && (!hero || ambient) };
   const enabled = useRef(active);
@@ -52,7 +52,8 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
     const cameraDestination = new Vector3(), targetDestination = new Vector3();
     const controller = new AbortController();
     const scene = new Scene();
-    const camera = new PerspectiveCamera(hero ? 30 : 32, 1, .1, 30);
+    const camera = new PerspectiveCamera(hero ? 64 : 32, 1, .1, 30);
+    if (hero) camera.up.set(.06, 1, 0).normalize();
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const compactLayout = window.matchMedia("(max-width: 700px)");
@@ -68,6 +69,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       frame = 0;
       if (disposed || failed || !enabled.current || !inView || document.hidden || !renderer || !controls) return;
       const settings = current.current;
+      const reaching = settings.pose === "reach";
       const moving = settings.motion && !prefersReduced.matches && !!vrm;
       const interval = 1000 / (hero || settings.saver ? 30 : 60);
       if (moving && last && time - last < interval - 1) { frame = requestAnimationFrame(render); return; }
@@ -78,8 +80,9 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       controls.enableDamping = moving;
       if (settings.framing !== previousFraming) {
         const portrait = settings.framing === "portrait";
-        cameraDestination.set(0, hero ? .91 : portrait ? 1.42 : .95, hero ? Math.max(3.35, 1.8 / camera.aspect) : portrait ? 1.6 : Math.min(4.4, Math.max(3.6, 2.15 / camera.aspect)));
-        targetDestination.set(0, hero ? .86 : portrait ? 1.35 : .8, 0);
+        const heroDistance = compactLayout.matches ? Math.max(1.02, .54 / camera.aspect) : Math.max(.78, .5 / camera.aspect);
+        cameraDestination.set(hero ? .16 : 0, hero ? 1.54 : portrait ? 1.42 : .95, hero ? heroDistance : portrait ? 1.6 : Math.min(4.4, Math.max(3.6, 2.15 / camera.aspect)));
+        targetDestination.set(hero ? (compactLayout.matches ? -.145 : 0) : 0, hero ? 1.21 : portrait ? 1.35 : .8, 0);
         dolly = moving && previousFraming !== "";
         if (!dolly) { camera.position.copy(cameraDestination); controls.target.copy(targetDestination); }
         previousFraming = settings.framing;
@@ -128,11 +131,40 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
               leftUpperLeg: { rotation: q(0, 0, .025) },
               rightUpperLeg: { rotation: q(.035, 0, -.035) },
             } : {}),
+            ...(reaching ? {
+              // The delivered ykhs9 illustration: an open reach, with the other hand at the heart.
+              hips: { rotation: q(.05, .22, -.13) },
+              spine: { rotation: q(.08, -.1, .03) },
+              chest: { rotation: q(.12, -.1, -.05) },
+              leftUpperArm: { rotation: q(0, -1.3, .52) },
+              // Share the palm turn with the forearm so the wrists stay relaxed.
+              leftLowerArm: { rotation: q(0, -.12, .05, -.9) },
+              leftHand: { rotation: q(-.6517, .9481, -1.2729) },
+              leftIndexProximal: { rotation: q(0, -.16, .06) },
+              leftMiddleProximal: { rotation: q(0, -.03, .08) },
+              leftRingProximal: { rotation: q(0, .12, .14) },
+              leftLittleProximal: { rotation: q(0, .26, .2) },
+              leftIndexIntermediate: { rotation: q(0, 0, .08) },
+              leftMiddleIntermediate: { rotation: q(0, 0, .1) },
+              leftRingIntermediate: { rotation: q(0, 0, .15) },
+              leftLittleIntermediate: { rotation: q(0, 0, .22) },
+              leftThumbMetacarpal: { rotation: q(.1, .2, -.22) },
+              rightUpperArm: { rotation: q(0, .35, -1.05) },
+              rightLowerArm: { rotation: q(-1.512, -.5313, 2.3146, -2.4) },
+              rightHand: { rotation: q(-.6598, .1262, -.3871) },
+              rightIndexProximal: { rotation: q(0, .08, -.12) },
+              rightMiddleProximal: { rotation: q(0, 0, -.14) },
+              rightRingProximal: { rotation: q(0, -.06, -.18) },
+              rightLittleProximal: { rotation: q(0, -.14, -.23) },
+              leftUpperLeg: { rotation: q(-.06, -.08, .09) },
+              rightUpperLeg: { rotation: q(.16, .1, -.1) },
+              rightLowerLeg: { rotation: q(-.2, 0, 0) },
+            } : {}),
           });
           previousPose = poseKey;
         }
         if (previousExpression !== settings.expression) {
-          for (const name of ["happy", "relaxed"]) vrm.expressionManager?.setValue(name, name === settings.expression ? (hero ? .16 : .8) : 0);
+          for (const name of ["happy", "relaxed"]) vrm.expressionManager?.setValue(name, name === settings.expression ? (hero ? .28 : .8) : 0);
           previousExpression = settings.expression;
         }
         const head = vrm.humanoid.getNormalizedBoneNode("head");
@@ -144,11 +176,11 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
           pointer.y += (pointer.targetY - pointer.y) * blend;
         }
         if (head) {
-          head.rotation.y = Math.sin(elapsed * .6) * (hero ? .06 : .035) + (hero ? pointer.x * .1 : 0);
-          head.rotation.x = hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0;
-          head.rotation.z = hero ? .025 + Math.sin(elapsed * .5) * .012 : 0;
+          head.rotation.y = (reaching ? .13 : 0) + Math.sin(elapsed * .6) * (hero ? .04 : .035) + (hero ? pointer.x * .08 : 0);
+          head.rotation.x = (reaching ? -.04 : 0) + (hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0);
+          head.rotation.z = (reaching ? .1 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .012 : 0);
         }
-        if (chest) chest.rotation.x = Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
+        if (chest) chest.rotation.x = (reaching ? .12 : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
         // Two soft beats, then a resting palm. The envelope eases in and out at zero.
         const greeting = (elapsed - waveStart) % 7.5;
         const waveEnvelope = greeting < 2.4 ? Math.sin(greeting / 2.4 * Math.PI) ** 2 : 0;
@@ -161,11 +193,16 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
         }
         if (hero) {
           const hips = vrm.humanoid.getNormalizedBoneNode("hips");
-          if (hips) hips.rotation.z = -.025 + Math.sin(elapsed * .5) * .012;
+          if (hips) hips.rotation.z = (reaching ? -.13 : -.025) + Math.sin(elapsed * .5) * .012;
         }
         const blinkTime = elapsed % 4.4;
         vrm.expressionManager?.setValue("blink", moving && blinkTime > 4.15 ? Math.sin((blinkTime - 4.15) / .25 * Math.PI) : 0);
         vrm.update(moving ? delta : 0);
+      }
+      if (hero) {
+        camera.position.copy(cameraDestination);
+        camera.position.x += pointer.x * .022 + Math.sin(elapsed * .28) * .008;
+        camera.position.y += pointer.y * .012 + Math.sin(elapsed * .36) * .004;
       }
       controls.update();
       renderer.render(scene, camera);
@@ -205,7 +242,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       controls = new OrbitControls(camera, element);
       controls.enabled = !hero;
       controls.enablePan = false;
-      controls.minDistance = 1.1; controls.maxDistance = 4.5;
+      controls.minDistance = hero ? .65 : 1.1; controls.maxDistance = 4.5;
       controls.minPolarAngle = .85; controls.maxPolarAngle = 1.7;
       controls.autoRotateSpeed = .7;
       controls.addEventListener("change", invalidate);
@@ -298,7 +335,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
     <div className="ed-studio-console">
       <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "full" ? "full figure" : value}</button>)}</div></div>
       <div className="ed-studio-control-row"><span className="ed-label">expression</span><div role="group" aria-label="Character expression">{(["neutral", "happy", "relaxed"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.expression === value} onClick={() => update("expression", value)}>{value}</button>)}</div></div>
-      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : "wave"}</button>)}</div></div>
+      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave", "reach"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value}</button>)}</div></div>
       <div className="ed-studio-transport"><button className="ed-icon-button" aria-label="Turn character left" onClick={() => commands.current?.rotate(-1)}><ArrowLeft size={17} /></button><button className="ed-button" disabled={reduced} aria-pressed={options.turntable} onClick={() => setOptions((old) => ({ ...old, turntable: !old.turntable, motion: true }))}>turntable</button><button className="ed-icon-button" aria-label="Turn character right" onClick={() => commands.current?.rotate(1)}><ArrowRight size={17} /></button></div>
       <div className="ed-studio-settings"><button className="ed-button" disabled={reduced} onClick={() => update("motion", !options.motion)}>{options.motion && !reduced ? <Pause size={14} /> : <Play size={14} />}{reduced ? "reduced motion" : options.motion ? "pause motion" : "resume motion"}</button><button className="ed-button" aria-pressed={options.saver} onClick={() => update("saver", !options.saver)}>battery saver</button><button className="ed-icon-button" aria-label="Reset character view" onClick={() => { setOptions((old) => ({ ...DEFAULTS, motion: !reduced, saver: old.saver })); commands.current?.reset(); }}><RotateCcw size={16} /></button></div>
       <p className="ed-studio-note">a closer look at okiso.<br />turn, pose & find your angle.</p>
