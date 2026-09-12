@@ -33,6 +33,30 @@ the intended starting point, not a fresh checkout from the last commit.
   the next concrete action updated here before every handoff. do not use old
   july/august handoffs to restart the design.
 
+## separate commission elements / 2026-09-13
+
+the user asked to use the smaller delivered assets, including the chibi. all ten
+PSD layers were exported at their native bounds, plus a ready-to-use outlined
+chibi composite. the artist's `chibi line` layer already contains the complete
+outlined illustration. all eleven exports are saved alongside the four expression
+PNGs in `D:\FOLDERS\Commissions\Bought\OKISO\ykhs9@skeb\converted`; the original
+PSD remains intact. the manifest verifies sixteen files in total. layer-to-file
+mapping: `S:\Codex\outputs\2026-09-13\skeb-ykhs9\elements\elements.json`.
+the Skeb skill now includes separately supplied elements in local saves.
+
+the hero's existing credited sticker slot now uses ykhs9's outlined chibi and
+links to the gallery. the winking octopus perches on the listening deck. both
+reuse the existing idle animation/visibility system with different sway timing;
+no new animation dependency. the two transparent, lossless WebPs total 89,100
+bytes, at their original 340 x 365 and 370 x 361 sizes. all full commissions and
+their original credits remain in the gallery. asset tests, build/types and SEO
+pass. desktop/390px checks confirm both images load and animate, with no overflow;
+the phone mascot has zero overlap with the artist credit. ambient pause freezes
+both accents. the sticker opens the seven-work gallery, and the listening card's
+next control still selects VAC. no captured warnings/errors. deployment is next.
+screenshots are in the elements output folder; logs in
+`S:\tmp\codex\site-cutouts-20260913`. existing blocked cleanup paths are untouched.
+
 ## illustration-inspired hero pose / 2026-09-13
 
 the user requested the PSD's alternate expressions, an illustration-inspired 3d
@@ -77,6 +101,13 @@ the original is downloaded and verified at
 8,492,720 bytes, PSD 2000 x 1500 with embedded ICC; SHA-256
 `86357a11fd8bcaeb5df81eafb56aa1eb1d79f6c1267b607af2252ab317edbbc1`.
 the artist-folder manifest records verification without private links.
+
+following the user's local-save correction, all four full-resolution 2000 x 1500
+PNG expressions are also archived in `ykhs9@skeb\converted\`, with filenames
+identifying Chara1/open-smile, Chara2/eyes-closed, Chara3/soft-smile and
+Chara4/quiet-smile. the manifest records their verified dimensions and hashes
+alongside the original PSD. the Skeb skill now requires every delivered/layered variant in the
+local artist archive, not only the original PSD or website-sized derivatives.
 
 the user was correct that this had worked before. recovered the September 10
 successful task `01a0887d-3d3f-7d23-ad9d-ac55abb6b0ab`: click Download(Raw),

@@ -57,9 +57,10 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
       <div className="ed-artist-note"><span className="ed-label">meet the artist <span aria-hidden="true">↗</span></span><p>at your<br /><em>command.</em></p><button onClick={() => setModelOpen(true)}>explore the 3d model <ArrowUpRight size={15} /></button></div>
-      <a href="#art-room" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring 7mmchan"><img className="ed-idle ed-idle-sticker" src="/art/7mmchan-256.webp" alt="Chibi OKISO with the red mascot, by 7mmchan" width="256" height="256" /><span>art by 7mmchan <ArrowUpRight size={12} /></span></a>
+      <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">
+        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" />
         <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-label={`Pick ${pickIndex + 1} of ${picks.length}`}>{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span></div>
         <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={pick.img} alt={`${pick.title} cover`} width="100" height="100" /></Link>
           <div className="ed-deck-info"><span className="ed-label">from the archive / {pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
