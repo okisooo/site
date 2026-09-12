@@ -12,7 +12,7 @@ import { EditorialDialog } from "./EditorialDialog";
 import EditorialMusicPlayer from "./EditorialMusicPlayer";
 import EditorialOpening from "./EditorialOpening";
 import { useEditorialMotion } from "./useEditorialMotion";
-import { AmbientMotionContext, AmbientWaves, useAmbientPreference } from "./AmbientMotion";
+import { AmbientArtwork, AmbientMotionContext, AmbientWaves, useAmbientPreference } from "./AmbientMotion";
 
 const destinations = [
   { href: "/releases", label: "releases" },
@@ -52,6 +52,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
   </>;
 
   return <AmbientMotionContext.Provider value={ambient.enabled}><div className="core-site" data-opening={opening || undefined} data-ambient-motion={ambient.enabled}>
+    <AmbientArtwork />
     {opening && <EditorialOpening key={openingTake} onFinish={() => setOpening(false)} />}
     <header className="ed-nav" data-editorial-background onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
       <Link href="/" className="ed-logo" aria-label="OKISO home" onClick={() => setMenuOpen(false)}>okiso<span aria-hidden="true">↗</span></Link>

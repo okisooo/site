@@ -55,7 +55,6 @@
 .ed-gallery-invite > .ed-text-link { flex-shrink: 0; }
 
 /* Idle movement stays on artwork or decorative layers, never text or controls. */
-.ed-idle-character { transform-origin: 50% 75%; animation: ed-character-breathe 7.8s ease-in-out infinite; }
 .ed-idle-sticker { transform-origin: 50% 80%; animation: ed-sticker-sway 9.4s ease-in-out infinite; }
 .ed-latest-art.ed-idle::after { background: linear-gradient(110deg, transparent 25%, #ffffff48 47%, transparent 67%); animation: ed-sleeve-light 13s ease-in-out infinite; }
 .ed-idle, .ed-idle::after, .ed-idle .ed-gallery-ticker-track { animation-play-state: paused; }
@@ -64,7 +63,6 @@
 .core-site[data-ambient-motion="true"] .ed-idle[data-idle-active] .ed-gallery-ticker-track { animation-play-state: running; }
 .core-site:has([role="dialog"]) .ed-idle, .core-site:has([role="dialog"]) .ed-idle::after { animation-play-state: paused; }
 .core-site:has([role="dialog"]) .ed-gallery-ticker-track { animation-play-state: paused; }
-@keyframes ed-character-breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-4px) scale(1.006); } }
 @keyframes ed-sticker-sway { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-6px) rotate(1.5deg); } }
 @keyframes ed-sleeve-light { 0%, 35% { transform: translateX(-110%); } 70%, 100% { transform: translateX(110%); } }
 .ed-ambient-band { height: 130px; position: relative; overflow: hidden; border-block: 1px solid var(--ed-line); margin: 0 0 30px; }

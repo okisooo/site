@@ -57,3 +57,18 @@ export function AmbientWaves() {
       waveAmpX={12} waveAmpY={10} xGap={38} yGap={24} maxCursorMove={22} />}
   </div>;
 }
+
+export function AmbientArtwork({ hero = false }: { hero?: boolean }) {
+  return <div className={`ed-ambient-artwork ed-idle ${hero ? "ed-hero-artwork" : "ed-page-artwork"}`} aria-hidden="true">
+    <svg className="ed-kinetic-lines ed-kinetic-layer" viewBox="0 0 1200 800" fill="none" preserveAspectRatio="xMidYMid slice">
+      {Array.from({ length: 13 }, (_, index) => <path key={index} d={`M -100 ${170 + index * 25} C 260 ${-120 + index * 32}, 590 ${880 - index * 14}, 1300 ${270 + index * 26}`} />)}
+    </svg>
+    <svg className="ed-kinetic-mark ed-kinetic-layer" viewBox="0 0 240 240" fill="none">
+      <circle cx="120" cy="120" r="103" strokeWidth="1.5" strokeDasharray="255 35 50 25 95 55" />
+      <circle cx="120" cy="120" r="82" strokeWidth="1" strokeDasharray="110 30 30 35" />
+      <path d="M120 65v110M65 120h110M81 81l78 78M81 159l78-78" strokeWidth="8" />
+      <circle cx="120" cy="120" r="12" fill="currentColor" stroke="none" />
+    </svg>
+    <span className="ed-kinetic-stripes ed-kinetic-layer" />
+  </div>;
+}

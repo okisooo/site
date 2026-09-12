@@ -1,0 +1,37 @@
+/* The character is rendered at the viewport's resolution, with a lossless fallback. */
+.ed-hero-model, .ed-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ed-hero-model { opacity: 0; transition: opacity .45s ease; }
+.ed-hero-model[data-ready="true"] { opacity: 1; }
+.ed-hero-canvas canvas { display: block; width: 100%; height: 100%; }
+.ed-character > .ed-hero-fallback { transition: opacity .45s ease; }
+.ed-character:has(.ed-hero-model[data-ready="true"]) > .ed-hero-fallback { opacity: 0; }
+
+/* Moving print marks and fine record grooves stay behind the editorial content. */
+.ed-ambient-artwork { pointer-events: none; overflow: hidden; color: var(--ed-accent); }
+.ed-page-artwork { position: fixed; inset: 0; z-index: -1; }
+.ed-kinetic-lines { position: absolute; width: 150%; height: 110%; left: -25%; top: 15%; stroke: currentColor; stroke-width: 1.15; opacity: .10; animation: ed-grooves-drift 22s ease-in-out infinite alternate; }
+.ed-kinetic-mark { position: absolute; width: 250px; height: 250px; top: 18%; right: -115px; stroke: currentColor; opacity: .19; animation: ed-record-turn 30s linear infinite; }
+.ed-kinetic-stripes { position: absolute; width: 180px; height: 440px; top: 48%; left: -120px; background: repeating-linear-gradient(135deg, transparent 0 15px, currentColor 15px 17px, transparent 17px 32px); opacity: .09; animation: ed-stripes-drift 15s ease-in-out infinite alternate; }
+.ed-hero-artwork { position: absolute; inset: 0; z-index: 1; }
+.ed-hero-artwork .ed-kinetic-lines { top: 21%; height: 66%; stroke-width: 1.4; opacity: .22; animation-duration: 17s; }
+.ed-hero-artwork .ed-kinetic-mark { width: 210px; height: 210px; top: 67%; right: auto; left: 10%; opacity: .55; animation-duration: 24s; }
+.ed-hero-artwork .ed-kinetic-stripes { width: 170px; left: auto; right: -65px; top: 23%; height: 390px; opacity: .24; animation-delay: -7s; }
+.ed-commission-montage img { height: calc(100% + 36px); margin-top: -18px; animation: ed-artwork-drift 11s ease-in-out infinite alternate; }
+.ed-commission-montage img:last-child { animation-duration: 14s; animation-delay: -8s; }
+.ed-idle .ed-kinetic-layer { animation-play-state: paused; }
+.core-site[data-ambient-motion="true"] .ed-idle[data-idle-active] .ed-kinetic-layer { animation-play-state: running; }
+.core-site:has([role="dialog"]) .ed-idle .ed-kinetic-layer { animation-play-state: paused; }
+@keyframes ed-record-turn { to { transform: rotate(360deg); } }
+@keyframes ed-grooves-drift { from { transform: translate(-14px, -22px) rotate(-3deg); } to { transform: translate(22px, 28px) rotate(3deg); } }
+@keyframes ed-stripes-drift { from { transform: translateY(-34px); } to { transform: translateY(34px); } }
+@keyframes ed-artwork-drift { from { transform: translateY(-14px) scale(1.035); } to { transform: translateY(14px) scale(1.035); } }
+@media (max-width: 700px) {
+  .ed-hero-artwork .ed-kinetic-mark { width: 130px; height: 130px; top: 64%; left: 3%; }
+  .ed-hero-artwork .ed-kinetic-lines { top: 25%; height: 48%; }
+  .ed-hero-artwork .ed-kinetic-stripes { top: 28%; right: -100px; }
+  .ed-page-artwork .ed-kinetic-mark { width: 160px; height: 160px; right: -100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ed-kinetic-layer { animation: none !important; }
+  .ed-hero-model, .ed-character > .ed-hero-fallback { transition: none; }
+}

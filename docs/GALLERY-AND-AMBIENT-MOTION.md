@@ -51,11 +51,13 @@ do not call the whole skeb collection complete before this work is added.
 - the homepage keeps its curated art room and links to the full collection. the
   shared navigation now links directly to the gallery. sitemap and llms.txt include
   it; gallery metadata is indexable with its own canonical URL.
-- animations use original delivered frames. the animated commission has explicit
-  play/pause and a still-image default; reduced motion and the ambient pause
-  preference keep it still. originals, embedded artist messages and colors remain
+- animations use original delivered frames. following the user's sept 12 correction,
+  visible gallery thumbnails and full-art variants animate automatically. the viewer
+  retains play/pause; reduced motion and the ambient pause preference keep artwork
+  still. originals, embedded artist messages and colors remain
   intact. no generated or replacement artwork.
-- slow character breathing, sticker movement and sleeve reflections use local
+- the hero now uses the original 3d character with a pose, blinking and breathing.
+  sticker movement, sleeve reflections and printed background graphics use local
   transforms. an artist-credit strip moves on the gallery. a contained footer
   wave panel reuses the existing react bits `Waves.tsx` from the saved toolkit.
 - the footer pause control freezes idle motion and removes the wave renderer;

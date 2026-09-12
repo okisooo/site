@@ -8,6 +8,16 @@ import { AmbientMotionContext, useAmbientVisibility } from "./AmbientMotion";
 
 const PAGE_SIZE = 12;
 
+function GalleryThumbnail({ work, eager }: { work: GalleryWork; eager: boolean }) {
+  const { ref, active } = useAmbientVisibility();
+  const animation = work.variants.find((variant) => variant.motion)?.motion;
+  return <div ref={ref} className={`ed-gallery-mount ${animation ? "ed-gallery-mount-animation" : ""}`}>
+    <img src={active && animation ? animation : work.small} alt={work.description} width={work.width} height={work.height} loading={eager ? "eager" : "lazy"} decoding="async" />
+    <span className="ed-gallery-expand"><ArrowUpRight size={20} /></span>
+    {animation && <span className="ed-gallery-badge"><Play size={11} /> animated</span>}
+  </div>;
+}
+
 function Artwork({ work, variant, animate = false }: { work: GalleryWork; variant: GalleryVariant; animate?: boolean }) {
   const { ref, active } = useAmbientVisibility();
   return <div ref={ref} className="ed-gallery-artwork">
@@ -20,10 +30,10 @@ function ArtworkViewer({ work, onClose, previous, next, position, total }: {
   work: GalleryWork; onClose: () => void; previous: () => void; next: () => void; position: number; total: number;
 }) {
   const [variantIndex, setVariantIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const ambient = useContext(AmbientMotionContext);
   const variant = work.variants[variantIndex];
-  useEffect(() => { setVariantIndex(0); setPlaying(false); }, [work.id]);
+  useEffect(() => { setVariantIndex(0); setPlaying(true); }, [work.id]);
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|SELECT|TEXTAREA/.test((event.target as HTMLElement)?.tagName)) return;
@@ -45,7 +55,7 @@ function ArtworkViewer({ work, onClose, previous, next, position, total }: {
         {work.workUrl && <a className="ed-text-link" href={work.workUrl} target="_blank" rel="noopener noreferrer">original on skeb <ArrowUpRight size={16} /></a>}
         {work.variants.length > 1 && <div className="ed-gallery-variants" role="group" aria-label="Artwork versions">
           <span className="ed-label">from this commission</span>
-          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(false); }}>
+          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(true); }}>
             <img src={item.small || item.src} alt="" width="48" height="48" loading="lazy" /><span>{item.label}</span>
           </button>)}
         </div>}
@@ -86,11 +96,7 @@ export default function CommissionGallery() {
     </div>
     {filtered.length ? <div className="ed-gallery-grid">{filtered.slice(0, limit).map((work, index) => <article key={work.id} className="ed-gallery-card">
       <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
-        <div className={`ed-gallery-mount ${work.medium === 'animation' ? 'ed-gallery-mount-animation' : ''}`}>
-          <img src={work.small} alt={work.description} width={work.width} height={work.height} loading={index < 3 ? "eager" : "lazy"} decoding="async" />
-          <span className="ed-gallery-expand"><ArrowUpRight size={20} /></span>
-          {work.medium === 'animation' && <span className="ed-gallery-badge"><Play size={11} /> animated</span>}
-        </div>
+        <GalleryThumbnail work={work} eager={index < 3} />
         <div className="ed-gallery-card-caption"><span className="ed-label">{work.artist}</span><h2>{work.title}</h2><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
       </button>
     </article>)}</div> : <div className="ed-gallery-empty"><h2>nothing in this frame.</h2><p>try another artist or a different search.</p><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>show the collection</button></div>}

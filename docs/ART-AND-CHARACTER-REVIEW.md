@@ -1,7 +1,8 @@
 # art and character room / 2026-09-11
 
-local candidate, not deployed. white/red identity and standalone-route exclusions
-remain unchanged. no generated art and no modified commission originals.
+the white/red site is live; see `RESUME-WEBSITE.md` for current deployment status.
+the sept 12 follow-up reuses the character renderer for the homepage hero as well
+as the studio dialog. no generated art and no modified commission originals.
 
 ## implemented
 
@@ -14,8 +15,12 @@ remain unchanged. no generated art and no modified commission originals.
   neutral/happy/relaxed expressions, blinking and breathing, portrait/full framing,
   an interruptible camera dolly, drag/keyboard turn controls, turntable, reset,
   pause, and a battery-saver profile. mobile dialogs retain a sticky close control.
-- the character room is imported and the model fetched only after opening it.
-  video playback code/metadata is deferred until the watch section is near the
+- the hero imports the character renderer after the first idle opportunity. its
+  initial fallback uses the existing lossless PNG while the 9 MB web VRM loads.
+  hero mode uses a posed, transparent scene with bounded pixel density and a 30 fps
+  ceiling; its loop stops offscreen, when hidden/paused, and behind the studio.
+  the studio still mounts only when opened. video playback code/metadata is deferred
+  until the watch section is near the
 viewport, with a reserved placeholder and a manual load control.
 - finite cover/art transitions respect reduced motion. the model observes the
   operating-system preference and disables automatic motion when requested.

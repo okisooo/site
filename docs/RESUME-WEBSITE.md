@@ -35,6 +35,29 @@ the intended starting point, not a fresh checkout from the last commit.
 
 ## immediate next action
 
+the latest user request adds automatic animated commissions, a sharper posed 3d
+hero, and more visible background movement. the implementation is locally verified
+and ready for the existing deployment workflow. it reuses `CharacterStudio` in a
+hero mode, with a raised-hand pose, breathing, blinks, subtle head/pointer response,
+and a lossless image fallback. it starts after the first idle opportunity without
+extending the 1.9-second opening. the existing optimized vrm is 9,065,872 bytes;
+network and device speed still determine when the live model replaces its fallback.
+
+the hero renders at up to 30 fps, uses bounded pixel density, and stops when hidden,
+offscreen, behind its studio dialog, or when ambient motion is paused. the shared
+studio retains its controls. gallery thumbnails and opened animated variants now
+loop automatically while visible; pause and reduced-motion preferences still apply.
+moving red print marks, fine groove lines, stripes and artwork drift extend the idle
+motion across the site without moving reading text or controls.
+
+all 32 tests, the type-checked 51-resource production build and seo audit passed.
+browser checks covered the visible pose, phone layout, studio controls, automatic
+gallery loops and alternate versions, and pause/resume. rendered-frame counts stayed
+fixed offscreen and behind the studio; global pause held the hero at 3 frames, and
+resume advanced it to 97 while the groove/montage animations switched back to running.
+no captured warnings/errors; no physical-device or os-level reduced-motion test.
+logs: `S:\tmp\codex\site-living-hero-20260912`. remote rollout verification is next.
+
 the user's follow-up restores the discord widget as their profile, replacing the
 generic "come hang out" headline and activity teaser. `334d6a0` presents the live
 display name, handle, circular avatar, avatar decoration, public-flag badges and

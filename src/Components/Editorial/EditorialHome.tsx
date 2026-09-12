@@ -12,6 +12,7 @@ import { useTwitchLive } from "@/hooks/useTwitchLive";
 import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
+import { AmbientArtwork } from "./AmbientMotion";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">preparing video…</p>,
@@ -19,6 +20,7 @@ const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlaye
 const CharacterStudio = dynamic(() => import("./CharacterStudio"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">loading the interactive model…</p>,
 });
+const HeroModel = dynamic(() => import("./CharacterStudio"), { ssr: false });
 
 function releaseDate(date: string) {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
@@ -27,6 +29,16 @@ function releaseDate(date: string) {
 export default function EditorialHome({ releases, picks, releaseCount }: { releases: Release[]; picks: Release[]; releaseCount: number }) {
   const [pickIndex, setPickIndex] = useState(0);
   const [modelOpen, setModelOpen] = useState(false);
+  const [heroMounted, setHeroMounted] = useState(false);
+  useEffect(() => {
+    // Let the first paint and opening start before loading the hero's shared 3d module.
+    if ("requestIdleCallback" in window) {
+      const idle = window.requestIdleCallback(() => setHeroMounted(true), { timeout: 650 });
+      return () => window.cancelIdleCallback(idle);
+    }
+    const timeout = setTimeout(() => setHeroMounted(true), 100);
+    return () => clearTimeout(timeout);
+  }, []);
   const pick = picks[pickIndex];
   const latest = releases[0];
   const target = getReleaseListenTarget(latest);
@@ -35,8 +47,9 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
     <section className="ed-cover" aria-label="Meet OKISO">
       <div className="ed-cover-kicker"><span>virtual artist & vocaloid producer</span><span>official website / {latest.year}</span></div>
       <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop.<br />electronic.<br />and everything<br />in between.</span><ArrowDown size={26} /></div></div>
-      <div className="ed-collage-strip ed-commission-montage" aria-hidden="true"><img src="/art/sobu-640.webp" alt="" width="640" height="830" decoding="async" /><img src="/art/suyosuyo-640.webp" alt="" width="640" height="1002" decoding="async" /></div>
-      <div className="ed-character"><img className="ed-idle ed-idle-character" src="/hero_character.webp" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" /></div>
+      <div className="ed-collage-strip ed-commission-montage ed-idle" aria-hidden="true"><img className="ed-kinetic-layer" src="/art/sobu-640.webp" alt="" width="640" height="830" decoding="async" /><img className="ed-kinetic-layer" src="/art/suyosuyo-640.webp" alt="" width="640" height="1002" decoding="async" /></div>
+      <AmbientArtwork hero />
+      <div className="ed-character"><img className="ed-hero-fallback" src="/hero_character.png" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" />{heroMounted && <HeroModel hero active={!modelOpen} />}</div>
       <article className="ed-latest-card">
         <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
