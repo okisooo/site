@@ -35,6 +35,23 @@ the intended starting point, not a fresh checkout from the last commit.
 
 ## immediate next action
 
+the user's follow-up restores the discord widget as their profile, replacing the
+generic "come hang out" headline and activity teaser. `334d6a0` presents the live
+display name, handle, circular avatar, avatar decoration, public-flag badges and
+custom profile text. availability is a small avatar indicator; listening/app
+activity stays in the expanded profile. existing server and copy-handle actions
+remain. animated avatar/decoration display follows the ambient-motion preference.
+
+the production build, 11 design tests and seo audit passed locally. browser checks
+verified avatar/decoration/badge loading, profile identity, phone layout without
+overflow, dialog dismissal and focus restoration. motion pause/resume hides/restores
+the decoration without removing profile identity. no captured warnings/errors.
+deployment `34685075585` and pages rollout `34685146689` both passed; all four
+regression suites and the production/seo checks passed remotely. the live card
+was checked with the correct name, handle, avatar, decoration, both public badges
+and custom text. the temporary preview process was stopped; the browser shows
+`https://okiso.net/#watch`. screenshot: `S:\Codex\outputs\2026-09-12\discord-profile\profile-card.png`.
+
 the website is deployed at `https://okiso.net` as of 2026-09-12. the launch request
 is complete for the six ready gallery works. older statements below about missing
 authorization or pending publishing describe earlier checks. preserve unrelated
