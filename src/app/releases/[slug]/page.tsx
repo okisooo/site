@@ -7,7 +7,7 @@ import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { TrackLyricsToggle } from "@/Components/TrackLyricsToggle";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
 import { jsonLd, releaseDescription, releaseMetadata, releaseStructuredData } from "@/lib/seo";
-import { releaseCard } from "@/lib/releasePresentation";
+import { relatedReleases, releaseCard } from "@/lib/releasePresentation";
 
 export async function generateStaticParams() {
   return staticReleases.filter((release) => release.slug).map((release) => ({ slug: release.slug as string }));
@@ -27,7 +27,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
   const release = staticReleases.find((item) => item.slug === slug);
   if (!release) return notFound();
   const target = getReleaseListenTarget(release);
-  const related = staticReleases.filter((item) => item.slug && item.slug !== release.slug).slice(0, 3);
+  const related = relatedReleases(release);
   return <article className="ed-page ed-release-detail" data-premid-page="release" data-premid-release-title={release.title} data-premid-release-cover={release.img}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(releaseStructuredData(release)) }} />
     <Link href="/releases" className="ed-text-link">← all releases</Link>
@@ -36,6 +36,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
       <div className="ed-detail-art"><a href={target.url} target="_blank" rel="noopener noreferrer"><img src={release.img} alt={`${release.title} artwork`} width="600" height="600" fetchPriority="high" /></a>
         <div className="ed-panel-label"><span>{release.albumType} / {(release.tracks?.length || 1)} {(release.tracks?.length || 1) === 1 ? "track" : "tracks"}</span><time dateTime={release.releaseDate}>{release.releaseDate}</time></div></div>
       <div><p className="ed-release-description">{releaseDescription(release)}</p>
+        <Link href="/about" className="ed-text-link">about okiso <ArrowUpRight size={14} /></Link>
         {release.label && <p className="ed-release-credits">released by {release.label}{release.primaryGenre ? ` · ${release.primaryGenre}` : ""}</p>}
         <div className="ed-quick-actions"><PlayReleaseButton release={releaseCard(release)} /><a href={target.url} target="_blank" rel="noopener noreferrer" className="ed-button">{target.label}<ArrowUpRight size={16} /></a></div>
         {release.tracks && release.tracks.length > 0 && <section className="ed-tracklist" aria-labelledby="tracks"><h2 id="tracks">tracks{release.tracks.some((track) => track.lyrics) ? " & lyrics" : ""} / {release.tracks.length}</h2>

@@ -21,6 +21,7 @@ export function GET() {
     '## Start here',
     '',
     `- [Home](${siteUrl}): artist identity, latest release, featured videos, live status, and official channels.`,
+    `- [About OKISO](${siteUrl}/about): artist profile, official channels and business contact.`,
     `- [Releases](${siteUrl}/releases): complete public discography and release details.`,
     `- [Gallery](${siteUrl}/gallery): commissioned artwork, alternate versions, artist credits, and original work links.`,
     `- [Upcoming](${siteUrl}/upcoming): announced and forthcoming projects.`,

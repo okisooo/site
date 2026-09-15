@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { staticReleases } from '../src/data/releases';
+import { releaseRedirects } from '../src/data/releaseRedirects';
 import { releaseDescription, SITE_URL } from '../src/lib/seo';
 import { getLocalPlaylist } from '../src/lib/localPlaylist';
 
 // Regression checks for this project's generated HTML, not a general HTML parser
 // or a ranking score. Run after `npm run build` (never against the dev cache).
-const output = path.resolve('out');
+const output = path.resolve(process.env.OKISO_EXPORT_DIR || 'out');
 const decode = (value: string) => value.replace(/&(?:amp|lt|gt|quot|apos|#x27|#39);/g,
   entity => ({ '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'", '&#x27;': "'", '&#39;': "'" }[entity]!));
 const readPage = (route: string) => readFileSync(path.join(output, route === '/' ? 'index.html' : `${route.slice(1)}.html`), 'utf8');
@@ -15,9 +16,9 @@ const attributes = (tag: string) => Object.fromEntries([...tag.matchAll(/([\w:-]
 const meta = (html: string, name: string) => [...html.matchAll(/<meta\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.name === name || a.property === name).map(a => a.content);
 const canonical = (html: string) => [...html.matchAll(/<link\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.rel === 'canonical').map(a => a.href);
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*>/g)].map(match => attributes(match[0]).href);
-const routes = ['/', '/releases', '/gallery', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
+const routes = ['/', '/about', '/releases', '/gallery', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
 // Core UI must stay unified; standalone work must not inherit that shell.
-for (const route of ['/', '/releases', '/gallery', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
+for (const route of ['/', '/about', '/releases', '/gallery', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
   const markup = readPage(route).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
   assert(markup.includes('class="core-site"'), `${route}: shared editorial shell`);
   assert(markup.includes('class="ed-nav"'), `${route}: shared navigation`);
@@ -66,12 +67,22 @@ for (const release of staticReleases) {
   assert(archiveLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable archive link`);
 }
 const homeLinks = links(readPage('/'));
+assert(homeLinks.includes('/about'), 'artist profile is linked from the homepage');
 for (const release of staticReleases.slice(0, 4)) assert(homeLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable home link`);
 
 const sitemap = readFileSync(path.join(output, 'sitemap.xml'), 'utf8');
 const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => decode(match[1]));
 assert.deepEqual(sitemapUrls.sort(), routes.map(route => route === '/' ? SITE_URL : SITE_URL + route).sort(), 'sitemap matches only indexable routes');
 assert(!sitemap.includes('<lastmod>'), 'do not fabricate page modification dates');
+for (const [previous, current] of Object.entries(releaseRedirects)) {
+  const html = readPage(`/releases/${previous}`);
+  const target = `${SITE_URL}/releases/${current}`;
+  assert.deepEqual(canonical(html), [target], `${previous}: redirect canonical`);
+  assert(html.includes(`http-equiv="refresh" content="0; url=${target}"`), `${previous}: immediate redirect without JavaScript`);
+  assert(links(html).includes(target), `${previous}: accessible fallback link`);
+  assert(!sitemapUrls.includes(`${SITE_URL}/releases/${previous}`), `${previous}: alias excluded from sitemap`);
+  assert.equal(readFileSync(path.join(output, 'releases', previous, 'index.html'), 'utf8'), html, `${previous}: trailing slash alias`);
+}
 for (const route of ['/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback']) {
   assert(meta(readPage(route), 'robots').some(value => value.includes('noindex')), `${route}: private/experimental route stays noindex`);
 }

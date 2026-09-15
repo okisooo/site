@@ -20,3 +20,13 @@ export function getEditorialHomeData() {
     releaseCount: staticReleases.length,
   };
 }
+
+/** Connect a single to its album before falling back to nearby release dates. */
+export function relatedReleases(release: Release, catalog: Release[] = staticReleases) {
+  const tracks = new Set(release.tracks?.map((track) => track.title.trim().toLowerCase()));
+  const sharedTracks = (item: Release) => item.tracks?.filter((track) => tracks.has(track.title.trim().toLowerCase())).length ?? 0;
+  const distance = (item: Release) => Math.abs(Date.parse(item.releaseDate) - Date.parse(release.releaseDate));
+  return catalog.filter((item) => item.slug && item.slug !== release.slug)
+    .sort((a, b) => sharedTracks(b) - sharedTracks(a) || distance(a) - distance(b) || a.slug!.localeCompare(b.slug!))
+    .slice(0, 3);
+}

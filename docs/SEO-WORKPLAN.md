@@ -1,5 +1,50 @@
 # okiso: design and search workplan
 
+## current seo pass — 2026-09-15
+
+the user authorized independent SEO work. Chrome already has access to the
+verified `sc-domain:okiso.net` Search Console property; no new account or access
+grant is needed. the older Okara access limitations below are historical.
+
+- live baseline: all 39 sitemap pages and 81 linked pages/assets pass the public
+  crawl. Google read the sitemap successfully on September 15 and discovered 39 URLs.
+- Search Console Web, June 13–September 12: 64 clicks, 1,763 impressions, 3.6% CTR,
+  average position 6.6. the first ten query rows were saved, not a complete export.
+  `okiso`: 33 clicks / 575 impressions / 5.7% CTR / position 1.8. do not interpret
+  the aggregate position as a non-brand ranking or keyword-volume estimate.
+- indexing report last updated September 4: 10 indexed, 56 excluded (22 not found,
+  3 redirect, 27 discovered-not-indexed, 3 crawled-not-indexed, 1 duplicate).
+  this predates the editorial launch; these are not current post-launch totals.
+- latest release URL Inspection: discovered-not-indexed, no recorded crawl.
+  September 15 live test: available to Google, indexing allowed, one valid breadcrumb.
+- recovered 17 release aliases from `ac59cff^:src/data/releases.ts`. every pair
+  has the same title, date and full track list. all 17 old paths still returned
+  404 before this change. GitHub Pages gets immediate HTML redirects and canonical
+  targets, including trailing-slash aliases; no JavaScript redirect dependency.
+  unrelated deleted music remains 404 rather than pointing to a different work.
+- `/about` adds a factual artist profile, official channels, business contact,
+  shared artist identity markup and sitewide navigation. the sitemap now has 40 URLs.
+- related releases now prioritize shared songs (single/album), then nearby dates.
+  FEAR now links first to ETUDE. existing canonical addresses remain unchanged.
+- reusable public crawl: `node scripts/audit-live-seo.mjs --output <absolute-path>`.
+  `npm run build` now exports aliases; `npm run audit:seo` checks them. all 36
+  regression tests, production build/types and local 40-page/83-resource crawl pass.
+  phone 390px and tablet 768px have no horizontal overflow; mobile navigation works.
+- public PageSpeed API returned quota exceeded (429); its web report remained
+  pending. no new Lighthouse score or field Core Web Vitals measurement is claimed.
+
+evidence: `S:\Codex\outputs\2026-09-15\site-seo`. build logs and disposable
+helpers: `S:\tmp\codex\site-seo-20260915`. no tracking installed or private
+search data sent to Okara. see the dated report in that output folder for final
+deployment and Search Console submission results.
+
+next priorities: verify indexing after recrawl; capture full query/page/country
+exports and comparable 28-day windows; reproduce mobile loading in a completed
+performance test before changing the commissioned art or automatic 3d hero.
+expand release copy only with verified credits or artist-provided context.
+
+---
+
 Updated 2026-09-06. Local candidate work, **not deployed**. The user requested
 the shared editorial redesign across the entire core site, including vault.
 Local route migration is authorized; deployment and visual acceptance are not

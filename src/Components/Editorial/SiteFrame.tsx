@@ -19,6 +19,7 @@ const destinations = [
   { href: "/vault", label: "vault" },
   { href: "/gallery", label: "gallery" },
   { href: "/upcoming", label: "upcoming" },
+  { href: "/about", label: "about" },
 ];
 
 export default function SiteFrame({ children }: { children: ReactNode }) {

@@ -3,6 +3,12 @@ import type { Release } from '@/data/releases';
 
 export const SITE_URL = 'https://okiso.net';
 export const ARTIST_ID = `${SITE_URL}/#artist`;
+export const ARTIST_DESCRIPTION = 'OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music.';
+export const artistStructuredData = {
+  '@type': 'MusicGroup', '@id': ARTIST_ID, name: 'OKISO',
+  url: SITE_URL, image: `${SITE_URL}/og_image.png`, description: ARTIST_DESCRIPTION,
+  sameAs: ['https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm', 'https://www.instagram.com/okisooo_/', 'https://github.com/okisooo', 'https://x.com/okisooo_', 'https://www.youtube.com/@okiso7', 'https://okiso.bandcamp.com/'],
+};
 
 export function jsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, '\\u003c');
