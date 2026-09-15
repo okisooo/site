@@ -47,7 +47,8 @@ export default function AboutPage() {
           <p>visit the <Link href="/">homepage</Link> to explore the interactive 3d character, watch videos and find the listening room.</p>
         </section>
         <section aria-labelledby="about-contact"><h2 id="about-contact">get in touch.</h2>
-          <p>for business inquiries and collaborations: <a href="mailto:oxo@okiso.net">oxo@okiso.net</a>.</p>
+          {/* Keep this intentionally public business contact intact through Cloudflare's HTML rewrite. */}
+          <p>for business inquiries and collaborations: <span dangerouslySetInnerHTML={{ __html: '<!--email_off--><a href="mailto:oxo@okiso.net">oxo@okiso.net</a><!--/email_off-->' }} />.</p>
           <p>for the community, <a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer">join the discord</a>.</p>
         </section>
       </div>

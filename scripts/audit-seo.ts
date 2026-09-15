@@ -68,6 +68,7 @@ for (const release of staticReleases) {
 }
 const homeLinks = links(readPage('/'));
 assert(homeLinks.includes('/about'), 'artist profile is linked from the homepage');
+assert(readPage('/about').includes('<!--email_off--><a href="mailto:oxo@okiso.net">oxo@okiso.net</a><!--/email_off-->'), 'public contact survives Cloudflare email rewriting');
 for (const release of staticReleases.slice(0, 4)) assert(homeLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable home link`);
 
 const sitemap = readFileSync(path.join(output, 'sitemap.xml'), 'utf8');
