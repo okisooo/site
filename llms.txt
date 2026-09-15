@@ -5,6 +5,7 @@
 ## Start here
 
 - [Home](https://okiso.net): artist identity, latest release, featured videos, live status, and official channels.
+- [About OKISO](https://okiso.net/about): artist profile, official channels and business contact.
 - [Releases](https://okiso.net/releases): complete public discography and release details.
 - [Gallery](https://okiso.net/gallery): commissioned artwork, alternate versions, artist credits, and original work links.
 - [Upcoming](https://okiso.net/upcoming): announced and forthcoming projects.
