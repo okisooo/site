@@ -9,6 +9,7 @@ import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelPerformanceBudget, heroPixelRatio } from "@/lib/modelPerformanceBudget";
+import { createModelContext } from "@/lib/modelContext";
 
 type Expression = "neutral" | "happy" | "relaxed";
 type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
@@ -22,7 +23,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
   current.current = { ...options, motion: options.motion && (!hero || ambient) };
   const enabled = useRef(active);
   enabled.current = active;
-  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+  const [state, setState] = useState<"loading" | "ready" | "error" | "unavailable">("loading");
   const [progress, setProgress] = useState(0);
   const [attempt, setAttempt] = useState(0);
   const [reduced, setReduced] = useState(false);
@@ -46,6 +47,12 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     // must never hand a deliberately lost context back to a new renderer.
     const element = document.createElement("canvas");
     element.setAttribute("aria-hidden", "true");
+    const context = createModelContext(element);
+    if (!context) {
+      setState("unavailable");
+      if (hero) onPerformanceFallback?.(true);
+      return;
+    }
     host.appendChild(element);
     const budget = hero ? createModelPerformanceBudget() : undefined;
     let quality = "full";
@@ -254,7 +261,8 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
-      renderer = new WebGLRenderer({ canvas: element, alpha: true, antialias: true, powerPreference: "low-power" });
+      // Pass the accepted context so Three cannot retry creation without our guard.
+      renderer = new WebGLRenderer({ canvas: element, context, alpha: true, antialias: true, powerPreference: "low-power" });
       renderer.outputColorSpace = SRGBColorSpace;
       renderer.toneMapping = LinearToneMapping;
       renderer.toneMappingExposure = 1;
@@ -344,20 +352,20 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
   const update = <K extends keyof StudioOptions>(key: K, value: StudioOptions[K]) => setOptions((old) => ({ ...old, [key]: value }));
   if (hero) return <div className="ed-hero-model" data-ready={state === "ready"} data-model-state={state} aria-hidden="true"><div ref={canvasHost} className="ed-hero-canvas" /></div>;
   return <div className="ed-character-studio">
-    <div className="ed-studio-stage">
-      <div className="ed-studio-stage-label"><span>okiso / character room</span><span>{options.saver ? "battery saver" : "high detail"}</span></div>
+    <div className="ed-studio-stage" style={state === "unavailable" ? { gridColumn: "1 / -1" } : undefined}>
+      <div className="ed-studio-stage-label"><span>okiso / character room</span><span>{state === "unavailable" ? "illustration" : options.saver ? "battery saver" : "high detail"}</span></div>
       <div ref={canvasHost} className="ed-studio-canvas" role="group" tabIndex={state === "ready" ? 0 : -1} aria-label="Interactive OKISO model. Drag to turn, scroll to zoom, or use the left and right arrow keys."
         onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); commands.current?.rotate(event.key === "ArrowLeft" ? -1 : 1); } }} />
-      {state !== "ready" && <div className="ed-studio-loading"><img src="/art/7mmchan-256.webp" alt="OKISO by 7mmchan" width="128" height="128" /><p role="status">{state === "error" ? "the 3d model couldn’t load on this device." : progress >= 95 ? "preparing the character…" : `loading the character · ${progress}%`}</p>{state === "error" ? <button className="ed-button" onClick={() => setAttempt((value) => value + 1)}>try again</button> : <progress value={progress} max="100" aria-label="Character loading progress" />}<small>illustration by 7mmchan</small></div>}
-      <span className="ed-studio-stage-hint">drag to turn · scroll to zoom</span>
+      {state !== "ready" && <div className="ed-studio-loading"><img src="/art/7mmchan-256.webp" alt="OKISO by 7mmchan" width="128" height="128" /><p role="status">{state === "unavailable" ? "showing the illustration to keep things smooth on this device." : state === "error" ? "the 3d model couldn’t load on this device." : progress >= 95 ? "preparing the character…" : `loading the character · ${progress}%`}</p>{state === "error" ? <button className="ed-button" onClick={() => setAttempt((value) => value + 1)}>try again</button> : state === "loading" && <progress value={progress} max="100" aria-label="Character loading progress" />}<small>illustration by 7mmchan</small></div>}
+      {state === "ready" && <span className="ed-studio-stage-hint">drag to turn · scroll to zoom</span>}
     </div>
-    <div className="ed-studio-console">
+    {state !== "unavailable" && <div className="ed-studio-console">
       <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "full" ? "full figure" : value}</button>)}</div></div>
       <div className="ed-studio-control-row"><span className="ed-label">expression</span><div role="group" aria-label="Character expression">{(["neutral", "happy", "relaxed"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.expression === value} onClick={() => update("expression", value)}>{value}</button>)}</div></div>
       <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave", "reach"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value}</button>)}</div></div>
       <div className="ed-studio-transport"><button className="ed-icon-button" aria-label="Turn character left" onClick={() => commands.current?.rotate(-1)}><ArrowLeft size={17} /></button><button className="ed-button" disabled={reduced} aria-pressed={options.turntable} onClick={() => setOptions((old) => ({ ...old, turntable: !old.turntable, motion: true }))}>turntable</button><button className="ed-icon-button" aria-label="Turn character right" onClick={() => commands.current?.rotate(1)}><ArrowRight size={17} /></button></div>
       <div className="ed-studio-settings"><button className="ed-button" disabled={reduced} onClick={() => update("motion", !options.motion)}>{options.motion && !reduced ? <Pause size={14} /> : <Play size={14} />}{reduced ? "reduced motion" : options.motion ? "pause motion" : "resume motion"}</button><button className="ed-button" aria-pressed={options.saver} onClick={() => update("saver", !options.saver)}>battery saver</button><button className="ed-icon-button" aria-label="Reset character view" onClick={() => { setOptions((old) => ({ ...DEFAULTS, motion: !reduced, saver: old.saver })); commands.current?.reset(); }}><RotateCcw size={16} /></button></div>
       <p className="ed-studio-note">a closer look at okiso.<br />turn, pose & find your angle.</p>
-    </div>
+    </div>}
   </div>;
 }
