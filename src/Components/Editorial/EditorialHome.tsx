@@ -31,6 +31,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
   const [pickIndex, setPickIndex] = useState(0);
   const [modelOpen, setModelOpen] = useState(false);
   const [heroMounted, setHeroMounted] = useState(false);
+  const [heroLimited, setHeroLimited] = useState(false);
   useEffect(() => {
     // Let the first paint and opening start before loading the hero's shared 3d module.
     if ("requestIdleCallback" in window) {
@@ -50,7 +51,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
       <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop.<br />electronic.<br />and everything<br />in between.</span><ArrowDown size={26} /></div></div>
       <HeroCommissionWall />
       <AmbientArtwork hero />
-      <div className="ed-character"><img className="ed-hero-fallback" src="/hero_character.png" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" />{heroMounted && <HeroModel hero active={!modelOpen} />}</div>
+      <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><img className="ed-hero-fallback" src="/hero_character.png" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" />{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
       <article className="ed-latest-card">
         <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>

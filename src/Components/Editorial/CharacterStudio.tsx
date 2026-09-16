@@ -8,12 +8,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
+import { createModelPerformanceBudget, heroPixelRatio } from "@/lib/modelPerformanceBudget";
 
 type Expression = "neutral" | "happy" | "relaxed";
 type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
 const DEFAULTS: StudioOptions = { expression: "neutral", pose: "relaxed", framing: "full", motion: true, turntable: false, saver: true };
 
-export default function CharacterStudio({ hero = false, active = true }: { hero?: boolean; active?: boolean }) {
+export default function CharacterStudio({ hero = false, active = true, onPerformanceFallback }: { hero?: boolean; active?: boolean; onPerformanceFallback?: (limited: true) => void }) {
   const ambient = useContext(AmbientMotionContext);
   const canvasHost = useRef<HTMLDivElement>(null);
   const [options, setOptions] = useState<StudioOptions>(() => hero ? { ...DEFAULTS, pose: "reach", expression: "happy" } : DEFAULTS);
@@ -46,7 +47,9 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
     const element = document.createElement("canvas");
     element.setAttribute("aria-hidden", "true");
     host.appendChild(element);
-    let disposed = false, failed = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0, renderedFrames = 0;
+    const budget = hero ? createModelPerformanceBudget() : undefined;
+    let quality = "full";
+    let disposed = false, failed = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0;
     let renderer: WebGLRenderer | undefined, controls: OrbitControls | undefined, vrm: VRM | undefined;
     let previousFraming = "", previousPose = "", previousExpression = "";
     let dolly = false, waveStart = 0;
@@ -72,11 +75,25 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       const settings = current.current;
       const reaching = settings.pose === "reach";
       const moving = settings.motion && !prefersReduced.matches && !!vrm;
+      if (moving && budget) {
+        const nextQuality = budget.sample(time);
+        if (nextQuality === "fallback") {
+          failed = true;
+          onPerformanceFallback?.(true);
+          return;
+        }
+        if (nextQuality !== quality) {
+          quality = nextQuality;
+          element.dataset.modelQuality = quality;
+          resize();
+        }
+      }
       const interval = 1000 / (hero || settings.saver ? 30 : 60);
       if (moving && time < nextFrame - 1) { frame = requestAnimationFrame(render); return; }
       const delta = Math.min((time - (last || time)) / 1000, .05);
       last = time;
       nextFrame = moving ? nextModelFrame(nextFrame, time, interval) : 0;
+      const updateStarted = performance.now();
       if (moving) elapsed += delta;
       controls.autoRotate = moving && settings.turntable && !dolly;
       controls.enableDamping = moving;
@@ -208,7 +225,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       }
       controls.update();
       renderer.render(scene, camera);
-      if (hero) element.dataset.frames = String(++renderedFrames);
+      if (moving) budget?.rendered(performance.now() - updateStarted);
       if (moving && !frame) frame = requestAnimationFrame(render);
     };
     const invalidate = () => { if (!disposed && !failed && enabled.current && inView && !document.hidden && !frame) frame = requestAnimationFrame(render); };
@@ -217,9 +234,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       // Layout dimensions exclude the opening animation's temporary scale.
       const width = element.clientWidth, height = element.clientHeight;
       if (!width || !height) return;
-      // Match the display density; forcing 1.5x on a 1x screen draws 2.25x
-      // the pixels on every frame, even when Chrome uses software compositing.
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, hero ? (current.current.saver ? 1.5 : 2) : current.current.saver ? 1 : 1.5));
+      renderer.setPixelRatio(hero ? heroPixelRatio(width, height, window.devicePixelRatio, quality === "reduced") : Math.min(window.devicePixelRatio, current.current.saver ? 1 : 1.5));
       renderer.setSize(width, height, false);
       const nextAspect = width / height;
       if (Math.abs(camera.aspect - nextAspect) > .001) previousFraming = "";
@@ -227,7 +242,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       camera.updateProjectionMatrix();
       invalidate();
     };
-    const visibility = () => { cancelAnimationFrame(frame); frame = 0; last = 0; nextFrame = 0; invalidate(); };
+    const visibility = () => { cancelAnimationFrame(frame); frame = 0; last = 0; nextFrame = 0; budget?.reset(); invalidate(); };
     const lost = (event: Event) => { event.preventDefault(); failed = true; controller.abort(); setState("error"); cancelAnimationFrame(frame); frame = 0; };
     const movePointer = (event: PointerEvent) => {
       if (!inView || !enabled.current || !current.current.motion || event.pointerType === "touch") return;
@@ -261,7 +276,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
         rim.rotation.x = Math.PI / 2; rim.position.y = -.01; scene.add(rim);
       }
       commands.current = {
-        refresh: () => { cancelAnimationFrame(frame); frame = 0; last = 0; nextFrame = 0; resize(); invalidate(); },
+        refresh: () => { cancelAnimationFrame(frame); frame = 0; last = 0; nextFrame = 0; budget?.reset(); resize(); invalidate(); },
         reset: () => { previousFraming = ""; elapsed = 0; invalidate(); },
         rotate: (direction) => {
           if (!controls) return;
@@ -324,7 +339,7 @@ export default function CharacterStudio({ hero = false, active = true }: { hero?
       commands.current = null; controls?.dispose();
       VRMUtils.deepDispose(scene); renderer?.dispose(); renderer?.forceContextLoss(); element.remove();
     };
-  }, [attempt, hero]);
+  }, [attempt, hero, onPerformanceFallback]);
 
   const update = <K extends keyof StudioOptions>(key: K, value: StudioOptions[K]) => setOptions((old) => ({ ...old, [key]: value }));
   if (hero) return <div className="ed-hero-model" data-ready={state === "ready"} data-model-state={state} aria-hidden="true"><div ref={canvasHost} className="ed-hero-canvas" /></div>;

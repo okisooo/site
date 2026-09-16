@@ -14,7 +14,7 @@
     "refresh-toolost": "tsx scripts/refresh-toolost-token.ts",
     "test:releases": "tsx --test src/lib/fetchTooLostReleases.test.ts src/lib/releaseLinks.test.ts src/lib/tooLostOAuth.test.ts src/lib/seo.test.ts",
     "audit:seo": "tsx scripts/audit-seo.ts",
-    "test:design": "tsx --test src/lib/siteDesign.test.ts src/lib/videoRecovery.test.ts src/lib/modelFrameTiming.test.ts",
+    "test:design": "tsx --test src/lib/siteDesign.test.ts src/lib/videoRecovery.test.ts src/lib/modelFrameTiming.test.ts src/lib/modelPerformanceBudget.test.ts",
     "test:assets": "tsx --test src/lib/artAssets.test.ts",
     "test:deployment": "tsx --test src/lib/deploymentConfig.test.ts",
     "generate-sitemap": "tsx scripts/generate-sitemap.ts"
