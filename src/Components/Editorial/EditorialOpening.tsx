@@ -8,7 +8,7 @@ function SleeveArtwork() {
     <div className="ed-opening-sketch"><img src="/art/sobu-640.webp" alt="" width="640" height="830" /></div>
     <div className="ed-opening-portrait"><img src="/art/suyosuyo-640.webp" alt="" width="640" height="1002" /></div>
     <div className="ed-opening-title">{"OKISO".split("").map((letter, index) => <span key={index} style={{ "--letter": index } as React.CSSProperties}>{letter}</span>)}<span className="ed-opening-arrow">↗</span></div>
-    <div className="ed-opening-colophon"><span>sound. character. everything in between.</span><span>art by suyosuyo & sobu · @sobsocks</span></div>
+    <div className="ed-opening-colophon"><span>art by suyosuyo & sobu · @sobsocks</span></div>
   </div>;
 }
 

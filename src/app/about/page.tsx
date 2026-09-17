@@ -34,25 +34,24 @@ export default function AboutPage() {
   };
   return <article className="ed-page ed-about">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
-    <header className="ed-page-heading"><div><span className="ed-label">the artist / official profile</span><h1>about okiso.</h1><p>virtual artist. very real music.</p></div></header>
+    <header className="ed-page-heading"><div><h1>about me</h1></div></header>
     <div className="ed-about-body">
       <div className="ed-about-copy">
-        <section aria-labelledby="about-music"><h2 id="about-music">a world of sound.</h2>
-          <p>okiso is a virtual artist and vocaloid producer creating hyperpop and electronic music.</p>
-          <p>the <Link href="/releases">official discography</Link> brings together {staticReleases.length} releases, with track lists, release dates, listening links and lyrics where available. start with <Link href={`/releases/${latest.slug}`}>{latest.title}</Link>, or explore the archive from the beginning.</p>
-          <Link className="ed-button" href="/releases">explore the music <ArrowUpRight size={16} /></Link>
+        <section aria-labelledby="about-music"><h2 id="about-music">hey, i’m okiso</h2>
+          <p>i’m a virtual artist and vocaloid producer making hyperpop and electronic music</p>
+          <p>latest release: <Link href={`/releases/${latest.slug}`}>{latest.title}</Link></p>
+          <Link className="ed-button" href="/releases">all releases <ArrowUpRight size={16} /></Link>
         </section>
-        <section aria-labelledby="about-character"><h2 id="about-character">sound meets character.</h2>
-          <p>the white-haired, red-eyed character appears throughout this site alongside original commissioned illustrations. the <Link href="/gallery">art gallery</Link> collects those works, their alternate versions and the artists behind them.</p>
-          <p>visit the <Link href="/">homepage</Link> to explore the interactive 3d character, watch videos and find the listening room.</p>
+        <section aria-labelledby="about-character"><h2 id="about-character">art</h2>
+          <p>i also commission art of my character — <Link href="/gallery">here’s the gallery</Link></p>
         </section>
-        <section aria-labelledby="about-contact"><h2 id="about-contact">get in touch.</h2>
+        <section aria-labelledby="about-contact"><h2 id="about-contact">contact</h2>
           {/* Keep this intentionally public business contact intact through Cloudflare's HTML rewrite. */}
-          <p>for business inquiries and collaborations: <span dangerouslySetInnerHTML={{ __html: '<!--email_off--><a href="mailto:oxo@okiso.net">oxo@okiso.net</a><!--/email_off-->' }} />.</p>
-          <p>for the community, <a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer">join the discord</a>.</p>
+          <p>business & collabs: <span dangerouslySetInnerHTML={{ __html: '<!--email_off--><a href="mailto:oxo@okiso.net">oxo@okiso.net</a><!--/email_off-->' }} /></p>
+          <p><a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer">join the discord</a></p>
         </section>
       </div>
-      <aside className="ed-about-channels" aria-labelledby="about-channels"><h2 id="about-channels">official channels.</h2>
+      <aside className="ed-about-channels" aria-labelledby="about-channels"><h2 id="about-channels">links</h2>
         {channels.map(([name, detail, href]) => <a key={name} className="ed-contact-row" href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{detail}</small></span><ArrowUpRight size={18} /></a>)}
       </aside>
     </div>

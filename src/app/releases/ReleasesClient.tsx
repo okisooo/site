@@ -23,7 +23,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
 
   return <div className="ed-page" data-premid-page="releases" data-premid-view={view}
     {...(pinned ? { "data-premid-release-title": pinned.title, "data-premid-release-cover": pinned.img } : {})}>
-    <header className="ed-page-heading"><div><span className="ed-label">music / the complete archive</span><h1>discography.</h1><p>every release, from the first to the latest. find your way in.</p></div><span className="ed-heading-number" aria-label={`${catalog.length} releases`}>{catalog.length}</span></header>
+    <header className="ed-page-heading"><div><h1>releases</h1></div><span className="ed-heading-number" aria-label={`${catalog.length} releases`}>{catalog.length}</span></header>
     <div className="ed-toolbar">
       {view === "grid" && <input type="search" aria-label="Search releases" placeholder="search title, year or release type" value={query} onChange={(event) => setQuery(event.target.value)} />}
       <span className="ed-label" role="status">{view === "grid" ? `${releases.length} ${releases.length === 1 ? "release" : "releases"} / newest first` : "drag to explore · select a cover"}</span>
@@ -40,7 +40,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
     </div> : <div className="ed-orbit" data-lenis-prevent><ReleaseOrbit onHoverRelease={setHovered} onClickRelease={setPinned} />
       {selected && <div className="ed-orbit-selection"><span className="ed-label">{selected.albumType} / {selected.year}</span><h2>{selected.title}</h2><ReleaseActions release={selected} />{pinned && <button className="ed-quick-listen" onClick={() => setPinned(null)}>clear selection</button>}</div>}
     </div>}
-    {view === "grid" && releases.length === 0 && <div className="ed-empty"><h2>nothing matches yet.</h2><p>try another title, year, or release type.</p><button className="ed-button" onClick={() => setQuery("")}>clear search</button></div>}
+    {view === "grid" && releases.length === 0 && <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => setQuery("")}>clear search</button></div>}
     {view === "grid" && pinned && <EditorialDialog title={pinned.title} onClose={() => setPinned(null)}><img src={pinned.img} alt={`${pinned.title} cover`} width="320" height="320" className="ed-quick-art" /><span className="ed-label">{pinned.albumType} / {pinned.year}</span><ReleaseActions release={pinned} /></EditorialDialog>}
   </div>;
 }

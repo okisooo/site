@@ -6,7 +6,7 @@ import { staticReleases } from "@/data/releases";
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { TrackLyricsToggle } from "@/Components/TrackLyricsToggle";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
-import { jsonLd, releaseDescription, releaseMetadata, releaseStructuredData } from "@/lib/seo";
+import { jsonLd, releaseMetadata, releaseStructuredData } from "@/lib/seo";
 import { relatedReleases, releaseCard } from "@/lib/releasePresentation";
 
 export async function generateStaticParams() {
@@ -35,7 +35,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
     <div className="ed-release-body">
       <div className="ed-detail-art"><a href={target.url} target="_blank" rel="noopener noreferrer"><img src={release.img} alt={`${release.title} artwork`} width="600" height="600" fetchPriority="high" /></a>
         <div className="ed-panel-label"><span>{release.albumType} / {(release.tracks?.length || 1)} {(release.tracks?.length || 1) === 1 ? "track" : "tracks"}</span><time dateTime={release.releaseDate}>{release.releaseDate}</time></div></div>
-      <div><p className="ed-release-description">{releaseDescription(release)}</p>
+      <div>
         <Link href="/about" className="ed-text-link">about okiso <ArrowUpRight size={14} /></Link>
         {release.label && <p className="ed-release-credits">released by {release.label}{release.primaryGenre ? ` · ${release.primaryGenre}` : ""}</p>}
         <div className="ed-quick-actions"><PlayReleaseButton release={releaseCard(release)} /><a href={target.url} target="_blank" rel="noopener noreferrer" className="ed-button">{target.label}<ArrowUpRight size={16} /></a></div>
@@ -44,7 +44,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
         </section>}
       </div>
     </div>
-    <nav className="ed-related" aria-label="More releases by OKISO"><header className="ed-section-heading"><h2>keep listening.</h2><Link className="ed-text-link" href="/releases">full archive <ArrowUpRight size={16} /></Link></header>
+    <nav className="ed-related" aria-label="More releases by OKISO"><header className="ed-section-heading"><h2>more music</h2><Link className="ed-text-link" href="/releases">all releases <ArrowUpRight size={16} /></Link></header>
       <div className="ed-release-grid">{related.map((item) => <div key={item.slug} className="ed-release-card"><Link href={`/releases/${item.slug}`}><div className="ed-release-image"><img src={item.img} alt={`${item.title} cover`} width="320" height="320" loading="lazy" /></div><div className="ed-release-meta"><span>{item.albumType}</span><span>{item.year}</span></div><h3>{item.title}</h3></Link></div>)}</div>
     </nav>
   </article>;

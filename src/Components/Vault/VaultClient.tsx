@@ -71,7 +71,7 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
           {error && <p className="tac-mono text-xs font-bold text-[var(--tac-signal)] uppercase tracking-wider">{error}</p>}
           <button disabled={busy || !username || !password} className="tac-cta w-full justify-center">{busy && <Loader2 size={15} className="animate-spin" />} ENTER</button>
         </form>
-        <p className="tac-mono text-[10px] text-[var(--tac-steel)] mt-4 leading-relaxed uppercase tracking-wider">Friends, collaborators and the artist get keys. Everyone else still gets the public shelf.</p>
+        <p className="tac-mono text-[10px] text-[var(--tac-steel)] mt-4 leading-relaxed uppercase tracking-wider">public tracks don’t need a login</p>
       </div>
     </EditorialDialog>
   );
@@ -193,20 +193,20 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
       {loginOpen && <LoginModal onAuthed={(s) => { onAuthed(s); }} onClose={() => setLoginOpen(false)} />}
 
       <header className="ed-page-heading ed-vault-heading">
-        <div><span className="ed-label">behind the releases / demos & cuts</span><h1>the vault.</h1><p>alternate versions, unfinished ideas, and the parts you don’t hear on the record.</p></div>
+        <div><h1>vault</h1><p>demos, alternate versions & unfinished tracks</p></div>
         <div className="ed-vault-actions flex flex-col gap-3">
-          {session ? <div className="flex items-center gap-3"><span className="ed-label">{session.name} · {session.level}</span><button onClick={onLogout} aria-label="Log out" className="ed-icon-button"><LogOut size={16} /></button></div> : <button onClick={() => setLoginOpen(true)} className="ed-button"><LogIn size={16} />unlock access</button>}
+          {session ? <div className="flex items-center gap-3"><span className="ed-label">{session.name} · {session.level}</span><button onClick={onLogout} aria-label="Log out" className="ed-icon-button"><LogOut size={16} /></button></div> : <button onClick={() => setLoginOpen(true)} className="ed-button"><LogIn size={16} />log in</button>}
           {session && permissions.canUpload && <div className="flex flex-wrap gap-2"><button onClick={() => setUploadOpen(true)} className="ed-button"><UploadCloud size={16} />upload</button><button onClick={() => setManageOpen((open) => !open)} className="ed-button"><Settings2 size={16} />manage</button></div>}
         </div>
       </header>
       <div className="ed-vault-stats" aria-busy={loading}>
         {loading ? <span className="ed-label">loading the collection…</span> : !message && <><Stat n={projects.length} label="projects" /><Stat n={trackCount} label="tracks" /><Stat n={openCount} label="open to you" /></>}
-        {!session && <button onClick={() => setLoginOpen(true)} className="inline-flex gap-2 items-center"><Lock size={13} />have a key? unlock your collection</button>}
+        {!session && <button onClick={() => setLoginOpen(true)} className="inline-flex gap-2 items-center"><Lock size={13} />log in for shared tracks</button>}
       </div>
 
       {uploadOpen && session && <VaultUploadPanel session={session} projects={projects} onClose={() => setUploadOpen(false)} onUploaded={async () => { setUploadOpen(false); await refresh(); }} />}
       {manageOpen && session && <VaultManagerPanel session={session} projects={projects} onSave={saveVersion} onDelete={remove} onSnippet={snippet} onClose={() => setManageOpen(false)} />}
-      {message && <div className="ed-empty" role="alert"><h2>the vault couldn’t load.</h2><p>{message}</p><button className="ed-button" onClick={() => void refresh()}>try again</button></div>}
+      {message && <div className="ed-empty" role="alert"><h2>couldn’t load the vault</h2><p>{message}</p><button className="ed-button" onClick={() => void refresh()}>try again</button></div>}
 
       {loading ? (
         <div className="py-24 flex justify-center text-[var(--tac-steel)]"><Loader2 className="animate-spin" /></div>

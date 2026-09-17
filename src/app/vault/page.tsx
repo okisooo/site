@@ -3,7 +3,7 @@ import VaultClient from "@/Components/Vault/VaultClient";
 
 export const metadata: Metadata = {
   title: "The Vault | OKISO",
-  description: "Demos, versions and cuts — straight from the source.",
+  description: "OKISO demos, alternate versions and unfinished tracks.",
   robots: { index: false, follow: false },
   alternates: { canonical: "https://okiso.net/vault" },
 };
