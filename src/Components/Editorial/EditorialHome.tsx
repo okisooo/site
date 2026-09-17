@@ -57,7 +57,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
-      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>okiso</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
+      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
       <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">

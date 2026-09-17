@@ -106,7 +106,7 @@
 .ed-artist-note > .ed-label { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--ed-line); color: var(--ed-muted); }
 .ed-artist-note > .ed-label > span { color: var(--ed-accent); font-size: 17px; line-height: 1; }
 .ed-artist-note p { font-size: clamp(40px, 4.3vw, 60px); font-weight: 500; line-height: .96; letter-spacing: -.04em; word-spacing: .06em; margin: 18px 0; }
-.ed-artist-note p em { color: var(--ed-accent); font-style: normal; }
+.ed-artist-note p em { color: var(--ed-accent); font-style: normal; font-size: 1.2em; font-weight: 600; }
 .ed-artist-note button { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: 11px; min-height: 44px; width: 100%; border-top: 1px solid var(--ed-line); }
 .ed-artist-note button svg { border: 1px solid var(--ed-line); width: 28px; height: 28px; padding: 5px; border-radius: 50%; }
 .ed-artist-note button:hover svg { background: var(--ed-accent); color: var(--ed-on-accent); }
