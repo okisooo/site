@@ -8,6 +8,7 @@ import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
+import { sampleCharacterIdle } from "@/lib/characterIdle";
 
 type Expression = "neutral" | "happy" | "relaxed";
 type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
@@ -67,6 +68,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     const twistAxis = new Vector3(1, 0, 0);
     const palmAxis = new Vector3(0, 1, 0);
     const waveWrist = new Quaternion().setFromEuler(new Euler(.35, .05, -.07));
+    const reachWrist = new Quaternion().setFromEuler(new Euler(-.59, .9, -1.2));
     const waveRotation = new Quaternion();
     const q = (x: number, y: number, z: number, twist = 0) => new Quaternion().setFromEuler(new Euler(x, y, z))
       .multiply(new Quaternion().setFromAxisAngle(twistAxis, twist)).toArray();
@@ -144,10 +146,10 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
               hips: { rotation: q(.05, .22, -.13) },
               spine: { rotation: q(.08, -.1, .03) },
               chest: { rotation: q(.12, -.1, -.05) },
-              leftUpperArm: { rotation: q(0, -1.3, .52) },
+              leftUpperArm: { rotation: q(-.03, -1.22, .6) },
               // Share the palm turn with the forearm so the wrists stay relaxed.
-              leftLowerArm: { rotation: q(0, -.12, .05, -.9) },
-              leftHand: { rotation: q(-.6517, .9481, -1.2729) },
+              leftLowerArm: { rotation: q(-.06, -.12, .12, -.82) },
+              leftHand: { rotation: reachWrist.toArray() },
               leftIndexProximal: { rotation: q(0, -.16, .06) },
               leftMiddleProximal: { rotation: q(0, -.03, .08) },
               leftRingProximal: { rotation: q(0, .12, .14) },
@@ -186,7 +188,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         if (head) {
           head.rotation.y = (reaching ? .13 : 0) + Math.sin(elapsed * .6) * (hero ? .04 : .035) + (hero ? pointer.x * .08 : 0);
           head.rotation.x = (reaching ? -.04 : 0) + (hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0);
-          head.rotation.z = (reaching ? .1 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .012 : 0);
+          head.rotation.z = (reaching ? .05 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .02 : 0);
         }
         if (chest) chest.rotation.x = (reaching ? .12 : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
         // Two soft beats, then a resting palm. The envelope eases in and out at zero.
@@ -202,9 +204,23 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         if (hero) {
           const hips = vrm.humanoid.getNormalizedBoneNode("hips");
           if (hips) hips.rotation.z = (reaching ? -.13 : -.025) + Math.sin(elapsed * .5) * .012;
+          if (reaching) {
+            const reachingHand = vrm.humanoid.getNormalizedBoneNode("leftHand");
+            reachingHand?.quaternion.copy(reachWrist).multiply(waveRotation.setFromAxisAngle(palmAxis, Math.sin(elapsed * .8) * .035));
+          }
         }
-        const blinkTime = elapsed % 4.4;
-        vrm.expressionManager?.setValue("blink", moving && blinkTime > 4.15 ? Math.sin((blinkTime - 4.15) / .25 * Math.PI) : 0);
+        const idle = sampleCharacterIdle(elapsed);
+        const expressions = vrm.expressionManager;
+        if (hero) {
+          expressions?.setValue("happy", .28 + idle.smile * .25);
+          expressions?.setValue("relaxed", .04);
+          expressions?.setValue("MouthSmileLeft", .04 + idle.smile * .14);
+          expressions?.setValue("MouthSmileRight", .04 + idle.smile * .12);
+          expressions?.setValue("CheekSquintLeft", idle.smile * .08);
+          expressions?.setValue("CheekSquintRight", idle.smile * .08);
+          expressions?.setValue("BrowInnerUp", idle.smile * .035);
+        }
+        expressions?.setValue("blink", moving ? idle.blink : 0);
         vrm.update(moving ? delta : 0);
       }
       if (hero) {
