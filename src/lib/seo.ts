@@ -3,7 +3,7 @@ import type { Release } from '@/data/releases';
 
 export const SITE_URL = 'https://okiso.net';
 export const ARTIST_ID = `${SITE_URL}/#artist`;
-export const ARTIST_DESCRIPTION = 'OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music.';
+export const ARTIST_DESCRIPTION = 'OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music.';
 export const artistStructuredData = {
   '@type': 'MusicGroup', '@id': ARTIST_ID, name: 'OKISO',
   url: SITE_URL, image: `${SITE_URL}/og_image.png`, description: ARTIST_DESCRIPTION,

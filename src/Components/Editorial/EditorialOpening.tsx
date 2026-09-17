@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 function SleeveArtwork() {
   return <div className="ed-opening-composition">
-    <div className="ed-opening-caption"><span>okiso / original music</span><span>virtual artist & vocaloid producer</span></div>
+    <div className="ed-opening-caption"><span>okiso / original music</span><span>VTuber & virtual artist</span></div>
     <div className="ed-opening-sketch"><img src="/art/sobu-640.webp" alt="" width="640" height="830" /></div>
     <div className="ed-opening-portrait"><img src="/art/suyosuyo-640.webp" alt="" width="640" height="1002" /></div>
     <div className="ed-opening-title">{"OKISO".split("").map((letter, index) => <span key={index} style={{ "--letter": index } as React.CSSProperties}>{letter}</span>)}<span className="ed-opening-arrow">↗</span></div>

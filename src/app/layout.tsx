@@ -38,7 +38,7 @@ const quicksand = Quicksand({
 export const metadata: Metadata = {
   metadataBase: new URL('https://okiso.net'),
   title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-  description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
+  description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
   keywords: [
     "OKISO",
     "okiso",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
+    description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
     url: "https://okiso.net",
     images: [
       {
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO is a virtual artist and VOCALOID producer creating hyperpop and electronic music. Explore releases, live streams, videos, and the full archive.",
+    description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
     images: ["https://okiso.net/og_image.png"]
   },
   formatDetection: {

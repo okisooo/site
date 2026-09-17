@@ -4,8 +4,8 @@ import { staticReleases } from '@/data/releases';
 import { ARTIST_ID, ARTIST_DESCRIPTION, SITE_URL, artistStructuredData, jsonLd, pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata(
-  'About OKISO | Virtual Artist & VOCALOID Producer',
-  'Meet OKISO, a virtual artist and VOCALOID producer making hyperpop and electronic music. Find the official discography, artist profiles and contact details.',
+  'About OKISO | VTuber, Virtual Artist & VOCALOID Producer',
+  'OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Find music, artist profiles and contact details.',
   '/about',
 );
 
@@ -38,7 +38,7 @@ export default function AboutPage() {
     <div className="ed-about-body">
       <div className="ed-about-copy">
         <section aria-labelledby="about-music"><h2 id="about-music">hey, i’m okiso</h2>
-          <p>i’m a virtual artist and vocaloid producer making hyperpop and electronic music</p>
+          <p>i’m a VTuber, virtual artist and vocaloid producer making hyperpop and electronic music</p>
           <p>latest release: <Link href={`/releases/${latest.slug}`}>{latest.title}</Link></p>
           <Link className="ed-button" href="/releases">all releases <ArrowUpRight size={16} /></Link>
         </section>

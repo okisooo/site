@@ -47,7 +47,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
 
   return <div className="ed-home">
     <section className="ed-cover" aria-label="Meet OKISO">
-      <div className="ed-cover-kicker"><span>virtual artist & vocaloid producer</span><span>official website / {latest.year}</span></div>
+      <div className="ed-cover-kicker"><span>VTuber / virtual artist / vocaloid producer</span><span>official website / {latest.year}</span></div>
       <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop<br />electronic<br />vocaloid</span><ArrowDown size={26} /></div></div>
       <HeroCommissionWall />
       <AmbientArtwork hero />
