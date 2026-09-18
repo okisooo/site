@@ -65,10 +65,11 @@ test('maps every Too Lost website release to a unique smart link', () => {
   }
 });
 
-test('uses Spotify when a verified Too Lost smart link is unavailable', () => {
-  const spotifyFallbackTitles = staticReleases
-    .filter((item) => getReleaseListenTarget(item).label === 'Listen on Spotify')
-    .map((item) => item.title);
-
-  assert.deepEqual(spotifyFallbackTitles, ['VESSEL FOR OBSESSION', 'DEADEND', 'VAC', 'リ：プレイ']);
+test('new and unmapped catalog releases keep their Spotify listening links', () => {
+  // Scheduled catalog updates can add releases before distributor links are verified.
+  for (const item of [...staticReleases, release()]) {
+    if (getTooLostSmartLink(item)) continue;
+    assert.deepEqual(getReleaseListenTarget(item), { label: 'Listen on Spotify', url: item.link });
+    assert.match(item.link, /^https:\/\/open\.spotify\.com\/album\/[A-Za-z0-9]+(?:\?.*)?$/);
+  }
 });
