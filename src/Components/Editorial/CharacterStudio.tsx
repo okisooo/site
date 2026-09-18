@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw, Pause, Play } from "lucide-react";
-import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping } from "three";
+import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping, AnimationMixer, type AnimationAction } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMPose } from "@pixiv/three-vrm";
@@ -9,6 +9,7 @@ import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
 import { sampleCharacterIdle } from "@/lib/characterIdle";
+import { createCharacterGestureClip } from "@/lib/characterGesture";
 import referenceReachPose from "@/data/characterReachPose.json";
 
 // Authored Overte gesture, fitted to OKISO; credits: /character/reference-pose-notice.txt
@@ -59,6 +60,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     host.appendChild(element);
     let disposed = false, failed = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0;
     let renderer: WebGLRenderer | undefined, controls: OrbitControls | undefined, vrm: VRM | undefined;
+    let gestureMixer: AnimationMixer | undefined, gestureAction: AnimationAction | undefined;
     let previousFraming = "", previousPose = "", previousExpression = "";
     let dolly = false, waveStart = 0;
     const cameraDestination = new Vector3(), targetDestination = new Vector3();
@@ -72,7 +74,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     const twistAxis = new Vector3(1, 0, 0);
     const palmAxis = new Vector3(0, 1, 0);
     const waveWrist = new Quaternion().setFromEuler(new Euler(.35, .05, -.07));
-    const reachWrist = new Quaternion().fromArray(REACH_POSE.leftHand!.rotation!);
     const reachChest = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.chest?.rotation ?? [0, 0, 0, 1]));
     const reachHips = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.hips!.rotation!));
     const waveRotation = new Quaternion();
@@ -114,7 +115,9 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         const waveSide = hero && compactLayout.matches ? "left" : "right";
         const waveSign = waveSide === "left" ? -1 : 1;
         const poseKey = `${settings.pose}-${waveSide}`;
-        if (previousPose !== poseKey) {
+        const poseChanged = previousPose !== poseKey;
+        if (poseChanged) {
+          gestureAction?.stop();
           const waving = settings.pose === "wave";
           if (waving) waveStart = elapsed;
           const waveQ = (x: number, y: number, z: number, twist = 0) => q(x, y * waveSign, z * waveSign, twist);
@@ -149,8 +152,11 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
             } : {}),
             ...(reaching ? REACH_POSE : {}),
           });
+          if (reaching) gestureAction?.play();
           previousPose = poseKey;
         }
+        // The same clock freezes fingers, hands and arms together when motion is paused.
+        if (reaching && gestureMixer && gestureAction) gestureMixer.setTime(elapsed % gestureAction.getClip().duration);
         if (previousExpression !== settings.expression) {
           for (const name of ["happy", "relaxed"]) vrm.expressionManager?.setValue(name, name === settings.expression ? (hero ? .28 : .8) : 0);
           previousExpression = settings.expression;
@@ -182,10 +188,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         if (hero) {
           const hips = vrm.humanoid.getNormalizedBoneNode("hips");
           if (hips) hips.rotation.z = (reaching ? reachHips.z : -.025) + Math.sin(elapsed * .5) * .012;
-          if (reaching) {
-            const reachingHand = vrm.humanoid.getNormalizedBoneNode("leftHand");
-            reachingHand?.quaternion.copy(reachWrist).multiply(waveRotation.setFromAxisAngle(palmAxis, Math.sin(elapsed * .8) * .035));
-          }
         }
         const idle = sampleCharacterIdle(elapsed);
         const expressions = vrm.expressionManager;
@@ -199,6 +201,12 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           expressions?.setValue("BrowInnerUp", idle.smile * .035);
         }
         expressions?.setValue("blink", moving ? idle.blink : 0);
+        if (poseChanged) {
+          // A new pose is a teleport for hair/clothing physics, not a large velocity.
+          vrm.humanoid.update();
+          vrm.scene.updateMatrixWorld(true);
+          vrm.springBoneManager?.reset();
+        }
         vrm.update(moving ? delta : 0);
       }
       if (hero) {
@@ -307,6 +315,8 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           VRMUtils.combineMorphs(model);
           VRMUtils.rotateVRM0(model);
           vrm = model; scene.add(model.scene);
+          gestureMixer = new AnimationMixer(model.scene);
+          gestureAction = gestureMixer.clipAction(createCharacterGestureClip(model));
           if (hero) model.scene.rotation.y -= .08;
           clearTimeout(timeout);
           setProgress(100); setState("ready"); invalidate();
@@ -322,6 +332,8 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       if (hero) window.removeEventListener("pointermove", movePointer);
       element.removeEventListener("webglcontextlost", lost);
       commands.current = null; controls?.dispose();
+      gestureMixer?.stopAllAction();
+      if (vrm) gestureMixer?.uncacheRoot(vrm.scene);
       VRMUtils.deepDispose(scene); renderer?.dispose(); renderer?.forceContextLoss(); element.remove();
     };
   }, [attempt, hero, onPerformanceFallback]);
