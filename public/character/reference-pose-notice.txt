@@ -1,0 +1,29 @@
+OKISO reference pose
+
+Copyright (c) 2013-2019, High Fidelity, Inc.
+Copyright (c) 2019-2021, Vircadia contributors.
+Copyright (c) 2022-2026, Overte e.V.
+
+Licensed under the Apache License, Version 2.0.
+The full license accompanies this notice in reference-pose-license.txt.
+
+Source animation:
+https://github.com/overte-org/overte/blob/master/interface/resources/avatar/animations/talk_lefthand.fbx
+Source FBX Git blob: 08299fd14bd0b3802c7d4e0f83712f089d955b72
+
+VRM Animation conversion supplied by Hanami:
+https://github.com/Undi95/Hanami/blob/main/vrma/idle-talking-6.vrma
+https://github.com/Undi95/Hanami/blob/main/vrma/NOTICE.md
+That asset is identified as Apache-2.0 in its accompanying notice.
+VRMA SHA-256: 1648d8a03d7e563cad203fa88b80cfd7629e70292cbcc406bc730ac1ffc8bf60
+
+Changes for this website, 2026-09-18:
+- Sampled the authored gesture at 1.0 seconds.
+- Converted local rotations through the source rest hierarchy into normalized
+  humanoid rotations, with the VRM 0 x/z quaternion sign conversion.
+- Retained OKISO's existing chest-hand upper arm, forearm and wrist orientation;
+  used the authored finger articulation and the complete other arm/hand pose.
+- Kept the website's existing facial animation, breathing and head motion.
+- Ship only the fitted static pose, not the full source animation or converter.
+
+No endorsement by the source authors is implied.

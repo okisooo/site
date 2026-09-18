@@ -4,11 +4,15 @@ import { ArrowLeft, ArrowRight, RotateCcw, Pause, Play } from "lucide-react";
 import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { VRMLoaderPlugin, VRMUtils, type VRM } from "@pixiv/three-vrm";
+import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMPose } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
 import { sampleCharacterIdle } from "@/lib/characterIdle";
+import referenceReachPose from "@/data/characterReachPose.json";
+
+// Authored Overte gesture, fitted to OKISO; credits: /character/reference-pose-notice.txt
+const REACH_POSE = referenceReachPose as VRMPose;
 
 type Expression = "neutral" | "happy" | "relaxed";
 type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
@@ -68,7 +72,9 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     const twistAxis = new Vector3(1, 0, 0);
     const palmAxis = new Vector3(0, 1, 0);
     const waveWrist = new Quaternion().setFromEuler(new Euler(.35, .05, -.07));
-    const reachWrist = new Quaternion().setFromEuler(new Euler(-.59, .9, -1.2));
+    const reachWrist = new Quaternion().fromArray(REACH_POSE.leftHand!.rotation!);
+    const reachChest = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.chest?.rotation ?? [0, 0, 0, 1]));
+    const reachHips = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.hips!.rotation!));
     const waveRotation = new Quaternion();
     const q = (x: number, y: number, z: number, twist = 0) => new Quaternion().setFromEuler(new Euler(x, y, z))
       .multiply(new Quaternion().setFromAxisAngle(twistAxis, twist)).toArray();
@@ -90,7 +96,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       controls.enableDamping = moving;
       if (settings.framing !== previousFraming) {
         const portrait = settings.framing === "portrait";
-        const heroDistance = compactLayout.matches ? Math.max(1.02, .54 / camera.aspect) : Math.max(.78, .5 / camera.aspect);
+        const heroDistance = compactLayout.matches ? Math.max(1.16, .64 / camera.aspect) : Math.max(.98, .62 / camera.aspect);
         cameraDestination.set(hero ? .16 : 0, hero ? 1.54 : portrait ? 1.42 : .95, hero ? heroDistance : portrait ? 1.6 : Math.min(4.4, Math.max(3.6, 2.15 / camera.aspect)));
         targetDestination.set(hero ? (compactLayout.matches ? -.145 : 0) : 0, hero ? 1.21 : portrait ? 1.35 : .8, 0);
         dolly = moving && previousFraming !== "";
@@ -141,35 +147,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
               leftUpperLeg: { rotation: q(0, 0, .025) },
               rightUpperLeg: { rotation: q(.035, 0, -.035) },
             } : {}),
-            ...(reaching ? {
-              // The delivered ykhs9 illustration: an open reach, with the other hand at the heart.
-              hips: { rotation: q(.05, .22, -.13) },
-              spine: { rotation: q(.08, -.1, .03) },
-              chest: { rotation: q(.12, -.1, -.05) },
-              leftUpperArm: { rotation: q(-.03, -1.22, .6) },
-              // Share the palm turn with the forearm so the wrists stay relaxed.
-              leftLowerArm: { rotation: q(-.06, -.12, .12, -.82) },
-              leftHand: { rotation: reachWrist.toArray() },
-              leftIndexProximal: { rotation: q(0, -.16, .06) },
-              leftMiddleProximal: { rotation: q(0, -.03, .08) },
-              leftRingProximal: { rotation: q(0, .12, .14) },
-              leftLittleProximal: { rotation: q(0, .26, .2) },
-              leftIndexIntermediate: { rotation: q(0, 0, .08) },
-              leftMiddleIntermediate: { rotation: q(0, 0, .1) },
-              leftRingIntermediate: { rotation: q(0, 0, .15) },
-              leftLittleIntermediate: { rotation: q(0, 0, .22) },
-              leftThumbMetacarpal: { rotation: q(.1, .2, -.22) },
-              rightUpperArm: { rotation: q(0, .35, -1.05) },
-              rightLowerArm: { rotation: q(-1.512, -.5313, 2.3146, -2.4) },
-              rightHand: { rotation: q(-.6598, .1262, -.3871) },
-              rightIndexProximal: { rotation: q(0, .08, -.12) },
-              rightMiddleProximal: { rotation: q(0, 0, -.14) },
-              rightRingProximal: { rotation: q(0, -.06, -.18) },
-              rightLittleProximal: { rotation: q(0, -.14, -.23) },
-              leftUpperLeg: { rotation: q(-.06, -.08, .09) },
-              rightUpperLeg: { rotation: q(.16, .1, -.1) },
-              rightLowerLeg: { rotation: q(-.2, 0, 0) },
-            } : {}),
+            ...(reaching ? REACH_POSE : {}),
           });
           previousPose = poseKey;
         }
@@ -190,7 +168,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           head.rotation.x = (reaching ? -.04 : 0) + (hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0);
           head.rotation.z = (reaching ? .05 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .02 : 0);
         }
-        if (chest) chest.rotation.x = (reaching ? .12 : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
+        if (chest) chest.rotation.x = (reaching ? reachChest.x : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
         // Two soft beats, then a resting palm. The envelope eases in and out at zero.
         const greeting = (elapsed - waveStart) % 7.5;
         const waveEnvelope = greeting < 2.4 ? Math.sin(greeting / 2.4 * Math.PI) ** 2 : 0;
@@ -203,7 +181,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         }
         if (hero) {
           const hips = vrm.humanoid.getNormalizedBoneNode("hips");
-          if (hips) hips.rotation.z = (reaching ? -.13 : -.025) + Math.sin(elapsed * .5) * .012;
+          if (hips) hips.rotation.z = (reaching ? reachHips.z : -.025) + Math.sin(elapsed * .5) * .012;
           if (reaching) {
             const reachingHand = vrm.humanoid.getNormalizedBoneNode("leftHand");
             reachingHand?.quaternion.copy(reachWrist).multiply(waveRotation.setFromAxisAngle(palmAxis, Math.sin(elapsed * .8) * .035));
