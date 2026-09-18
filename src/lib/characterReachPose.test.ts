@@ -17,7 +17,7 @@ test("the reference pose uses valid normalized bones and retains all finger join
   assert.equal(Object.keys(pose).filter(name => /Thumb|Index|Middle|Ring|Little/.test(name)).length, 30);
 });
 
-test("the authored clip moves finger joints on both hands and holds a paused frame", () => {
+test("the hero idle holds the arm silhouette with subtle fingers, pause and a continuous loop", () => {
   const scene = new Object3D();
   const bones = new Map(Object.keys(pose).map(name => {
     const bone = new Object3D(); bone.name = name; scene.add(bone);
@@ -25,23 +25,22 @@ test("the authored clip moves finger joints on both hands and holds a paused fra
   }));
   const vrm = { scene, humanoid: { getNormalizedBoneNode: (name: string) => bones.get(name) } } as unknown as VRM;
   const clip = createCharacterGestureClip(vrm);
-  assert.equal(clip.tracks.length, 38);
+  assert.equal(clip.tracks.length, 4);
+  assert(clip.tracks.every(track => !/Arm|Shoulder/.test(track.name)), "arms must hold their pose");
   const mixer = new AnimationMixer(scene);
   const action = mixer.clipAction(clip).play();
-  for (const side of ["left", "right"]) {
-    for (const joint of ["IndexIntermediate", "MiddleProximal", "ThumbProximal"]) {
-      const bone = bones.get(`${side}${joint}`)!;
-      mixer.setTime(0); const start = bone.quaternion.clone();
-      let excursion = 0;
-      for (let time = 0; time < clip.duration; time += .1) {
-        mixer.setTime(time); excursion = Math.max(excursion, start.angleTo(bone.quaternion));
-      }
-      assert(excursion > .15, `${side}${joint} must visibly articulate, not remain frozen`);
-      mixer.setTime(8); const paused = bone.quaternion.clone();
-      mixer.setTime(8); assert(bone.quaternion.angleTo(paused) < .003);
-      mixer.setTime(clip.duration - .001); const end = bone.quaternion.clone();
-      mixer.setTime(0); assert(bone.quaternion.angleTo(end) < .003, "continuous loop seam");
+  for (const name of ["leftHand", "leftIndexProximal", "leftMiddleProximal", "rightThumbProximal"]) {
+    const bone = bones.get(name)!;
+    mixer.setTime(0); const start = bone.quaternion.clone();
+    let excursion = 0;
+    for (let time = 0; time < clip.duration; time += .1) {
+      mixer.setTime(time); excursion = Math.max(excursion, start.angleTo(bone.quaternion));
     }
+    assert(excursion > .02 && excursion < .08, `${name} must settle subtly without changing the gesture`);
+    mixer.setTime(8); const paused = bone.quaternion.clone();
+    mixer.setTime(8); assert(bone.quaternion.angleTo(paused) < .003);
+    mixer.setTime(clip.duration - .001); const end = bone.quaternion.clone();
+    mixer.setTime(0); assert(bone.quaternion.angleTo(end) < .003, "continuous loop seam");
   }
   action.stop(); mixer.uncacheRoot(scene);
 });

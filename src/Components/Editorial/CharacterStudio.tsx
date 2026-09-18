@@ -12,7 +12,7 @@ import { sampleCharacterIdle } from "@/lib/characterIdle";
 import { createCharacterGestureClip } from "@/lib/characterGesture";
 import referenceReachPose from "@/data/characterReachPose.json";
 
-// Authored Overte gesture, fitted to OKISO; credits: /character/reference-pose-notice.txt
+// Held peace sign over an adapted reference stance; credits: /character/reference-pose-notice.txt
 const REACH_POSE = referenceReachPose as VRMPose;
 
 type Expression = "neutral" | "happy" | "relaxed";
@@ -151,6 +151,11 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
               rightUpperLeg: { rotation: q(.035, 0, -.035) },
             } : {}),
             ...(reaching ? REACH_POSE : {}),
+            ...(reaching && hero && compactLayout.matches ? {
+              // Keep the peace sign beside his cheek inside the narrow hero crop.
+              leftUpperArm: { rotation: q(-.12, .08, 1.15) },
+              leftLowerArm: { rotation: q(-.18, -.08, -2.95, .9) },
+            } : {}),
           });
           if (reaching) gestureAction?.play();
           previousPose = poseKey;
@@ -172,7 +177,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         if (head) {
           head.rotation.y = (reaching ? .13 : 0) + Math.sin(elapsed * .6) * (hero ? .04 : .035) + (hero ? pointer.x * .08 : 0);
           head.rotation.x = (reaching ? -.04 : 0) + (hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0);
-          head.rotation.z = (reaching ? .05 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .02 : 0);
+          head.rotation.z = (reaching ? .1 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .02 : 0);
         }
         if (chest) chest.rotation.x = (reaching ? reachChest.x : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
         // Two soft beats, then a resting palm. The envelope eases in and out at zero.
@@ -351,7 +356,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     {state !== "unavailable" && <div className="ed-studio-console">
       <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "full" ? "full figure" : value}</button>)}</div></div>
       <div className="ed-studio-control-row"><span className="ed-label">expression</span><div role="group" aria-label="Character expression">{(["neutral", "happy", "relaxed"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.expression === value} onClick={() => update("expression", value)}>{value}</button>)}</div></div>
-      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave", "reach"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value}</button>)}</div></div>
+      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave", "reach"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value === "reach" ? "peace sign" : value}</button>)}</div></div>
       <div className="ed-studio-transport"><button className="ed-icon-button" aria-label="Turn character left" onClick={() => commands.current?.rotate(-1)}><ArrowLeft size={17} /></button><button className="ed-button" disabled={reduced} aria-pressed={options.turntable} onClick={() => setOptions((old) => ({ ...old, turntable: !old.turntable, motion: true }))}>turntable</button><button className="ed-icon-button" aria-label="Turn character right" onClick={() => commands.current?.rotate(1)}><ArrowRight size={17} /></button></div>
       <div className="ed-studio-settings"><button className="ed-button" disabled={reduced} onClick={() => update("motion", !options.motion)}>{options.motion && !reduced ? <Pause size={14} /> : <Play size={14} />}{reduced ? "reduced motion" : options.motion ? "pause motion" : "resume motion"}</button><button className="ed-button" aria-pressed={options.saver} onClick={() => update("saver", !options.saver)}>battery saver</button><button className="ed-icon-button" aria-label="Reset character view" onClick={() => { setOptions((old) => ({ ...DEFAULTS, motion: !reduced, saver: old.saver })); commands.current?.reset(); }}><RotateCcw size={16} /></button></div>
 
