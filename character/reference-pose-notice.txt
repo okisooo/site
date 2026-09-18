@@ -18,14 +18,14 @@ That asset is identified as Apache-2.0 in its accompanying notice.
 VRMA SHA-256: 1648d8a03d7e563cad203fa88b80cfd7629e70292cbcc406bc730ac1ffc8bf60
 
 Changes for this website, 2026-09-18:
-- Sampled 0.0 to 16.6 seconds of the authored gesture at 10 Hz, with quaternion
-  interpolation during playback and a 1.2-second eased return to its starting pose.
+- Used a sampled reference stance as the starting point for a held hero pose.
 - Converted local rotations through the source rest hierarchy into normalized
   humanoid rotations, with the VRM 0 x/z quaternion sign conversion.
-- Animate all 38 authored shoulder, arm, wrist and finger tracks. The starting
-  body pose also comes from the source; no forced hand-to-chest override remains.
+- Reposed the arms into a left-hand peace sign and right hand at the waist.
+  Shaped the extended index/middle, curled ring/little and tucked thumb manually.
+- Replaced the talking animation with small original wrist/fingertip idle accents.
 - Kept the website's existing facial animation, breathing and head motion.
-- Ship the starting body pose and retargeted arm/hand tracks, not the original
+- Ship the adapted body pose, not the original
   FBX/VRMA file, animation converter or source model.
 
 No endorsement by the source authors is implied.
