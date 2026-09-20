@@ -2,6 +2,537 @@
 
 # task
 
+## keep the name readable and soften finger bends — 2026-09-18
+
+user screenshot showed the peace sign covering "i’m OKISO" and curled fingers
+folding over themselves. brought the desktop raised arm closer to the face;
+reduced ring/little knuckle and fingertip bends, with slightly staggered fingers.
+checked enlarged front and side views on the actual model. artist card now shares
+the other hero cards' z-index 5, above the character at 4, so idle movement cannot
+cover its text. desktop and intermediate-width previews show a clear hand beside
+the face and an unobstructed name. 18 design tests and production build/typecheck
+pass. 390x844 phone preview also checked; viewport reset. committed 12b636b and
+pushed to main. deployment 35312255793 and Pages 35312343100 succeeded; all 43 CI
+regressions, build/typecheck and SEO audit passed. live screenshot verified at
+https://okiso.net/?v=12b636b-live: name clear, hand beside face, softer finger curl.
+preview server PID 5828 stopped. existing scratch retained; no blocked deletion retry.
+
+## deliberate homepage hero pose — 2026-09-18
+
+user rejected the conversational clip as tapping the air. replace it with a held,
+asymmetrical peace sign beside the face, the opposite hand resting at the waist,
+and a slight body/head lean. left index/middle are separated and extended;
+ring/little curl into the palm and thumb folds in. inspected front/side candidates
+on the actual model before integrating. retain the adapted reference stance and
+attribution. delete the 252 KB talking-track JSON; existing Three mixer now carries
+four small original wrist/fingertip accents. no arm gesture loop. preserve facial
+expressions, render quality, software-renderer guard and spring reset on pose change.
+character-room control now labels this pose "peace sign". compact hero brings its
+raised elbow inward to fit the phone crop. 18 design checks and final production
+build/typecheck pass. actual homepage visually checked on desktop and 390x844;
+both show the V clearly, with a clean model startup. viewport reset. committed
+a753de4 and pushed to main. deployment 35309992817 and Pages 35310083548 succeeded;
+all 43 CI regression checks, production build/typecheck and SEO audit passed.
+live desktop screenshot at https://okiso.net/?v=a753de4-live confirms the held
+peace-sign pose, natural idle smile and clean model startup.
+temporary preview server PID 47840 stopped. scratch stays in the previously
+policy-blocked folder; do not retry deletion.
+
+## fingers must actually move — 2026-09-18
+
+user rejected the frozen reference pose as awkward. previous implementation sampled
+one frame, so fingers could not animate. replace it with the source gesture's 38
+shoulder/arm/wrist/finger tracks, including all 30 finger-joint tracks. retain the
+existing source/license, retargeted VRM 0 coordinates and render quality. remove the
+forced chest-hand overrides; both hands now follow the authored gesture.
+characterGesture.json samples 0–16.6 s at 10 Hz; Three interpolates quaternions at
+render rate. a 1.2 s eased return closes the loop. createCharacterGestureClip builds
+one native clip/mixer at model load, driven only by existing elapsed time. manual
+pose switches stop/reactivate it; pause/reduced-motion freeze it; cleanup releases it.
+reset spring-bone physics after applying a new pose to avoid the startup clothing
+deformation caught in local visual review. startup rechecked clean. observed distinct
+finger curls/hand shapes across frames on desktop and narrow layout; viewport reset.
+18 design tests pass, including actual mixer finger movement on both hands, pause
+stability and loop continuity. deployed 23ea68c: deployment 35308867891 and Pages
+35308960687 succeeded; all 43 CI regressions, production build/typecheck and SEO
+checks passed. live preview at https://okiso.net/?v=23ea68c-live confirmed new motion
+and clean model startup. preview server PID 34748 stopped, viewport override reset.
+scratch stays in the previously policy-blocked folder; do not retry its deletion.
+
+## authored reference pose replaces guessed hands — 2026-09-18
+
+user rejected the hands and requested a similar real pose adapted to his rig.
+selected Overte's authored talk_lefthand gesture, via Hanami's Apache-2.0 VRMA
+conversion. sampled 1.0 s, converted source-rest rotations to normalized VRM 0
+bones, retained the chest-hand arm/wrist fit and used the source finger rotations.
+the offered arm/palm now follows the source gesture. data lives in
+src/data/characterReachPose.json; provenance, exact source hash and license ship in
+public/character/reference-pose-notice.txt and reference-pose-license.txt.
+replaces the old reach-angle block, retains the idle face/hand motion and sharpness.
+camera backed off slightly to fit the more upright reference stance; checked actual
+homepage at normal desktop and 390x844, plus reference front/side views in Chrome.
+viewport override reset. imported pose can omit an unchanged chest track; handle
+that as identity instead of dereferencing it. model now loads successfully.
+17 design tests, production build/typecheck and SEO audit pass. latest scheduled
+catalog commit 0244607 was fast-forwarded, preserving its new release. deployment
+complete. original user dirt remains untouched; preview server PID 37728 stopped.
+pose commit 7639462 passed local checks but CI exposed a stale exact-title assertion
+in releaseLinks.test.ts after the scheduled catalog addition. follow-up 7f3ff6e
+checks valid Spotify fallback behavior for new/unmapped releases without freezing
+the catalog's title list; all 18 release/SEO unit tests pass locally.
+deployment 35307302057 and Pages 35307389053 succeeded for 7f3ff6e; all 42 CI
+regressions, build/typecheck and SEO audit pass. live desktop screenshot verified
+at https://okiso.net/?v=7f3ff6e; local narrow-layout and front/side checks passed.
+temporary viewport reset. cleanup of S:\tmp\codex\site-reference-pose-20260918
+was rejected by automatic approval review as blocked by policy; no workaround
+attempted. files remain, both preview servers (8004 and 37728) are stopped.
+
+## subtle pose and facial animation — 2026-09-17
+
+user asks to refine his pose and give him life through his facial expressions.
+slightly soften the reach elbow/wrist, reduce the fixed head tilt and add a small
+palm motion. hero smile gently varies with the existing animation clock using the
+model's happy/relaxed, MouthSmileLeft/Right, CheekSquintLeft/Right and BrowInnerUp
+controls. blink timing includes an occasional double blink. character-room manual
+expression choices stay manual; its blink timing also uses the new shared sampler.
+no new render loop or timers; pause, reduced motion and visibility still govern
+the existing elapsed time. restored pixel density and software guard stay intact.
+16 design tests and production build/typecheck pass, including a bounded continuous
+expression-cycle test. no existing website tab in Chrome; requested the user open
+one for visual review. visual appearance remains unverified in this turn.
+deployed 7742f83: deployment 35197767688 and Pages 35197898652 succeeded, all 41
+CI regression tests, build/typecheck and SEO audit passed. published model chunk
+1696.98618b74f35b93d4.js returns 200 and includes the smile/cheek/brow controls.
+do not claim live visual inspection; the existing Chrome website tab was unavailable.
+
+## prominent OKISO and both artist descriptions — 2026-09-17
+
+user wants the homepage introduction to read “i’m OKISO” prominently, and wants
+both VTuber and virtual artist used. b50d510 capitalizes OKISO and makes it 20%
+larger/bolder within the existing responsive card. bbaa576 adds VTuber alongside
+virtual artist in the hero, opening, about bio, metadata and structured description.
+keep the concise copy direction; preserve the requested casing of OKISO and VTuber.
+release/SEO unit checks pass. deployment 35169004442 and Pages 35169089868 succeeded
+for bbaa576; all 40 CI checks, build/typecheck and SEO audit passed. live homepage
+verified in Chrome at https://okiso.net/?v=bbaa576 with the enlarged uppercase name
+and both VTuber / virtual artist in the kicker. prior size-only build also completed;
+the deployed gh-pages head points to bbaa576. user work remains untouched.
+
+## plain-language copy cleanup — 2026-09-17
+
+user dislikes the overwhelming AI-feeling slogans and periods on headings/labels.
+prefer fewer words, direct labels and grounded first-person copy; do not invent
+personality, artwork titles or dramatic taglines. removed repeated promotional
+copy across the gallery, home, about, releases, upcoming, vault, opening and footer.
+gallery now uses artist names as card headings, short descriptive artwork labels,
+and no repeated artist ticker or redundant descriptive paragraphs. accessible image
+descriptions, artist/work links, music titles/lyrics, content terms and SEO metadata
+remain. about is a brief first-person intro with real links/contact. model rendering
+behavior unchanged. removed CSS made unused by deleted copy.
+local build, design tests and export SEO audit pass; gallery/home visual inspection,
+gallery search, artwork viewer and about copy verified in Chrome. published 860f78f:
+deployment 35168603140 and Pages 35168684172 succeeded, all 40 CI regressions and
+SEO checks passed. live gallery screenshot confirms simplified copy. current Chrome
+tab left on https://okiso.net/gallery?v=860f78f. local preview PID 19188 stopped.
+unrelated source/audio/assets/docs user work preserved.
+
+## Chrome restart resolved lag; restore 3d quality — 2026-09-17
+
+user confirms the website runs fine after restarting Chrome. consider the lag
+incident resolved in that session and stop investigating unless it recurs.
+canonical incident note: docs/CHROME-GRAPHICS-INCIDENT.md. earlier unresolved
+checkpoints below are historical and superseded by this confirmation.
+user requests original 3d sharpness. remove the debugging-era 600k pixel budget
+and automatic quality reduction; restore the pre-debug desktop supersampling
+(1.5 minimum, 2 maximum; original saver/mobile limits). keep the native software
+context rejection guard and corrected frame cadence.
+
+deployed a34136b: deployment 35166779920 and Pages 35166866690 succeeded;
+40 remaining regression tests, production build/typecheck and export SEO audit pass.
+verified in restarted Chrome tab 1492674288 at https://okiso.net/?v=a34136b:
+hero ready, canvas 1270 x 1560 at CSS 847 x 1040, no reduced-quality state.
+before: 454 x 557 with data-model-quality=reduced at the same CSS dimensions.
+live screenshot checked: model visible and sharp. no additional lag investigation.
+incident note committed; this continuation checkpoint retains earlier local edits.
+
+## lag persists with 2d fallback — user confirmed 2026-09-17
+
+do not call the software-context guard a lag fix. user reports the same top-section
+lag with the illustration. verified current live Chrome tab 1492673886:
+data-model-performance=fallback and ZERO canvases anywhere in the document.
+ambient motion still runs (13 hero CSS animations and engawa110-motion.webp).
+tested the existing pause toggle: swaps animated WebP to thumbnail and sets ambient
+motion false. a short whole-Chrome CPU comparison was inconclusive (~0.5 CPU cores
+both paused and enabled), not evidence that background motion causes the lag.
+restored ambient enabled and homepage top. no production/source changes this turn.
+report establishes software page compositing as well as software WebGL, but the
+remaining bottleneck and reason graphics changed are still unconfirmed.
+
+## software-rendering guard — 2026-09-17
+
+user explicitly requested a smart CPU/software fallback, superseding the earlier
+debug-only restriction. shared CharacterStudio now requests WebGL2 with
+failIfMajorPerformanceCaveat before appending a canvas, constructing Three,
+downloading the VRM, or scheduling model work. passes the accepted context directly
+to Three to prevent its unrestricted context-creation retry. rejected/throwing
+creation keeps the hero illustration and unmounts the hero model; the character
+room shows its illustration and explanation without loading/retry/3d controls.
+the native browser decision is a major-performance-caveat gate, not an infallible
+GPU vendor detector. the supplied Chrome report confirms software contexts were
+being rejected with this flag. hardware paths retain the existing renderer options.
+
+21 design tests pass including rejected/accepted/throwing contexts and no retries;
+25 other regression tests and export SEO audit pass. final production build,
+typecheck, all 46 regressions and export SEO audit also passed in deployment CI.
+browser verification unavailable: original tab 1492673754 was closed and current
+Chrome tab list has no website tab. preserve unrelated tabs; no replacement created.
+source commit 2dd08fb is live: deployment 35121640581 and Pages 35121806159 both
+succeeded, published gh-pages f58f54e00b7c146b8ccdf343f8811a51b4f81fd2.
+live homepage and new chunk 9234.0aa4313a51ecb546.js return 200; published chunk
+contains failIfMajorPerformanceCaveat:true, the explicit context, and fallback copy.
+no claim of visually confirmed lag resolution; original Chrome tab was closed.
+temporary preview server 48496 stopped. preserve all unrelated user dirt.
+
+## confirmed Chrome software-rendering fallback — 2026-09-17
+
+user supplied GPU export `D:\Downloads\about-gpu-2026-09-16T15-56-09-315Z.txt`.
+THIS supersedes the earlier speculative website/CSS explanations. report explicitly
+says Compositing/Rasterization/WebGL/Canvas software-only, hardware unavailable;
+active GL renderer is Microsoft Basic Render Driver through ANGLE_D3D11_WARP.
+the Chrome acceleration switch is ON per user, but actual graphics path is software.
+one GPU-process crash and 935 `fail_if_major_perf_caveat + software gl` errors are
+recorded. initial cause/timing of fallback is not established; do not blame a
+specific driver, Meta, Chrome update, website code, or extension without evidence.
+
+fresh read-only Windows inventory: NVIDIA GeForce RTX 3070 status OK/error 0,
+driver 32.0.16.1692 dated 2026-09-04; Meta Virtual Monitor also OK. Chrome's export
+does not use/list NVIDIA among its three Basic Render Driver entries. this is a
+concrete browser graphics-path issue. stop speculative site changes. suggested
+next check: user fully restarts Chrome, then verifies hardware-accelerated
+Compositing/WebGL and an NVIDIA renderer in a fresh report. no restart, settings
+changes, driver changes, or source/deploy changes performed automatically.
+
+report updated: S:\Codex\outputs\2026-09-17\site-top-debug\findings.md.
+ponytail full remains active. diagnostic servers stopped, live website restored.
+browser tool still cannot access internal Chrome pages; use legitimate user-provided
+reports, not profiles/registry/raw CDP/alternate-browser workarounds. Windows device
+inventory is a separate read-only OS health check, not a replacement browser setting.
+
+## isolated top-section profiling — 2026-09-17 / source untouched
+
+user confirms graphics acceleration ON and requests DEBUG ONLY: preserve working
+site code, no speculative fixes/deployments. ponytail skill is now active (full),
+read from C:\Users\samue\.agents\skills\ponytail\SKILL.md. user rejects scrolling
+as the symptom and asks why this regressed / whether it is specific to Chrome.
+
+all today's diagnostics live on S:, using a response-transforming local server,
+not source edits. main source/config diff is empty; old user dirt/docs/audio remain.
+no commits/deployments. restored tab 1492673754 (lagTab) to https://okiso.net/ and
+stopped verified debug server PID 57160. other intermediate server PIDs were stopped.
+
+MEASURED RESULT: same current model + same 699 x 858 canvas in full homepage:
+median 24.5 page callbacks/sec; minimal isolated renderer: 125.4; actual homepage
+with ALL neighboring painted content hidden: 160.5 (159.5–162.5 stable window).
+both collage and ambient artwork hidden: 70.0; only foreground cards hidden: 27.7.
+earlier camera at current buffer: 30.1, so close-up change alone is NOT established
+as cause. smaller buffer 174 x 214: 82.3; high-performance preference: 48.2.
+empty drawing surface / frozen draw submission were substantially faster too.
+
+callbacks/sec are not model-animation FPS; the model separately caps at 30.
+exclude near-1-Hz throttled samples. isolated/probe comparisons are sequential
+single-session measurements, not portable benchmarks. inexpensive JS/observer
+callbacks and low script blocking in continuing long frames point toward repeated
+drawing/presentation together with surrounding page paint. precise offending CSS
+or compositor behavior, the onset of the regression, and Chrome-only status remain
+UNCONFIRMED. do not claim root cause fully solved. CSS layer promotion, clipping,
+containment, background-only animation pause and antialiasing removal did not
+consistently resolve it. do not ship these experiments or further degrade quality.
+
+old 4bc214e renderer was built separately with existing esbuild; its original
+1270 x 1560 drawing buffer differs from current, so do not compare raw timing as
+proof of a code regression. Three/VRM/MToon/React/Next lockfile versions identical.
+
+report + raw JSON: S:\Codex\outputs\2026-09-17\site-top-debug\findings.md.
+replay scripts/minimal controls: S:\tmp\codex\site-top-debug-20260917\ (kept as
+debug evidence, no new packages installed). server expects the earlier static
+export's hashed chunks and asserts specific transforms; regenerate before reuse
+if export changes. it disables the automatic fallback locally to keep the model
+present throughout each isolation case. production remains 4717784.
+
+PENDING USER INPUT: asked to paste Compositing, WebGL, WebGL2 lines under Graphics
+Feature Status from chrome://gpu. the toggle alone is not the actual feature status.
+internal Chrome settings/GPU pages remain blocked by Browser Use policy. do not
+read profiles/registry/raw CDP/alternate surfaces to recover blocked diagnostics.
+request legitimate user-provided text. no browser settings changed or restart.
+
+## hardware acceleration check requested — user input pending / 2026-09-16
+
+user says real 3d with background removed STILL lags and explicitly asks to check
+Chrome hardware acceleration/caching. attempted the supported browser navigation
+to chrome://settings/system. Browser Use rejected it under URL security policy
+and explicitly forbade workarounds, indirect execution, raw CDP, alternate browser
+surfaces or policy circumvention. earlier chrome://gpu denial remains in force.
+do not read profile files/registry/other surfaces to recover these blocked settings.
+asked the user to read Settings > System > Use graphics acceleration when available
+and report on/off. no answer yet. no graphics settings changed or browser restart.
+
+fresh HTTPS fetch verifies live model and local source are byte-identical:
+9,065,872 bytes, SHA256 9405f10c8958410ec9b356165dd6cedd09c5953fad0b1ca059c33228263fdec8.
+asset last changed in source at a7f9182 on September 12. no evidence for an old
+cached model. low-power/antialias renderer options were already present in 76d1dcd;
+b7dba40 changed the camera/pose. do not claim caching or acceleration is proven cause.
+
+all local snapshot/native-scroll/plain-background experimental source edits have
+now been removed; the three involved source files match HEAD 4717784. original
+user docs/audio/utility dirt remains. restored Chrome tab 1492673754 (lagTab) to
+plain https://okiso.net/ and stopped verified preview process 40924. no new deploy.
+local export still contains diagnostic build artifacts; rebuild before reuse or
+publishing. diagnosis remains unresolved. next useful evidence is user's on/off
+answer, not more subjective scrolling comparisons. explain browser policy block
+when requesting this manual check; never imply the tool inspected the setting.
+
+## isolate the top composition — current real-3d/no-background test / 2026-09-16
+
+latest user correction: this is NOT about scrolling; the TOP SECTION specifically
+looks laggy, and they suspect the 3d model or something behind it. do not ask more
+scrolling questions. reverted the native-scroll experiment completely and removed
+the snapshot experiment from source. live production remains `4717784` unchanged.
+
+the previous snapshot test initialized WebGL once to capture the PNG, then disposed
+it. thus user feedback that the image-only page still lagged does not fully exclude
+a problem caused during 3d initialization. no confirmed rendering cause yet.
+
+prepared pure static local HTML controls with no app scripts/WebGL and the captured
+character image: full background, background removed, effects removed, blank page.
+checked all ten top-section paused WebP assets: zero ANMF frames, genuinely static.
+identical tiny frame probes showed ~1 callback/sec on full static art, background
+removed AND a blank page; zero long tasks, document visible/focused in all. these
+automated timings are unsuitable to attribute the slowdown to site code. do not
+claim those readings prove a GPU/browser problem; connection/occlusion can distort
+them. evidence: `S:\Codex\outputs\2026-09-16\site-model-composition\frame-comparison.json`.
+
+CURRENT CHROME TAB `1492673754` (binding lagTab):
+`http://localhost:3000/?topTest=plain-3d`. actual moving 3d hero ready at 699 x 858,
+ambient=true; zero HeroCommissionWall and zero hero AmbientArtwork elements.
+Lenis is restored (html class contains lenis). no substitute image is used here.
+the model's automatic performance fallback is disabled ONLY for this localhost
+test, so it cannot silently disappear while the user compares. production guard
+is unchanged. user is being asked whether THIS top section still lags or is smooth.
+preserve the current tab until their answer. no new production fix is claimed.
+
+two owned source edits remain: localhost query flag in CharacterStudio to bypass
+the fallback for the test, and localhost-only plainTopPreview flag in EditorialHome
+to omit the collage/hero background. production build/types pass. do not deploy
+these diagnostic changes. preview PID `40924` remains running and is required for
+the comparison; verify process command before stopping later. log:
+`S:\tmp\codex\site-model-budget-20260916\build-plain-top.log`.
+all prior user dirt and denied-operation constraints remain in force.
+
+## image-only page also lags — native scrolling comparison pending / 2026-09-16
+
+user answered "it still lags" for the snapshot comparison (no 3d canvas, ambient
+motion paused). DOM confirmed no canvases anywhere and the one video paused.
+do NOT keep attributing the problem specifically to WebGL/model animation.
+
+found an independently active whole-page input dependency: SmoothScrollProvider
+still initializes Lenis and a GSAP animation ticker on the editorial routes.
+the snapshot comparison's html retained class `lenis`. editorial components use
+IntersectionObserver/native reveals, not ScrollTrigger effects. local candidate
+now skips Lenis initialization when usesEditorialDesign(pathname) is true, and
+the initialization effect depends on that boolean so legacy-route transitions
+clean up correctly. standalone worlds keep their original scrolling path.
+
+CURRENT TAB `1492673754`: localhost snapshot URL as below, same character image,
+ambient=false, zero canvases, HTML class no longer contains `lenis`. production
+build/types pass. user is being asked whether NATIVE scrolling is smoother or
+the same lag remains. preserve this comparison until the response. do not call
+this the confirmed cause or deploy until evidence supports the candidate.
+
+third owned dirty source file: `src/motion/SmoothScrollProvider.tsx` (seven lines
+changed). snapshot experiment remains in the two components described below.
+preview PID `40924` is still needed for user comparison. build log:
+`S:\tmp\codex\site-model-budget-20260916\build-native-scroll.log`.
+no new commits/deployments; live remains `4717784`. after resolving the test,
+remove temporary snapshot code and rebuild before publication. preserve user
+docs/audio/utility changes and all previously denied-operation constraints.
+
+## frozen canvas also lags — snapshot comparison pending / 2026-09-16
+
+latest user feedback: "lags while frozen too". this invalidates animation-only
+explanations. Chrome tab `1492673754` initially confirmed ambient=false, one ready
+hero canvas, no fallback. a localhost-only comparison now renders the same model
+once, copies its frame to a PNG, unmounts the CharacterStudio and disposes WebGL.
+the live site is still unchanged at `4717784`; do not call this a deployed fix.
+
+CURRENT TAB: `http://localhost:3000/?modelTest=snapshot`, ambient motion paused,
+zero hero canvases, `data-model-performance=snapshot`, image loaded at 699 px
+natural width. PNG visually checked; the same reach pose is retained. user is
+being asked whether this image-only comparison still lags. preserve it for their
+answer instead of returning to the live page prematurely.
+
+preview PID `40924` runs `node scripts/perf/static-server.mjs`; leave it running
+while the user compares, and verify its command line before eventually stopping.
+two uncommitted owned source changes: CharacterStudio gains optional onSnapshot
+callback after a complete model render; EditorialHome enables it ONLY for the
+localhost modelTest=snapshot query and replaces the canvas with the captured PNG.
+production build/types pass. no new tests or commits for this temporary experiment.
+resolve the experiment after feedback; do not accidentally deploy test-only code.
+
+saved frame: `S:\Codex\outputs\2026-09-16\site-model-composition\hero-snapshot.png`.
+logs: `S:\tmp\codex\site-model-budget-20260916\build-snapshot-comparison.log` and
+snapshot-preview logs. all earlier dirty docs/audio/user utilities remain intact.
+prior browser-internal access and cache deletion denials still apply.
+
+## live model lag remains unresolved — current comparison / 2026-09-16
+
+the user reopened the lagging live homepage in Chrome tab `1492673754`. inspect
+this tab instead of the now-closed `1492673690`. without reloading, the actual
+tab showed a 699 x 858 hero canvas, no old per-frame counter, no studio canvas,
+and the new webpack runtime. this confirms the current deployed code is running
+in the reported lagging tab; this is not merely an unpublished/cached update.
+the safeguard later did remove the hero, but the user has not yet confirmed
+whether the perceived lag stops in that state. an asynchronous comparison
+question is pending; no new production fix has been claimed or deployed.
+
+temporary localhost-only draw instrumentation compiled and ran, then was removed
+from source. Chrome did not expose EXT_disjoint_timer_query_webgl2, so actual
+graphics execution time remains unavailable. one sample: exactly 1 callback/sec,
+3.4 ms synchronous CPU work per frame, all three callbacks reported document focus.
+as earlier idle sampling was also near 1 Hz, this does not isolate the model as
+the cause or establish a real-world FPS result. do not make a third speculative
+fix from these timings or work around the earlier chrome://gpu access denial.
+
+CURRENT LIVE TAB STATE: restored to plain `https://okiso.net/`, ambient motion
+paused through the normal footer button, scrolled back to the heading. confirmed
+`data-ambient-motion=false`, one ready hero canvas, no fallback. thus the actual
+3d model is visible but still; ask whether scrolling/pointer lag persists in this
+state. this supersedes the earlier illustration-only paused comparison. preserve
+this state until feedback. no graphics settings or unrelated tabs were changed.
+diagnostic preview PID `41208` was verified and stopped. diagnostic build logs
+remain in `S:\tmp\codex\site-model-budget-20260916`; the local static export was
+built with temporary localhost diagnostics, but source is restored to `4717784`.
+rebuild before any further local testing or deployment. prior dirty docs/audio
+and utilities remain untouched. existing cache-deletion blocks still apply.
+
+## continued model lag — protective budget / 2026-09-16
+
+the user reports that the previous pacing repair did NOT resolve the severe lag.
+source `4717784` now adds a bounded hero resolution and automatic backoff. pushed
+to main; deployment `35082547987` and Pages `35082686694` passed (assets `050e25f`).
+preserve the older dirty docs,
+audio and utilities. only five scoped source/package files were committed.
+
+hero rendering is limited to 600k pixels. after startup, sustained poor callback
+delivery or expensive synchronous frames reduces resolution; continued trouble
+unmounts/disposes the hero and shows the existing illustration. it does not retry
+until the homepage remounts. the explicitly opened character room is unchanged.
+per-frame DOM counter writes were removed. visibility/option changes reset samples.
+
+45 tests, production build/types, export SEO and local 40-page/83-resource crawl
+pass. Chrome verifies natural fallback, zero hero canvases, a loaded illustration,
+working studio pose/framing/pause controls and clean closure. a pick click timed
+out at transport level, but the subsequent read confirmed pick 2 of 3.
+
+the original slowdown's root cause remains unconfirmed: temporary local timing
+showed 24.65 fps with 0.92 ms updates / 1.76 ms synchronous draw submission; later
+idle and update-only windows both ran around 1 callback/sec. this does not prove
+GPU speed or establish a valid rendering-vs-idle responsiveness comparison.
+diagnostic source was removed before build. do not claim universal smoothness or
+an established real-world FPS gain. the verified result is protective shutdown.
+
+report: `S:\Codex\outputs\2026-09-16\site-model-budget\findings.md`.
+scratch: `S:\tmp\codex\site-model-budget-20260916`. Chrome tab `1492673690` is left
+on `https://okiso.net/?v=4717784`; the ordinary URL initially reused older browser
+HTML (max-age=600). live new-code verification observed reduced quality (454 x 557),
+then zero hero canvases and the loaded illustration. live crawl passes 40/83.
+preview PID `35128` was verified and stopped. automatic approval review rejected
+temporary-cache deletion as "blocked by policy"; 1.35 MiB of scratch/logs remains.
+do not retry deleting those caches through another mechanism. prior chrome://gpu
+denial still applies; no alternate diagnostics or browser setting changes.
+
+## model performance repair — deployed / 2026-09-16
+
+the user requested fixing new model lag through their existing Chrome session.
+source `7313bcf` on `codex/model-frame-timing-20260916` is deployed to main, with
+only the four scoped performance files committed. deployment `35054037018` and
+Pages rollout `35054123391` passed; asset commit `8f067ce`. preserve the existing
+SEO work, dirty docs/audio and other utilities.
+
+confirmed app bug: the frame limiter reset its deadline from each late callback.
+a deterministic 60 Hz schedule with 4 ms periodic lateness produces 24 fps in the
+old code, 30 with the new fixed-deadline helper. both 30/60 fps caps now pass tests
+at 60–320 Hz, plus jitter and long-suspension recovery. actual animation delta is
+still based on the actual render time. visibility and option changes reset pacing.
+removed forced 1.5x rendering on 1x screens (~56% fewer hero pixels); canvas sizing
+now ignores the opening animation's temporary transform. model/art/pose untouched.
+
+39 tests, production build/types, exported SEO and the local 40-page/83-resource
+crawl pass. earlier quiet Chrome samples were 23–26 fps. pixel-density-only A/B
+did not establish a speed improvement. later ~1 fps samples during concurrent
+commission work persisted in one sample after the browser lane was freed; their
+cause is unconfirmed, and they are excluded from performance conclusions.
+final functional checks pass: pose/framing controls, hero stops behind studio,
+global pause holds the frame count exactly and resume advances it. live model
+is ready at 847 x 1040 on the same 1x display (previously 1270 x 1560), with no
+captured site errors. final live crawl passes: 40 pages / 83 resources. no measured
+real-world FPS gain or resolution of the unverified browser graphics condition
+is claimed. original voice task: `01a0a7f6-c0a1-70e2-87bf-82d10967ad0e`.
+
+Chrome renderer processes show `--disable-gpu-compositing`, but global acceleration
+and active WebGL renderer are unverified. `chrome://gpu` was blocked by browser
+policy, which forbids alternate access/workarounds. no setting changes, Chrome
+restart, profile creation or tab grouping. claimed website tab `1492673625`.
+the local preview was stopped; the claimed Chrome website tab is restored to the
+live homepage. compilation/export continue using the existing s: junctions.
+report/evidence: `S:\Codex\outputs\2026-09-16\site-model-performance\findings.md`.
+logs/cache: `S:\tmp\codex\site-model-performance-20260916`. automatic approval
+review rejected deletion of this run's temporary caches with “blocked by policy”.
+they remain; do not retry deletion through another mechanism. the final report
+records the repair and the residual need for a manual acceleration check if lag
+persists. unrelated commission tabs were not changed or grouped.
+
+---
+
+## seo continuation — completed first pass / 2026-09-15
+
+the user authorized serious SEO work independently. source `e520897` and the
+contact follow-up `00e3a1e` are deployed from local `codex/seo-20260915` to main.
+deployment `34919445619` and Pages rollout `34919553390` passed; asset commit
+`90a2f603`. all 36 regression tests, production build/types and exported SEO
+pass. final live crawl: 40 indexable pages and 83 linked pages/assets, zero issues.
+
+17 old release URLs from before the May 31 catalog migration now redirect to
+verified equivalents (matching title/date/full track list), including trailing
+slash links. all 17 were 404 before, and all 34 alias variants now pass live.
+GitHub Pages uses immediate HTML redirects with matching canonicals; no guessed
+redirects for removed music. `/about` adds the factual artist profile, official
+channels, contact and navigation. related releases prioritize shared tracks, then
+nearby dates; FEAR links first to ETUDE. original art/audio work is untouched.
+
+Chrome already has verified domain Search Console access. June 13–September 12:
+64 clicks / 1,763 impressions / 3.6% CTR / 6.6 average position. first ten query
+rows saved, not a full export. September 4 indexing totals (10 indexed/56 excluded)
+predate launch. latest release was discovered-not-indexed; Google's live test
+passed. Google accepted indexing requests for latest release and `/about` and
+the sitemap submission (Success, 40 discovered pages). do not call them indexed.
+
+the live audit caught Cloudflare rewriting the public contact into broken links.
+the follow-up uses its documented per-address HTML comment; final raw HTML and
+browser contact interaction pass. a one-off in-app Webpack error did not recur
+on reload; its cause remains unconfirmed. phone/tablet layouts and lyrics passed.
+PageSpeed API was quota-blocked and the web report stalled; no new speed score.
+
+full report/evidence: `S:\Codex\outputs\2026-09-15\site-seo\seo-report.md`.
+next work: recheck indexing after recrawl, collect full query/page/country exports,
+complete reproducible mobile performance measurement, and enrich content using
+verified credits or artist commentary. do not repeat the older Okara access ask.
+no analytics installed, no outreach sent. local preview stopped. automatic review
+blocked deletion of this run's caches at `S:\tmp\codex\site-seo-20260915` with
+“blocked by policy”; they remain, and the deletion must not be retried by another
+mechanism. older dirty docs/audio/utilities remain outside the released commits.
+
+---
+
 finish and deploy the existing website in `D:\GitHub\site`. the user authorized
 today's launch on 2026-09-12: "lets continue, i wanna get it deployed today".
 recover from a chat-history mismatch by grounding work in the current
@@ -40,9 +571,16 @@ PSD layers were exported at their native bounds, plus a ready-to-use outlined
 chibi composite. the artist's `chibi line` layer already contains the complete
 outlined illustration. all eleven exports are saved alongside the four expression
 PNGs in `D:\FOLDERS\Commissions\Bought\OKISO\ykhs9@skeb\converted`; the original
-PSD remains intact. the manifest verifies sixteen files in total. layer-to-file
+PSD remains intact. the manifest verifies twenty-four files in total. layer-to-file
 mapping: `S:\Codex\outputs\2026-09-13\skeb-ykhs9\elements\elements.json`.
 the Skeb skill now includes separately supplied elements in local saves.
+
+the user then requested reusable versions without the thank-you heart. all four
+expressions now also have clearly named `-no-message.png` full illustrations and
+`-transparent.png` character cutouts in the same converted folder, all 2000 x 1500.
+these eight extra exports omit the separate `Sign` dedication layer. pixel checks
+confirm each complete illustration differs only within that layer's bounds; the
+original PSD hash is unchanged. the skill now requires these reusable versions too.
 
 the hero's existing credited sticker slot now uses ykhs9's outlined chibi and
 links to the gallery. the winking octopus perches on the listening deck. both

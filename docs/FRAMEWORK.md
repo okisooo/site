@@ -2,9 +2,20 @@
 
 Shared UI + motion framework for every route on okiso.net. Written 2026-07-25 from
 a 5-area codebase audit and three independently-designed, adversarially-judged
-architecture proposals. Visual target: HoYoverse *Zenless Zone Zero* and Gryphline
-*Arknights: Endfield* — cinematic pacing, technical HUD annotation, restrained
-palette with one hot accent, extreme type contrast.
+architecture proposals. **The current visual contract is
+[EDITORIAL-DIRECTION.md](./EDITORIAL-DIRECTION.md), updated 2026-09-06.** The user
+rejected soft orbit and requested one dense, character-led editorial language
+across the homepage, releases, release details, upcoming, and vault. Rouge Noir
+and future OKISO Grain are deliberate standalone exceptions.
+
+The user explicitly reaffirmed white and red as the core brand palette. The
+supplied collage reference governs composition and detail, not its yellow/lavender
+colors. Older pink/tactical palette notes below must not override that correction.
+
+The historical audit and architecture proposals below remain engineering context,
+not authority to restore tactical HUDs, a separate vault theme, or the rejected
+soft-orbit palette. Current source and the editorial contract supersede those
+older visual recommendations.
 
 Tool reference (skill install, library links, constraints):
 `D:\SecondBrain\vault\20-shared\premium-frontend-toolkit.md`.
@@ -14,9 +25,64 @@ The visual/token spine in this document is now paired with
 the Apple interaction audit into an OKISO-specific behavior contract and is the
 gate for any whole-site redesign.
 
-The current candidate art direction is preserved separately in
-[`SOFT-ORBIT-DIRECTION.md`](./SOFT-ORBIT-DIRECTION.md). Its prototype is a saved,
-unfinished review artifact—not approval to migrate or deploy live routes.
+The rejected candidate is preserved in
+[`SOFT-ORBIT-DIRECTION.md`](./SOFT-ORBIT-DIRECTION.md) as history. Local migration
+to the shared editorial system is requested; deployment still requires approval.
+
+### External reference feeds
+
+Use these as current-input libraries during art direction, not as component catalogs
+to copy. Every borrowed idea must be translated through OKISO's identity, the token
+layers below, and the interaction contract; source popularity never outranks those
+constraints.
+
+| Source | Best used for | Do not copy |
+|---|---|---|
+| [Recent](https://recent.design/) | broad visual research across web, typography, motion, 3D, editorial, and branding | its feed layout or trend mix as a substitute for a route concept |
+| [Best Designs on X](https://bestdesignsonx.com/) | very recent UI and motion fragments, creator discovery, and interaction references | isolated social-media shots without checking the complete product flow |
+| [The Internet Designs](https://www.theinternetdesigns.com/) | targeted interface, landing-page, dashboard, mobile, typography, 3D, and interaction references | category-page composition or generic gallery chrome |
+| [Inspora](https://www.inspora.design/) | curated web, branding, product, motion, illustration, 3D, and print references with original-source links | styling detached from the original creator and context |
+
+For a redesign proposal, record one concrete reference per decision—layout, type,
+motion, surface, or interaction—and state what is being adapted. A moodboard of
+unrelated screenshots is not a design direction.
+
+### Strategic input: audience, positioning, and growth
+
+The [OKISO CMO workspace](https://okara.ai/agent/cmo/c37930b3-12a4-4088-bfc1-95ea44131cff)
+is a dated research input, not brand authority. Its accessible product brief,
+marketing strategy, crawler draft, and 2026-09-02 technical audit must be checked
+against current source before use. The competitor analysis, design guide, and
+content strategy are subscription-locked and must not be cited as reviewed.
+
+- **Audience:** online-native VOCALOID, hyperpop, electronic-music, and VTuber
+  listeners who discover through YouTube, Spotify, X, and fan communities, then
+  deepen through Discord, live streams, and the archive.
+- **Positioning:** present OKISO as an independent virtual artist with a connected
+  creative universe. The site must not collapse into either a generic link hub or
+  a discography grid.
+- **Primary path:** latest release first. Supporting paths are featured video/live
+  content, the full release archive, upcoming work, and official community channels.
+- **Proof before claims:** use real release count, current releases, live state,
+  public archive material, and official links. Do not invent scale, coordinates,
+  lore, engagement, or campaign results.
+- **Channel handoff:** YouTube and Spotify carry discovery; X carries release and
+  creator conversation; Discord and Twitch carry retention and participation. The
+  site should make those transitions legible without turning the hero into a link farm.
+- **Technical gate:** one meaningful `h1` per public route, unique metadata,
+  accurate structured data, canonical crawlable URLs,
+  and a complete mobile experience before cinematic extras load. Heavy 3D and
+  adaptive video code must remain user-initiated or route-split.
+
+The implementation and measurement handoff is [SEO-WORKPLAN.md](./SEO-WORKPLAN.md).
+`/llms.txt` is an optional factual directory, not a Google ranking requirement.
+No AI-generated art assets are permitted in the site or its design prototypes;
+use OKISO's existing original artwork and authored media.
+
+The workspace's numeric audit is a production snapshot, not a permanent score.
+Reproduce any performance or SEO defect on the candidate branch before treating it
+as current; human visual judgment and real browser behavior still decide whether a
+direction ships.
 
 ---
 
@@ -85,8 +151,9 @@ and every existing `dark:` variant inside it resolves correctly — **fixing def
 #3 without editing any `.vault-*` class**. `.dark .x` keeps working because
 `&:is(.dark *)` is a superset of it.
 
-Scopes: `okiso` (default, light-first), `vault` (dark-only editorial serif),
-`rouge-noir` (dark-only crimson/gold casino noir).
+Current scopes: `.core-site` (shared white/red editorial system,
+including the vault) and standalone `rouge-noir` (existing crimson/gold world).
+The old separate dark/serif vault recommendation is superseded.
 
 Moving `/rouge-noir`'s inline `<style>` tokens into `scopes.css` has a second
 payoff: the tokens become visible to Tailwind's content scanner, so `bg-accent`
@@ -182,12 +249,13 @@ net deletion of ~250 lines. If it can't, the primitives are wrong.
 
 | route | treatment |
 |---|---|
-| `/` | Keep kinetic-brutalist identity. Push `"use client"` down off the page root; lazy-load `hls.js`; keep the VRM defer. Sections → `<Section>`, marquees → `<Ticker>`. |
-| `/releases` | Biggest motion upside: **GSAP Flip shared-element transition** from grid cover → detail hero (`data-flip-id`). Body-style scroll writes → `useScrollLock`. |
-| `/releases/[slug]` | Lowest risk, largest gain — currently near-unstyled. Convert first. |
-| `/upcoming` | Full-lock page → `useScrollLock`; its marquee background → `<FxBackground kind="grid">`. |
-| `/vault` | `<ThemeScope name="vault" scheme="dark">`; delete the dead `vault-theme` string. Fixes defect #3 with no `.vault-*` edits. Stays dark-only, serif, minimal motion — it's a listening room. |
-| `/rouge-noir` | Reference implementation; scoped `<style>` → `scopes.css`; all bespoke GSAP → primitives. Converted **last**, as the acceptance test. |
+| `/` | Layered editorial cover with the existing original character, latest artwork, listening deck, actual media and channels. |
+| `/releases` | Shared mounted cover grid, real search, quick listening, optional deferred 3D archive. |
+| `/releases/[slug]` | Shared masthead, large artwork mount, factual credits, listening controls and native lyrics. |
+| `/upcoming` | Same shell and panels, truthful announcement state, no full-page scroll lock. |
+| `/vault` | Same shell, typography, colors and controls; preserve all backend-enforced access and management contracts. |
+| `/rouge-noir` | Standalone exception. Do not migrate it into the core editorial system. |
+| `/lab/soft-orbit` | Noindex review alias using the same homepage component; not a second design language. |
 
 ---
 
@@ -221,7 +289,7 @@ built `/out`.
 - **Vanta.js — do not adopt.** Verified: latest is `0.5.24`, last published **2022**, unmaintained. It needs a global `window.THREE`, spins up a *second* WebGL context alongside the four canvases this site already runs (r3f OrbitGallery, VRM, ogl DarkVeil, Waves), and duplicates capability already paid for. (Correction to one research pass: npm declares *no* three.js peer range — the "pinned to r121–r134" claim is inferred from internal API use, not a manifest constraint, and several effects broke after `THREE.Geometry` was removed in r125.) If it is still wanted, the only defensible placement is `/upcoming` — the one route with no competing WebGL context — behind `dynamic(ssr:false)`, `cinematic` only. Everywhere else `DarkVeil`/`Waves` behind `<FxBackground>` is strictly better and already free.
 - **reactbits TextPressure** — belongs narrowly. Needs a real variable font with `wght`/`wdth` axes in `/public`, which is exactly the `basePath` trap that already broke the cursor frames, so `AssetStyle` lands first. It rewrites `font-variation-settings` on every character every frame → one wordmark only, `cinematic` only. For everything else `<SplitHeading>` on GSAP SplitText is cheaper and integrates with ScrollTrigger natively.
 - **21st.dev** — chrome only (nav shells, docks, dialogs, badges, marquees), never hero motion, and always hand-ported. The L3 bridge is what makes their `bg-card` / `text-muted-foreground` classes resolve at all.
-- **`ui-ux-pro-max` skill** — advisory. Its palette output does **not** outrank OKISO's locked identity (`ba-pink` `#FF7EB3`; rouge-noir crimson/gold). Many of its style/motion rows are React-Native-flavoured (Reanimated, haptics) — take the principles, not the APIs.
+- **`ui-ux-pro-max` skill** — advisory. Its palette output does **not** outrank OKISO's user-confirmed white/red identity (existing red primitives `#FF4D4D` / `#CC0000`; rouge-noir crimson/gold remains standalone). Many of its style/motion rows are React-Native-flavoured (Reanimated, haptics) — take the principles, not the APIs.
 
 ---
 

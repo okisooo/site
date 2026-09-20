@@ -1,3 +1,7 @@
+> historical handoff: for current work, read [resume website](RESUME-WEBSITE.md)
+> first. this july checkpoint does not describe the current white/red website.
+> do not run its old cache-deletion instructions: local build paths are junctions.
+
 # Handoff — okiso.net (2026-07-27)
 
 Run dev: `npm run dev:webpack` (port 3000). **Do NOT use `npm run dev`** —

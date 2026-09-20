@@ -1,3 +1,11 @@
+## current website continuation
+
+read `docs/RESUME-WEBSITE.md` before acting on older website handoffs. it records
+the current white/red editorial implementation and deployment checklist. the
+july/august tactical and soft-orbit next steps are historical, not the current
+assignment. verify the checkout before changing anything; preserve uncommitted
+art, audio, and other user work. update this repository checkpoint as work lands.
+
 <!-- second-brain:start -->
 ## persistent second brain
 

@@ -12,11 +12,12 @@ the public site remains a static github pages export. release credentials and ap
 
 ## first authorization
 
-1. put `TOOLOST_CLIENT_ID` and the registered `TOOLOST_REDIRECT_URI` in ignored `.env.local`. public pkce apps do not need `TOOLOST_CLIENT_SECRET`.
-2. run `npm run authorize-toolost`.
-3. open the printed too lost authorization url and approve only `read:releases`.
-4. copy the full callback url and paste it into the waiting terminal.
-5. access and refresh tokens are written to ignored `.env.toolost.local`. create github actions secrets named `TOOLOST_CLIENT_ID` and `TOOLOST_REFRESH_TOKEN`.
+1. copy the approved app's credentials from the too lost developer portal. an app approved for the sandbox is sandbox-only; do not treat it as production approval.
+2. put `TOOLOST_CLIENT_ID`, `TOOLOST_CLIENT_SECRET` (when issued), and the exact registered `TOOLOST_REDIRECT_URI` in ignored `.env.local`. never guess or rewrite the redirect URI. public pkce apps may omit the secret; confidential apps must keep it server-side. if the portal gives the sandbox distinct endpoints, also set its exact `TOOLOST_AUTHORIZE_URL`, `TOOLOST_TOKEN_URL`, and `TOOLOST_API_BASE_URL`; otherwise the documented production defaults remain in use.
+3. run `npm run authorize-toolost`.
+4. open the printed too lost authorization url and approve only `read:releases`.
+5. copy the full callback url and paste it into the waiting terminal.
+6. access and refresh tokens are written to ignored `.env.toolost.local`. create github actions secrets named `TOOLOST_CLIENT_ID`, `TOOLOST_CLIENT_SECRET` (when issued), and `TOOLOST_REFRESH_TOKEN` only after the sandbox sync is verified.
 
 never add oauth values to `NEXT_PUBLIC_*`, `src/data/releases.ts`, screenshots, action output, or commits.
 
@@ -25,6 +26,8 @@ never add oauth values to `NEXT_PUBLIC_*`, `src/data/releases.ts`, screenshots, 
 run `npm run update-releases` locally, or dispatch the `update-releases` github action. the action exchanges `TOOLOST_REFRESH_TOKEN`, saves its rotated replacement with `SITE_PAT`, and passes the short-lived access token only to the sync step.
 
 if refresh returns `401`, repeat authorization and replace `TOOLOST_REFRESH_TOKEN`. tokens never enter the repository or action logs.
+
+the catalog adapter accepts the developer portal's current `{ data: { releases, meta } }` response and the earlier flat response during the beta transition. snake-case and camel-case metadata fields are normalized at the boundary; the site's release model remains stable.
 
 ## smart links
 
