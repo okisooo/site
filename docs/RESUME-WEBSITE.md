@@ -2,7 +2,7 @@
 
 # task
 
-## site-wide link previews — publishing approved / 2026-09-22
+## site-wide link previews — deployed / 2026-09-22
 
 user expanded the gallery request to proper embeds for most pages. supersedes
 the gallery-only scope below. seven authored 1200x630 JPEG cards now cover home,
@@ -33,8 +33,15 @@ production build/typecheck, 18 release/SEO unit tests and expanded exported SEO
 audit (41 indexable pages, 35 release pages). audit checks route-specific metadata,
 all release covers, main-page exported image presence/budgets, and callback opt-out.
 log: `S:\tmp\codex\site-social-preview-20260922\build-sitewide.log`.
-user approved publishing on 2026-09-22. release/deployment in progress; record the
-completed workflow and live checks here afterward. no Discord message was sent.
+published source `1793efc9` after user approval. deployment `35635809626` and Pages
+rollout `35636193065` succeeded; published assets `0b720e8b`. all 43 CI regressions,
+production build/typecheck and exported SEO checks passed. live verification passed
+45 pages (including all 35 releases), the seven main URLs without cache-busting,
+and all seven JPEGs with exact SHA-256 matches to the reviewed assets. crawler
+requests received correct per-page OG/Twitter fields and preserved noindex rules.
+evidence: `S:\Codex\outputs\2026-09-22\site-social-preview\live-checks.json`.
+no actual Discord message was sent or rendered; previously cached messages may
+retain their older previews. working tree changes were scoped to this feature.
 oki.so DNS/email/redirect setup remains outside this change.
 
 ## gallery link preview — local candidate / 2026-09-22
