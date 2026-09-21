@@ -2,6 +2,24 @@
 
 # task
 
+## he_know_lee commission gallery integration — 2026-09-22
+
+request 4046163 / public work 11 is archived under
+`D:\FOLDERS\Commissions\Bought\OKISO\he_know_lee@skeb` with all five original
+2894x4093 PNG deliveries, descriptive verified copies and a 10-record manifest.
+the site carries five 1273x1800 WebP versions: open mouth, frown, artist message,
+background separation, and character & mascot. gallery now shows 8 commissions
+and 25 versions; the homepage commission wall uses one piece from each artist
+instead of repeating sobu. asset, design, release, deployment and SEO checks pass;
+production build/typecheck passes. local and live Chrome checks cover the gallery,
+every variant, the homepage wall, 1440x1000 desktop and 390x844 phone layouts;
+images load, links point to the artist and public Skeb work, neither layout spills
+horizontally, and site console warnings/errors are empty. committed 264cb1aa and
+pushed to main. deployment 35616762636 and Pages 35617002260 succeeded; published
+gh-pages asset commit 065a3837. private signed-link scratch remains at
+`S:\tmp\codex\skeb-4046163-20260921\request.json` (3,886 bytes) because automatic
+approval review rejected deletion as blocked by policy; do not retry a workaround.
+
 ## keep the name readable and soften finger bends — 2026-09-18
 
 user screenshot showed the peace sign covering "i’m OKISO" and curled fingers
