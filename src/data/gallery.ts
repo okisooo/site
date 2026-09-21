@@ -29,9 +29,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in the signed-in completed list, September 12–13, 2026.
+// Skeb work/creator identities verified in the signed-in completed list through September 21, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'he-know-lee', artist: 'he_know_lee', title: 'portrait with mascot', medium: 'illustration',
+    description: 'OKISO and a takoling mascot, illustrated by he_know_lee.',
+    artistUrl: 'https://skeb.jp/@he_know_lee', workUrl: 'https://skeb.jp/@he_know_lee/works/11',
+    small: '/art/gallery/he-know-lee-thumb.webp', width: 1273, height: 1800,
+    variants: [variant('he-know-lee', 'open mouth', 1273, 1800), variant('he-know-lee-frown', 'frown', 1273, 1800), variant('he-know-lee-message', 'artist message', 1273, 1800), variant('he-know-lee-background', 'background separation', 1273, 1800), variant('he-know-lee-character', 'character & mascot', 1273, 1800)] },
   { id: 'ykhs9', artist: 'ykhs9', title: 'music illustration', medium: 'illustration',
     description: 'OKISO in a graphic red-and-mint music illustration by ykhs9.',
     artistUrl: 'https://skeb.jp/@ykhs9', workUrl: 'https://skeb.jp/@ykhs9/works/16',
