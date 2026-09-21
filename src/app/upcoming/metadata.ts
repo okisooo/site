@@ -4,8 +4,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
   ...pageMetadata(
-    "OKISO | Upcoming Music Releases & Announcements",
-    "Stay updated on upcoming music releases, future announcements, and project teasers from virtual artist and VOCALOID producer OKISO.",
+    "OKISO / upcoming",
+    "New music and announcements from OKISO. In the meantime, hear the latest release or explore demos in the vault.",
     "/upcoming",
   ),
   keywords: [

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import SoftOrbitLab from "./SoftOrbitLab";
+import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = {
-  title: "Editorial design preview | OKISO",
-  description: "An unlisted preview of OKISO’s shared editorial design.",
+  ...pageMetadata("Editorial design preview | OKISO", "An unlisted preview of OKISO’s shared editorial design.", "/lab/soft-orbit"),
   robots: { index: false, follow: false },
-  alternates: { canonical: "https://okiso.net/lab/soft-orbit" },
 };
 export default function SoftOrbitLabPage() { return <SoftOrbitLab />; }

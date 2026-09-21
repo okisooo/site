@@ -1,6 +1,7 @@
 import { Playfair_Display, Archivo } from "next/font/google";
 import { metadata } from "./metadata";
 import RougeNoirClient from "./RougeNoirClient";
+import { socialImage } from "@/lib/socialImages";
 
 export { metadata };
 
@@ -31,7 +32,7 @@ const videoGameLd = {
     name: "OKISO",
     url: siteUrl,
   },
-  image: `${siteUrl}/og_image.png`,
+  image: socialImage('/rouge-noir').url,
 };
 
 const breadcrumbLd = {

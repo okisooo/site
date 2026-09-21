@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import VaultClient from "@/Components/Vault/VaultClient";
+import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "The Vault | OKISO",
-  description: "OKISO demos, alternate versions and unfinished tracks.",
+  ...pageMetadata("OKISO / the vault", "Demos, alternate versions and unfinished tracks from my music archive.", "/vault"),
   robots: { index: false, follow: false },
-  alternates: { canonical: "https://okiso.net/vault" },
 };
 
 export default function VaultPage() {

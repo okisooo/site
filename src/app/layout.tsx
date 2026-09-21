@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { SmoothScrollProvider } from "@/motion/SmoothScrollProvider";
 import { getLocalPlaylist } from "@/lib/localPlaylist";
+import { pageMetadata } from "@/lib/seo";
 
 // Technical mono for HUD labels / metadata annotation (docs/FRAMEWORK.md §5 step 2).
 // tailwind.config mapped `font-mono` to `var(--font-geist-mono)`, which was defined
@@ -37,8 +38,11 @@ const quicksand = Quicksand({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://okiso.net'),
-  title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-  description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
+  ...pageMetadata(
+    "OKISO — music, art & more",
+    "VTuber, virtual artist and VOCALOID producer. Listen to my music, browse the art gallery and explore the vault.",
+    "",
+  ),
   keywords: [
     "OKISO",
     "okiso",
@@ -52,28 +56,6 @@ export const metadata: Metadata = {
     "OKISO official",
     "OKISO music"
   ],
-  alternates: {
-    canonical: 'https://okiso.net'
-  },
-  openGraph: {
-    title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
-    url: "https://okiso.net",
-    images: [
-      {
-        url: "https://okiso.net/og_image.png",
-        alt: "OKISO Official Site"
-      }
-    ],
-    siteName: "OKISO",
-    type: "website"
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "OKISO ✦ Official Site | VOCALOID Producer & VTuber",
-    description: "OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Listen to releases, watch streams and browse commissioned art.",
-    images: ["https://okiso.net/og_image.png"]
-  },
   formatDetection: {
     telephone: false,
   },

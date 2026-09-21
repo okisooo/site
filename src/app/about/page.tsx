@@ -4,8 +4,8 @@ import { staticReleases } from '@/data/releases';
 import { ARTIST_ID, ARTIST_DESCRIPTION, SITE_URL, artistStructuredData, jsonLd, pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata(
-  'About OKISO | VTuber, Virtual Artist & VOCALOID Producer',
-  'OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music. Find music, artist profiles and contact details.',
+  'About OKISO',
+  'I make hyperpop and electronic music. More about me, my official profiles and how to get in touch.',
   '/about',
 );
 

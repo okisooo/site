@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import type { Release } from '@/data/releases';
+import { socialImage } from './socialImages';
 
 export const SITE_URL = 'https://okiso.net';
 export const ARTIST_ID = `${SITE_URL}/#artist`;
 export const ARTIST_DESCRIPTION = 'OKISO is a VTuber, virtual artist and VOCALOID producer making hyperpop and electronic music.';
 export const artistStructuredData = {
   '@type': 'MusicGroup', '@id': ARTIST_ID, name: 'OKISO',
-  url: SITE_URL, image: `${SITE_URL}/og_image.png`, description: ARTIST_DESCRIPTION,
+  url: SITE_URL, image: socialImage('/about').url, description: ARTIST_DESCRIPTION,
   sameAs: ['https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm', 'https://www.instagram.com/okisooo_/', 'https://github.com/okisooo', 'https://x.com/okisooo_', 'https://www.youtube.com/@okiso7', 'https://okiso.bandcamp.com/'],
 };
 
@@ -16,7 +17,7 @@ export function jsonLd(value: unknown): string {
 
 export function pageMetadata(title: string, description: string, pathname: string): Metadata {
   const url = `${SITE_URL}${pathname}`;
-  const images = [{ url: `${SITE_URL}/og_image.png`, alt: 'OKISO' }];
+  const images = [socialImage(pathname)];
   return {
     title, description, alternates: { canonical: url },
     openGraph: { title, description, url, siteName: 'OKISO', type: 'website', images },
@@ -34,7 +35,7 @@ export function releaseDescription(release: Release): string {
 }
 
 export function releaseMetadata(release: Release): Metadata {
-  const title = `${release.title} — OKISO | Official release`;
+  const title = `${release.title} — OKISO`;
   const description = releaseDescription(release);
   const url = `${SITE_URL}/releases/${release.slug}`;
   return {
@@ -45,7 +46,8 @@ export function releaseMetadata(release: Release): Metadata {
       images: [{ url: release.img, alt: `${release.title} cover artwork` }],
     },
     twitter: {
-      card: 'summary_large_image', title, description, images: [release.img],
+      card: 'summary_large_image', title, description,
+      images: [{ url: release.img, alt: `${release.title} cover artwork` }],
     },
   };
 }

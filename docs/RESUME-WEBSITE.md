@@ -2,6 +2,68 @@
 
 # task
 
+## site-wide link previews — publishing approved / 2026-09-22
+
+user expanded the gallery request to proper embeds for most pages. supersedes
+the gallery-only scope below. seven authored 1200x630 JPEG cards now cover home,
+about, releases, upcoming, gallery, vault and rouge noir. real commissioned art
+retains artist credit; the archive card uses six real curated release covers.
+vault uses an authored folder/record motif; rouge noir uses title art and a
+roulette wheel in the game page's existing palette, not a gameplay screenshot.
+upcoming promises no unannounced release or date. images are 37–217 KiB each.
+
+`src/lib/socialImages.ts` maps routes to versioned images and a new home fallback.
+the shared metadata helper supplies matching OG/Twitter images, alt text, type
+and dimensions. page titles/descriptions are concise. all 35 release detail pages
+retain their own cover art with matching Twitter alt text; structured artist/game
+images no longer use the old business card. vault/labs remain noindex; callback
+pages explicitly suppress inherited promotional metadata. `og_image.png` stays
+available for old external references, but no current source metadata uses it.
+
+regenerate using `npx tsx scripts/prepare-site-social.mts` with:
+`OKISO_SOCIAL_OUTPUT_DIR=S:\Codex\outputs\2026-09-22\site-social-preview\assets`,
+`OKISO_SOCIAL_CACHE_DIR=S:\tmp\codex\site-social-preview-20260922\covers`, and
+optionally `OKISO_SOCIAL_REVIEW_DIR=S:\Codex\outputs\2026-09-22\site-social-preview`.
+the existing `public/social` junction points to that asset directory. review sheet:
+`S:\Codex\outputs\2026-09-22\site-social-preview\social-preview-sheet.jpg`.
+bump affected image filenames and the route map when replacing published cards.
+
+verified: all seven images visually reviewed at 400px wide, decoded JPEG dimensions,
+production build/typecheck, 18 release/SEO unit tests and expanded exported SEO
+audit (41 indexable pages, 35 release pages). audit checks route-specific metadata,
+all release covers, main-page exported image presence/budgets, and callback opt-out.
+log: `S:\tmp\codex\site-social-preview-20260922\build-sitewide.log`.
+user approved publishing on 2026-09-22. release/deployment in progress; record the
+completed workflow and live checks here afterward. no Discord message was sent.
+oki.so DNS/email/redirect setup remains outside this change.
+
+## gallery link preview — local candidate / 2026-09-22
+
+user bought oki.so and rejected the gallery's Discord embed screenshot. live
+`/gallery` still advertises the old `og_image.png`; this is a metadata issue,
+not merely a cached Discord card. no domain/redirect setup was requested here.
+
+local candidate gives `/gallery` its own 1200x630 JPEG: three large commissioned
+portraits by he_know_lee, sobu and ykhs9, visible credits and a white/red title strip.
+existing originals are untouched; no generated illustration. title is now
+`OKISO / gallery`, with brief first-person copy. `pageMetadata` accepts an optional
+image; other pages and release-cover previews keep their existing behavior.
+`scripts/prepare-gallery-social.mjs` reproduces the layout from shipped artwork;
+set `OKISO_SOCIAL_OUTPUT_DIR` to the physical asset directory on S: to regenerate.
+`public/social` is a new junction to
+`S:\Codex\outputs\2026-09-22\site-social-preview\assets`.
+new asset: `social/gallery-v1.jpg` (222,609 bytes). a separate 360px review image
+is in the parent output directory. inspect that actual chat-size rendering.
+
+production build/typecheck, 18 release/SEO tests, 4 asset tests and export SEO audit
+pass (41 indexable pages / 35 releases). audit now checks gallery OG/Twitter image,
+dimensions, format, attribution and exported JPEG. final image verified 1200x630.
+build log: `S:\tmp\codex\site-social-preview-20260922\build.log`.
+not committed, pushed or deployed; actual Discord rendering remains unverified.
+next: show the finished preview and obtain visual/publishing approval. existing
+shared previews on other routes still use the old default image. oki.so remains
+outside this change; no DNS or email changes were made.
+
 ## he_know_lee commission gallery integration — 2026-09-22
 
 request 4046163 / public work 11 is archived under

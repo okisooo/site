@@ -43,6 +43,10 @@ for (const route of routes) {
   assert(!meta(html, 'robots').some(value => value.includes('noindex')), `${route}: indexable`);
   assert.deepEqual(meta(html, 'og:title'), title, `${route}: own social title`);
   assert.deepEqual(meta(html, 'twitter:title'), title, `${route}: own Twitter title`);
+  assert.deepEqual(meta(html, 'og:description'), description, `${route}: own social description`);
+  assert.deepEqual(meta(html, 'twitter:description'), description, `${route}: own Twitter description`);
+  assert.deepEqual(meta(html, 'og:url'), canonical(html), `${route}: canonical share URL`);
+  assert.deepEqual(meta(html, 'twitter:card'), ['summary_large_image'], `${route}: large preview`);
   const markup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
   assert.equal((markup.match(/<h1\b/g) ?? []).length, 1, `${route}: one primary heading`);
   assert.equal((markup.match(/<main\b/g) ?? []).length, 1, `${route}: one main landmark`);
@@ -52,6 +56,10 @@ for (const route of routes) {
   }
   const release = staticReleases.find(item => `/releases/${item.slug}` === route);
   if (release) {
+    assert.deepEqual(meta(html, 'og:image'), [release.img], `${route}: correct release cover`);
+    assert.deepEqual(meta(html, 'twitter:image'), [release.img], `${route}: correct Twitter cover`);
+    assert.deepEqual(meta(html, 'og:image:alt'), [`${release.title} cover artwork`]);
+    assert.deepEqual(meta(html, 'twitter:image:alt'), [`${release.title} cover artwork`]);
     assert.equal(description[0], releaseDescription(release), `${route}: factual release description`);
     const lyricTracks = release.tracks?.filter(track => track.lyrics?.trim()) ?? [];
     assert.equal((markup.match(/<details\b/g) ?? []).length, lyricTracks.length, `${route}: native lyrics controls`);
@@ -62,6 +70,27 @@ for (const route of routes) {
 }
 
 const archiveLinks = links(readPage('/releases'));
+// Assert the exported HTML, not just the helper: layout inheritance can silently
+// replace a route's title, image or URL with the homepage's metadata.
+for (const [route, name] of [['/', 'home'], ['/about', 'about'], ['/releases', 'releases'], ['/upcoming', 'upcoming'], ['/gallery', 'gallery'], ['/vault', 'vault'], ['/rouge-noir', 'rouge-noir']]) {
+  const html = readPage(route);
+  const imagePath = `/social/${name}-v1.jpg`;
+  assert.deepEqual(meta(html, 'og:image'), [SITE_URL + imagePath], `${route}: dedicated image`);
+  assert.deepEqual(meta(html, 'twitter:image'), [SITE_URL + imagePath], `${route}: Twitter image`);
+  assert.deepEqual(meta(html, 'og:image:width'), ['1200'], `${route}: image width`);
+  assert.deepEqual(meta(html, 'og:image:height'), ['630'], `${route}: image height`);
+  assert.deepEqual(meta(html, 'og:image:type'), ['image/jpeg'], `${route}: image type`);
+  assert(meta(html, 'og:image:alt')[0]?.length > 10, `${route}: useful image description`);
+  assert.deepEqual(meta(html, 'twitter:image:alt'), meta(html, 'og:image:alt'), `${route}: Twitter image description`);
+  assert.deepEqual(meta(html, 'og:url'), canonical(html), `${route}: correct share URL`);
+  assert.deepEqual(meta(html, 'og:description'), meta(html, 'description'), `${route}: own description`);
+  const imageBytes = readFileSync(path.join(output, imagePath));
+  assert.equal(imageBytes.subarray(0, 3).toString('hex'), 'ffd8ff', `${route}: exported JPEG exists`);
+  assert(imageBytes.length < 1_000_000, `${route}: lightweight embed image`);
+}
+assert(!meta(readPage('/vault'), 'og:title')[0]?.includes('music, art'), 'vault: never inherits homepage title');
+assert.deepEqual(meta(readPage('/api/auth/callback'), 'og:image'), [], 'authorization callback has no promotional embed');
+assert.deepEqual(meta(readPage('/api/auth/callback'), 'twitter:image'), []);
 for (const release of staticReleases) {
   assert(release.slug, `${release.title}: explicit canonical slug`);
   assert(archiveLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable archive link`);
