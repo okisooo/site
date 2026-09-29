@@ -2,7 +2,7 @@
 
 # task
 
-## compact links & contact page — publishing / 2026-09-29
+## compact links & contact page — deployed / 2026-09-29
 
 user approved adding routes and wanted a small directory without turning bare
 `oki.so` into a contact landing page. `/links` now brings together eight verified
@@ -25,7 +25,14 @@ overflow and mobile-menu discovery. a wrong initial thumbnail path was caught in
 the browser and corrected to the shared commission catalog before the final build.
 screenshots: `S:\Codex\outputs\2026-09-29\oki-so-links\desktop.png` and `phone.png`.
 build/test logs: `S:\tmp\codex\oki-so-links-20260929`.
-publication and live verification pending; do not claim `oki.so/links` is live yet.
+published source `12bb2a6e`; deployment `36561633278` and Pages rollout
+`36561811949` succeeded, with published assets `24923490`. CI passed all 43
+regressions, production build/typecheck and exported SEO checks. plain live
+`oki.so/links` redirects to `okiso.net/links` and returns 200; the canonical,
+links/contact title, eight profile anchors, visible protected email, thumbnail,
+home-preview artwork and sitemap entry were verified. bare `oki.so` still returns
+the existing homepage, now with the directory link in navigation. no DNS, email
+routing or external profile settings were changed.
 
 ## site-wide link previews — deployed / 2026-09-22
 
