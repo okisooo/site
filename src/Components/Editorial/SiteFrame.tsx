@@ -20,6 +20,7 @@ const destinations = [
   { href: "/gallery", label: "gallery" },
   { href: "/upcoming", label: "upcoming" },
   { href: "/about", label: "about" },
+  { href: "/links", label: "links" },
 ];
 
 export default function SiteFrame({ children }: { children: ReactNode }) {
@@ -89,6 +90,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
         <a className="ed-contact-row" href="mailto:oxo@okiso.net"><span><small>email</small>oxo@okiso.net</span><ArrowUpRight /></a>
         <button className="ed-contact-row" onClick={copyDiscord}><span><small>discord · copy handle</small>.oxo</span><span>copy</span></button>
         <p role="status">{copyMessage}</p>
+        <Link href="/links" className="ed-text-link" onClick={() => setDialog(null)}>all my links <ArrowUpRight size={16} /></Link>
       </div> : <div className="ed-dialog-copy">
         <p>you are free to repost, remix, and reuse my content for creative purposes!</p>
         <ul><li>include clear credit linking back to my official channels (okiso).</li>

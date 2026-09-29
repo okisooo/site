@@ -2,6 +2,31 @@
 
 # task
 
+## compact links & contact page — publishing / 2026-09-29
+
+user approved adding routes and wanted a small directory without turning bare
+`oki.so` into a contact landing page. `/links` now brings together eight verified
+official profiles, music/gallery shortcuts, the existing `oxo@okiso.net` address
+and Discord handle `.oxo`. it uses the shared white/red shell, a real 7mmchan
+thumbnail and visible credit, native links, and a compact two-column layout.
+the main navigation and contact dialog link to it. the homepage stays the homepage;
+Cloudflare's existing path-preserving redirect will make `oki.so/links` work after
+publication without a DNS/rule change. `/releases` and `/gallery` already work.
+
+metadata stays canonical on `okiso.net/links`, with a factual links/contact title
+and description, the existing home preview artwork, and a sitemap entry. existing
+SEO audit now includes the directory and checks homepage discovery. no new email
+address has been provisioned, and no external social bios were edited.
+
+verified locally: production build/typecheck, all 43 existing regression checks,
+exported SEO audit (42 indexable pages / 35 release pages), Chrome desktop and
+390x844 phone layout, eight readable profile links, loaded portrait, no horizontal
+overflow and mobile-menu discovery. a wrong initial thumbnail path was caught in
+the browser and corrected to the shared commission catalog before the final build.
+screenshots: `S:\Codex\outputs\2026-09-29\oki-so-links\desktop.png` and `phone.png`.
+build/test logs: `S:\tmp\codex\oki-so-links-20260929`.
+publication and live verification pending; do not claim `oki.so/links` is live yet.
+
 ## site-wide link previews — deployed / 2026-09-22
 
 user expanded the gallery request to proper embeds for most pages. supersedes

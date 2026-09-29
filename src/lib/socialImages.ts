@@ -1,6 +1,7 @@
 const socialCards = {
   '/': ['home-v1', 'OKISO illustrated by suyosuyo and ykhs9 — music, art and more'],
   '/about': ['about-v1', 'OKISO portrait by he_know_lee — VTuber, virtual artist and VOCALOID producer'],
+  '/links': ['home-v1', 'OKISO illustrated by suyosuyo and ykhs9 — music, art and more'],
   '/releases': ['releases-v1', 'Selected OKISO release covers — music archive'],
   '/upcoming': ['upcoming-v1', 'OKISO upcoming music and announcements, with chibi art by 7mmchan'],
   '/gallery': ['gallery-v1', 'OKISO gallery — commissioned illustrations by he_know_lee, sobu and ykhs9'],

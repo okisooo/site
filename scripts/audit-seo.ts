@@ -16,9 +16,9 @@ const attributes = (tag: string) => Object.fromEntries([...tag.matchAll(/([\w:-]
 const meta = (html: string, name: string) => [...html.matchAll(/<meta\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.name === name || a.property === name).map(a => a.content);
 const canonical = (html: string) => [...html.matchAll(/<link\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.rel === 'canonical').map(a => a.href);
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*>/g)].map(match => attributes(match[0]).href);
-const routes = ['/', '/about', '/releases', '/gallery', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
+const routes = ['/', '/about', '/links', '/releases', '/gallery', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
 // Core UI must stay unified; standalone work must not inherit that shell.
-for (const route of ['/', '/about', '/releases', '/gallery', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
+for (const route of ['/', '/about', '/links', '/releases', '/gallery', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
   const markup = readPage(route).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
   assert(markup.includes('class="core-site"'), `${route}: shared editorial shell`);
   assert(markup.includes('class="ed-nav"'), `${route}: shared navigation`);
@@ -97,6 +97,7 @@ for (const release of staticReleases) {
 }
 const homeLinks = links(readPage('/'));
 assert(homeLinks.includes('/about'), 'artist profile is linked from the homepage');
+assert(homeLinks.includes('/links'), 'social and contact directory is linked from the homepage');
 assert(readPage('/about').includes('<!--email_off--><a href="mailto:oxo@okiso.net">oxo@okiso.net</a><!--/email_off-->'), 'public contact survives Cloudflare email rewriting');
 for (const release of staticReleases.slice(0, 4)) assert(homeLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable home link`);
 
