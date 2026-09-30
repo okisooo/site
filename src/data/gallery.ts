@@ -29,9 +29,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in the signed-in completed list through September 21, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through September 30, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'obakeno-perutan', artist: 'ObakenoPerutan', title: 'character assortment', medium: 'illustration',
+    description: 'A red-and-white OKISO collage with portraits, chibis and takoling mascots, illustrated by ObakenoPerutan.',
+    artistUrl: 'https://skeb.jp/@ObakenoPerutan', workUrl: 'https://skeb.jp/@ObakenoPerutan/works/14',
+    small: '/art/gallery/obakeno-perutan-thumb.webp', width: 1280, height: 1109,
+    variants: [variant('obakeno-perutan', 'character assortment', 1280, 1109), variant('obakeno-perutan-message', 'artist message', 1280, 1109), variant('obakeno-perutan-portrait', 'portrait', 1280, 1357), variant('obakeno-perutan-profile', 'side profile', 1280, 1758), variant('obakeno-perutan-tiny', 'tiny mascot', 878, 956), variant('obakeno-perutan-full-body', 'full body', 936, 1800), variant('obakeno-perutan-chibi', 'chibi & mascot', 1142, 1281)] },
   { id: 'he-know-lee', artist: 'he_know_lee', title: 'portrait with mascot', medium: 'illustration',
     description: 'OKISO and a takoling mascot, illustrated by he_know_lee.',
     artistUrl: 'https://skeb.jp/@he_know_lee', workUrl: 'https://skeb.jp/@he_know_lee/works/11',

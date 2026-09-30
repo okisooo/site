@@ -1,5 +1,26 @@
 # commissioned artwork for the site
 
+## ObakenoPerutan / 2026-09-30
+
+Request 4070366 is complete with one 4559x3950 PSD (96,949,892 bytes), matched
+to `https://skeb.jp/@ObakenoPerutan/works/14`. Original SHA-256:
+`2f7e919f51ccce48a41f151f05fd53da4877384d4998890dc0e7c1c85aaf5e81`.
+Archive: `D:/FOLDERS/Commissions/Bought/OKISO/ObakenoPerutan@skeb/`.
+The original PSD and Skeb converted PNG are preserved. `converted/` holds both
+full-resolution collages (with/without the artist message), five native-resolution
+transparent character illustrations, and a verified copy of the Skeb composite.
+All are decoded and hashed in `work-14.manifest.json`. The message is embedded
+in one supplied collage; the other collage is the artist's message-free version.
+No repainting, embedded-text removal or fabricated expressions were used.
+
+Reproduce layer exports using `scripts/export-obakeno-perutan.py --output-dir`
+with S: scratch and `psd-tools`/Pillow, then archive its `exports.json` through
+the skeb-download helper. `scripts/prepare-obakeno-perutan.mjs` prepares seven
+gallery versions and thumbnails with `OKISO_GALLERY_OUTPUT_DIR` set to the
+existing S: gallery asset directory. Main images are 85–393 kB WebPs; originals
+and lossless exports remain at their delivered dimensions. Artist/work links
+and all seven choices are in `src/data/gallery.ts`.
+
 reviewed 2026-09-11. the user supplied this local collection for website art,
 preferring the skeb folders; the sketch combo is also acceptable.
 
