@@ -96,3 +96,56 @@
 @media (prefers-reduced-motion: reduce) {
   .ed-idle, .ed-idle::after { animation: none !important; transform: none !important; }
 }
+
+/* Free cursor set: the page wears the cursors; pixel art stays on its grid. */
+.ed-cursors { cursor: var(--okiso-cursor); }
+.ed-cursors a, .ed-cursors button, .ed-cursors summary { cursor: var(--okiso-link); }
+.ed-cursors p { cursor: var(--okiso-text); }
+.ed-cursors img { image-rendering: pixelated; }
+.ed-cursors-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 360px); align-items: center; gap: 40px; padding-bottom: 36px; border-bottom: 1px solid var(--ed-line); }
+.ed-cursors-heading h1 { font-size: clamp(66px, 10vw, 144px); color: var(--ed-accent); margin: 6px 0 14px; }
+.ed-cursors-heading p { max-width: 46ch; font-size: 15px; line-height: 1.6; }
+.ed-cursors-heading p a { border-bottom: 1px solid; }
+.ed-cursors-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 28px; }
+.ed-cursors-download { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 22px; background: var(--ed-accent); color: var(--ed-on-accent); border-color: var(--ed-accent); font-size: 14px; }
+.ed-cursors-download small { font: 10px var(--font-geist-mono); opacity: .8; }
+.ed-cursors-download:hover { background: var(--ed-red); }
+.ed-cursors-hero { margin: 0; padding: 10px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 5px 12px 12px 5px; box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-shadow); transform: rotate(2deg); }
+.ed-cursors-hero img { display: block; width: 100%; height: auto; aspect-ratio: 1; background: var(--ed-white); border: 1px solid var(--ed-line); }
+.ed-cursors-hero figcaption { padding: 10px 4px 0; color: var(--ed-muted); font-size: 9px; }
+.ed-cursors-set { padding: 40px 0; }
+.ed-cursors-set-heading, .ed-cursors-install h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+.ed-cursors-set h2, .ed-cursors-install h2 { font-size: clamp(30px, 3.6vw, 48px); font-weight: 500; letter-spacing: -.04em; }
+.ed-cursors-set-heading .ed-label { color: var(--ed-muted); font-size: 10px; }
+.ed-cursors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; list-style: none; padding: 0; margin: 0; }
+.ed-cursors-grid li { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px 12px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 5px; box-shadow: inset 0 0 0 1px var(--ed-highlight); transition: transform .2s, border-color .2s, box-shadow .2s; }
+.ed-cursors-grid li:hover { transform: translateY(-3px); border-color: var(--ed-accent); box-shadow: 0 0 0 1px var(--ed-accent), var(--ed-shadow); }
+.ed-cursors-grid img { width: 128px; height: 128px; }
+.ed-cursors-grid span { font: 9px var(--font-geist-mono); color: var(--ed-muted); text-align: center; }
+.ed-cursors-install { padding: 40px 0; border-top: 1px solid var(--ed-line); scroll-margin-top: 20px; }
+.ed-cursors-install ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 0 0 24px; list-style: none; counter-reset: step; }
+.ed-cursors-install li { counter-increment: step; padding: 18px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 6px; font-size: 13px; line-height: 1.55; }
+.ed-cursors-install li::before { content: counter(step, decimal-leading-zero); display: block; margin-bottom: 14px; font: 400 34px/1 var(--font-editorial); letter-spacing: -.05em; color: var(--ed-accent); }
+.ed-cursors-install li strong { font-weight: 600; }
+.ed-cursors-install details { max-width: 70ch; padding: 14px 0; border-block: 1px solid var(--ed-line); }
+.ed-cursors-install details p { margin-top: 10px; font-size: 13px; line-height: 1.6; }
+.ed-cursors-note { margin-top: 16px; font-size: 12px; color: var(--ed-muted); }
+.ed-cursors-credit { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding: 24px; margin-bottom: 24px; background: var(--ed-shell); color: var(--ed-paper); border-radius: 12px 12px 24px 12px; box-shadow: inset 0 1px 0 #ffffff40, var(--ed-shadow); }
+.ed-cursors-credit strong { display: block; font-size: clamp(32px, 4vw, 52px); font-weight: 500; letter-spacing: -.045em; line-height: 1.1; margin: 8px 0 10px; }
+.ed-cursors-credit p { max-width: 48ch; font-size: 13px; line-height: 1.6; color: #d8d8de; }
+.ed-cursors-credit nav { display: flex; gap: 8px; flex-wrap: wrap; }
+.ed-cursors-credit nav a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 1px solid #ffffff40; border-radius: var(--ed-control-radius); font-size: 12px; }
+.ed-cursors-credit nav a:hover { background: var(--ed-accent); border-color: var(--ed-accent); }
+@media (min-width: 1150px) { .ed-cursors-grid { grid-template-columns: repeat(9, minmax(0, 1fr)); } }
+@media (max-width: 950px) {
+  .ed-cursors-install ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .ed-cursors-heading { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .ed-cursors-hero { max-width: 260px; justify-self: center; }
+  .ed-cursors-download { width: 100%; justify-content: center; }
+  .ed-cursors-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ed-cursors-set-heading .ed-label { display: none; }
+  .ed-cursors-install ol { grid-template-columns: minmax(0, 1fr); }
+  .ed-cursors-credit { flex-direction: column; align-items: flex-start; }
+}

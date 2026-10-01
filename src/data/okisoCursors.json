@@ -1,0 +1,176 @@
+{
+  "zipBytes": 836963,
+  "pointerSize": 64,
+  "cursors": [
+    {
+      "slug": "alternate",
+      "file": "Alternate.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        12
+      ]
+    },
+    {
+      "slug": "busy",
+      "file": "Busy.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        33,
+        33
+      ]
+    },
+    {
+      "slug": "diagonal1",
+      "file": "Diagonal1.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        32
+      ]
+    },
+    {
+      "slug": "diagonal2",
+      "file": "Diagonal2.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        32
+      ]
+    },
+    {
+      "slug": "handwriting",
+      "file": "Handwriting.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        0,
+        0
+      ]
+    },
+    {
+      "slug": "help",
+      "file": "Help.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        0,
+        0
+      ]
+    },
+    {
+      "slug": "horizontal",
+      "file": "Horizontal.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        32
+      ]
+    },
+    {
+      "slug": "link",
+      "file": "Link.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        4,
+        0
+      ]
+    },
+    {
+      "slug": "move",
+      "file": "Move.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        32
+      ]
+    },
+    {
+      "slug": "normal",
+      "file": "Normal.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        0,
+        0
+      ]
+    },
+    {
+      "slug": "person",
+      "file": "Person.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        4,
+        0
+      ]
+    },
+    {
+      "slug": "pin",
+      "file": "Pin.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        4,
+        0
+      ]
+    },
+    {
+      "slug": "precision",
+      "file": "Precision.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        33,
+        31
+      ]
+    },
+    {
+      "slug": "text",
+      "file": "Text.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        31,
+        30
+      ]
+    },
+    {
+      "slug": "unavailable",
+      "file": "Unavailable.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        15,
+        15
+      ]
+    },
+    {
+      "slug": "vertical",
+      "file": "Vertical.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        32,
+        32
+      ]
+    },
+    {
+      "slug": "working",
+      "file": "Working.ani",
+      "frames": 12,
+      "frameMs": 100,
+      "hotspot": [
+        0,
+        0
+      ]
+    }
+  ]
+}
