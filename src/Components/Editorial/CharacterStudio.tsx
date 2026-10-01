@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, RotateCcw, Pause, Play } from "lucide-react";
 import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping, AnimationMixer, type AnimationAction } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMPose } from "@pixiv/three-vrm";
+import { VRMLoaderPlugin, VRMUtils, MToonMaterial, type VRM, type VRMPose } from "@pixiv/three-vrm";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
@@ -12,8 +12,39 @@ import { sampleCharacterIdle } from "@/lib/characterIdle";
 import { createCharacterGestureClip } from "@/lib/characterGesture";
 import referenceReachPose from "@/data/characterReachPose.json";
 
-// Held peace sign over an adapted reference stance; credits: /character/reference-pose-notice.txt
+// Hand-authored held peace sign: V beside the cheek, palm out, weight on one hip.
 const REACH_POSE = referenceReachPose as VRMPose;
+// Phones crop the hero tightly, so the elbow tucks in and the V sits by the chin.
+const COMPACT_REACH: VRMPose = {
+  leftUpperArm: { rotation: [-0.7251639, -0.0930152, -0.4575378, -0.5061074] },
+  leftLowerArm: { rotation: [0.3339683, 0.9418331, 0.0060023, -0.037141] },
+};
+
+// Cel shading: crisp lavender shadows on the whites and a faint red rim, matching the site's palette.
+// The face keeps the artist's flat shading; toon faces read badly with cast light.
+const LOOK = {
+  hair: { shade: 0xc3c2dc, toony: .94, shift: 0, rim: 0x5a2238, rimPower: 5, rimMix: .45 },
+  face: { shade: 0xffffff, toony: .95, shift: -.6, rim: 0, rimPower: 1, rimMix: 0 },
+  skin: { shade: 0xf1c9c2, toony: .92, shift: -.15, rim: 0, rimPower: 1, rimMix: 0 },
+  cloth: { shade: 0xb4b1cf, toony: .92, shift: .05, rim: 0x7a1f2a, rimPower: 6, rimMix: .45 },
+};
+function shadeCharacter(vrm: VRM) {
+  vrm.scene.traverse((object) => {
+    const materials = (object as Mesh).isMesh ? [(object as Mesh).material].flat() : [];
+    for (const material of materials) {
+      if (!(material instanceof MToonMaterial) || material.name.includes("瞳孔")) continue;
+      const look = material.name.includes("头发") ? LOOK.hair : material.name.includes("头材质") ? LOOK.face : material.name.includes("身体") ? LOOK.skin : LOOK.cloth;
+      material.shadeColorFactor.set(look.shade);
+      material.shadingToonyFactor = look.toony;
+      material.shadingShiftFactor = look.shift;
+      material.giEqualizationFactor = .75;
+      material.parametricRimColorFactor.set(look.rim);
+      material.parametricRimFresnelPowerFactor = look.rimPower;
+      material.parametricRimLiftFactor = 0;
+      material.rimLightingMixFactor = look.rimMix;
+    }
+  });
+}
 
 type Expression = "neutral" | "happy" | "relaxed";
 type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
@@ -67,15 +98,17 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     const controller = new AbortController();
     const scene = new Scene();
     const camera = new PerspectiveCamera(hero ? 64 : 32, 1, .1, 30);
-    if (hero) camera.up.set(.06, 1, 0).normalize();
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const compactLayout = window.matchMedia("(max-width: 700px)");
     const twistAxis = new Vector3(1, 0, 0);
     const palmAxis = new Vector3(0, 1, 0);
     const waveWrist = new Quaternion().setFromEuler(new Euler(.35, .05, -.07));
-    const reachChest = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.chest?.rotation ?? [0, 0, 0, 1]));
-    const reachHips = new Euler().setFromQuaternion(new Quaternion().fromArray(REACH_POSE.hips!.rotation!));
+    // Idle motion layers on top of the held pose instead of replacing its tilt.
+    const restHead = new Quaternion(), restChest = new Quaternion(), restHips = new Quaternion();
+    const sway = new Quaternion(), swayEuler = new Euler();
+    const layer = (bone: { quaternion: Quaternion } | null | undefined, rest: Quaternion, x: number, y: number, z: number) =>
+      bone?.quaternion.copy(rest).multiply(sway.setFromEuler(swayEuler.set(x, y, z)));
     const waveRotation = new Quaternion();
     const q = (x: number, y: number, z: number, twist = 0) => new Quaternion().setFromEuler(new Euler(x, y, z))
       .multiply(new Quaternion().setFromAxisAngle(twistAxis, twist)).toArray();
@@ -151,12 +184,10 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
               rightUpperLeg: { rotation: q(.035, 0, -.035) },
             } : {}),
             ...(reaching ? REACH_POSE : {}),
-            ...(reaching && hero && compactLayout.matches ? {
-              // Keep the peace sign beside his cheek inside the narrow hero crop.
-              leftUpperArm: { rotation: q(-.12, .08, 1.15) },
-              leftLowerArm: { rotation: q(-.18, -.08, -2.95, .9) },
-            } : {}),
+            ...(reaching && hero && compactLayout.matches ? COMPACT_REACH : {}),
           });
+          for (const [name, rest] of [["head", restHead], ["chest", restChest], ["hips", restHips]] as const)
+            rest.copy(vrm.humanoid.getNormalizedBoneNode(name)?.quaternion ?? sway.identity());
           if (reaching) gestureAction?.play();
           previousPose = poseKey;
         }
@@ -174,12 +205,9 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           pointer.x += (pointer.targetX - pointer.x) * blend;
           pointer.y += (pointer.targetY - pointer.y) * blend;
         }
-        if (head) {
-          head.rotation.y = (reaching ? .13 : 0) + Math.sin(elapsed * .6) * (hero ? .04 : .035) + (hero ? pointer.x * .08 : 0);
-          head.rotation.x = (reaching ? -.04 : 0) + (hero ? .02 + Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0);
-          head.rotation.z = (reaching ? .1 : 0) + (hero ? .025 + Math.sin(elapsed * .5) * .02 : 0);
-        }
-        if (chest) chest.rotation.x = (reaching ? reachChest.x : 0) + Math.sin(elapsed * 1.35) * (hero ? .018 : .008);
+        layer(head, restHead, hero ? Math.sin(elapsed * .45) * .015 + pointer.y * .035 : 0,
+          Math.sin(elapsed * .6) * (hero ? .04 : .035) + (hero ? pointer.x * .08 : 0), hero ? Math.sin(elapsed * .5) * .02 : 0);
+        layer(chest, restChest, Math.sin(elapsed * 1.35) * (hero ? .018 : .008), 0, 0);
         // Two soft beats, then a resting palm. The envelope eases in and out at zero.
         const greeting = (elapsed - waveStart) % 7.5;
         const waveEnvelope = greeting < 2.4 ? Math.sin(greeting / 2.4 * Math.PI) ** 2 : 0;
@@ -190,10 +218,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           const upperArm = vrm.humanoid.getNormalizedBoneNode(`${waveSide}UpperArm`);
           if (upperArm) upperArm.rotation.z = (-.55 + wave * .1) * waveSign;
         }
-        if (hero) {
-          const hips = vrm.humanoid.getNormalizedBoneNode("hips");
-          if (hips) hips.rotation.z = (reaching ? reachHips.z : -.025) + Math.sin(elapsed * .5) * .012;
-        }
+        if (hero) layer(vrm.humanoid.getNormalizedBoneNode("hips"), restHips, 0, 0, Math.sin(elapsed * .5) * .012);
         const idle = sampleCharacterIdle(elapsed);
         const expressions = vrm.expressionManager;
         if (hero) {
@@ -264,11 +289,11 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       controls.autoRotateSpeed = .7;
       controls.addEventListener("change", invalidate);
       controls.addEventListener("start", () => { dolly = false; });
-      scene.add(new AmbientLight(0xffffff, .6));
-      const key = new DirectionalLight(0xffffff, 1.1); key.position.set(2, 4, 4); scene.add(key);
-      const fill = new DirectionalLight(0xffffff, .45); fill.position.set(-3, 2, 1); scene.add(fill);
+      scene.add(new AmbientLight(0xffffff, .45));
+      const key = new DirectionalLight(0xffffff, 1.45); key.position.set(-2.4, 3.4, 2.6); scene.add(key);
+      const fill = new DirectionalLight(0xf0f2ff, .25); fill.position.set(3, 1, 2); scene.add(fill);
       if (!hero) {
-        const plinth = new Mesh(new CylinderGeometry(.48, .5, .045, 64), new MeshStandardMaterial({ color: 0xe4e4e8, roughness: .7 }));
+        const plinth = new Mesh(new CylinderGeometry(.48, .5, .045, 64), new MeshStandardMaterial({ color: 0xf6f6f8, roughness: .7 }));
         plinth.position.y = -.035; scene.add(plinth);
         const rim = new Mesh(new TorusGeometry(.49, .004, 8, 64), new MeshBasicMaterial({ color: 0xcc0000 }));
         rim.rotation.x = Math.PI / 2; rim.position.y = -.01; scene.add(rim);
@@ -319,6 +344,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           VRMUtils.combineSkeletons(model.scene);
           VRMUtils.combineMorphs(model);
           VRMUtils.rotateVRM0(model);
+          shadeCharacter(model);
           vrm = model; scene.add(model.scene);
           gestureMixer = new AnimationMixer(model.scene);
           gestureAction = gestureMixer.clipAction(createCharacterGestureClip(model));

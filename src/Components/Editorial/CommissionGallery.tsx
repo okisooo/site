@@ -7,6 +7,31 @@ import { EditorialDialog } from "./EditorialDialog";
 import { AmbientMotionContext, useAmbientVisibility } from "./AmbientMotion";
 
 const PAGE_SIZE = 12;
+// Caption height relative to column width, so the column balance accounts for it.
+const CAPTION_RATIO = .2;
+
+function useColumnCount() {
+  const [count, setCount] = useState(3);
+  useEffect(() => {
+    const phone = window.matchMedia("(max-width: 700px)"), wide = window.matchMedia("(min-width: 1180px)");
+    const sync = () => setCount(phone.matches ? 2 : wide.matches ? 4 : 3);
+    sync();
+    phone.addEventListener("change", sync); wide.addEventListener("change", sync);
+    return () => { phone.removeEventListener("change", sync); wide.removeEventListener("change", sync); };
+  }, []);
+  return count;
+}
+
+// Pinterest-style packing: each piece drops into the currently shortest column, in catalog order.
+function packColumns(works: GalleryWork[], count: number) {
+  const columns = Array.from({ length: count }, () => ({ height: 0, works: [] as { work: GalleryWork; index: number }[] }));
+  works.forEach((work, index) => {
+    const shortest = columns.reduce((best, column) => column.height < best.height - .001 ? column : best);
+    shortest.works.push({ work, index });
+    shortest.height += work.height / work.width + CAPTION_RATIO;
+  });
+  return columns;
+}
 
 function GalleryThumbnail({ work, eager }: { work: GalleryWork; eager: boolean }) {
   const { ref, active } = useAmbientVisibility();
@@ -74,6 +99,7 @@ export default function CommissionGallery() {
   const [artist, setArtist] = useState("all");
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const columnCount = useColumnCount();
   const artists = useMemo(() => [...new Set(galleryWorks.map((work) => work.artist))], []);
   const filtered = galleryWorks.filter((work) => (artist === "all" || work.artist === artist)
     && `${work.title} ${work.artist} ${work.description}`.toLowerCase().includes(query.trim().toLowerCase()));
@@ -93,12 +119,14 @@ export default function CommissionGallery() {
         <option value="all">all artists</option>{artists.map((name) => <option key={name}>{name}</option>)}</select></label>
       <span className="ed-label" role="status">{filtered.length} {filtered.length === 1 ? "work" : "works"}</span>
     </div>
-    {filtered.length ? <div className="ed-gallery-grid">{filtered.slice(0, limit).map((work, index) => <article key={work.id} className="ed-gallery-card">
-      <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
-        <GalleryThumbnail work={work} eager={index < 3} />
-        <div className="ed-gallery-card-caption"><h2>{work.artist}</h2><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
-      </button>
-    </article>)}</div> : <div className="ed-gallery-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
+    {filtered.length ? <div className="ed-gallery-grid">{packColumns(filtered.slice(0, limit), columnCount).map((column, columnIndex) => <div key={columnIndex} className="ed-gallery-column">
+      {column.works.map(({ work, index }) => <article key={work.id} className="ed-gallery-card">
+        <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
+          <GalleryThumbnail work={work} eager={index < 4} />
+          <div className="ed-gallery-card-caption"><h2>{work.artist}</h2><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
+        </button>
+      </article>)}
+    </div>)}</div> : <div className="ed-gallery-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
     {limit < filtered.length && <div className="ed-gallery-more"><button className="ed-button" onClick={() => setLimit(limit + PAGE_SIZE)}>show more <ArrowUpRight size={16} /></button></div>}
     {selected && <ArtworkViewer work={selected} onClose={() => setSelectedId(null)} previous={() => navigate(-1)} next={() => navigate(1)} position={selectedIndex} total={filtered.length} />}
   </div>;

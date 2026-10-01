@@ -10,17 +10,18 @@
 .ed-gallery-filter { display: flex; align-items: center; gap: 12px; }
 .ed-gallery-filter select { min-height: 50px; min-width: 160px; padding: 0 30px 0 12px; background: white; border: 1px solid var(--ed-edge); border-radius: 6px; font-size: 12px; }
 .ed-gallery-tools > [role="status"] { margin-left: auto; white-space: nowrap; }
-.ed-gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 26px; row-gap: 40px; }
+.ed-gallery-grid { display: flex; align-items: flex-start; gap: 20px; }
+.ed-gallery-column { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 26px; }
 .ed-gallery-card { min-width: 0; }
 .ed-gallery-open { display: block; width: 100%; text-align: left; }
-.ed-gallery-mount { position: relative; aspect-ratio: 4/5; display: grid; place-items: center; padding: 14px; border: 1px solid var(--ed-edge); border-radius: 5px 10px 10px 5px; background: linear-gradient(145deg, #fff, #ededf0); box-shadow: inset 0 0 0 3px #ffffffb0, var(--ed-shadow); overflow: hidden; transition: transform .55s var(--ed-ease), box-shadow .55s var(--ed-ease); }
+.ed-gallery-mount { position: relative; display: block; padding: 8px; border: 1px solid var(--ed-edge); border-radius: 5px 10px 10px 5px; background: linear-gradient(145deg, #fff, #ededf0); box-shadow: inset 0 0 0 3px #ffffffb0, var(--ed-shadow); overflow: hidden; transition: transform .55s var(--ed-ease), box-shadow .55s var(--ed-ease); }
 .ed-gallery-mount::before { content: ''; position: absolute; z-index: 1; inset: 5px; border: 1px solid #28282c12; pointer-events: none; }
-.ed-gallery-mount > img { width: 100%; height: 100%; object-fit: contain; min-height: 0; transition: transform .7s var(--ed-ease); }
+.ed-gallery-mount > img { display: block; width: 100%; height: auto; transition: transform .7s var(--ed-ease); }
 .ed-gallery-mount-animation { background: #fff4f2; }
 .ed-gallery-expand { position: absolute; right: 12px; bottom: 12px; display: grid; place-items: center; width: 42px; height: 42px; background: var(--ed-white); border: 1px solid var(--ed-edge); border-radius: 5px; box-shadow: var(--ed-shadow); transition: background .2s, color .2s, transform .35s var(--ed-ease); }
 .ed-gallery-badge { position: absolute; left: 14px; bottom: 18px; display: flex; align-items: center; gap: 7px; font: 9px/1 var(--font-geist-mono), monospace; background: white; padding: 9px; border-radius: 3px; }
-.ed-gallery-card-caption { display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: 12px; row-gap: 6px; padding-top: 17px; }
-.ed-gallery-card-caption h2 { font-size: clamp(22px, 2.4vw, 30px); letter-spacing: -.045em; font-weight: 500; line-height: 1.1; }
+.ed-gallery-card-caption { display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: 12px; row-gap: 6px; padding-top: 12px; }
+.ed-gallery-card-caption h2 { font-size: clamp(20px, 1.9vw, 26px); letter-spacing: -.045em; font-weight: 500; line-height: 1.1; }
 .ed-gallery-version-count { font: 9px/1.5 var(--font-geist-mono), monospace; color: var(--ed-muted); white-space: nowrap; }
 .ed-gallery-more { display: flex; justify-content: center; margin: 36px 0 0; }
 .ed-gallery-empty { padding: 60px 0 80px; }
@@ -64,7 +65,7 @@
   .ed-gallery-open:hover .ed-gallery-expand { background: var(--ed-accent); color: white; transform: translate(2px, -2px); }
 }
 @media (max-width: 950px) {
-  .ed-gallery-grid { gap: 30px 16px; }
+  .ed-gallery-grid, .ed-gallery-column { gap: 16px; }
   .ed-gallery-tools { flex-wrap: wrap; gap: 14px; }
   .ed-gallery-search { max-width: none; }
   .ed-gallery-viewer { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; }
@@ -77,8 +78,9 @@
   .ed-gallery-search { flex-basis: 100%; }
   .ed-gallery-filter { flex: 1; }
   .ed-gallery-filter select { width: 100%; min-width: 0; }
-  .ed-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
-  .ed-gallery-mount { padding: 7px; border-radius: 4px 7px 7px 4px; }
+  .ed-gallery-grid, .ed-gallery-column { gap: 12px; }
+  .ed-gallery-column { gap: 20px; }
+  .ed-gallery-mount { padding: 5px; border-radius: 4px 7px 7px 4px; }
   .ed-gallery-expand { width: 32px; height: 32px; right: 8px; bottom: 8px; }
   .ed-gallery-expand svg { width: 16px; }
   .ed-gallery-card-caption { display: flex; flex-direction: column; gap: 7px; }

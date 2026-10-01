@@ -4,9 +4,10 @@ import { galleryWorks } from "@/data/gallery";
 import { useAmbientVisibility } from "./AmbientMotion";
 
 // Curated positions keep the portraits visible around the character and sleeves.
+// Desktop shows a 5x2 wall; phones show the first nine in a 3x3 wall.
 const editions = [
-  ["7mmchan", 0], ["sobu", 0], ["amaxa", 0], ["suyosuyo", 0],
-  ["engawa110", 0], ["kou768", 0], ["ykhs9", 0], ["he-know-lee", 0],
+  ["7mmchan", 0], ["obakeno-perutan", 0], ["sobu", 0], ["amaxa", 0], ["suyosuyo", 0],
+  ["engawa110", 0], ["kou768", 0], ["ykhs9", 0], ["he-know-lee", 0], ["obakeno-perutan", 5],
 ] as const;
 
 export default function HeroCommissionWall() {

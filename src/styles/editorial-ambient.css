@@ -19,7 +19,7 @@
 .ed-hero-artwork .ed-kinetic-mark { width: 210px; height: 210px; top: 67%; right: auto; left: 10%; opacity: .55; animation-duration: 24s; }
 .ed-hero-artwork .ed-kinetic-stripes { width: 170px; left: auto; right: -65px; top: 23%; height: 390px; opacity: .24; animation-delay: -7s; }
 .ed-commission-wall { position: absolute; top: 268px; bottom: 70px; left: 0; right: 0; overflow: hidden; pointer-events: none; background: #e5e5e8; mask-image: linear-gradient(to bottom, #000 88%, transparent); }
-.ed-commission-wall-grid { position: absolute; inset: -50px -9% -75px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; transform: rotate(-8deg); }
+.ed-commission-wall-grid { position: absolute; inset: -50px -9% -75px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); gap: 15px; transform: rotate(-8deg); }
 .ed-wall-print { min-height: 0; min-width: 0; padding: 7px; background: var(--ed-white); border: 1px solid var(--ed-edge); box-shadow: 0 6px 14px #28282c18; animation: ed-print-float 12s ease-in-out infinite alternate; }
 .ed-wall-print:nth-child(even) { animation-delay: -7s; animation-duration: 15s; }
 .ed-wall-print:nth-child(3n) { animation-delay: -4s; animation-duration: 17s; }
@@ -39,6 +39,7 @@
   .ed-wall-print { padding: 4px; }
   .ed-wall-print > span { font-size: 6px; }
   .ed-wall-print > span > span:last-child { display: none; }
+  .ed-wall-print:nth-child(n+10) { display: none; }
   .ed-hero-artwork .ed-kinetic-mark { width: 130px; height: 130px; top: 64%; left: 3%; }
   .ed-hero-artwork .ed-kinetic-lines { top: 49%; height: 22%; }
   .ed-hero-artwork .ed-kinetic-stripes { top: 28%; right: -100px; }

@@ -539,16 +539,33 @@
 .ed-art-sheet figcaption > span:first-child { font-size: 21px; font-weight: 600; letter-spacing: -.025em; }
 .ed-art-sheet figcaption .ed-label { color: var(--ed-muted); font-size: 9px; }
 .ed-art-room-side { min-width: 0; }
-.ed-art-intro { padding: 10px 0 22px; }
-.ed-art-artists { border: 1px solid var(--ed-edge); border-radius: 8px; overflow: hidden; background: var(--ed-surface); }
-.ed-art-artists > button { width: 100%; min-height: 82px; display: flex; gap: 14px; align-items: center; padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--ed-line); transition: background .2s; }
-.ed-art-artists > button:last-child { border-bottom: 0; }
-.ed-art-artists > button[aria-pressed="true"] { background: var(--ed-white); box-shadow: inset 4px 0 0 var(--ed-accent); }
-.ed-art-artists img { width: 52px; height: 52px; object-fit: cover; object-position: center 22%; border: 3px solid var(--ed-white); outline: 1px solid var(--ed-line); border-radius: 3px; }
-.ed-art-artists > button > span { flex: 1; }
-.ed-art-artists strong { display: block; font-size: 18px; font-weight: 500; letter-spacing: -.02em; }
-.ed-art-artists small { display: block; font: 9px var(--font-geist-mono); color: var(--ed-muted); margin-top: 6px; }
-.ed-art-artists > button[aria-pressed="true"] > svg { color: var(--ed-accent); }
+.ed-art-intro { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0 14px; color: var(--ed-muted); }
+.ed-art-artists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ed-art-artists > button { min-width: 0; display: flex; flex-direction: column; gap: 7px; padding: 5px 5px 8px; text-align: left; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 5px; box-shadow: inset 0 0 0 1px var(--ed-highlight); transition: transform .2s, box-shadow .2s, background .2s; }
+.ed-art-artists > button:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-shadow); }
+.ed-art-artists > button[aria-pressed="true"] { background: var(--ed-white); border-color: var(--ed-accent); box-shadow: 0 0 0 2px var(--ed-accent), var(--ed-shadow); }
+.ed-art-artists img { width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; object-position: center 22%; background: var(--ed-white); border: 1px solid var(--ed-line); border-radius: 3px; }
+.ed-art-artists > button > span { min-width: 0; padding-inline: 2px; }
+.ed-art-artists strong { display: block; font-size: 13px; font-weight: 600; letter-spacing: -.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed-art-artists small { display: flex; align-items: center; gap: 4px; font: 8px var(--font-geist-mono); color: var(--ed-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ed-art-artists > button[aria-pressed="true"] small { color: var(--ed-accent); }
+.ed-art-source { min-height: 32px; gap: 6px; font-size: 11px; }
+.ed-art-versions { display: flex; gap: 6px; overflow-x: auto; padding: 10px 2px 2px; scrollbar-width: thin; }
+.ed-art-versions > button { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius); font: 9px var(--font-geist-mono); color: var(--ed-muted); white-space: nowrap; transition: background .2s, color .2s; }
+.ed-art-versions > button[aria-pressed="true"] { background: var(--ed-accent); border-color: var(--ed-accent); color: var(--ed-on-accent); }
+.ed-art-versions img { width: 30px; height: 30px; object-fit: cover; object-position: center 25%; border-radius: 3px; background: var(--ed-white); }
+/* A slow contact-sheet reel of every piece; it pauses off-screen, on hover and with reduced motion. */
+.ed-art-reel { position: relative; overflow: hidden; margin: 0 0 36px; padding: 14px 0 18px; mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+.ed-art-reel-track { display: flex; width: max-content; gap: 14px; animation: ed-reel 150s linear infinite; }
+.ed-art-reel[data-active="false"] .ed-art-reel-track, .ed-art-reel:hover .ed-art-reel-track, .ed-art-reel:focus-within .ed-art-reel-track { animation-play-state: paused; }
+.ed-art-reel-print { flex: 0 0 auto; display: flex; flex-direction: column; padding: 6px; background: var(--ed-white); border: 1px solid var(--ed-edge); box-shadow: 0 6px 14px #28282c18; transform: rotate(-1.2deg); transition: transform .25s, box-shadow .25s; cursor: zoom-in; }
+.ed-art-reel-print:nth-child(even) { transform: rotate(1deg) translateY(6px); }
+.ed-art-reel-print:nth-child(3n) { transform: rotate(-.4deg) translateY(-4px); }
+.ed-art-reel-print:hover, .ed-art-reel-print:focus-visible { transform: rotate(0) translateY(-6px) scale(1.03); box-shadow: var(--ed-float-shadow); z-index: 1; }
+.ed-art-reel-print img { display: block; height: 210px; width: auto; max-width: 300px; object-fit: cover; object-position: center 25%; }
+.ed-art-reel-print > span { display: flex; justify-content: space-between; gap: 10px; padding: 7px 1px 1px; font: 8px/1 var(--font-geist-mono); color: var(--ed-muted); white-space: nowrap; }
+.ed-art-reel-print > span > span:first-child { color: var(--ed-ink); }
+@keyframes ed-reel { to { transform: translateX(-50%); } }
 .ed-art-pagination { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 12px 0 28px; }
 .ed-art-pagination .ed-label { font-size: 9px; text-align: center; }
 .ed-studio-invite { display: block; position: relative; overflow: hidden; width: 100%; padding: 20px; text-align: left; background: var(--ed-shell); color: var(--ed-paper); border: 1px solid var(--ed-edge); border-radius: 12px 12px 24px 12px; box-shadow: inset 0 1px 0 #ffffff40, var(--ed-shadow); }
@@ -594,12 +611,18 @@
   .ed-menu-button { display: flex !important; margin-left: auto; border: 0; }
   .ed-commission-sticker > span { font-size: 7px; margin-inline: 0; padding: 5px 3px; }
   .ed-art-room-layout { grid-template-columns: minmax(0,1fr); gap: 20px; }
-  .ed-art-count { font-size: 32px; }
+  .ed-art-count { font-size: 32px; text-align: right; }
+  .ed-art-count small { display: block; margin-top: 4px; font-size: 8px; white-space: nowrap; }
+  .ed-art-image-button { aspect-ratio: auto; }
+  .ed-art-image-button > img { height: auto; max-height: 520px; }
   .ed-art-image-button { max-height: 520px; }
   .ed-art-sheet figcaption { padding: 14px 8px 8px; }
   .ed-art-sheet figcaption > span:first-child { font-size: 18px; }
   .ed-art-intro { padding-top: 0; }
-  .ed-art-artists strong { font-size: 16px; }
+  .ed-art-artists { gap: 6px; }
+  .ed-art-artists strong { font-size: 12px; }
+  .ed-art-reel { margin-bottom: 24px; }
+  .ed-art-reel-print img { height: 150px; max-width: 210px; }
   .ed-studio-invite-title { font-size: 32px; }
   .ed-character-studio { grid-template-columns: minmax(0,1fr); }
   .ed-studio-stage { height: 48dvh; min-height: 300px; }

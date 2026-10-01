@@ -2,6 +2,35 @@
 
 # task
 
+## home commissions, hero pose & shading — local candidate / 2026-10-01
+
+User: most commissions weren't visible from the home page; the hero's peace sign
+looked crooked and flat. Keep the design language, make it nicer.
+
+- `ArtRoom` now reads `galleryWorks` (all 9 commissions / 32 pieces, newest first)
+  instead of the 3-item `commissionArt`. New: a slow contact-sheet reel of every
+  piece (round-robin by version, pauses off-screen/on hover/reduced motion, click
+  opens the piece), a 3-column commission grid, per-work version chips, skeb link.
+  New gallery entries appear on the home page automatically.
+- `/gallery` is now Pinterest-style masonry: `packColumns` drops each work into the
+  shortest column by its aspect ratio (4 columns >=1180px, 3 mid, 2 phones); images
+  keep their natural shape instead of a 4:5 letterbox.
+- Hero commission wall: 5x2 on desktop (adds ObakenoPerutan), first 9 on phones.
+- Hero pose re-authored from scratch (`characterReachPose.json`): V beside the
+  cheek with palm out, ring/little curled under the thumb, relaxed right arm,
+  contrapposto. Phones use `COMPACT_REACH` (elbow tucked, V by the chin).
+  Removed the tilted camera `up` vector and the absolute head/chest/hips idle
+  writes that overwrote the pose; idle motion now layers on the rest pose.
+  The Overte-derived pose and its notice/license files were removed.
+- Cel shading in `shadeCharacter`: lavender shade colors, toony .92, faint red
+  parametric rim on hair/cloth, face left flat; key light moved front-left.
+- Pose authoring method: model space faces -Z, character left = -X; aim bones by
+  direction + palm normal, then dump normalized quaternions.
+
+Verified: typecheck, 18 design + 4 asset tests, production build, headless Chrome
+desktop 1440x900 and 390x844 (no horizontal overflow), 3d studio dialog.
+Not committed or deployed. Discord badge changes below remain separate.
+
 ## compact links & contact page — deployed / 2026-09-29
 
 user approved adding routes and wanted a small directory without turning bare
