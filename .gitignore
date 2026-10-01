@@ -61,3 +61,6 @@ Desktop.ini
 .sh_history
 OKISO.zip
 *.zip
+
+# The free cursor pack is published on /cursor.
+!public/cursor/okiso/okiso-cursors-by-katekoteko.zip
