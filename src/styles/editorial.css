@@ -212,8 +212,8 @@
 .ed-discord-details { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
 .ed-discord-details strong { display: block; font-size: 25px; line-height: 1.1; letter-spacing: -.04em; overflow-wrap: anywhere; }
 .ed-discord-handle { color: var(--ed-muted); font: 12px var(--font-mono), monospace; overflow-wrap: anywhere; margin: 0; }
-.ed-discord-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
-.ed-discord-badges img { display: block; width: 20px; height: 20px; object-fit: contain; }
+.ed-discord-badges { display: flex; flex-wrap: wrap; max-width: 100%; gap: 5px; margin-top: 3px; }
+.ed-discord-badges img { display: block; flex: 0 0 20px; width: 20px; height: 20px; object-fit: contain; }
 .ed-discord-custom-status { width: 100%; padding-top: 13px; border-top: 1px solid var(--ed-line); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 .ed-discord-card:hover { background: var(--ed-accent-soft); }
 .ed-discord-profile { display: flex; gap: 24px; align-items: center; padding: 8px 4px; margin-bottom: 24px; }

@@ -50,6 +50,68 @@ Verified: typecheck, 18 design + 4 asset tests, production build, headless Chrom
 desktop 1440x900 and 390x844 (no horizontal overflow), 3d studio dialog.
 Not committed or deployed. Discord badge changes below remain separate.
 
+## ObakenoPerutan commission — deployed / 2026-10-01
+
+Request 4070366 / public work 14 is complete. The 4559x3950 original PSD and
+Skeb composite are preserved under
+`D:/FOLDERS/Commissions/Bought/OKISO/ObakenoPerutan@skeb/`.
+`converted/` has both full-resolution collages, five native-resolution transparent
+character illustrations, and the verified Skeb composite copy. Nine records in
+`work-14.manifest.json` cover the PSD and eight converted files, with hashes,
+decoded dimensions and ICC metadata. All seven supplied PSD layers were visually
+inspected; no additional expression/outline layers exist. Artist-message and
+artist-supplied message-free collages are both retained without repainting.
+
+Gallery has 9 commissions / 32 versions, including seven new credited choices.
+Fourteen WebPs live through the existing `public/art/gallery` S: junction.
+Reproducible export/preparation scripts and inventory are in `COMMISSION-ASSETS.md`.
+Local production build/typecheck, all 43 website checks, exported SEO audit and
+16 archive-helper tests pass. Desktop and 390x844 Chrome checks load all seven
+choices, preserve artist/work links, and show no horizontal overflow; observed
+warnings came from browser extensions. Screenshots:
+`S:/Codex/outputs/2026-09-30/skeb-4070366/gallery-desktop.png` and `gallery-phone.png`.
+Source `b6729cfa` was pushed to main under the user's request to put it on the site.
+Deployment `36734182308` and Pages rollout `36734353061` both succeeded, with
+published asset commit `d52ac798`. Plain live `https://okiso.net/gallery` shows
+9 commissions and all seven new versions load with matching selected labels.
+Live screenshot and checks: `gallery-live.png` and `live-checks.json` in the
+same output folder. Direct Python HTTP checking received 403; no live-byte hash
+claim is made. Chrome verified the actual published images.
+
+Browser tooling repair: the running Codex 26.928.2636 app expected bundled Browser
+26.928.21956, absent from cache. Restored the matching unmodified bundle from that
+installed app, verified the service hash, and reset the failed JS kernel (its import
+failure was cached). Existing signed-in Chrome reconnected and the actual Skeb
+download worked. Chrome itself, its profile and native host were not restarted or
+modified. Private signed-link input was removed after original verification.
+The plugin automatically grouped its newly created gallery tab; existing user
+tabs were not moved. Gallery tab is marked to remain open. Scratch cleanup was
+rejected as blocked by policy; retained temporary files were not deleted via
+another route, and the local preview remains available on localhost:3000.
+
+## discord profile badges — deployed 2026-10-02 (built 2026-09-30)
+
+The card and expanded profile now combine the public Discord flags from Lanyard,
+the owner's Vencord badges fetched at mount and every 30 minutes, and seven
+manual profile-only badges matched to the supplied screenshot. Manual artwork:
+Nitro ruby, 18-month boost, legacy username, completed quest, Last Meadow Online,
+Orbs Apprentice, and gifting legend. Follow-up owner screenshots confirm Completed
+a Quest, Last Meadow Online level 100, Orbs Apprentice, and Gifting Legend; the
+tooltips now include the confirmed level and gifting tier. Tooltips intentionally
+omit unverified subscription dates, old discriminator, and gift counts. Nitro and
+boost artwork tiers remain visual matches to the small original screenshot.
+Assets use a pinned badge-catalog revision. Vencord remains a live optional feed;
+failures retain the last successful result and do not affect the other badges.
+Badge rows wrap without shrinking the icons. Fixed two existing public-badge asset
+names (partnered server owner and early verified developer).
+
+Verified production build/typecheck, all 18 design checks, all seven manual image
+URLs, and Chrome desktop plus 390x844 mobile. All 16 current badges load in both
+the card and expanded profile, with no horizontal overflow on mobile. Desktop
+card screenshot: `S:/Codex/outputs/2026-09-30/discord-badges/card.png`.
+The unrelated video feed showed its existing unavailable fallback in local preview.
+Deployed 2026-10-02 after a local recheck: all 16 badges load in the card.
+
 ## compact links & contact page — deployed / 2026-09-29
 
 user approved adding routes and wanted a small directory without turning bare
