@@ -20,4 +20,14 @@ for (const [previous, current] of Object.entries(releaseRedirects)) {
   mkdirSync(directory, { recursive: true });
   writeFileSync(path.join(directory, 'index.html'), html);
 }
-console.log(`Exported ${Object.keys(releaseRedirects).length} verified release redirects.`);
+// Renamed pages keep their old links working the same way.
+const pageRedirects: Record<string, string> = { cursors: 'cursor' };
+for (const [previous, current] of Object.entries(pageRedirects)) {
+  if (!existsSync(path.join(output, `${current}.html`))) throw new Error(`Missing redirect target: /${current}`);
+  const target = `${SITE_URL}/${current}`;
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="refresh" content="0; url=${escape(target)}"><link rel="canonical" href="${escape(target)}"><title>OKISO</title></head><body><p>this page has moved to <a href="${escape(target)}">${escape(target)}</a>.</p></body></html>`;
+  writeFileSync(path.join(output, `${previous}.html`), html);
+  mkdirSync(path.join(output, previous), { recursive: true });
+  writeFileSync(path.join(output, previous, 'index.html'), html);
+}
+console.log(`Exported ${Object.keys(releaseRedirects).length} verified release redirects and ${Object.keys(pageRedirects).length} page redirect.`);

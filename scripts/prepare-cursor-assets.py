@@ -1,4 +1,4 @@
-"""Build the /cursors page assets from kateko's delivered OKISO cursor pack.
+"""Build the /cursor page assets from kateko's delivered OKISO cursor pack.
 
 Pixel art: every resize is nearest-neighbour at an integer scale.
 Source: D:/FOLDERS/Commissions/Bought/OKISO/kateko@vgen/Cursor.zip (VGen COMM#D8PK9IMBHJEC).
@@ -15,9 +15,8 @@ from PIL import Image
 
 SOURCE = Path("D:/FOLDERS/Commissions/Bought/OKISO/kateko@vgen/Cursor.zip")
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "public" / "cursors" / "okiso"
+OUT = ROOT / "public" / "cursor" / "okiso"
 MANIFEST = ROOT / "src" / "data" / "okisoCursors.json"
-SOCIAL = ROOT / "public" / "social" / "cursors-v1.jpg"
 PREVIEW = 128  # animated preview edge; the 256px pixel art halves cleanly
 POINTER = 64   # static browser cursor edge (browsers cap custom cursors at 128px)
 EMOTE_NATIVE, EMOTE = 32, 640  # the 1600px GIF is a 32px sprite at 50x; republish at 20x
@@ -74,13 +73,6 @@ def main():
             durations.append(emote.info.get("duration", 100))
         emote_frames[0].save(OUT / "animation.webp", save_all=True, append_images=emote_frames[1:],
                              duration=durations, loop=0, lossless=True, method=6)
-        social = Image.new("RGB", (1200, 630), (250, 250, 250))
-        sprite = emote_frames[0].resize((480, 480), Image.NEAREST)
-        social.paste(sprite, (90, 75), sprite)
-        for index, slug in enumerate(["normal", "link", "help", "busy"]):
-            tile = Image.open(OUT / "preview" / f"{slug}.webp").convert("RGBA").resize((192, 192), Image.NEAREST)
-            social.paste(tile, (660 + (index % 2) * 230, 100 + (index // 2) * 230), tile)
-        social.save(SOCIAL, quality=90)
     zip_bytes = (OUT / "okiso-cursors-by-katekoteko.zip").stat().st_size
     MANIFEST.write_text(json.dumps({"zipBytes": zip_bytes, "pointerSize": POINTER, "cursors": manifest}, indent=2) + "\n")
     print(f"{len(manifest)} cursors -> {OUT}")

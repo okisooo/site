@@ -2,18 +2,20 @@
 
 # task
 
-## free cursor page — /cursors / 2026-10-02
+## free cursor page — /cursor / 2026-10-02
 
 kateko's VGen commission (COMM#D8PK9IMBHJEC, "OKISO's Custom Cursor Set") is archived at
-`D:/FOLDERS/Commissions/Bought/OKISO/kateko@vgen/` (`Cursor.zip` + `extracted/`). 17
-animated 256px `.ani` cursors (12 frames, 100ms), `install.inf` scheme "Okiso", and a
-32px pixel sprite delivered as a 1600px GIF. Artist terms: use anywhere, no selling.
+`D:/FOLDERS/Commissions/Bought/OKISO/kateko@vgen/` (`Cursor.zip` + `extracted/`, plus
+`promo/` social clips: square + story MP4/PNG and the link-preview card, with their
+render scripts in `promo/source/`). 17 animated 256px `.ani` cursors (12 frames,
+100ms), `install.inf` scheme "Okiso", and a 32px sprite delivered as a 1600px GIF.
+Artist terms: use anywhere, no selling.
 
-`python scripts/prepare-cursor-assets.py` rebuilds `public/cursors/okiso/` (original zip,
-animated WebP previews, 64px static pointers), `src/data/okisoCursors.json` and
-`public/social/cursors-v1.jpg`. Pixel art: nearest-neighbour, integer scales only.
-The page wears the set (page/link/text cursors) and each tile previews its pointer on
-hover. Linked from /links and the sitemap; audit-seo covers the route.
+Route renamed from /cursors (a postbuild meta-refresh keeps the old link working).
+`python scripts/prepare-cursor-assets.py` rebuilds `public/cursor/okiso/` and
+`src/data/okisoCursors.json`; `public/social/cursor-v1.jpg` comes from the promo
+renderer. Pixel art: nearest-neighbour, integer scales only, no rotation. The page
+wears the set, has stats, floating animated pointers, copy-link/X/Bluesky share.
 
 ## home commissions, hero pose & shading — local candidate / 2026-10-01
 

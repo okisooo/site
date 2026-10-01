@@ -3,14 +3,15 @@ import Link from 'next/link';
 import { ArrowUpRight, Download } from 'lucide-react';
 import { pageMetadata } from '@/lib/seo';
 import pack from '@/data/okisoCursors.json';
+import ShareRow from './ShareRow';
 
 export const metadata = pageMetadata(
-  'OKISO / free cursors',
-  'A free animated pixel cursor set of OKISO for Windows, drawn by kateko. Download, install in a minute, use it anywhere.',
-  '/cursors',
+  'OKISO cursor set — free download',
+  'A free animated pixel-art cursor set of OKISO for Windows, drawn by kateko. 17 animated pointers, installs in a minute.',
+  '/cursor',
 );
 
-const BASE = '/cursors/okiso';
+const BASE = '/cursor/okiso';
 const ZIP = `${BASE}/okiso-cursors-by-katekoteko.zip`;
 const ARTIST = { name: 'kateko', vgen: 'https://vgen.co/katekoteko', bluesky: 'https://bsky.app/profile/katekoteko.bsky.social', x: 'https://x.com/katekoteko' };
 
@@ -27,24 +28,35 @@ const pointer = (slug: string, fallback = 'auto') => {
   return `url(${BASE}/pointer/${slug}.png) ${x} ${y}, ${fallback}`;
 };
 // The page itself wears the set, so visitors try it before downloading.
+// Animated pointers that orbit the hero sprite.
+const orbit = ['link', 'help', 'busy', 'move'];
 const wearing = { '--okiso-cursor': pointer('normal'), '--okiso-link': pointer('link', 'pointer'), '--okiso-text': pointer('text', 'text') } as CSSProperties;
 
-export default function CursorsPage() {
+export default function CursorPage() {
   const size = `${Math.round(pack.zipBytes / 1024)} KB`;
   return <article className="ed-page ed-cursors" style={wearing}>
     <header className="ed-page-heading ed-cursors-heading">
       <div>
-        <span className="ed-label">free download · windows</span>
-        <h1>cursors</h1>
-        <p>an animated pixel cursor set of me, drawn by <a href={ARTIST.vgen} target="_blank" rel="noopener noreferrer">{ARTIST.name}</a>. {pack.cursors.length} pointers, every one animated. grab it, it’s free.</p>
+        <span className="ed-label ed-cursors-kicker"><span>free download</span><span>windows</span><span>pixel art</span></span>
+        <h1>cursor<span> set</span></h1>
+        <p>a tiny animated me, living in your mouse pointer. drawn by <a href={ARTIST.vgen} target="_blank" rel="noopener noreferrer">{ARTIST.name}</a>, free for everyone.</p>
+        <dl className="ed-cursors-stats">
+          <div><dt>pointers</dt><dd>{pack.cursors.length}</dd></div>
+          <div><dt>frames each</dt><dd>{pack.cursors[0].frames}</dd></div>
+          <div><dt>price</dt><dd>free</dd></div>
+        </dl>
         <div className="ed-cursors-actions">
           <a className="ed-button ed-cursors-download" href={ZIP} download><Download size={18} aria-hidden="true" /> download the set <small>.zip · {size}</small></a>
           <a className="ed-text-link" href="#install">how to install <ArrowUpRight size={16} aria-hidden="true" /></a>
         </div>
+        <ShareRow />
       </div>
       <figure className="ed-cursors-hero">
-        <img src={`${BASE}/animation.webp`} alt="Pixel-art chibi OKISO bobbing in place, the animation the cursors are built from" width="640" height="640" />
-        <figcaption className="ed-label">art & animation by {ARTIST.name}</figcaption>
+        <div className="ed-cursors-stage">
+          <img src={`${BASE}/animation.webp`} alt="Pixel-art chibi OKISO bobbing in place, the animation the cursors are built from" width="640" height="640" />
+          {orbit.map((slug, index) => <img key={slug} className={`ed-cursors-orbit ed-cursors-orbit-${index}`} src={`${BASE}/preview/${slug}.webp`} alt="" width="128" height="128" />)}
+        </div>
+        <figcaption className="ed-label"><span>okiso.net/cursor</span><span>art & animation by {ARTIST.name}</span></figcaption>
       </figure>
     </header>
 

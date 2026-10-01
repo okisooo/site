@@ -33,7 +33,7 @@ export default function LinksPage() {
     <nav className="ed-links-features" aria-label="Music and art">
       <Link href="/releases">all my music <ArrowUpRight size={18} aria-hidden="true" /></Link>
       <Link href="/gallery">art gallery <ArrowUpRight size={18} aria-hidden="true" /></Link>
-      <Link href="/cursors">free cursors <ArrowUpRight size={18} aria-hidden="true" /></Link>
+      <Link href="/cursor">free cursor set <ArrowUpRight size={18} aria-hidden="true" /></Link>
     </nav>
     <section aria-labelledby="links-profiles">
       <h2 id="links-profiles" className="ed-label">find me</h2>

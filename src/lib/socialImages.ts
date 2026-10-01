@@ -5,7 +5,7 @@ const socialCards = {
   '/releases': ['releases-v1', 'Selected OKISO release covers — music archive'],
   '/upcoming': ['upcoming-v1', 'OKISO upcoming music and announcements, with chibi art by 7mmchan'],
   '/gallery': ['gallery-v1', 'OKISO gallery — commissioned illustrations by he_know_lee, sobu and ykhs9'],
-  '/cursors': ['cursors-v1', 'Pixel-art OKISO cursor set by kateko — free animated cursors for Windows'],
+  '/cursor': ['cursor-v1', 'Pixel-art OKISO cursor set by kateko — free animated cursors for Windows'],
   '/vault': ['vault-v1', 'The Vault — OKISO demos, alternate versions and unfinished tracks'],
   '/rouge-noir': ['rouge-noir-v1', 'Rouge & Noir title artwork with a red and black roulette wheel'],
 } as const;
