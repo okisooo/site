@@ -15,6 +15,10 @@ looked crooked and flat. Keep the design language, make it nicer.
 - `/gallery` is now Pinterest-style masonry: `packColumns` drops each work into the
   shortest column by its aspect ratio (4 columns >=1180px, 3 mid, 2 phones); images
   keep their natural shape instead of a 4:5 letterbox.
+- Art room auto-tours (2026-10-02): every 3s the next version, then the next
+  commission; images decode before swapping. Any manual pick, version chip, arrow
+  or closing the full view holds 10s. Pauses off-screen, on mouse hover, while the
+  full view is open, and with reduced/paused ambient motion. Red timer bar on card.
 - Hero commission wall: 5x2 on desktop (adds ObakenoPerutan), first 9 on phones.
 - Hero pose re-authored from scratch (`characterReachPose.json`): V beside the
   cheek with palm out, ring/little curled under the thumb, relaxed right arm,
