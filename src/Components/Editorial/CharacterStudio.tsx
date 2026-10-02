@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw, Pause, Play } from "lucide-react";
-import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping, AnimationMixer, type AnimationAction } from "three";
+import { WebGLRenderer, Scene, PerspectiveCamera, AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, MeshBasicMaterial, CylinderGeometry, TorusGeometry, Quaternion, Euler, Vector3, SRGBColorSpace, LinearToneMapping } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { VRMLoaderPlugin, VRMUtils, MToonMaterial, type VRM, type VRMPose } from "@pixiv/three-vrm";
@@ -9,12 +9,8 @@ import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
 import { sampleCharacterIdle } from "@/lib/characterIdle";
-import { createCharacterGestureClip } from "@/lib/characterGesture";
-import referenceReachPose from "@/data/characterReachPose.json";
 import smirkPose from "@/data/characterSmirkPose.json";
 
-// Hand-authored held peace sign: V beside the cheek, palm out, weight on one hip.
-const REACH_POSE = referenceReachPose as VRMPose;
 // Close-up from below: knuckles at the jaw, chin down, half-lidded one-sided smirk.
 const SMIRK_POSE = smirkPose as VRMPose;
 const SMIRK_FACE: Record<string, number> = {
@@ -23,13 +19,6 @@ const SMIRK_FACE: Record<string, number> = {
 };
 const SMIRK_CAMERA = { position: [.05, 1.24, .6], target: [0, 1.47, 0] } as const;
 const HERO_SMIRK = { fov: 24, angle: 30 * Math.PI / 180, height: 1.5, distance: 1.12, phoneDistance: 1.95, x: .04, phoneX: .005 };
-// The homepage hero's pose; "reach" restores the peace sign.
-const HERO_POSE: StudioOptions["pose"] = "smirk";
-// Phones crop the hero tightly, so the elbow tucks in and the V sits by the chin.
-const COMPACT_REACH: VRMPose = {
-  leftUpperArm: { rotation: [-0.7251639, -0.0930152, -0.4575378, -0.5061074] },
-  leftLowerArm: { rotation: [0.3339683, 0.9418331, 0.0060023, -0.037141] },
-};
 
 // Cel shading: crisp lavender shadows on the whites and a faint red rim, matching the site's palette.
 // The face keeps the artist's flat shading; toon faces read badly with cast light.
@@ -58,13 +47,13 @@ function shadeCharacter(vrm: VRM) {
 }
 
 type Expression = "neutral" | "happy" | "relaxed";
-type StudioOptions = { expression: Expression; pose: "relaxed" | "wave" | "reach" | "smirk"; framing: "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
-const DEFAULTS: StudioOptions = { expression: "neutral", pose: "relaxed", framing: "full", motion: true, turntable: false, saver: true };
+type StudioOptions = { expression: Expression; pose: "smirk" | "relaxed" | "wave"; framing: "close" | "full" | "portrait"; motion: boolean; turntable: boolean; saver: boolean };
+const DEFAULTS: StudioOptions = { expression: "neutral", pose: "smirk", framing: "close", motion: true, turntable: false, saver: true };
 
 export default function CharacterStudio({ hero = false, active = true, onPerformanceFallback }: { hero?: boolean; active?: boolean; onPerformanceFallback?: (limited: true) => void }) {
   const ambient = useContext(AmbientMotionContext);
   const canvasHost = useRef<HTMLDivElement>(null);
-  const [options, setOptions] = useState<StudioOptions>(() => hero ? { ...DEFAULTS, pose: HERO_POSE, expression: "happy" } : DEFAULTS);
+  const [options, setOptions] = useState<StudioOptions>(() => DEFAULTS);
   const current = useRef(options);
   current.current = { ...options, motion: options.motion && (!hero || ambient) };
   const enabled = useRef(active);
@@ -102,7 +91,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
     host.appendChild(element);
     let disposed = false, failed = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0;
     let renderer: WebGLRenderer | undefined, controls: OrbitControls | undefined, vrm: VRM | undefined;
-    let gestureMixer: AnimationMixer | undefined, gestureAction: AnimationAction | undefined;
     let previousFraming = "", previousPose = "", previousExpression = "";
     let dolly = false, waveStart = 0;
     const cameraDestination = new Vector3(), targetDestination = new Vector3();
@@ -129,7 +117,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       frame = 0;
       if (disposed || failed || !enabled.current || !inView || document.hidden || !renderer || !controls) return;
       const settings = current.current;
-      const reaching = settings.pose === "reach";
       const moving = settings.motion && !prefersReduced.matches && !!vrm;
       const interval = 1000 / (hero || settings.saver ? 30 : 60);
       if (moving && time < nextFrame - 1) { frame = requestAnimationFrame(render); return; }
@@ -139,20 +126,18 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       if (moving) elapsed += delta;
       controls.autoRotate = moving && settings.turntable && !dolly;
       controls.enableDamping = moving;
-      const smirking = !hero && settings.pose === "smirk";
-      const framingKey = smirking ? "smirk" : settings.framing;
-      // The smirk camera sits low and close; the default orbit limits would clamp it back to eye level.
-      const lowCamera = settings.pose === "smirk";
+      const framingKey = hero ? "hero" : settings.framing;
+      // The close-up sits low and near; the default orbit limits would clamp it back to eye level.
+      const lowCamera = hero || settings.framing === "close";
       controls.minDistance = lowCamera ? .4 : hero ? .65 : 1.1;
       controls.maxPolarAngle = lowCamera ? 2.2 : 1.7;
       if (framingKey !== previousFraming) {
         const portrait = settings.framing === "portrait";
-        const heroDistance = compactLayout.matches ? Math.max(1.16, .64 / camera.aspect) : Math.max(.98, .62 / camera.aspect);
-        cameraDestination.set(hero ? .16 : 0, hero ? 1.54 : portrait ? 1.42 : .95, hero ? heroDistance : portrait ? 1.6 : Math.min(4.4, Math.max(3.6, 2.15 / camera.aspect)));
-        targetDestination.set(hero ? (compactLayout.matches ? -.145 : 0) : 0, hero ? 1.21 : portrait ? 1.35 : .8, 0);
-        const heroSmirk = hero && settings.pose === "smirk";
-        camera.fov = hero ? 64 : 32;
-        if (heroSmirk) {
+        cameraDestination.set(0, portrait ? 1.42 : .95, portrait ? 1.6 : Math.min(4.4, Math.max(3.6, 2.15 / camera.aspect)));
+        targetDestination.set(0, portrait ? 1.35 : .8, 0);
+        if (settings.framing === "close") { cameraDestination.set(...SMIRK_CAMERA.position); targetDestination.set(...SMIRK_CAMERA.target); }
+        camera.fov = 32;
+        if (hero) {
           // Close on the face and the hand at his jaw, looking up at him from 30° below.
           const distance = compactLayout.matches ? HERO_SMIRK.phoneDistance : HERO_SMIRK.distance;
           const x = compactLayout.matches ? HERO_SMIRK.phoneX : HERO_SMIRK.x;
@@ -170,7 +155,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           targetDestination.sub(up); cameraDestination.sub(up);
         }
         camera.updateProjectionMatrix();
-        if (smirking) { cameraDestination.set(...SMIRK_CAMERA.position); targetDestination.set(...SMIRK_CAMERA.target); }
         dolly = moving && previousFraming !== "";
         if (!dolly) { camera.position.copy(cameraDestination); controls.target.copy(targetDestination); }
         previousFraming = framingKey;
@@ -188,7 +172,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         const poseKey = `${settings.pose}-${waveSide}`;
         const poseChanged = previousPose !== poseKey;
         if (poseChanged) {
-          gestureAction?.stop();
           const waving = settings.pose === "wave";
           if (waving) waveStart = elapsed;
           const waveQ = (x: number, y: number, z: number, twist = 0) => q(x, y * waveSign, z * waveSign, twist);
@@ -216,13 +199,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
               [`${waveSide}LittleIntermediate`]: { rotation: waveQ(0, 0, -.1) },
               [`${waveSide}ThumbMetacarpal`]: { rotation: waveQ(.1, -.12, .12) },
             } : {}),
-            ...(hero ? {
-              hips: { rotation: q(0, -.05, -.025) },
-              leftUpperLeg: { rotation: q(0, 0, .025) },
-              rightUpperLeg: { rotation: q(.035, 0, -.035) },
-            } : {}),
-            ...(reaching ? REACH_POSE : {}),
-            ...(reaching && hero && compactLayout.matches ? COMPACT_REACH : {}),
             ...(settings.pose === "smirk" ? SMIRK_POSE : {}),
           });
           for (const [name, value] of Object.entries(SMIRK_FACE)) vrm.expressionManager?.setValue(name, settings.pose === "smirk" ? value : 0);
@@ -231,11 +207,8 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           previousExpression = "";
           for (const [name, rest] of [["head", restHead], ["chest", restChest], ["hips", restHips]] as const)
             rest.copy(vrm.humanoid.getNormalizedBoneNode(name)?.quaternion ?? sway.identity());
-          if (reaching) gestureAction?.play();
           previousPose = poseKey;
         }
-        // The same clock freezes fingers, hands and arms together when motion is paused.
-        if (reaching && gestureMixer && gestureAction) gestureMixer.setTime(elapsed % gestureAction.getClip().duration);
         if (previousExpression !== settings.expression) {
           // The smirk carries its own face; the preset expressions would soften it.
           for (const name of ["happy", "relaxed"]) vrm.expressionManager?.setValue(name, name === settings.expression && settings.pose !== "smirk" ? (hero ? .28 : .8) : 0);
@@ -265,15 +238,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
         if (hero) layer(vrm.humanoid.getNormalizedBoneNode("hips"), restHips, 0, 0, Math.sin(elapsed * .5) * .012);
         const idle = sampleCharacterIdle(elapsed);
         const expressions = vrm.expressionManager;
-        if (hero && settings.pose !== "smirk") {
-          expressions?.setValue("happy", .28 + idle.smile * .25);
-          expressions?.setValue("relaxed", .04);
-          expressions?.setValue("MouthSmileLeft", .04 + idle.smile * .14);
-          expressions?.setValue("MouthSmileRight", .04 + idle.smile * .12);
-          expressions?.setValue("CheekSquintLeft", idle.smile * .08);
-          expressions?.setValue("CheekSquintRight", idle.smile * .08);
-          expressions?.setValue("BrowInnerUp", idle.smile * .035);
-        }
         expressions?.setValue("blink", moving ? idle.blink : 0);
         if (poseChanged) {
           // A new pose is a teleport for hair/clothing physics, not a large velocity.
@@ -390,8 +354,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           VRMUtils.rotateVRM0(model);
           shadeCharacter(model);
           vrm = model; scene.add(model.scene);
-          gestureMixer = new AnimationMixer(model.scene);
-          gestureAction = gestureMixer.clipAction(createCharacterGestureClip(model));
           if (hero) model.scene.rotation.y -= .08;
           clearTimeout(timeout);
           setProgress(100); setState("ready"); invalidate();
@@ -407,8 +369,6 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       if (hero) window.removeEventListener("pointermove", movePointer);
       element.removeEventListener("webglcontextlost", lost);
       commands.current = null; controls?.dispose();
-      gestureMixer?.stopAllAction();
-      if (vrm) gestureMixer?.uncacheRoot(vrm.scene);
       VRMUtils.deepDispose(scene); renderer?.dispose(); renderer?.forceContextLoss(); element.remove();
     };
   }, [attempt, hero, onPerformanceFallback]);
@@ -424,9 +384,9 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       {state === "ready" && <span className="ed-studio-stage-hint">drag to turn · scroll to zoom</span>}
     </div>
     {state !== "unavailable" && <div className="ed-studio-console">
-      <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "full" ? "full figure" : value}</button>)}</div></div>
+      <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["close", "full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "close" ? "close-up" : value === "full" ? "full figure" : value}</button>)}</div></div>
       <div className="ed-studio-control-row"><span className="ed-label">expression</span><div role="group" aria-label="Character expression">{(["neutral", "happy", "relaxed"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.expression === value} onClick={() => update("expression", value)}>{value}</button>)}</div></div>
-      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["relaxed", "wave", "reach", "smirk"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value === "reach" ? "peace sign" : value}</button>)}</div></div>
+      <div className="ed-studio-control-row"><span className="ed-label">pose</span><div role="group" aria-label="Character pose">{(["smirk", "relaxed", "wave"] as const).map((value) => <button key={value} className="ed-button" disabled={state !== "ready"} aria-pressed={options.pose === value} onClick={() => update("pose", value)}>{value === "relaxed" ? "at ease" : value}</button>)}</div></div>
       <div className="ed-studio-transport"><button className="ed-icon-button" aria-label="Turn character left" onClick={() => commands.current?.rotate(-1)}><ArrowLeft size={17} /></button><button className="ed-button" disabled={reduced} aria-pressed={options.turntable} onClick={() => setOptions((old) => ({ ...old, turntable: !old.turntable, motion: true }))}>turntable</button><button className="ed-icon-button" aria-label="Turn character right" onClick={() => commands.current?.rotate(1)}><ArrowRight size={17} /></button></div>
       <div className="ed-studio-settings"><button className="ed-button" disabled={reduced} onClick={() => update("motion", !options.motion)}>{options.motion && !reduced ? <Pause size={14} /> : <Play size={14} />}{reduced ? "reduced motion" : options.motion ? "pause motion" : "resume motion"}</button><button className="ed-button" aria-pressed={options.saver} onClick={() => update("saver", !options.saver)}>battery saver</button><button className="ed-icon-button" aria-label="Reset character view" onClick={() => { setOptions((old) => ({ ...DEFAULTS, motion: !reduced, saver: old.saver })); commands.current?.reset(); }}><RotateCcw size={16} /></button></div>
 

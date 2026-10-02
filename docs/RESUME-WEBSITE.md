@@ -9,8 +9,9 @@ user-supplied reference: body turned ~20°, knuckles at the jaw with the elbow o
 the oversized sleeve, chin down, eyes locked on the camera (`vrm.lookAt.target`),
 narrowed eyes and a one-sided smirk (ARKit blendshapes in `SMIRK_FACE`). Camera:
 `HERO_SMIRK` in CharacterStudio — 24° FOV, 30° below the face looking up; phones get their
-own distance/offset. `HERO_POSE = "reach"` restores the peace sign. The 3d viewer also
-gained a "smirk" pose button with its own low close-up.
+own distance/offset. The 3d viewer opens on the smirk with a "close-up" framing (plus
+full figure / portrait, at ease / wave). The peace sign was removed entirely on user
+request (2026-10-03): its pose JSON, finger-idle clip, tests and `hero_character.png`.
 
 Gotchas fixed: OrbitControls' maxPolarAngle silently clamped the low camera back to eye
 level (now lifted for the smirk); the hero canvas used to be 65% wide and fixed-height, so
