@@ -2,6 +2,24 @@
 
 # task
 
+## homepage hero: smirk close-up — deployed / 2026-10-03
+
+The hero now shows the "smirk" pose (`src/data/characterSmirkPose.json`), modelled on a
+user-supplied reference: body turned ~20°, knuckles at the jaw with the elbow out wide for
+the oversized sleeve, chin down, eyes locked on the camera (`vrm.lookAt.target`),
+narrowed eyes and a one-sided smirk (ARKit blendshapes in `SMIRK_FACE`). Camera:
+`HERO_SMIRK` in CharacterStudio — 24° FOV, 30° below the face looking up; phones get their
+own distance/offset. `HERO_POSE = "reach"` restores the peace sign. The 3d viewer also
+gained a "smirk" pose button with its own low close-up.
+
+Gotchas fixed: OrbitControls' maxPolarAngle silently clamped the low camera back to eye
+level (now lifted for the smirk); the hero canvas used to be 65% wide and fixed-height, so
+the close-up cut his sleeves and body in hard lines — `.ed-character` now spans the cover
+edge to edge (same centres as before) and at least its full height, and the camera keeps
+his scale/position via `--hero-base`. The still fallback is now `hero-smirk.webp` /
+`hero-smirk-phone.webp` rendered from the live hero, sized by `--hero-base` so the load-in
+crossfade is seamless (`hero_character.png` is no longer referenced).
+
 ## free cursor page — /cursor / 2026-10-02
 
 kateko's VGen commission (COMM#D8PK9IMBHJEC, "OKISO's Custom Cursor Set") is archived at

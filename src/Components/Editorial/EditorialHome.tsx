@@ -51,7 +51,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
       <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop<br />electronic<br />vocaloid</span><ArrowDown size={26} /></div></div>
       <HeroCommissionWall />
       <AmbientArtwork hero />
-      <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><img className="ed-hero-fallback" src="/hero_character.png" alt="OKISO’s white-haired character in an oversized white tracksuit" width="667" height="1024" fetchPriority="high" />{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
+      <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
       <article className="ed-latest-card">
         <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
