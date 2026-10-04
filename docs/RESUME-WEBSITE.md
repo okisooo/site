@@ -2,7 +2,7 @@
 
 # task
 
-## OTORIxxx commission — verified locally / 2026-10-05
+## OTORIxxx commission — deployed / 2026-10-05
 
 User authorized downloading the new delivery and putting it on the website.
 Request 4043266 / public work 37 has three verified originals: an 800x800 GIF
@@ -19,7 +19,11 @@ Chrome; animation play/pause switches correctly, and 390x844 gallery/viewer/home
 checks have no horizontal overflow. Production build/typecheck, all 43 existing
 website checks, exported SEO checks and 16 archive-helper checks pass.
 Review evidence: `S:/Codex/outputs/2026-10-05/skeb-otori/`.
-Publication is authorized by this request; remote deployment verification follows.
+Published source `c4c31616` to main under this request. Deployment `37217490030`
+and Pages rollout `37217606880` succeeded, publishing assets `d1b6e384`.
+Plain live `https://okiso.net/gallery` shows 10 commissions. All 20 new choices
+load with the selected labels and verified artist/work links. Live evidence:
+`gallery-live.png` and `live-checks.json` in the same S: output folder.
 
 Build storage correction: `.next` now resolves to
 `S:/tmp/codex/skeb-otori-20261005/.next`; use process-local
