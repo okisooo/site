@@ -32,8 +32,9 @@ test("gallery groups credited works and ships every version within image budgets
       assert(statSync(`public${version.src}`).size < 500 * 1024, version.src);
       if (version.motion) {
         const animation = await sharp(`public${version.motion}`, { animated: true }).metadata();
-        assert.equal(animation.pages, 31, "all delivered animation frames are preserved");
-        assert.equal(animation.delay?.reduce((a, b) => a + b, 0), 1400, "original timing is preserved");
+        const expected = work.id === 'otori' ? { frames: 100, duration: 4000 } : { frames: 31, duration: 1400 };
+        assert.equal(animation.pages, expected.frames, "all delivered animation frames are preserved");
+        assert.equal(animation.delay?.reduce((a, b) => a + b, 0), expected.duration, "original timing is preserved");
         assert(statSync(`public${version.motion}`).size < 1_500_000, version.motion);
       }
     }

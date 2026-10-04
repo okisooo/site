@@ -2,6 +2,34 @@
 
 # task
 
+## OTORIxxx commission — verified locally / 2026-10-05
+
+User authorized downloading the new delivery and putting it on the website.
+Request 4043266 / public work 37 has three verified originals: an 800x800 GIF
+(100 frames, 4000ms loop), a 6668x6668 diary-collage PSD and a 5667x9029 asset-sheet
+PSD. The usual `D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/` folder is a
+junction to `S:/Codex/outputs/2026-10-05/skeb-otori/OTORIxxx@skeb/`.
+`converted/` has 19 lossless native-resolution exports; the manifest hashes all
+22 files. Complete art/messages and reusable transparent pieces are retained.
+See `COMMISSION-ASSETS.md` for the inventory and reproducible export commands.
+
+The gallery and homepage now have 10 commissions / 52 pieces. OTORIxxx is first,
+with 20 selectable views and verified creator/work links. All 20 images load in
+Chrome; animation play/pause switches correctly, and 390x844 gallery/viewer/home
+checks have no horizontal overflow. Production build/typecheck, all 43 existing
+website checks, exported SEO checks and 16 archive-helper checks pass.
+Review evidence: `S:/Codex/outputs/2026-10-05/skeb-otori/`.
+Publication is authorized by this request; remote deployment verification follows.
+
+Build storage correction: `.next` now resolves to
+`S:/tmp/codex/skeb-otori-20261005/.next`; use process-local
+`NODE_PATH=D:/GitHub/site/node_modules` for dependencies required by that cache.
+Always set `OKISO_EXPORT_DIR=build/site`: Next replaces an `out` junction when
+using its default export destination. `build/site` and the `out` preview alias
+resolve to `S:/tmp/codex/site-seo-design-20260905/export-root/site`.
+Earlier generated builds were copied, hash-verified and preserved on S: before
+redirecting their paths. No original source/configuration or browser profile moved.
+
 ## homepage hero: smirk close-up — deployed / 2026-10-03
 
 The hero now shows the "smirk" pose (`src/data/characterSmirkPose.json`), modelled on a

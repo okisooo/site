@@ -29,9 +29,35 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through September 30, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 5, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'otori', artist: 'OTORIxxx', title: 'your one-of-a-kind diary', medium: 'animation',
+    description: 'An animated OKISO diary collage with portraits, pixel art, stickers and takoling keychains, illustrated by OTORIxxx.',
+    artistUrl: 'https://skeb.jp/@OTORIxxx', workUrl: 'https://skeb.jp/@OTORIxxx/works/37',
+    small: '/art/gallery/otori-animated-thumb.webp', width: 800, height: 800,
+    variants: [
+      variant('otori-animated', 'animated collage', 800, 800, true),
+      variant('otori', 'diary collage', 1280, 1280),
+      variant('otori-guide', 'artist asset guide', 1130, 1800),
+      variant('otori-sheet', 'transparent asset sheet', 1130, 1800),
+      variant('otori-portrait', 'portrait', 1280, 1512),
+      variant('otori-holographic', 'holographic sticker', 1270, 1270),
+      variant('otori-pixel', 'pixel character', 1280, 1126),
+      variant('otori-dark-keychain', 'dark keychain', 994, 1800),
+      variant('otori-silver-keychain', 'silver keychain', 940, 1800),
+      variant('otori-mascot-open', 'mascot · open arms', 1182, 1012),
+      variant('otori-mascot-raised', 'mascot · raised arms', 1134, 1010),
+      variant('otori-mascot-left', 'mascot · looking left', 782, 712),
+      variant('otori-mascot-right', 'mascot · looking right', 802, 707),
+      variant('otori-mascot-front', 'mascot · front', 805, 693),
+      variant('otori-mascot-back', 'mascot · back', 797, 683),
+      variant('otori-name-sticker', 'name sticker', 1280, 649),
+      variant('otori-portrait-card', 'portrait card', 1280, 1280),
+      variant('otori-keychain', 'collage keychain', 905, 1800),
+      variant('otori-ring', 'keychain ring', 737, 165),
+      variant('otori-pencils', 'colored pencils', 840, 1800),
+    ] },
   { id: 'obakeno-perutan', artist: 'ObakenoPerutan', title: 'character assortment', medium: 'illustration',
     description: 'A red-and-white OKISO collage with portraits, chibis and takoling mascots, illustrated by ObakenoPerutan.',
     artistUrl: 'https://skeb.jp/@ObakenoPerutan', workUrl: 'https://skeb.jp/@ObakenoPerutan/works/14',

@@ -1,5 +1,31 @@
 # commissioned artwork for the site
 
+## OTORIxxx / 2026-10-05
+
+Request 4043266 / public work 37 completed October 4, verified against the entire
+signed-in completed list. All three delivered originals are preserved under
+`D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/`, a junction to
+`S:/Codex/outputs/2026-10-05/skeb-otori/OTORIxxx@skeb/`.
+The GIF is 800x800, 100 frames at 40ms, looping every four seconds. The PSDs are
+6668x6668 and 5667x9029. `work-37.manifest.json` verifies 22 files with hashes:
+three originals plus 19 full-resolution lossless PNGs in `converted/`.
+
+Exports include the complete diary collage, artist asset guide, transparent
+asset sheet, portrait, holographic sticker, pixel character, two sheet keychains,
+six mascot poses, name sticker, portrait card, and the square PSD's separate
+keychain, ring and pencils. The artist's guide/message and all embedded credits
+are retained. The guide's separate info group is omitted only from reusable
+transparent exports. Individual sheet pieces follow empty gutters and preserve
+the artist-supplied alpha; no backgrounds, signatures or painted text are erased.
+No hidden alternate expression or outline layers were found.
+
+`scripts/export-otori.py --output-dir <S: scratch>` reproduces the PNG exports;
+archive its `exports.json` with the skeb-download helper. `scripts/prepare-otori.mjs`
+requires `OKISO_GALLERY_OUTPUT_DIR` and `OKISO_GALLERY_INVENTORY` on S:.
+Twenty gallery choices use 41 WebPs through the existing gallery junction.
+The animated WebP preserves all 100 frames and 4000ms timing at 360px, 485160
+bytes. Originals and lossless exports stay outside public website assets.
+
 ## ObakenoPerutan / 2026-09-30
 
 Request 4070366 is complete with one 4559x3950 PSD (96,949,892 bytes), matched
