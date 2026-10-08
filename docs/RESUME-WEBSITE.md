@@ -2,6 +2,36 @@
 
 # task
 
+## lina / @nanashinolina commission — local candidate / 2026-10-09
+
+User authorized downloading request 4070361 and putting it on the website.
+Public work 32 completed October 8 and contains five verified originals: four
+2894x4093 PNGs and one PSD. All five PSD layers were visually inspected; four
+artwork layers supply clean/message collages, a full body and a portrait with
+mascot. There are no additional expressions. Nine decoded/hashed archive records
+cover originals plus four native-resolution lossless exports, with profiles and
+alpha retained. Physical archive:
+`S:/Codex/outputs/2026-10-09/skeb-4070361/nanashinolina@skeb/`.
+The usual D: artist path is a junction to that location.
+
+Gallery/home now have 11 commissions / 56 pieces. The new commission is first,
+with four credited choices and the public creator/work links. Eight WebPs use
+the existing S: gallery junction. Reproducible export/preparation scripts and
+the inventory are documented in `COMMISSION-ASSETS.md`.
+Verified: production build/typecheck, all 43 website regression checks, exported
+SEO audit (43 indexable pages / 35 releases), 16 archive-helper checks and all nine
+archive hashes/byte counts. Chrome loads all four selected images with matching
+labels and verified artist/work links. Desktop, 390x844 gallery/viewer and phone
+home checks have no horizontal overflow. Evidence is in the S: task output folder.
+Pending: scoped publishing and live verification.
+
+Multi-file download: promptly capture each resulting attachment tab URL and
+return to the delivery page with Back between files. Leaving Chrome's attachment
+error page open interrupted this delivery after two files; returning between
+attachments allowed all five observed links to be captured without settings,
+credentials, preview substitution or invented URLs. Private signed-link inputs
+must be removed after saving. Existing user Chrome tabs are preserved.
+
 ## OTORIxxx commission — deployed / 2026-10-05
 
 User authorized downloading the new delivery and putting it on the website.

@@ -1,5 +1,31 @@
 # commissioned artwork for the site
 
+## lina / @nanashinolina / 2026-10-09
+
+Request 4070361 / public work 32 completed October 8. The signed-in delivery
+reports five files, all downloaded and decoded: four 2894x4093 RGBA PNGs and
+one 2894x4093 PSD. Originals, hashes and dimensions are in
+`S:/Codex/outputs/2026-10-09/skeb-4070361/nanashinolina@skeb/work-32.manifest.json`.
+The usual `D:/FOLDERS/Commissions/Bought/OKISO/nanashinolina@skeb/` path is a
+junction to that physical S: artist folder.
+
+All five PSD layers were visually inspected: blank paper, transparent portrait
+with mascot, transparent full body, artist-message collage and clean collage.
+There are no additional expression or outline layers. `converted/` retains four
+lossless native-resolution artwork exports: both 2894x4093 collages, the
+1609x3703 full body and the 2035x3739 portrait. Delivered PNGs retain their
+original full-canvas transparency; layer exports retain their supplied bounds.
+All nine archive files are decoded and hashed. Messages, alpha and embedded
+color profiles are retained without repainting or embedded-text removal.
+
+Reproduce with `scripts/export-nanashinolina.py --output-dir <S: scratch>` and
+archive its `exports.json` through the skeb-download helper. The exporter resolves
+the archive junction before constructing helper destinations.
+`scripts/prepare-nanashinolina.mjs` requires `OKISO_GALLERY_OUTPUT_DIR` and
+`OKISO_GALLERY_INVENTORY` on S:. Four selectable gallery views use eight WebPs
+through the existing gallery asset junction; originals stay outside public assets.
+Artist and work links are verified against the delivery's visible links.
+
 ## OTORIxxx / 2026-10-05
 
 Request 4043266 / public work 37 completed October 4, verified against the entire

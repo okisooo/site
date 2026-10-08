@@ -29,9 +29,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through October 5, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 9, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'nanashinolina', artist: 'lina · @nanashinolina', title: 'white outfit & mascot', medium: 'illustration',
+    description: 'An OKISO character collage with a redesigned white outfit and a portrait holding the takoling mascot, illustrated by lina (@nanashinolina).',
+    artistUrl: 'https://skeb.jp/@nanashinolina', workUrl: 'https://skeb.jp/@nanashinolina/works/32',
+    small: '/art/gallery/nanashinolina-thumb.webp', width: 1273, height: 1800,
+    variants: [variant('nanashinolina', 'character collage', 1273, 1800), variant('nanashinolina-message', 'artist message', 1273, 1800), variant('nanashinolina-full-body', 'full body', 782, 1800), variant('nanashinolina-portrait', 'portrait & mascot', 980, 1800)] },
   { id: 'otori', artist: 'OTORIxxx', title: 'your one-of-a-kind diary', medium: 'animation',
     description: 'An animated OKISO diary collage with portraits, pixel art, stickers and takoling keychains, illustrated by OTORIxxx.',
     artistUrl: 'https://skeb.jp/@OTORIxxx', workUrl: 'https://skeb.jp/@OTORIxxx/works/37',
