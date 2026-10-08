@@ -2,6 +2,41 @@
 
 # task
 
+## canonical domains and google indexing — 2026-10-09
+
+User authorized fixing URLs permanently and handling Google indexing; release-page
+content remains deferred. Read `CANONICAL-URL-ROUTING.md` for the production contract,
+deployed Cloudflare rule identifiers and ongoing checks before changing domain routing.
+The canonical website remains `https://okiso.net`; `oki.so` remains the branded
+redirect. Hosting is still GitHub Pages behind Cloudflare, not Cloudflare Pages.
+
+Both zones now normalize trailing slashes, `.html`, nested `index.html` and homepage
+index aliases using permanent edge redirects with encoded queries preserved. The main
+www rule also removes an unnecessary HTTP/www redirect hop. Rules apply to future paths,
+only apex/www GET/HEAD; service subdomain routing and mail records were preserved.
+Crawler-only noindex headers now exclude auth/api on both domains and the main web manifest.
+All five remain 200. Current public pages remain indexable. Unknown/removed pages retain 404.
+
+Live verification: 2,086 checks passed across 43 sitemap pages, including all host/scheme
+combinations and 18 verified legacy migrations. Eight transport failures succeeded on
+the single bounded retry; this is not a claim of a network repair. The complete live SEO
+crawl also passed: 43 pages / 163 resources, no issues. The final guard adds the five
+verified crawler exclusions and runs daily through `verify-live-urls.yml`, saving reports
+and failing on regressions. Evidence: `S:/Codex/outputs/2026-10-09/domain-seo/`.
+
+Search Console's October 4 report shows 14 indexed / 53 excluded. The 19 old 404 examples
+include 11 already restored catalog aliases, seven removed releases without current
+equivalents, and Cloudflare's email-protection endpoint. Do not invent redirects for
+removed music. The duplicate is auth, and crawled-not-indexed examples are api and the
+manifest; all now have explicit noindex headers. The sitemap was resubmitted October 9,
+status Success, 43 discovered pages. Google accepted priority indexing requests for
+`/gallery` and `/releases/onthelow-1vH03l`; acceptance is not indexing completion.
+URL Inspection confirms `/about`, `/links`, `/cursor` and VESSEL FOR OBSESSION are indexed.
+Cursor's user-declared and Google-selected canonical agree. Release copy was not changed.
+`sc-domain:oki.so` was added and Google confirmed Ownership verified using a new
+apex TXT record; public DNS also shows the verification value and the existing SPF.
+Keep the verification record. No alias sitemap or change-of-address request was submitted.
+
 ## lina / @nanashinolina commission — deployed / 2026-10-09
 
 User authorized downloading request 4070361 and putting it on the website.

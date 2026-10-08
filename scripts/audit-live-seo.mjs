@@ -38,7 +38,7 @@ const pages = await pool(urls, async (canonical) => {
   const nodes = ld.flatMap((data) => data['@graph'] ?? [data]);
   return {
     path, status: res.status, finalUrl: res.finalUrl, error: res.error,
-    bytes: Buffer.byteLength(html), canonical: tags(html, 'link').filter((a) => a.rel === 'canonical').map((a) => a.href),
+    bytes: Buffer.byteLength(html), robotsHeader: res.headers['x-robots-tag'], canonical: tags(html, 'link').filter((a) => a.rel === 'canonical').map((a) => a.href),
     titles: [...html.matchAll(/<title>([\s\S]*?)<\/title>/gi)].map((m) => decode(m[1])),
     descriptions: metas.filter((a) => a.name === 'description').map((a) => a.content),
     robots: metas.filter((a) => a.name === 'robots').map((a) => a.content),
@@ -61,6 +61,7 @@ for (const page of pages) {
   check(page.descriptions.length === 1 && page.descriptions[0], page.path, 'Missing/duplicate description');
   check(page.h1.length === 1, page.path, 'Missing/duplicate primary heading');
   check(!page.robots.some((r) => /noindex/i.test(r)), page.path, 'Sitemap URL is noindex');
+  check(!/noindex/i.test(page.robotsHeader ?? ''), page.path, 'Sitemap URL has a noindex response header');
   check(!page.structuredData.some((d) => d.invalid), page.path, 'Invalid JSON-LD');
   check(page.images.every((img) => img.alt !== undefined), page.path, 'Image missing alt attribute');
 }

@@ -1,0 +1,38 @@
+name: Verify live canonical URLs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-live-urls.mjs'
+      - 'scripts/audit-live-seo.mjs'
+      - '.github/workflows/verify-live-urls.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+      - name: Check every sitemap URL and its common aliases
+        run: node scripts/audit-live-urls.mjs --output "$RUNNER_TEMP/url-audit.json"
+      - name: Check canonical pages, metadata and linked resources
+        if: always()
+        run: node scripts/audit-live-seo.mjs --output "$RUNNER_TEMP/seo-audit.json"
+      - name: Save routing evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-url-audit
+          path: |
+            ${{ runner.temp }}/url-audit.json
+            ${{ runner.temp }}/seo-audit.json

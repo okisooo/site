@@ -1,5 +1,23 @@
 # okiso: design and search workplan
 
+## domain routing and indexing refresh — 2026-10-09
+
+See `CANONICAL-URL-ROUTING.md` and the current `RESUME-WEBSITE.md` checkpoint.
+Both public domains now normalize common URL variants through permanent, path-aware
+Cloudflare redirects. `okiso.net` remains canonical; no website move was declared.
+Daily live URL and SEO checks discover future pages from the sitemap and verify the
+existing catalog migrations. Release-page content work remains deferred.
+
+Live crawl: all 43 sitemap pages and 163 linked resources pass. Search Console's
+October 4 report has 14 indexed / 53 excluded; it is not a post-fix count. The sitemap
+was resubmitted October 9, Success, 43 discovered pages. Gallery and onthelow priority
+indexing requests were accepted. `/about`, `/links`, `/cursor` and VESSEL FOR OBSESSION
+are confirmed indexed via URL Inspection. Google agrees with cursor's canonical.
+Auth/api and the web manifest now have verified noindex response headers. Real removed
+releases remain 404 rather than being misleadingly mapped to unrelated music.
+`oki.so` is now a verified Search Console domain property too, using DNS TXT ownership.
+It is for redirect visibility, not a competing indexable website or a domain move.
+
 ## current seo pass — 2026-09-15
 
 the user authorized independent SEO work. Chrome already has access to the

@@ -27,3 +27,12 @@ test("production builds do not bypass type errors", () => {
   const config = readFileSync(new URL("../../next.config.ts", import.meta.url), "utf8");
   assert.doesNotMatch(config, /ignoreBuildErrors:\s*true/);
 });
+
+test("live URL and indexing eligibility checks run daily with saved evidence", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/verify-live-urls.yml", import.meta.url), "utf8");
+  assert.match(workflow, /node-version:\s*'22\.19\.0'/);
+  assert.match(workflow, /schedule:\s*\n\s*- cron:/);
+  assert.match(workflow, /node scripts\/audit-live-urls\.mjs --output/);
+  assert.match(workflow, /node scripts\/audit-live-seo\.mjs --output/);
+  assert.match(workflow, /if: always\(\)\s*\n\s*uses: actions\/upload-artifact@v4/);
+});
