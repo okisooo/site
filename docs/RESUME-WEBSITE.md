@@ -2,7 +2,7 @@
 
 # task
 
-## lina / @nanashinolina commission — local candidate / 2026-10-09
+## lina / @nanashinolina commission — deployed / 2026-10-09
 
 User authorized downloading request 4070361 and putting it on the website.
 Public work 32 completed October 8 and contains five verified originals: four
@@ -23,14 +23,21 @@ SEO audit (43 indexable pages / 35 releases), 16 archive-helper checks and all n
 archive hashes/byte counts. Chrome loads all four selected images with matching
 labels and verified artist/work links. Desktop, 390x844 gallery/viewer and phone
 home checks have no horizontal overflow. Evidence is in the S: task output folder.
-Pending: scoped publishing and live verification.
+Published source `ed94f1de` to main under this request. Deployment `37821583948`
+passed the remote regression checks, production build/typecheck and SEO audit,
+publishing assets `b81fd58a`. Pages rollout `37821871168` succeeded. Plain live
+`https://okiso.net/gallery` shows 11 commissions and all four new images load
+with matching selected labels and verified artist/work links. Live evidence:
+`gallery-live.png` and `live-checks.json` in the same S: output folder.
 
 Multi-file download: promptly capture each resulting attachment tab URL and
 return to the delivery page with Back between files. Leaving Chrome's attachment
 error page open interrupted this delivery after two files; returning between
 attachments allowed all five observed links to be captured without settings,
 credentials, preview substitution or invented URLs. Private signed-link inputs
-must be removed after saving. Existing user Chrome tabs are preserved.
+were removed after saving. The existing user Chrome tab was restored to the
+request page; no tabs were created, grouped, moved or closed. Temporary phone
+viewport overrides were reset. The local static preview remains on localhost:3000.
 
 ## OTORIxxx commission — deployed / 2026-10-05
 
