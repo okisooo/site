@@ -30,12 +30,19 @@ equivalents, and Cloudflare's email-protection endpoint. Do not invent redirects
 removed music. The duplicate is auth, and crawled-not-indexed examples are api and the
 manifest; all now have explicit noindex headers. The sitemap was resubmitted October 9,
 status Success, 43 discovered pages. Google accepted priority indexing requests for
-`/gallery` and `/releases/onthelow-1vH03l`; acceptance is not indexing completion.
+`/gallery`, `/releases/onthelow-1vH03l` and `/rouge-noir`; acceptance is not indexing completion.
 URL Inspection confirms `/about`, `/links`, `/cursor` and VESSEL FOR OBSESSION are indexed.
 Cursor's user-declared and Google-selected canonical agree. Release copy was not changed.
 `sc-domain:oki.so` was added and Google confirmed Ownership verified using a new
 apex TXT record; public DNS also shows the verification value and the existing SPF.
 Keep the verification record. No alias sitemap or change-of-address request was submitted.
+Published source `a81a439d` to main. Deployment `37830834409` passed the website
+regressions, production build/types and exported SEO audit; Pages rollout `37831142373`
+succeeded, publishing assets `78515f38`. The first daily guard `37830834245` passed:
+2,091 checks / 43 sitemap pages / zero failures and zero transport retries; accompanying
+SEO crawl: 43 pages / 163 resources / zero issues. Its original JSON reports are saved
+in the evidence folder's `remote-guard/`. URL Inspection also confirms `/upcoming` indexed.
+The post-rollout live SEO crawl passed again: 43 pages / 163 resources / zero issues.
 
 ## lina / @nanashinolina commission — deployed / 2026-10-09
 

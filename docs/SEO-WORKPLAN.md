@@ -10,8 +10,8 @@ existing catalog migrations. Release-page content work remains deferred.
 
 Live crawl: all 43 sitemap pages and 163 linked resources pass. Search Console's
 October 4 report has 14 indexed / 53 excluded; it is not a post-fix count. The sitemap
-was resubmitted October 9, Success, 43 discovered pages. Gallery and onthelow priority
-indexing requests were accepted. `/about`, `/links`, `/cursor` and VESSEL FOR OBSESSION
+was resubmitted October 9, Success, 43 discovered pages. Gallery, onthelow and the
+game page's priority indexing requests were accepted. `/about`, `/links`, `/cursor` and VESSEL FOR OBSESSION
 are confirmed indexed via URL Inspection. Google agrees with cursor's canonical.
 Auth/api and the web manifest now have verified noindex response headers. Real removed
 releases remain 404 rather than being misleadingly mapped to unrelated music.
