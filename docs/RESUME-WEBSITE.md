@@ -11,8 +11,12 @@ artwork layers supply clean/message collages, a full body and a portrait with
 mascot. There are no additional expressions. Nine decoded/hashed archive records
 cover originals plus four native-resolution lossless exports, with profiles and
 alpha retained. Physical archive:
-`S:/Codex/outputs/2026-10-09/skeb-4070361/nanashinolina@skeb/`.
-The usual D: artist path is a junction to that location.
+`D:/FOLDERS/Commissions/Bought/OKISO/nanashinolina@skeb/`.
+User clarified that this skill's D: archive destination is explicitly allowed.
+On October 9, both this artist folder and OTORIxxx were restored as physical D:
+folders. All 33 files, including manifests, matched their copied SHA-256 hashes
+before the junctions were replaced and the old S: copies removed. The skill now
+records this exception. Website derivatives, review evidence and scratch stay on S:.
 
 Gallery/home now have 11 commissions / 56 pieces. The new commission is first,
 with four credited choices and the public creator/work links. Eight WebPs use
@@ -44,8 +48,9 @@ viewport overrides were reset. The local static preview remains on localhost:300
 User authorized downloading the new delivery and putting it on the website.
 Request 4043266 / public work 37 has three verified originals: an 800x800 GIF
 (100 frames, 4000ms loop), a 6668x6668 diary-collage PSD and a 5667x9029 asset-sheet
-PSD. The usual `D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/` folder is a
-junction to `S:/Codex/outputs/2026-10-05/skeb-otori/OTORIxxx@skeb/`.
+PSD. The archive is physically stored in
+`D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/` (restored from the former S:
+junction on October 9 after the user's storage clarification).
 `converted/` has 19 lossless native-resolution exports; the manifest hashes all
 22 files. Complete art/messages and reusable transparent pieces are retained.
 See `COMMISSION-ASSETS.md` for the inventory and reproducible export commands.

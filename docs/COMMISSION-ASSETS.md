@@ -5,9 +5,8 @@
 Request 4070361 / public work 32 completed October 8. The signed-in delivery
 reports five files, all downloaded and decoded: four 2894x4093 RGBA PNGs and
 one 2894x4093 PSD. Originals, hashes and dimensions are in
-`S:/Codex/outputs/2026-10-09/skeb-4070361/nanashinolina@skeb/work-32.manifest.json`.
-The usual `D:/FOLDERS/Commissions/Bought/OKISO/nanashinolina@skeb/` path is a
-junction to that physical S: artist folder.
+`D:/FOLDERS/Commissions/Bought/OKISO/nanashinolina@skeb/work-32.manifest.json`.
+The artist folder is physically on D:, as explicitly permitted for this skill.
 
 All five PSD layers were visually inspected: blank paper, transparent portrait
 with mascot, transparent full body, artist-message collage and clean collage.
@@ -20,7 +19,7 @@ color profiles are retained without repainting or embedded-text removal.
 
 Reproduce with `scripts/export-nanashinolina.py --output-dir <S: scratch>` and
 archive its `exports.json` through the skeb-download helper. The exporter resolves
-the archive junction before constructing helper destinations.
+the physical archive path before constructing helper destinations.
 `scripts/prepare-nanashinolina.mjs` requires `OKISO_GALLERY_OUTPUT_DIR` and
 `OKISO_GALLERY_INVENTORY` on S:. Four selectable gallery views use eight WebPs
 through the existing gallery asset junction; originals stay outside public assets.
@@ -30,8 +29,8 @@ Artist and work links are verified against the delivery's visible links.
 
 Request 4043266 / public work 37 completed October 4, verified against the entire
 signed-in completed list. All three delivered originals are preserved under
-`D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/`, a junction to
-`S:/Codex/outputs/2026-10-05/skeb-otori/OTORIxxx@skeb/`.
+`D:/FOLDERS/Commissions/Bought/OKISO/OTORIxxx@skeb/`, physically on D: after the
+October 9 storage clarification and verified removal of the former S: junction.
 The GIF is 800x800, 100 frames at 40ms, looping every four seconds. The PSDs are
 6668x6668 and 5667x9029. `work-37.manifest.json` verifies 22 files with hashes:
 three originals plus 19 full-resolution lossless PNGs in `converted/`.
