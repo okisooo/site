@@ -11,7 +11,7 @@ const titleSlugs: Record<string, string> = {
 };
 
 export function releaseTitleSlug(title: string): string {
-  const slug = titleSlugs[title] ?? title.toLowerCase().normalize('NFKD')
+  const slug = (Object.hasOwn(titleSlugs, title) ? titleSlugs[title] : undefined) ?? title.toLowerCase().normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/['’]/g, '')
     .replace(/[^a-z0-9]+/g, '-')

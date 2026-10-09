@@ -15,8 +15,19 @@ Canonicals, structured data, every release-link consumer and the 43-page sitemap
 follow the clean catalog data. See `CANONICAL-URL-ROUTING.md` for the contract.
 Local verification: all 48 regression tests, production build/typecheck and
 exported SEO checks passed (43 indexable pages / 35 releases / 52 release aliases).
-Migration checks also verified every non-URL catalog field unchanged against HEAD.
-Publication/live verification and Search Console submission are pending.
+Migration checks also verified every non-URL catalog field unchanged against
+pre-migration `c6611ebf`. Fifty exported HTML pages have no obsolete release links.
+Published source `8ef0aac4` to main. Deployment `37892848116` and Pages rollout
+`37893046519` succeeded, publishing assets `4a403e8f`.
+Remote guard `37893307874` passed all 2,231 URL checks / 43 sitemap pages with
+zero failures or transport retries; SEO crawl: 43 pages / 163 resources / zero issues.
+The local URL crawl had two HTTP connection timeouts; both affected paths passed
+the focused recheck with the exact expected 301/query-preserving destination.
+Keep the original report; this is not a claim of repairing the network.
+Chrome verifies an old `oki.so` release link reaches the readable main-domain URL,
+preserving multiple query parameters, encoded values and a fragment.
+Google accepted the refreshed sitemap (Success / 43 pages) and the new
+`/releases/onthelow` priority indexing request. Indexing/ranking is not guaranteed.
 Evidence/scratch: `S:/Codex/outputs/2026-10-09/clean-release-urls/` and
 `S:/tmp/codex/clean-release-urls-20261009/`.
 

@@ -13,6 +13,7 @@ test('readable title slugs retain words and never append provider IDs', () => {
   assert.equal(releaseTitleSlug('v0Id::PULSE'), 'v0id-pulse');
   assert.equal(releaseTitleSlug("TEARS IN HEAVEN '99"), 'tears-in-heaven-99');
   assert.equal(releaseTitleSlug('déjà vu!'), 'deja-vu');
+  assert.equal(releaseTitleSlug('constructor'), 'constructor');
   assert.throws(() => releaseTitleSlug('!!!'), /Add a readable/);
   assert.equal(assignReleaseSlugs([fixture('a song', undefined, { id: 'AbCdEf123', slug: 'a-song-AbCdEf' })])[0].slug, 'a-song');
 });
