@@ -2,6 +2,24 @@
 
 # task
 
+## readable release URLs — 2026-10-09
+
+User requested removing random URL suffixes sitewide. All 35 release slugs now
+use readable titles (including authored equivalents for titles stripped by the
+old formatter). Catalog sync assigns stable slugs after merging and preserves
+already published routes even when titles/provider IDs change. Future genuine
+collisions use meaningful dates rather than IDs. No release copy/media changed.
+The 35 previous addresses and 17 verified older aliases now point directly to
+clean targets, with query/fragment preservation and a non-JavaScript fallback.
+Canonicals, structured data, every release-link consumer and the 43-page sitemap
+follow the clean catalog data. See `CANONICAL-URL-ROUTING.md` for the contract.
+Local verification: all 48 regression tests, production build/typecheck and
+exported SEO checks passed (43 indexable pages / 35 releases / 52 release aliases).
+Migration checks also verified every non-URL catalog field unchanged against HEAD.
+Publication/live verification and Search Console submission are pending.
+Evidence/scratch: `S:/Codex/outputs/2026-10-09/clean-release-urls/` and
+`S:/tmp/codex/clean-release-urls-20261009/`.
+
 ## old flcollab relay — retired / 2026-10-09
 
 User paused flcollab and authorized retiring the old VPS relay; they will handle

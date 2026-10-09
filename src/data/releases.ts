@@ -46,7 +46,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1vH03lW0IfZ9GYf8b9QYBU",
     "releaseDate": "2026-09-17",
     "albumType": "single",
-    "slug": "onthelow-1vH03l",
+    "slug": "onthelow",
     "description": "onthelow — single by OKISO.",
     "tracks": [
       {
@@ -72,7 +72,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5ZSV0OHuWBDlP1XXFx0Euf",
     "releaseDate": "2026-08-30",
     "albumType": "single",
-    "slug": "vessel-for-obsession-5ZSV0O",
+    "slug": "vessel-for-obsession",
     "description": "VESSEL FOR OBSESSION — single by OKISO.",
     "tracks": [
       {
@@ -98,7 +98,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/6bQWrF7V9gOYRFJ85hDZ5L",
     "releaseDate": "2026-08-24",
     "albumType": "single",
-    "slug": "deadend-6bQWrF",
+    "slug": "deadend",
     "description": "DEADEND — single by OKISO.",
     "tracks": [
       {
@@ -124,7 +124,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1n3y33L9KIRz3oYxbWLlOf",
     "releaseDate": "2026-07-15",
     "albumType": "single",
-    "slug": "same-old-bs-1n3y33",
+    "slug": "same-old-bs",
     "description": "same old bs! — single by OKISO.",
     "tracks": [
       {
@@ -165,7 +165,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7s1rccJu49nMstJfnwfTTH",
     "releaseDate": "2026-07-10",
     "albumType": "single",
-    "slug": "love-st-7s1rcc",
+    "slug": "love-st",
     "description": "Love St. — single by OKISO.",
     "tracks": [
       {
@@ -206,7 +206,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5fUrozDWE08pZHsFNmJa1j",
     "releaseDate": "2026-06-25",
     "albumType": "single",
-    "slug": "break-me-5fUroz",
+    "slug": "break-me",
     "description": "BREAK ME — single by OKISO.",
     "tracks": [
       {
@@ -247,7 +247,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7j3Weq7F6KZCOLK7IucH8t",
     "releaseDate": "2026-05-21",
     "albumType": "single",
-    "slug": "prodigy-7j3Weq",
+    "slug": "prodigy",
     "description": "PRODIGY — single by OKISO.",
     "tracks": [
       {
@@ -299,7 +299,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1tbLs18CspTGSxLsw0acR7",
     "releaseDate": "2026-04-14",
     "albumType": "single",
-    "slug": "vac-1tbLs1",
+    "slug": "vac",
     "description": "VAC — single by OKISO.",
     "tracks": [
       {
@@ -349,7 +349,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/3EYCF4DQCNVxsHq6Ep9FWl",
     "releaseDate": "2026-03-10",
     "albumType": "album",
-    "slug": "for-a-chance-to-look-beyond-the-stars-3EYCF4",
+    "slug": "for-a-chance-to-look-beyond-the-stars",
     "description": "for a chance to look beyond the stars — album by OKISO.",
     "tracks": [
       {
@@ -478,7 +478,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/4SeepZvMOIwxvHcezyBf6V",
     "releaseDate": "2026-02-15",
     "albumType": "single",
-    "slug": "-4SeepZ",
+    "slug": "re-play",
     "description": "リ：プレイ — single by OKISO.",
     "tracks": [
       {
@@ -504,7 +504,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1uOe2jivJX1Z4ZEz1DHKdp",
     "releaseDate": "2026-02-02",
     "albumType": "single",
-    "slug": "v0idpulse-1uOe2j",
+    "slug": "v0id-pulse",
     "description": "v0Id::PULSE — single by OKISO.",
     "tracks": [
       {
@@ -546,7 +546,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/6LngUfrEv2ZFhLtiO3N07Y",
     "releaseDate": "2025-12-19",
     "albumType": "single",
-    "slug": "so-gorgeous-6LngUf",
+    "slug": "so-gorgeous",
     "description": "so gorgeous! — single by OKISO.",
     "tracks": [
       {
@@ -572,7 +572,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/3x8KXmxG7drNOZJdQSho0B",
     "releaseDate": "2025-12-01",
     "albumType": "single",
-    "slug": "ice-cold-3x8KXm",
+    "slug": "ice-cold",
     "description": "ice cold — single by OKISO.",
     "tracks": [
       {
@@ -614,7 +614,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5GPkDv0fvnVgZMYdJgl7j0",
     "releaseDate": "2025-11-07",
     "albumType": "album",
-    "slug": "chronicles-of-5GPkDv",
+    "slug": "chronicles-of-matta",
     "description": "Chronicles of \"マッタ\" — album by OKISO.",
     "tracks": [
       {
@@ -688,7 +688,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/6K1ElBEXCYlZqdMmQ2RCCr",
     "releaseDate": "2025-10-10",
     "albumType": "single",
-    "slug": "crydie-6K1ElB",
+    "slug": "crydie",
     "description": "CryDie — single by OKISO.",
     "tracks": [
       {
@@ -714,7 +714,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5Jc41LQd5yPAigJcTmS0TU",
     "releaseDate": "2025-09-25",
     "albumType": "album",
-    "slug": "-5Jc41L",
+    "slug": "genesis",
     "description": "ジェネシス — album by OKISO.",
     "tracks": [
       {
@@ -788,7 +788,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/2uADNEc96WdMbANDcq38eH",
     "releaseDate": "2025-09-05",
     "albumType": "single",
-    "slug": "where-are-you-now-2uADNE",
+    "slug": "where-are-you-now",
     "description": "where are you now? — single by OKISO.",
     "tracks": [
       {
@@ -814,7 +814,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7aV1twZ0WEnJjjKOtxaws6",
     "releaseDate": "2025-08-15",
     "albumType": "single",
-    "slug": "love-loop-hedoro-7aV1tw",
+    "slug": "love-loop-hedoro",
     "description": "LOVE LOOP + HEDORO — single by OKISO.",
     "tracks": [
       {
@@ -848,7 +848,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/6fKkcKVpselydLiyPuow9n",
     "releaseDate": "2025-06-01",
     "albumType": "single",
-    "slug": "miku-miku-hatsune-6fKkcK",
+    "slug": "miku-miku-hatsune",
     "description": "MIKU MIKU HATSUNE — single by OKISO.",
     "tracks": [
       {
@@ -874,7 +874,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7KJxRcFssHXN9M5H5uwJmr",
     "releaseDate": "2025-05-25",
     "albumType": "album",
-    "slug": "-7KJxRc",
+    "slug": "resurrection",
     "description": "リザレクション — album by OKISO.",
     "tracks": [
       {
@@ -1092,7 +1092,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/0pjrHysz0qyqoH7KYk4nSv",
     "releaseDate": "2025-05-01",
     "albumType": "single",
-    "slug": "my-dearest-0pjrHy",
+    "slug": "my-dearest",
     "description": "My Dearest — single by OKISO.",
     "tracks": [
       {
@@ -1118,7 +1118,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5axlA60Y1NFvuqr8AFxq9Q",
     "releaseDate": "2025-04-25",
     "albumType": "album",
-    "slug": "fantasia-etude-5axlA6",
+    "slug": "fantasia-etude",
     "description": "FANTASIA & ETUDE — album by OKISO.",
     "tracks": [
       {
@@ -1192,7 +1192,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/4NS67UCyX9mkWPCPtoeiPg",
     "releaseDate": "2025-04-07",
     "albumType": "album",
-    "slug": "etude-4NS67U",
+    "slug": "etude",
     "description": "ETUDE — album by OKISO.",
     "tracks": [
       {
@@ -1298,7 +1298,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7AOKAC8GZi6IbIL34KGEHT",
     "releaseDate": "2025-03-25",
     "albumType": "single",
-    "slug": "hello-world-7AOKAC",
+    "slug": "hello-world",
     "description": "HELLO, WORLD. — single by OKISO.",
     "tracks": [
       {
@@ -1324,7 +1324,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/0aAUvaJ0fCYfYjGKBLo7zB",
     "releaseDate": "2025-03-18",
     "albumType": "single",
-    "slug": "meet-the-princess-0aAUva",
+    "slug": "meet-the-princess",
     "description": "Meet The Princess — single by OKISO.",
     "tracks": [
       {
@@ -1350,7 +1350,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1pb8UV2RyNG3XfEFKWLnqF",
     "releaseDate": "2025-03-15",
     "albumType": "single",
-    "slug": "shut-off-1pb8UV",
+    "slug": "shut-off",
     "description": "SHUT OFF — single by OKISO.",
     "tracks": [
       {
@@ -1376,7 +1376,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/0LO32qXtXYqVCOmrqxt0nU",
     "releaseDate": "2025-03-10",
     "albumType": "album",
-    "slug": "fantasia-0LO32q",
+    "slug": "fantasia",
     "description": "FANTASIA — album by OKISO.",
     "tracks": [
       {
@@ -1458,7 +1458,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/5eqlbvpPR6XOKucUI9PHbj",
     "releaseDate": "2025-02-25",
     "albumType": "single",
-    "slug": "precious-you-5eqlbv",
+    "slug": "precious-you",
     "description": "PRECIOUS YOU — single by OKISO.",
     "tracks": [
       {
@@ -1484,7 +1484,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/1mtsHtgw6GDFNyFH5f5KsK",
     "releaseDate": "2025-02-17",
     "albumType": "single",
-    "slug": "tears-in-heaven-99-1mtsHt",
+    "slug": "tears-in-heaven-99",
     "description": "TEARS IN HEAVEN '99 — single by OKISO.",
     "tracks": [
       {
@@ -1510,7 +1510,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/4MGkjCfWfuBtKnSTEVJEMX",
     "releaseDate": "2025-02-13",
     "albumType": "single",
-    "slug": "mango-boba-4MGkjC",
+    "slug": "mango-boba",
     "description": "MANGO BOBA — single by OKISO.",
     "tracks": [
       {
@@ -1536,7 +1536,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/77tVthmxizmwTTGBM0iR30",
     "releaseDate": "2025-02-13",
     "albumType": "single",
-    "slug": "fear-77tVth",
+    "slug": "fear",
     "description": "FEAR — single by OKISO.",
     "tracks": [
       {
@@ -1562,7 +1562,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7i5SdwyPNpbLAFD6rWsglW",
     "releaseDate": "2025-02-07",
     "albumType": "single",
-    "slug": "destiny-7i5Sdw",
+    "slug": "destiny",
     "description": "DESTINY — single by OKISO.",
     "tracks": [
       {
@@ -1588,7 +1588,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/4GbwRd5U2NbwwtVKj5HjcQ",
     "releaseDate": "2025-01-25",
     "albumType": "album",
-    "slug": "-4GbwRd",
+    "slug": "revolution",
     "description": "レボリューション — album by OKISO.",
     "tracks": [
       {
@@ -1670,7 +1670,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/4PX2v9DwUqfAN4iCmM3a1y",
     "releaseDate": "2024-03-26",
     "albumType": "single",
-    "slug": "watashi-wa-dare-4PX2v9",
+    "slug": "watashi-wa-dare",
     "description": "Watashi Wa Dare — single by OKISO.",
     "tracks": [
       {
@@ -1704,7 +1704,7 @@ export const staticReleases: Release[] = [
     "link": "https://open.spotify.com/album/7wTaQV3L3qAeRxlImeXTGc",
     "releaseDate": "2024-03-18",
     "albumType": "single",
-    "slug": "star-trail-7wTaQV",
+    "slug": "star-trail",
     "description": "Star Trail — single by OKISO.",
     "tracks": [
       {

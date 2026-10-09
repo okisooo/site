@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { runInNewContext } from 'node:vm';
 import { staticReleases } from '../src/data/releases';
 import { releaseRedirects } from '../src/data/releaseRedirects';
 import { releaseDescription, SITE_URL } from '../src/lib/seo';
@@ -93,6 +94,8 @@ assert.deepEqual(meta(readPage('/api/auth/callback'), 'og:image'), [], 'authoriz
 assert.deepEqual(meta(readPage('/api/auth/callback'), 'twitter:image'), []);
 for (const release of staticReleases) {
   assert(release.slug, `${release.title}: explicit canonical slug`);
+  assert(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(release.slug), `${release.title}: readable canonical slug`);
+  assert(!release.id || !release.slug.endsWith(`-${release.id.slice(0, 6)}`), `${release.title}: no provider suffix`);
   assert(archiveLinks.includes(`/releases/${release.slug}`), `${release.title}: crawlable archive link`);
 }
 const homeLinks = links(readPage('/'));
@@ -110,6 +113,13 @@ for (const [previous, current] of Object.entries(releaseRedirects)) {
   const target = `${SITE_URL}/releases/${current}`;
   assert.deepEqual(canonical(html), [target], `${previous}: redirect canonical`);
   assert(html.includes(`http-equiv="refresh" content="0; url=${target}"`), `${previous}: immediate redirect without JavaScript`);
+  assert(html.includes(`location.replace(${JSON.stringify(target)} + location.search + location.hash)`), `${previous}: redirect retains query and fragment`);
+  let destination = '';
+  runInNewContext(html.match(/<script>(.*?)<\/script>/)![1], {
+    location: { search: '?utm_source=test&value=%2F', hash: '#listen', replace: (url: string) => { destination = url; } },
+  });
+  assert.equal(destination, `${target}?utm_source=test&value=%2F#listen`, `${previous}: executed redirect preserves encoded values`);
+  assert(html.includes('<noscript><meta http-equiv="refresh"'), `${previous}: fallback cannot override query-preserving navigation`);
   assert(links(html).includes(target), `${previous}: accessible fallback link`);
   assert(!sitemapUrls.includes(`${SITE_URL}/releases/${previous}`), `${previous}: alias excluded from sitemap`);
   assert.equal(readFileSync(path.join(output, 'releases', previous, 'index.html'), 'utf8'), html, `${previous}: trailing slash alias`);

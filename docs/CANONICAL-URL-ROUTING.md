@@ -73,13 +73,32 @@ Do not disallow their crawling in robots.txt: crawlers need to read the noindex 
 Main header rule: `7fa6a5cf79e34f8ca89c237a47adaac0`.
 Short header rule: `9f1c2c29b3f946f599a7d85542b73c20`.
 
+## readable release addresses — 2026-10-09
+
+All 35 release pages use readable title slugs without Spotify/provider suffixes.
+`src/lib/releaseSlugs.ts` assigns them after catalog merging, preserves published
+addresses on subsequent syncs, and reserves them before naming new releases.
+Authored title equivalents handle non-ASCII titles; genuinely colliding future
+titles use readable year/date/type labels. Indistinguishable entries or titles
+without a usable equivalent fail explicitly instead of inventing random URLs.
+Only URL fields changed: titles, artwork, tracks, lyrics and provider links remain intact.
+
+`src/data/releaseRedirects.ts` retains all 35 former URLs and the 17 already
+verified older catalog URLs, flattened directly to their new canonical destinations.
+The exporter writes 52 release aliases with canonical/fallback links, a JavaScript
+replacement preserving queries/fragments, and a zero-second meta refresh for
+non-JavaScript visitors. GitHub Pages serves these as HTML redirects, not HTTP 301s.
+Existing edge host/path normalization remains unchanged and applies to clean URLs.
+Only clean current addresses appear in internal links, metadata, structured data
+and the sitemap. Removed releases without a verified equivalent remain 404.
+
 ## regression guard
 
 `.github/workflows/verify-live-urls.yml` runs daily and when its audit source
 changes. It saves the reports as a GitHub Actions artifact and fails on a regression.
 `audit-live-urls.mjs` discovers pages from the live canonical sitemap, checks every
 HTTP/HTTPS/apex/www/short-domain combination and the common slash/HTML/index variants,
-tests encoded query preservation, verifies all 17 catalog migrations plus `/cursors`,
+tests encoded query preservation, verifies all 52 release aliases plus `/cursors`,
 checks crawler exclusions and requires unknown routes to remain 404.
 Requests are paced with two workers and one bounded retry for transport failures;
 retries remain visible in the report.

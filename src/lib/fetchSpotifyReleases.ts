@@ -76,25 +76,10 @@ import YTMusic from 'ytmusic-api';
 import fs from 'fs';
 import path from 'path';
 import { fetchTooLostReleases, mergeTooLostReleases } from './fetchTooLostReleases';
+import { assignReleaseSlugs } from './releaseSlugs';
 
 async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function slugify(title: string, id?: string) {
-  // Basic slug: lowercase, remove non-alnum (except spaces), replace spaces with dashes
-  const base = title
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-');
-
-  // Append a short suffix from the Spotify id to avoid collisions
-  if (id) {
-    return `${base}-${id.slice(0, 6)}`;
-  }
-  return base;
 }
 
 function msToIsoDuration(ms?: number) {
@@ -384,7 +369,6 @@ export async function fetchSpotifyReleases(artistId: string = '2FSh9530hmphpeK3Q
       link: album.external_urls.spotify,
       releaseDate: album.release_date,
       albumType: album.album_type,
-      slug: slugify(album.name, album.id),
       description: `${album.name} — ${album.album_type} by OKISO.`,
       tracks: album.tracks.items.map(t => ({
         id: t.id,
@@ -427,6 +411,8 @@ export async function updateReleasesData(): Promise<void> {
     } else {
       console.log('TOOLOST_ACCESS_TOKEN not found; keeping Spotify-only release sync.');
     }
+
+    releases = assignReleaseSlugs(releases, existingReleases);
 
     if (JSON.stringify(releases) === JSON.stringify(existingReleases)) {
       console.log('No release changes found. Existing verified data left untouched.');

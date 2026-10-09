@@ -13,7 +13,7 @@ for (const [previous, current] of Object.entries(releaseRedirects)) {
   const target = `${SITE_URL}/releases/${current}`;
   // GitHub Pages cannot emit per-path HTTP redirects. Google treats a zero-second
   // meta refresh as permanent; the canonical and ordinary link agree on the target.
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="refresh" content="0; url=${escape(target)}"><link rel="canonical" href="${escape(target)}"><title>${escape(release.title)} — OKISO</title></head><body><p>this release has moved. <a href="${escape(target)}">listen to ${escape(release.title)} by OKISO</a>.</p></body></html>`;
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script><noscript><meta http-equiv="refresh" content="0; url=${escape(target)}"></noscript><link rel="canonical" href="${escape(target)}"><title>${escape(release.title)} — OKISO</title></head><body><p>this release has moved. <a href="${escape(target)}">listen to ${escape(release.title)} by OKISO</a>.</p></body></html>`;
   writeFileSync(path.join(output, 'releases', `${previous}.html`), html);
   // Old links with a trailing slash should reach the same destination as well.
   const directory = path.join(output, 'releases', previous);
