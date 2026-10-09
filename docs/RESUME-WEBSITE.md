@@ -26,8 +26,12 @@ the focused recheck with the exact expected 301/query-preserving destination.
 Keep the original report; this is not a claim of repairing the network.
 Chrome verifies an old `oki.so` release link reaches the readable main-domain URL,
 preserving multiple query parameters, encoded values and a fragment.
-Google accepted the refreshed sitemap (Success / 43 pages) and the new
-`/releases/onthelow` priority indexing request. Indexing/ranking is not guaranteed.
+Google accepted the refreshed sitemap (Success / 43 pages) and priority indexing
+requests for `/releases/onthelow` and `/releases/vessel-for-obsession`.
+Indexing/ranking is not guaranteed; both clean URLs were initially unknown to Google.
+Follow-up source `f8a0e2e0` protects authored title lookup from inherited object keys;
+deployment `37894125162` and Pages rollout `37894319098` passed, publishing `4327d904`.
+The final remote build repeated all 48 checks, production typecheck and exported SEO audit.
 Evidence/scratch: `S:/Codex/outputs/2026-10-09/clean-release-urls/` and
 `S:/tmp/codex/clean-release-urls-20261009/`.
 
