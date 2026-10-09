@@ -2,6 +2,23 @@
 
 # task
 
+## old flcollab relay — retired / 2026-10-09
+
+User paused flcollab and authorized retiring the old VPS relay; they will handle
+the app's replacement relay setup themselves. Stack source `481a8ae` removed only
+the relay service and its Caddy certificate/HTTP blocks, preserving concurrent
+cobalt/openclaw updates. Guarded deployment `37870774030` succeeded.
+The existing relay container is stopped with restart policy `no`, renewal timer
+disabled/inactive, and TCP/UDP 8443 closed in runtime/permanent firewalld with no
+remaining listener. Container/image/configuration and certificate data are retained.
+Both dedicated DNS-only relay A records were removed with restoration details saved.
+The `oki.so` exposure warning is gone. `okiso.net` still has its separate intentional
+DNS-only upload record; do not proxy it blindly or claim the VPS IP is now secret.
+Website redirects, API health, auth and ntfy checks passed; flcollab client code was
+not modified. Evidence: `S:/Codex/outputs/2026-10-09/relay-retirement/`; local rollback
+copies: `S:/tmp/codex/relay-retire-20261009/rollback/`. See the stack repository's
+`iroh-relay/README.md` for the inactive status and scoped restoration cautions.
+
 ## canonical domains and google indexing — 2026-10-09
 
 User authorized fixing URLs permanently and handling Google indexing; release-page
