@@ -2,6 +2,61 @@
 
 # task
 
+## Grouped public downloads and persisted publication — deployed 2026-10-11
+
+Current live page: https://okiso.net/downloads (https://oki.so/downloads redirects there). Website dff055ec / API 5bbbad1 / stack fe26bb9. Deploy workflow 38105304503 and Pages rollout 38105432695 succeeded. Existing design is retained: 81 artwork cards, 86 files, 10 artists, 8 PSD downloads. Five PSD/image pairs were grouped only after matching decoded composite pixels from the same commissioned work; other variants stay distinct. Every download retains its original filename, extension and size. Reference access grants no merchandise/redistribution rights.
+
+The fixed-ID bootstrap is now superseded by owner-managed downloads-publication.json in the existing private volume. It contains the same 86 already approved files. Future owner publications merge entries through the authenticated /api/commission-downloads/manage/publication endpoint and need no deployment. Private draft collection membership is independent. No new uploads/grants/invitations, credential extraction, proxy changes or other service restarts occurred. Private catalog, originals route, environment and mounts remained unchanged. 64 MiB ceiling unchanged; two oversized PSDs remain held.
+
+API image: okiso-commission-downloads:20261011-dynamic-2fb028229e01. Code rollback: /home/fedora/backups/commission-downloads/20261011-dynamic/rollback.sh. Tests: API access/persistence tests and compile, eight synthetic Skeb integration tests, frontend grouping tests, existing website suites, production build/export and SEO audit passed. Build skips lint per existing configuration. Fresh signed-out Chrome verified all 81 thumbnails, 86 unique file links, 5 paired cards and 8 PSD buttons on desktop/mobile, without overflow, page exceptions or failed API reads. Native PSD and PNG browser downloads completed and matched imported hashes. The installed helper's read-only live check also verified two already approved public originals/previews without upload or owner authentication.
+
+Evidence: S:/SymLinks/AppDataRelocated/Temp/okiso-private-local/GROUPED-DOWNLOADS-BROWSER-VERIFIED.json, GROUPED-DOWNLOADS-DESKTOP.png, GROUPED-DOWNLOADS-MOBILE.png, DYNAMIC-PUBLICATION-DEPLOYMENT-RECEIPT.json, SKEB-LIVE-VERIFY-ONLY.json. Installed skill ownership has been handed off to a separate task; this website/API task has stopped modifying it.
+
+
+## Public downloads — deployed and signed-out verified (2026-10-11)
+
+Explicit approval to publish all 86 uploaded originals/PSDs was confirmed at 2026-10-11 01:30:25 UTC, after the assistant explicitly described public downloading/redistribution. This supersedes the earlier publication-pending notes only for these 86 assets. The 128 MiB increase and two oversized held PSDs remain unapproved and untouched.
+
+Live: https://okiso.net/downloads; https://oki.so/downloads redirects there. Existing editorial layout, navigation, Archivo typography, colors and gallery heading are reused. Individual native attachment downloads retain original filenames/extensions and sizes. No visitor login, link secret, expiration or ZIP is required. The short reference notice and downloads-page content-terms dialog do not confer merchandise or redistribution rights. Recorded rights remain unknown.
+
+Public reads require the enabled fixed 86-ID selection and continued membership in its approved collection. Future private collection additions remain inaccessible automatically; owner write/admin endpoints and unrelated records retain existing authentication. Public catalog omits private request briefs, evidence, notes and storage paths. Originals remain in the existing volume, outside static exports/Git. No credential was extracted, no invitation or Kowa message sent, and no real-file upload was performed in this publication step.
+
+Source: website 6de39f0c, API 81c6b3b, stack 385c7ff. Website workflow 38102516618 and Pages rollout 38102648755 succeeded; published assets 65fd0cc0. Focused API image okiso-commission-downloads:20261011-c4783acf4b0b preserves live unrelated code. Only the API public-read flag and exact GET/HEAD Caddy matcher changed; existing private catalog, mounts and originals route hash are unchanged. Durable rollback: /home/fedora/backups/commission-downloads/20261011-public/rollback.sh. Source pins were pushed with broad stack CI skipped because only the API/proxy were rolled out.
+
+Checks: public route regression plus existing originals owner/expiry/revocation tests and API compile pass; all four existing website suites, production build/typecheck/export and SEO audit pass. The build skips lint by existing configuration. Signed-out live HTTP verified all 86 original headers and filenames/sizes, correct website CORS, exact representative PSD/PNG hashes and denial of private originals/storage indexes/file routes. Fresh signed-out Chrome rendered all 86 real thumbnails, 10 artists and 86 download links at desktop/mobile sizes, with zero page exceptions, failed API reads or horizontal overflow. Native browser downloads completed for 3836091-3.psd (4,039,171 bytes) and 4029552-1-Chara1-open-smile-no-message.png (1,176,030 bytes); both SHA-256 values match imported originals.
+
+Evidence at S:/SymLinks/AppDataRelocated/Temp/okiso-private-local/: PUBLIC-DOWNLOADS-HTTP-VERIFIED.json, PUBLIC-DOWNLOADS-BROWSER-VERIFIED.json, PUBLIC-DOWNLOADS-DESKTOP.png, PUBLIC-DOWNLOADS-MOBILE.png and PUBLIC-DOWNLOADS-DEPLOYMENT-RECEIPT.json. The Python urllib verification client was denied 403 by the external edge; the established HTTP client and real signed-out Chrome verified successfully without changing edge policy.
+
+## Approved private API and partial all-Skeb import
+
+Production API f7883ca / stack source pin 8ac4f86 now implement private originals,
+64 MiB uploads and SHA-256 idempotent owner imports. One owner-only Kowa draft
+contains 86 originals plus previews; 86 hashes verified, no duplicate records or
+grants. Two oversized PSDs remain held locally. Public media query filters now
+exclude private storage. Authelia and public website exposure are unchanged;
+website feature changes remain local/unpublished. See PRIVATE-ORIGINALS.md and
+S:/SymLinks/AppDataRelocated/Temp/okiso-private-local/ALL-SKEB-UPLOAD-MANIFEST.md.
+
+## Initial private originals / local implementation — 2026-10-11
+
+Implemented `/gallery/private` with the existing editorial design and a private
+`/api/originals` router in `D:/GitHub/okiso-stack/okiso-api`. Reuses Vault login,
+owner management, explicit unknown reference/merchandise rights, selected private
+collections and expiring/revocable account grants. Previews and originals are
+authenticated on every request; public gallery/catalog exposure is unchanged.
+No real originals, persistent grants, invitations or production changes made.
+Full checkout production build/export and SEO audit passed. The built UI passed
+dummy original/preview uploads and metadata edits; API access-control tests pass.
+CDP browser filesystem downloads remain unverified (plain Blob control canceled),
+while authenticated API download byte equality passes.
+Added local no-account collection bearer links alongside account grants. Tokens
+are hashed, collection-scoped, expiring and revocable; management stays owner-only.
+Dummy scope/expiry/revocation tests, typechecks, full build/export and SEO pass.
+Authorized read-only commission inspection produced a candidate list outside Git
+on S:. No real-file import/sharing or production proxy/auth changes were made.
+Read `PRIVATE-ORIGINALS.md` for testing, storage and pending rollout decisions.
+
+
 ## readable release URLs — 2026-10-09
 
 User requested removing random URL suffixes sitewide. All 35 release slugs now
@@ -1534,3 +1589,17 @@ website changes and untracked feature/art files are intentional. roughly 100+
 audio binary modifications and unrelated utility files predate this work. keep
 them untouched and do not stage the entire tree. a fresh checkout from the last
 commit will not contain the current website: continue from this working directory.
+
+## Local simplified downloads page — continuation checkpoint
+
+The source page `/commissions/downloads` and `/api/commission-downloads` are local and unpublished. They reuse the private catalog and Vault owner authentication, display files grouped by artist with thumbnails, original filenames, format/size and individual downloads, and retain independent unknown rights. No live collaborator grant or permanent access key was created. Production access policy and the proposed 128 MiB upload ceiling remain unapproved; the existing 64 MiB ceiling is unchanged.
+
+The API defaults to owner-only access. A future explicitly approved stable link requires all three settings: COMMISSION_DOWNLOADS_PUBLIC_ENABLED=true, COMMISSION_DOWNLOADS_COLLECTION_ID and a 64-hex COMMISSION_DOWNLOADS_PAGE_KEY. The credential stays in the browser fragment and travels only in an Authorization header. Existing Authelia still applies; any narrow proxy read allowance requires separate approval. Do not mint/persist this key, enable the gate or deploy as part of local review. Access never grants merchandise permission, and files already downloaded cannot be recalled.
+
+Dummy-only preview: http://127.0.0.1:3132/downloads. Normal owner-authenticated real-data preview: http://127.0.0.1:3130/owner-review. The latter uses a loopback SSH tunnel and an HttpOnly SameSite=Strict in-memory cookie; current owner authority is checked on every read. Use normal Vault sign-in. Automatic approval review rejected extracting the VPS owner password for automated verification; do not read secrets or fabricate a session to bypass that rejection. Actual real-thumbnail browser verification remains pending owner sign-in.
+
+Verification: test:originals (owner/nonowner, scope, expiry, revocation, exact bytes, public exclusion, 64 MiB boundary), test:downloads (default-private gate, filenames, selected membership, write denial, unsafe storage), the isolated owner-review bridge test, and API tsc all pass. Full website production build/export passed for 57 pages, with existing asset/deployment/design/release checks and SEO audit. Lint was skipped by the existing build configuration. Static downloads shell is noindex and absent from the sitemap; no catalog is embedded. Browser fixture status is recorded separately in the S: scratch receipt.
+Final visual-verification limit: Chrome private debugging-pipe Page.enable timed out during the fixture check. The fixture page serves three synthetic assets and its PSD endpoint returns the expected original filename and dummy bytes, but rendered thumbnail/browser verification is not claimed. Real thumbnails likewise await normal owner sign-in. See S:/SymLinks/AppDataRelocated/Temp/okiso-private-local/DOWNLOADS-PAGE-LOCAL-VERIFICATION.md.
+
+## Owner preview blank-page fix
+The standalone scratch preview left process.env.NEXT_PUBLIC_COMMISSION_DOWNLOADS_API unresolved, crashing before React mounted. Its esbuild configuration now defines the value explicitly. Browser DOM, network and screenshots verified the former blank page and the corrected visible owner sign-in form with zero JavaScript exceptions. Owner-review access tests pass; anonymous catalog/session remain 401. Actual uploaded thumbnails still require normal owner sign-in. Evidence is S:/SymLinks/AppDataRelocated/Temp/okiso-private-local/owner-review-after.png and owner-review-after.json. No deployment or sharing change.
