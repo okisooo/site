@@ -18,6 +18,7 @@ const destinations = [
   { href: "/releases", label: "releases" },
   { href: "/vault", label: "vault" },
   { href: "/gallery", label: "gallery" },
+  { href: "/downloads", label: "downloads" },
   { href: "/upcoming", label: "upcoming" },
   { href: "/about", label: "about" },
   { href: "/links", label: "links" },
@@ -92,11 +93,11 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
         <p role="status">{copyMessage}</p>
         <Link href="/links" className="ed-text-link" onClick={() => setDialog(null)}>all my links <ArrowUpRight size={16} /></Link>
       </div> : <div className="ed-dialog-copy">
-        <p>you are free to repost, remix, and reuse my content for creative purposes!</p>
+        {pathname === "/downloads" ? <p>Commission originals are provided for reference. Access does not grant merchandise or redistribution rights. Unknown permissions remain unknown.</p> : <><p>you are free to repost, remix, and reuse my content for creative purposes!</p>
         <ul><li>include clear credit linking back to my official channels (okiso).</li>
           <li>feel free to clip, edit, and react to streams and releases.</li>
           <li>content must not be used for harm, denigration, hate speech, or malicious intent.</li></ul>
-        <p>by using my content, you agree to these rules. have fun creating!</p>
+        <p>by using my content, you agree to these rules. have fun creating!</p></>}
       </div>}
     </EditorialDialog>}
   </div></AmbientMotionContext.Provider>;
