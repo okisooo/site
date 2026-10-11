@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import "./commission-downloads.css";
 
-export interface DownloadAsset { id: string; filename: string; format: string; bytes: number; artist: string; source: string; hasPreview: boolean; permissions: Record<string, string>; requestedUses?: string; requestEvidence?: string }
+import { groupDownloads, downloadLabel, type DownloadAsset } from "@/lib/commissionDownloads";
+
 const DEFAULT_API = process.env.NEXT_PUBLIC_COMMISSION_DOWNLOADS_API || "https://api.okiso.net/api/commission-downloads";
 function size(bytes: number) { return bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KiB` : `${(bytes / 1048576).toFixed(2)} MiB`; }
 function Thumbnail({ asset, api, headers }: { asset: DownloadAsset; api: string; headers: Record<string, string> }) {
@@ -31,17 +32,17 @@ export default function CommissionDownloads({ apiBase = DEFAULT_API }: { apiBase
     }).catch(error => { if (!controller.signal.aborted) setStatus(error instanceof Error ? error.message : "Downloads unavailable."); });
     return () => controller.abort();
   }, [api]);
+  const groups = groupDownloads(assets);
   const artists = [...new Set(assets.map(asset => asset.artist))].sort((a, b) => a.localeCompare(b));
   return <div className="ed-page commission-downloads">
     <header className="ed-page-heading ed-gallery-heading"><div><h1>downloads</h1><p>Original commission files, previews and PSDs, organized by artist.</p><a className="ed-text-link" href="/gallery">back to the gallery ↗</a></div><div className="ed-gallery-count"><strong>{assets.length || "—"}</strong><span className="ed-label">original files</span></div></header>
     <p className="cd-rights">For reference. Access does not grant merchandise or redistribution rights; unknown permissions remain unknown.</p>
     {status && <p role="status">{status}</p>}
     {!!assets.length && <><nav aria-label="Artists" className="cd-artists">{artists.map((artist, index) => <a key={artist} href={`#artist-${index}`}>{artist}</a>)}<span>{assets.length} files</span></nav>
-      {artists.map((artist, index) => <section key={artist} id={`artist-${index}`} className="cd-section"><h2>{artist}<span>{assets.filter(asset => asset.artist === artist).length} files</span></h2>
-        <div className="cd-grid">{assets.filter(asset => asset.artist === artist).map(asset => <article key={asset.id} className="cd-asset"><Thumbnail asset={asset} api={api} headers={headers} />
-          <div className="cd-file"><h3>{asset.filename}</h3><p>{asset.format} · {size(asset.bytes)}</p><a className="ed-button" href={`${api}/assets/${asset.id}/original`}>Download {asset.format}</a>
-            {asset.source && <a href={asset.source} target="_blank" rel="noopener noreferrer">Artist / source</a>}
-            <details><summary>Usage notes</summary><p>Merchandise: {asset.permissions.merchandise || "unknown"}. Sharing originals with a manufacturer: {asset.permissions.manufacturerSharing || "unknown"}.</p><p>{asset.permissions.note || "No confirmed usage rights recorded."}</p>{asset.requestedUses && <p>Requested use: {asset.requestedUses}</p>}{asset.requestEvidence && <p>Evidence to review: {asset.requestEvidence}</p>}</details>
+      {artists.map((artist, index) => <section key={artist} id={`artist-${index}`} className="cd-section"><h2>{artist}<span>{groups.filter(group => group.artist === artist).length} artworks · {assets.filter(asset => asset.artist === artist).length} files</span></h2>
+        <div className="cd-grid">{groups.filter(group => group.artist === artist).map(group => <article key={group.id} className="cd-asset"><Thumbnail asset={group.preview} api={api} headers={headers} />
+          <div className="cd-file"><h3>{group.title}</h3><ul className="cd-formats">{group.files.map(file => <li key={file.id} data-file-id={file.id}><div><a className="ed-button" href={`${api}/assets/${file.id}/original`}>{downloadLabel(file.format)}</a><span>{size(file.bytes)}</span></div><p className="cd-filename">{file.filename}</p></li>)}</ul>
+            {group.source && <a href={group.source} target="_blank" rel="noopener noreferrer">Artist / source</a>}
           </div></article>)}</div>
       </section>)}</>}
   </div>;
