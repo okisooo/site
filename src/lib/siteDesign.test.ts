@@ -39,3 +39,14 @@ test("homepage keeps the four latest releases and real curated listening picks",
   assert.equal(data.releaseCount, staticReleases.length);
   assert.deepEqual(data.picks.map((release) => release.title), ["PRODIGY", "VAC", "for a chance to look beyond the stars"]);
 });
+
+test("youtube uses the current handle without renaming twitch", () => {
+  for (const file of ["../Components/BA/SocialGrid.tsx", "../Components/Editorial/EditorialHome.tsx", "../app/about/page.tsx", "../app/links/page.tsx", "./seo.ts"]) {
+    const source = readFileSync(new URL(file, import.meta.url), "utf8");
+    assert.match(source, /https:\/\/www\.youtube\.com\/@okiso["']/);
+    assert.doesNotMatch(source, /youtube\.com\/@okiso7\b/);
+  }
+  const directory = readFileSync(new URL("../app/links/page.tsx", import.meta.url), "utf8");
+  assert.match(directory, /name: 'youtube', detail: '@okiso'/);
+  assert.match(directory, /name: 'twitch', detail: '@okiso7', href: 'https:\/\/www\.twitch\.tv\/okiso7\//);
+});

@@ -12,7 +12,7 @@ export const metadata = pageMetadata(
 const channels = [
   ['spotify', 'listen to the discography', 'https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm'],
   ['bandcamp', 'support the music', 'https://okiso.bandcamp.com/'],
-  ['youtube', 'music videos & more', 'https://www.youtube.com/@okiso7'],
+  ['youtube', 'music videos & more', 'https://www.youtube.com/@okiso'],
   ['instagram', '@okisooo_', 'https://www.instagram.com/okisooo_/'],
   ['x', '@okisooo_', 'https://x.com/okisooo_'],
 ];

@@ -32,6 +32,7 @@ const descriptions = new Set<string>();
 
 for (const route of routes) {
   const html = readPage(route);
+  assert(!/youtube\.com\/@okiso7\b/.test(html), `${route}: no retired YouTube handle in links or metadata`);
   const title = [...html.matchAll(/<title>([\s\S]*?)<\/title>/g)].map(match => decode(match[1]));
   assert.equal(title.length, 1, `${route}: exactly one title`);
   assert(!titles.has(title[0]), `${route}: unique title`);

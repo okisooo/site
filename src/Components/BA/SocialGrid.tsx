@@ -100,7 +100,7 @@ export default function SocialGrid() {
     {
       name: "YouTube",
       icon: FaYoutube,
-      href: "https://www.youtube.com/@okiso7",
+      href: "https://www.youtube.com/@okiso",
       status: "",
       iconColor: "text-[#FF0000]",
     },

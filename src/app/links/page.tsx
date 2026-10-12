@@ -12,7 +12,7 @@ export const metadata = pageMetadata(
 );
 
 const profiles = [
-  { name: 'youtube', detail: '@okiso7', href: 'https://www.youtube.com/@okiso7', icon: FaYoutube },
+  { name: 'youtube', detail: '@okiso', href: 'https://www.youtube.com/@okiso', icon: FaYoutube },
   { name: 'spotify', detail: 'listen to my music', href: 'https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm', icon: FaSpotify },
   { name: 'instagram', detail: '@okisooo_', href: 'https://www.instagram.com/okisooo_/', icon: FaInstagram },
   { name: 'x', detail: '@okisooo_', href: 'https://x.com/okisooo_', icon: FaXTwitter },

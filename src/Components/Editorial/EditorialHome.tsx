@@ -109,7 +109,7 @@ function WatchSection() {
   const video = videos.find((item) => item.id === activeId) ?? videos[0];
   const showingLive = isLive && !showFeatured;
   const channels = [
-    ["youtube", "music videos & more", "https://www.youtube.com/@okiso7"],
+    ["youtube", "music videos & more", "https://www.youtube.com/@okiso"],
     ["twitch", "come hang out", "https://www.twitch.tv/okiso7/"],
     ["spotify", "the full discography", "https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm"],
     ["bandcamp", "support the music", "https://okiso.bandcamp.com/"],
@@ -117,10 +117,10 @@ function WatchSection() {
     ["x", "@okisooo_", "https://x.com/okisooo_"],
   ];
   return <section ref={watchRef} id="watch" className="ed-section ed-watch-section">
-    <header className="ed-section-heading"><div><h2>{showingLive ? "live now" : "videos"}</h2></div><a className="ed-text-link" href="https://www.youtube.com/@okiso7" target="_blank" rel="noopener noreferrer">on youtube <ArrowUpRight size={18} /></a></header>
+    <header className="ed-section-heading"><div><h2>{showingLive ? "live now" : "videos"}</h2></div><a className="ed-text-link" href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer">on youtube <ArrowUpRight size={18} /></a></header>
     <div className="ed-watch-grid"><div>
       {isLive && <div className="ed-toolbar"><button className="ed-button" aria-pressed={showingLive} onClick={() => setShowFeatured(false)}>live stream</button><button className="ed-button" aria-pressed={!showingLive} onClick={() => setShowFeatured(true)}>featured videos</button></div>}
-      <div className="ed-video-frame">{!nearViewport ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setNearViewport(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso7" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
+      <div className="ed-video-frame">{!nearViewport ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setNearViewport(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
       {!showingLive && video && <p className="ed-video-title">{video.title}</p>}
       {!showingLive && videos.length > 1 && <div className="ed-video-selector">{videos.slice(0, 6).map((item) => <button key={item.id} onClick={() => setActiveId(item.id)} aria-pressed={item.id === video?.id}>{item.poster && <img src={item.poster} alt="" width="100" height="56" loading="lazy" />}<span>{item.title}</span></button>)}</div>}
     </div><aside><DiscordPresence /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>

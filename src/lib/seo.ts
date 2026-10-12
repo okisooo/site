@@ -8,7 +8,7 @@ export const ARTIST_DESCRIPTION = 'OKISO is a VTuber, virtual artist and VOCALOI
 export const artistStructuredData = {
   '@type': 'MusicGroup', '@id': ARTIST_ID, name: 'OKISO',
   url: SITE_URL, image: socialImage('/about').url, description: ARTIST_DESCRIPTION,
-  sameAs: ['https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm', 'https://www.instagram.com/okisooo_/', 'https://github.com/okisooo', 'https://x.com/okisooo_', 'https://www.youtube.com/@okiso7', 'https://okiso.bandcamp.com/'],
+  sameAs: ['https://open.spotify.com/artist/2FSh9530hmphpeK3QmDSPm', 'https://www.instagram.com/okisooo_/', 'https://github.com/okisooo', 'https://x.com/okisooo_', 'https://www.youtube.com/@okiso', 'https://okiso.bandcamp.com/'],
 };
 
 export function jsonLd(value: unknown): string {
