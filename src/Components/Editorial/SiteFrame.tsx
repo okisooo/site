@@ -18,7 +18,7 @@ const destinations = [
   { href: "/releases", label: "releases" },
   { href: "/vault", label: "vault" },
   { href: "/gallery", label: "gallery" },
-  { href: "/downloads", label: "downloads" },
+  { href: "/downloads", label: "art previews" },
   { href: "/upcoming", label: "upcoming" },
   { href: "/about", label: "about" },
   { href: "/links", label: "links" },
@@ -93,10 +93,11 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
         <p role="status">{copyMessage}</p>
         <Link href="/links" className="ed-text-link" onClick={() => setDialog(null)}>all my links <ArrowUpRight size={16} /></Link>
       </div> : <div className="ed-dialog-copy">
-        {pathname === "/downloads" ? <p>Commission originals are provided for reference. Access does not grant merchandise or redistribution rights. Unknown permissions remain unknown.</p> : <><p>you are free to repost, remix, and reuse my content for creative purposes!</p>
+        {pathname === "/downloads" ? <p>Commissioned artwork is shown as previews. Original files and PSDs stay private. The artists retain their rights.</p> : <><p>you are free to repost, remix, and reuse my content for creative purposes!</p>
         <ul><li>include clear credit linking back to my official channels (okiso).</li>
           <li>feel free to clip, edit, and react to streams and releases.</li>
           <li>content must not be used for harm, denigration, hate speech, or malicious intent.</li></ul>
+        <p>these reuse terms cover my streams and releases. commissioned artwork belongs to its artists; original files and PSDs stay private.</p>
         <p>by using my content, you agree to these rules. have fun creating!</p></>}
       </div>}
     </EditorialDialog>}
