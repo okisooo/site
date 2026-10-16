@@ -29,9 +29,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through October 9, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 16, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'yoshi-ras888', artist: 'yoshiRAS888', title: 'painterly portrait & mascot', medium: 'illustration',
+    description: 'A softly painted portrait of OKISO holding the red takoling mascot, illustrated by yoshiRAS888.',
+    artistUrl: 'https://skeb.jp/@yoshiRAS888',
+    small: '/art/gallery/yoshi-ras888-thumb.webp', width: 1280, height: 889,
+    variants: [variant('yoshi-ras888', 'illustration', 1280, 889)] },
   { id: 'nanashinolina', artist: 'lina · @nanashinolina', title: 'white outfit & mascot', medium: 'illustration',
     description: 'An OKISO character collage with a redesigned white outfit and a portrait holding the takoling mascot, illustrated by lina (@nanashinolina).',
     artistUrl: 'https://skeb.jp/@nanashinolina', workUrl: 'https://skeb.jp/@nanashinolina/works/32',

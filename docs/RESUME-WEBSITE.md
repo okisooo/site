@@ -2,6 +2,21 @@
 
 # task
 
+## yoshiRAS888 gallery import — release 2026-10-16
+
+the user authorized deployment of the new commission in `/gallery`. the preview
+catalog import was already verified as asset `2d1b68acb2f693aff410739c3b8a1bd8`;
+the separate static gallery now includes the credited portrait and mascot with a
+1280 x 889 WebP and 480 x 334 thumbnail. the hidden Skeb request has no public work
+link, so gallery attribution uses the observed creator profile. originals stay
+private in `D:/FOLDERS/Commissions/Bought/OKISO/yoshiRAS888@skeb/`; web derivatives
+and import evidence are physically under `S:/Codex/outputs/2026-10-16/`.
+local asset/design/release/deployment checks pass (4/21/22/4). GitHub's existing
+deployment workflow must confirm the full build/export and SEO checks, followed
+by live gallery image/viewer verification. this scoped release excludes unrelated
+private-gallery/downloads work from the user's main checkout. preview-only policy
+supersedes historical original-download permissions described below.
+
 ## Grouped public downloads and persisted publication — deployed 2026-10-11
 
 Current live page: https://okiso.net/downloads (https://oki.so/downloads redirects there). Website dff055ec / API 5bbbad1 / stack fe26bb9. Deploy workflow 38105304503 and Pages rollout 38105432695 succeeded. Existing design is retained: 81 artwork cards, 86 files, 10 artists, 8 PSD downloads. Five PSD/image pairs were grouped only after matching decoded composite pixels from the same commissioned work; other variants stay distinct. Every download retains its original filename, extension and size. Reference access grants no merchandise/redistribution rights.

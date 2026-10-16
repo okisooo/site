@@ -8,6 +8,7 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['yoshi-ras888', 'yoshiRAS888@skeb/4068819-1.jpg'],
   ['kou768', 'kou768@skeb/3836091-3.output.png'],
   ['kou768-framed', 'kou768@skeb/3836091-2.output.png'],
   ['kou768-message', 'kou768@skeb/3836091-1.output.png'],
