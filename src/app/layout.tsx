@@ -96,7 +96,7 @@ export default function RootLayout({
           enableSystem={false}
           storageKey="okiso-theme"
         >
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:text-black focus:p-4">Skip to content</a>
+          <a href="#main-content" className="ed-skip-link sr-only">skip to content</a>
           <MusicPlayerProvider playlist={getLocalPlaylist()}>
           <SmoothScrollProvider>
             <SiteFrame>{children}</SiteFrame>
