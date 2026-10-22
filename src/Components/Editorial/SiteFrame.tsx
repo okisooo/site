@@ -115,7 +115,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
         <p role="status">{copyMessage}</p>
         <Link href="/links" className="ed-text-link" onClick={() => setDialog(null)}>all my links <ArrowUpRight size={16} /></Link>
       </div> : <div className="ed-dialog-copy">
-        {pathname === "/downloads" ? <p>Commissioned artwork is shown as previews. Original files and PSDs stay private. The artists retain their rights.</p> : <><p>you are free to repost, remix, and reuse my content for creative purposes!</p>
+        {pathname === "/downloads" ? <p>commissioned artwork is shown as previews. original files and PSDs stay private. the artists retain their rights.</p> : <><p>you are free to repost, remix, and reuse my content for creative purposes!</p>
         <ul><li>include clear credit linking back to my official channels (okiso).</li>
           <li>feel free to clip, edit, and react to streams and releases.</li>
           <li>content must not be used for harm, denigration, hate speech, or malicious intent.</li></ul>

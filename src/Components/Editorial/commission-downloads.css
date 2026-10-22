@@ -1,18 +1,34 @@
 .commission-downloads { min-height: calc(100svh - 64px); color: var(--ed-ink); }
-.commission-downloads a { color: var(--ed-accent,#e33831); }
+.commission-downloads .ed-gallery-count strong { font-variant-numeric: tabular-nums; }
 .cd-rights { padding: 12px 16px; margin: 20px 0; border-left: 3px solid var(--ed-accent); background: var(--ed-accent-soft); font-size: 14px; }
-.cd-artists { display: flex; flex-wrap: wrap; gap: 12px 20px; padding: 12px 0; border-bottom: 1px solid var(--ed-line); font-size: 14px; }
-.cd-artists span { margin-left: auto; color: var(--ed-muted); }
-.cd-section { scroll-margin-top: 110px; margin-top: 32px; }
-.cd-section h2 { font-size: 26px; display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; }
-.cd-section h2 span { font-size: 13px; font-weight: 400; color: var(--ed-muted); }
-.cd-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(min(100%,260px),1fr)); gap: 20px; }
-.cd-asset { min-width: 0; border: 1px solid var(--ed-line); border-radius: var(--ed-control-radius); overflow: hidden; background: var(--ed-surface); }
-.cd-asset img,.cd-placeholder { width: 100%; height: 240px; object-fit: contain; background: var(--ed-white); }
-.cd-placeholder { display: grid; place-items: center; font-size: 13px; color: var(--ed-muted); }
-.cd-file { padding: 16px; }
-.cd-file h3 { font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; margin: 0 0 8px; }
-.cd-file p { margin: 8px 0; font-size: 13px; color: var(--ed-muted); }
-.cd-file > a,.cd-file details { font-size: 12px; }
-.cd-file details { margin-top: 12px; }
-.cd-file summary { cursor: pointer; }
+.cd-status { color: var(--ed-muted); }
+/* Artist jumps are raised keys in the same chip language as the art-room versions. */
+.cd-artists { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 0 16px; border-bottom: 1px solid var(--ed-line); }
+.cd-artists a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius); background: var(--ed-surface); box-shadow: var(--ed-control-shadow); color: var(--ed-ink); font-size: 12px; font-weight: 500; transition: background .2s, color .2s; }
+@media (hover: hover) { .cd-artists a:hover { background: var(--ed-accent-soft); color: var(--ed-accent); } }
+.cd-artists > .ed-label { margin-left: auto; color: var(--ed-muted); }
+.cd-section { scroll-margin-top: 12px; margin-top: 36px; }
+.cd-section h2 { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; font-size: 28px; font-weight: 500; letter-spacing: -.04em; }
+.cd-section h2 .ed-label { color: var(--ed-muted); }
+.cd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 24px 20px; }
+.cd-asset { min-width: 0; }
+.cd-asset .ed-gallery-mount > img, .cd-placeholder { width: 100%; height: 240px; object-fit: contain; background: var(--ed-white); }
+.cd-placeholder { display: grid; place-items: center; font: 500 10px var(--font-geist-mono), monospace; color: var(--ed-muted); }
+.cd-asset .cd-loading { position: absolute; z-index: 1; inset: 0; display: grid; place-items: center; color: var(--ed-muted); pointer-events: none; }
+/* The file id is a label, not a heading; the source link sits beside it. */
+.cd-file { display: flex; align-items: center; gap: 12px; padding: 4px 2px 0; }
+.cd-file .ed-label { flex: 1 1 0; min-width: 0; color: var(--ed-muted); overflow-wrap: anywhere; }
+.cd-file .ed-text-link { flex-shrink: 0; gap: 6px; font-size: 12px; color: var(--ed-accent); }
+@media (max-width: 700px) {
+  .cd-artists { gap: 6px; }
+  .cd-artists a { padding: 0 12px; }
+  .cd-section { margin-top: 24px; }
+  .cd-section h2 { position: sticky; top: 0; z-index: 3; margin-bottom: 6px; padding: 10px 0; background: var(--ed-paper); font-size: 24px; }
+  .cd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 10px; }
+  .cd-asset .ed-gallery-mount > img, .cd-placeholder { height: auto; aspect-ratio: 1; }
+  /* A long file id wraps above its link; links still line up across the row. */
+  .cd-asset { display: flex; flex-direction: column; }
+  .cd-file { flex: 1 0 auto; flex-direction: column; align-items: flex-start; gap: 0; padding-top: 8px; }
+  .cd-file .ed-label { flex: none; width: 100%; }
+  .cd-file .ed-text-link { margin-top: auto; }
+}
