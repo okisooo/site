@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, statSync } from "node:fs";
 import test from "node:test";
 import sharp from "sharp";
+import { characterModel } from "../data/characterModel";
 import { commissionArt } from "../data/commissionArt";
 import { galleryWorks } from "../data/gallery";
 
@@ -51,8 +52,9 @@ function readModel(path: string) {
 
 test("web VRM preserves original geometry, rig, expressions and metadata", () => {
   const original = readModel("public/model.vrm");
-  const web = readModel("public/character/okiso-web.vrm");
+  const web = readModel(`public${characterModel.src}`);
   assert(web.bytes.length < original.bytes.length * .65, "at least 35% smaller");
+  assert.equal(web.bytes.length, characterModel.bytes, "the studio's progress total matches the shipped model");
   for (const field of ["extensions", "nodes", "skins", "meshes", "accessors", "materials", "textures", "images"]) {
     assert.deepEqual(web.json[field], original.json[field], field);
   }

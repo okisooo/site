@@ -51,6 +51,7 @@
 .core-site :is(a, button, input, select, summary):focus-visible { outline: 3px solid var(--ed-focus); outline-offset: 4px; }
 .core-site :is(.ed-listening-deck, .ed-player, .ed-cursors-credit, .ed-video-frame, .ed-upcoming-art) { --ed-focus: var(--ed-red); }
 .core-site button:disabled { opacity: .45; cursor: not-allowed; }
+.core-site button:disabled[aria-pressed="true"] { opacity: 1; background: var(--ed-silver); color: var(--ed-muted); border-color: var(--ed-line); box-shadow: none; }
 .core-site main { min-width: 0; }
 .core-site main:focus { outline: none; }
 .ed-content-stage { flex: 1 0 auto; }
@@ -651,7 +652,10 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 .ed-studio-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--ed-paper); padding: 28px; text-align: center; }
 .ed-studio-loading p { font-size: 13px; max-width: 30ch; }
 .ed-studio-loading small { font: 8px var(--font-geist-mono); color: var(--ed-muted); }
-.ed-studio-loading progress { width: min(220px,100%); height: 4px; accent-color: var(--ed-accent); }
+.ed-studio-loading progress { width: min(220px,100%); height: 4px; accent-color: var(--ed-accent); appearance: none; border: 0; border-radius: 2px; overflow: hidden; background: var(--ed-silver); }
+.ed-studio-loading progress::-webkit-progress-bar { background: var(--ed-silver); }
+.ed-studio-loading progress::-webkit-progress-value { background: var(--ed-accent); }
+.ed-studio-loading progress::-moz-progress-bar { background: var(--ed-accent); }
 .ed-studio-console { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
 .ed-studio-control-row { padding-bottom: 16px; border-bottom: 1px solid var(--ed-line); }
 .ed-studio-control-row > .ed-label { margin-bottom: 10px; color: var(--ed-muted); }
@@ -689,7 +693,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-art-reel-print > span { font-size: 9px; }
   .ed-studio-invite-title { font-size: 32px; }
   .ed-character-studio { grid-template-columns: minmax(0,1fr); }
-  .ed-studio-stage { height: 48dvh; min-height: 300px; }
+  .ed-studio-stage { height: 42dvh; min-height: 280px; }
   .ed-studio-console { gap: 14px; }
   .ed-studio-control-row { padding-bottom: 12px; }
   .ed-studio-control-row > div { gap: 5px; }

@@ -9,6 +9,7 @@ import { AmbientMotionContext } from "./AmbientMotion";
 import { nextModelFrame } from "@/lib/modelFrameTiming";
 import { createModelContext } from "@/lib/modelContext";
 import { sampleCharacterIdle } from "@/lib/characterIdle";
+import { characterModel } from "@/data/characterModel";
 import smirkPose from "@/data/characterSmirkPose.json";
 
 // Close-up from below: knuckles at the jaw, chin down, half-lidded one-sided smirk.
@@ -62,12 +63,14 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
   const [progress, setProgress] = useState(0);
   const [attempt, setAttempt] = useState(0);
   const [reduced, setReduced] = useState(false);
+  const [touch, setTouch] = useState(false);
   const commands = useRef<{ refresh: () => void; reset: () => void; rotate: (direction: number) => void } | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => { setReduced(media.matches); if (media.matches) setOptions((old) => ({ ...old, motion: false, turntable: false })); };
     sync();
+    setTouch(window.matchMedia("(pointer: coarse)").matches);
     setOptions((old) => ({ ...old, saver: window.matchMedia("(max-width: 700px), (pointer: coarse)").matches || navigator.hardwareConcurrency <= 4 }));
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
@@ -326,9 +329,11 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       void (async () => {
         try {
           timeout = setTimeout(() => controller.abort(), 45000);
-          const response = await fetch("/character/okiso-web.vrm", { signal: controller.signal });
+          // The hero is ambient: it must never compete with the page's own images.
+          const response = await fetch(characterModel.src, { signal: controller.signal, priority: hero ? "low" : "auto" });
           if (!response.ok) throw new Error("Model download failed");
-          const total = Number(response.headers.get("content-length"));
+          // A compressed response's length counts gzip bytes; the stream yields decoded ones.
+          const total = response.headers.get("content-encoding") ? characterModel.bytes : Number(response.headers.get("content-length")) || characterModel.bytes;
           const reader = response.body?.getReader();
           const chunks: Uint8Array[] = [];
           let received = 0;
@@ -378,10 +383,10 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
   return <div className="ed-character-studio">
     <div className="ed-studio-stage" style={state === "unavailable" ? { gridColumn: "1 / -1" } : undefined}>
       <div className="ed-studio-stage-label"><span>okiso / character room</span><span>{state === "unavailable" ? "illustration" : options.saver ? "battery saver" : "high detail"}</span></div>
-      <div ref={canvasHost} className="ed-studio-canvas" role="group" tabIndex={state === "ready" ? 0 : -1} aria-label="Interactive OKISO model. Drag to turn, scroll to zoom, or use the left and right arrow keys."
+      <div ref={canvasHost} className="ed-studio-canvas" role="group" tabIndex={state === "ready" ? 0 : -1} aria-label={`Interactive OKISO model. Drag to turn, ${touch ? "pinch" : "scroll"} to zoom, or use the left and right arrow keys.`}
         onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); commands.current?.rotate(event.key === "ArrowLeft" ? -1 : 1); } }} />
       {state !== "ready" && <div className="ed-studio-loading"><img src="/art/7mmchan-256.webp" alt="OKISO by 7mmchan" width="128" height="128" /><p role="status">{state === "unavailable" ? "3d isn’t available on this device" : state === "error" ? "couldn’t load the 3d model" : progress >= 95 ? "preparing the character…" : `loading the character · ${progress}%`}</p>{state === "error" ? <button className="ed-button" onClick={() => setAttempt((value) => value + 1)}>try again</button> : state === "loading" && <progress value={progress} max="100" aria-label="Character loading progress" />}<small>illustration by 7mmchan</small></div>}
-      {state === "ready" && <span className="ed-studio-stage-hint">drag to turn · scroll to zoom</span>}
+      {state === "ready" && <span className="ed-studio-stage-hint">drag to turn · {touch ? "pinch" : "scroll"} to zoom</span>}
     </div>
     {state !== "unavailable" && <div className="ed-studio-console">
       <div className="ed-studio-control-row"><span className="ed-label">framing</span><div role="group" aria-label="Character framing">{(["close", "full", "portrait"] as const).map((value) => <button key={value} className="ed-button" aria-pressed={options.framing === value} onClick={() => update("framing", value)}>{value === "close" ? "close-up" : value === "full" ? "full figure" : value}</button>)}</div></div>
