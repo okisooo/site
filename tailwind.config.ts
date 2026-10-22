@@ -1,11 +1,14 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  // Only the components a route can reach. Most of src/Components is retired source
+  // that no page imports; scanning it shipped ~26 KB of unused utilities to every
+  // route. A component newly imported from outside these paths must be listed here.
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/Components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/Components/{Editorial,Vault,3D,Backgrounds}/**/*.{ts,tsx}",
+    "./src/Components/{MusicPlayer,PlayReleaseButton,ThemeProvider,ThemeToggle,TrackLyricsToggle}.tsx",
+    "./src/Components/BA/CustomVideoPlayer.tsx",
   ],
   darkMode: "class",
   theme: {
