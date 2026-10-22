@@ -277,7 +277,8 @@ const Waves: React.FC<WavesProps> = ({
       }
     }
 
-    function movePoints(time: number) {
+    /** Returns how far the pointer spring still is from rest. */
+    function movePoints(time: number): number {
       const lines = linesRef.current;
       const mouse = mouseRef.current;
       const noise = noiseRef.current;
@@ -290,6 +291,7 @@ const Waves: React.FC<WavesProps> = ({
         tension,
         maxCursorMove,
       } = configRef.current;
+      let energy = 0;
       lines.forEach((pts) => {
         pts.forEach((p) => {
           const move =
@@ -325,8 +327,10 @@ const Waves: React.FC<WavesProps> = ({
             maxCursorMove,
             Math.max(-maxCursorMove, p.cursor.y),
           );
+          energy = Math.max(energy, Math.abs(p.cursor.x) + Math.abs(p.cursor.y) + Math.abs(p.cursor.vx) + Math.abs(p.cursor.vy));
         });
       });
+      return energy;
     }
 
     function moved(point: Point, withCursor = true): { x: number; y: number } {
@@ -359,11 +363,30 @@ const Waves: React.FC<WavesProps> = ({
       ctx.stroke();
     }
 
+    // Pointer play runs every frame. At rest the waves drift a fraction of a pixel
+    // per frame, so 30 fps looks the same and halves the work; skipped frames are
+    // never requested at all.
+    const idleFrame = 1000 / 30;
+    let idleTimer = 0;
+    let lastFrame = 0;
+    let markX = Infinity,
+      markY = Infinity;
+
+    function wake() {
+      if (frameIdRef.current !== null) return;
+      window.clearTimeout(idleTimer);
+      frameIdRef.current = requestAnimationFrame(tick);
+    }
+
     function tick(t: number) {
+      frameIdRef.current = null;
       if (!container) return;
+      const dt = lastFrame ? Math.min(t - lastFrame, 100) : 1000 / 60;
+      lastFrame = t;
       const mouse = mouseRef.current;
-      mouse.sx += (mouse.x - mouse.sx) * 0.1;
-      mouse.sy += (mouse.y - mouse.sy) * 0.1;
+      const follow = 1 - Math.pow(0.9, dt / (1000 / 60));
+      mouse.sx += (mouse.x - mouse.sx) * follow;
+      mouse.sy += (mouse.y - mouse.sy) * follow;
       const dx = mouse.x - mouse.lx,
         dy = mouse.y - mouse.ly;
       const d = Math.hypot(dx, dy);
@@ -373,12 +396,21 @@ const Waves: React.FC<WavesProps> = ({
       mouse.lx = mouse.x;
       mouse.ly = mouse.y;
       mouse.a = Math.atan2(dy, dx);
-      container.style.setProperty("--x", `${mouse.sx}px`);
-      container.style.setProperty("--y", `${mouse.sy}px`);
+      if (Math.abs(mouse.sx - markX) > 0.5 || Math.abs(mouse.sy - markY) > 0.5) {
+        markX = mouse.sx;
+        markY = mouse.sy;
+        container.style.setProperty("--x", `${mouse.sx}px`);
+        container.style.setProperty("--y", `${mouse.sy}px`);
+      }
 
-      movePoints(t);
+      const energy = movePoints(t);
       drawLines();
-      frameIdRef.current = requestAnimationFrame(tick);
+      if (mouse.vs > 0.5 || energy > 0.05) {
+        frameIdRef.current = requestAnimationFrame(tick);
+      } else {
+        // Wake half a frame early so the request lands on the next 30 fps beat.
+        idleTimer = window.setTimeout(wake, Math.max(0, t + idleFrame - 1000 / 120 - performance.now()));
+      }
     }
 
     function onResize() {
@@ -393,6 +425,7 @@ const Waves: React.FC<WavesProps> = ({
       updateMouse(touch.clientX, touch.clientY);
     }
     function updateMouse(x: number, y: number) {
+      wake();
       const mouse = mouseRef.current;
       const b = boundingRef.current;
       mouse.x = x - b.left;
@@ -417,8 +450,10 @@ const Waves: React.FC<WavesProps> = ({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("touchmove", onTouchMove);
+      window.clearTimeout(idleTimer);
       if (frameIdRef.current !== null) {
         cancelAnimationFrame(frameIdRef.current);
+        frameIdRef.current = null;
       }
     };
   }, []);
