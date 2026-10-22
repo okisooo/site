@@ -20,7 +20,8 @@ interface UseFeaturedVideosResult {
 
 const FEED_URL = 'https://api.okiso.net/api/media/website/videos/feed?limit=50';
 
-export function useFeaturedVideos(): UseFeaturedVideosResult {
+/** Fetches nothing until `enabled`, so a section can hold the request until it is near the viewport. */
+export function useFeaturedVideos(enabled = true): UseFeaturedVideosResult {
   const [videos, setVideos] = useState<FeaturedVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +29,7 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
   const refreshMs = 0; // Disabled polling to prevent playback reset
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -113,7 +115,7 @@ export function useFeaturedVideos(): UseFeaturedVideosResult {
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
-  }, [refreshMs]);
+  }, [enabled, refreshMs]);
 
   return { videos, isLoading, error };
 }

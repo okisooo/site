@@ -78,11 +78,11 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
-      <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" fetchPriority="low" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
+      <Link href="/gallery" className="ed-commission-sticker" aria-label="art by ykhs9, explore the commission gallery"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" fetchPriority="low" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">
         <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" fetchPriority="low" />
-        <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-label={`Pick ${pickIndex + 1} of ${picks.length}`}>{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span></div>
+        <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-hidden="true">{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span><span className="sr-only">pick {pickIndex + 1} of {picks.length}</span></div>
         <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={coverArt(pick.img, 300)} alt={`${pick.title} cover`} width="100" height="100" /></Link>
           <div className="ed-deck-info"><span className="ed-label">{pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
         </div>
@@ -109,9 +109,11 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
 
 function WatchSection() {
   const watchRef = useRef<HTMLElement>(null);
+  // The player, the video feed, the twitch status and the discord presence all wait until the page has
+  // loaded and the section is within two screens, so none of them compete with the cover.
   const [nearViewport, setNearViewport] = useState(false);
-  const { videos, isLoading, error } = useFeaturedVideos();
-  const { isLive } = useTwitchLive("okiso");
+  const { videos, isLoading, error } = useFeaturedVideos(nearViewport);
+  const { isLive } = useTwitchLive("okiso", nearViewport);
   const [showFeatured, setShowFeatured] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [twitchParent, setTwitchParent] = useState("localhost");
@@ -120,9 +122,10 @@ function WatchSection() {
     if (!section) return;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) { setNearViewport(true); observer.disconnect(); }
-    }, { rootMargin: "400px" });
-    observer.observe(section);
-    return () => observer.disconnect();
+    }, { rootMargin: "200% 0px" });
+    const watch = () => observer.observe(section);
+    if (document.readyState === "complete") watch(); else window.addEventListener("load", watch, { once: true });
+    return () => { observer.disconnect(); window.removeEventListener("load", watch); };
   }, []);
   useEffect(() => { setTwitchParent(window.location.hostname); }, []);
   useEffect(() => { if (!isLive) setShowFeatured(false); }, [isLive]);
@@ -143,6 +146,6 @@ function WatchSection() {
       <div className="ed-video-frame">{!nearViewport ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setNearViewport(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
       {!showingLive && video && <p className="ed-video-title">{video.title}</p>}
       {!showingLive && videos.length > 1 && <div className="ed-video-selector">{videos.slice(0, 6).map((item) => <button key={item.id} onClick={() => setActiveId(item.id)} aria-pressed={item.id === video?.id}>{item.poster && <img src={item.poster} alt="" width="100" height="56" loading="lazy" />}<span>{item.title}</span></button>)}</div>}
-    </div><aside><DiscordPresence /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
+    </div><aside><DiscordPresence live={nearViewport} /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
   </section>;
 }
