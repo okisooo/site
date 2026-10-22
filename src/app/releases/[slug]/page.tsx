@@ -45,7 +45,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ slug: 
       </div>
     </div>
     <nav className="ed-related" aria-label="More releases by OKISO"><header className="ed-section-heading"><h2>more music</h2><Link className="ed-text-link" href="/releases">all releases <ArrowUpRight size={16} /></Link></header>
-      <div className="ed-release-grid">{related.map((item) => <div key={item.slug} className="ed-release-card"><Link href={`/releases/${item.slug}`}><div className="ed-release-image"><img src={item.img} alt={`${item.title} cover`} width="320" height="320" loading="lazy" /></div><div className="ed-release-meta"><span>{item.albumType}</span><span>{item.year}</span></div><h3>{item.title}</h3></Link></div>)}</div>
+      <div className="ed-release-grid">{related.map((item) => <div key={item.slug} className="ed-release-card"><Link href={`/releases/${item.slug}`}><div className="ed-release-image"><img src={item.img} alt={`${item.title} cover`} width="320" height="320" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div><div className="ed-release-meta"><span>{item.albumType}</span><span>{item.year}</span></div><h3>{item.title}</h3></Link></div>)}</div>
     </nav>
   </article>;
 }

@@ -67,6 +67,7 @@
 .ed-logo span, .ed-footer-logo span, .ed-nav-watch svg, .ed-text-link svg, .ed-channels a > svg, .ed-contact-row > svg, .ed-art-artists > button > svg { transition: transform .35s var(--ed-ease); }
 .ed-release-image { transition: transform .5s var(--ed-ease), box-shadow .5s var(--ed-ease); }
 .ed-release-image img { transition: transform .65s var(--ed-ease); }
+.ed-detail-art a img, .ed-upcoming-art img { transition: transform .5s var(--ed-ease); }
 .ed-vault-teaser, .ed-studio-invite { transition: transform .4s var(--ed-ease), box-shadow .4s var(--ed-ease); }
 .ed-art-image-button { overflow: hidden; }
 .ed-art-image-button > img { transition: scale .65s var(--ed-ease); }
@@ -75,6 +76,7 @@
   .ed-release-card:hover .ed-release-image img { transform: scale(.985); }
   .ed-vault-teaser:hover, .ed-studio-invite:hover { transform: translateY(-4px); box-shadow: 0 12px 22px -12px #28282c70; }
   .ed-art-image-button:hover > img { scale: 1.025; }
+  .ed-detail-art a:hover img, .ed-upcoming-art:hover img { transform: scale(1.015); }
   .ed-logo:hover span, .ed-footer-logo:hover span, .ed-nav-watch:hover svg, .ed-text-link:hover svg, .ed-channels a:hover > svg, .ed-contact-row:hover > svg, .ed-art-artists > button:hover > svg { transform: translate(3px, -3px); }
   .ed-channels a:hover, .ed-contact-row:hover { transform: translateX(3px); }
 }
