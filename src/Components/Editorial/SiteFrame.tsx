@@ -104,7 +104,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
       <div className="ed-footer-top"><Link href="/" className="ed-footer-logo">okiso<span>↗</span></Link>
         <a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer" className="ed-button">join the discord <ArrowUpRight size={16} /></a></div>
       <div className="ed-footer-bottom"><span>© {new Date().getFullYear()} okiso</span><span>vocaloid / hyperpop / electronic</span>
-        <div><button disabled={ambient.reduced} aria-pressed={ambient.paused} onClick={() => ambient.setPaused(!ambient.paused)}>{ambient.reduced ? "reduced motion" : ambient.paused ? "resume ambient motion" : "pause ambient motion"}</button>{pathname === "/" && <button onClick={replayOpening}>replay opening ↗</button>}<button onClick={() => setDialog("content terms")}>content terms</button><button onClick={() => { setCopyMessage(""); setDialog("contact"); }}>contact ↗</button></div></div>
+        <div>{ambient.reduced ? <span className="ed-footer-note">motion reduced by your system</span> : <button onClick={() => ambient.setPaused(!ambient.paused)}>{ambient.paused ? "resume ambient motion" : "pause ambient motion"}</button>}{pathname === "/" && <button onClick={replayOpening}>replay opening ↗</button>}<button onClick={() => setDialog("content terms")}>content terms</button><button onClick={() => { setCopyMessage(""); setDialog("contact"); }}>contact ↗</button></div></div>
     </footer>
     <EditorialMusicPlayer />
     {dialog && <EditorialDialog title={dialog} onClose={() => setDialog(null)}>

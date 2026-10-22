@@ -8,7 +8,8 @@ const Waves = dynamic(() => import("@/Backgrounds/Waves/Waves"), { ssr: false })
 
 export function useAmbientPreference(pathname: string) {
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(true);
+  // Unknown until mounted: motion stays off, but the server never renders a "reduced" state for everyone.
+  const [reduced, setReduced] = useState<boolean | null>(null);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -22,7 +23,7 @@ export function useAmbientPreference(pathname: string) {
       document.removeEventListener("visibilitychange", updateVisibility);
     };
   }, []);
-  const enabled = !paused && !reduced && visible;
+  const enabled = !paused && reduced === false && visible;
   useEffect(() => {
     if (!enabled) return;
     const observer = new IntersectionObserver((entries) => {
@@ -32,7 +33,7 @@ export function useAmbientPreference(pathname: string) {
     elements.forEach((element) => observer.observe(element));
     return () => { observer.disconnect(); elements.forEach((element) => element.removeAttribute("data-idle-active")); };
   }, [enabled, pathname]);
-  return { enabled, paused, reduced, setPaused };
+  return { enabled, paused, reduced: reduced === true, setPaused };
 }
 
 export function useAmbientVisibility() {
