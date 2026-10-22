@@ -36,6 +36,30 @@ export function useAmbientPreference(pathname: string) {
   return { enabled, paused, reduced: reduced === true, setPaused };
 }
 
+/** Save-Data and 2g/3g connections skip optional media: the art-room tour, animated thumbnails, the hero model. */
+export function prefersLightData() {
+  const { connection } = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } };
+  return !!connection?.saveData || /(^|slow-)2g|3g/.test(connection?.effectiveType ?? "");
+}
+
+// Animated thumbnails swap in after the page has loaded and gone idle, never during first paint.
+let motionAssetsReady = false;
+export function useMotionAssetsReady() {
+  const [ready, setReady] = useState(motionAssetsReady);
+  useEffect(() => {
+    if (ready || prefersLightData()) return;
+    let cancel = () => {};
+    const schedule = () => {
+      const done = () => { motionAssetsReady = true; setReady(true); };
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(done, { timeout: 3000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(done, 200); cancel = () => clearTimeout(timeout); }
+    };
+    if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule, { once: true });
+    return () => { window.removeEventListener("load", schedule); cancel(); };
+  }, [ready]);
+  return ready;
+}
+
 export function useAmbientVisibility() {
   const enabled = useContext(AmbientMotionContext);
   const ref = useRef<HTMLDivElement>(null);

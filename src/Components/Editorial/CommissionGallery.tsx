@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Search, X } from "lucide-react";
 import { galleryWorks, type GalleryVariant, type GalleryWork } from "@/data/gallery";
 import { EditorialDialog } from "./EditorialDialog";
-import { AmbientMotionContext, useAmbientVisibility } from "./AmbientMotion";
+import { AmbientMotionContext, useAmbientVisibility, useMotionAssetsReady } from "./AmbientMotion";
 
 const PAGE_SIZE = 12;
 // Caption height relative to column width, so the column balance accounts for it.
@@ -35,9 +35,11 @@ function packColumns(works: GalleryWork[], count: number) {
 
 function GalleryThumbnail({ work, eager }: { work: GalleryWork; eager: boolean }) {
   const { ref, active } = useAmbientVisibility();
+  // The still thumb paints first; the animation swaps in after load and idle.
+  const motionReady = useMotionAssetsReady();
   const animation = work.variants.find((variant) => variant.motion)?.motion;
   return <div ref={ref} className={`ed-gallery-mount ${animation ? "ed-gallery-mount-animation" : ""}`}>
-    <img src={active && animation ? animation : work.small} alt={work.description} width={work.width} height={work.height} loading={eager ? "eager" : "lazy"} decoding="async" />
+    <img src={active && motionReady && animation ? animation : work.small} alt={work.description} width={work.width} height={work.height} loading={eager ? "eager" : "lazy"} decoding="async" />
     <span className="ed-gallery-expand"><ArrowUpRight size={20} /></span>
     {animation && <span className="ed-gallery-badge"><Play size={11} /> animated</span>}
   </div>;

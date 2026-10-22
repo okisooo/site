@@ -7,6 +7,8 @@ export interface GalleryVariant {
   width: number;
   height: number;
   motion?: string;
+  /** 960px-wide resize of `src` for still variants wider than 1100px (scripts/prepare-gallery-mids.mts). */
+  mid?: string;
 }
 export interface GalleryWork {
   id: string;
@@ -23,10 +25,11 @@ export interface GalleryWork {
 }
 const variant = (id: string, label: string, width: number, height: number, animated = false): GalleryVariant => ({
   label, src: `/art/gallery/${id}.webp`, small: `/art/gallery/${id}-thumb.webp`, width, height,
-  ...(animated ? { motion: `/art/gallery/${id}-motion.webp` } : {}),
+  ...(animated ? { motion: `/art/gallery/${id}-motion.webp` } : width > 1100 ? { mid: `/art/gallery/${id}-mid.webp` } : {}),
 });
 const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   label: 'illustration', src: art.src, small: art.small, width: art.width, height: art.height,
+  ...(art.width > 1100 ? { mid: art.src.replace('-1280.webp', '-960.webp') } : {}),
 });
 
 // Skeb work/creator identities verified in signed-in deliveries through October 16, 2026.

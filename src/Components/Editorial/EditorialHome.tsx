@@ -15,7 +15,7 @@ import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
 import HeroCommissionWall from "./HeroCommissionWall";
-import { AmbientArtwork } from "./AmbientMotion";
+import { AmbientArtwork, prefersLightData } from "./AmbientMotion";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">preparing video…</p>,
@@ -27,8 +27,8 @@ const HeroModel = dynamic(() => import("./CharacterStudio"), { ssr: false });
 
 /** Save-Data, slow connections and low-memory devices keep the still instead of a 3 MB model. */
 function heroModelAllowed() {
-  const { connection, deviceMemory } = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number };
-  return !connection?.saveData && !/(^|slow-)2g|3g/.test(connection?.effectiveType ?? "") && (deviceMemory ?? 8) >= 4;
+  const { deviceMemory } = navigator as Navigator & { deviceMemory?: number };
+  return !prefersLightData() && (deviceMemory ?? 8) >= 4;
 }
 
 function releaseDate(date: string) {

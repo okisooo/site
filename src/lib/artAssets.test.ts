@@ -31,6 +31,12 @@ test("gallery groups credited works and ships every version within image budgets
       assert.equal(info.width, version.width, version.src);
       assert.equal(info.height, version.height, version.src);
       assert(statSync(`public${version.src}`).size < 500 * 1024, version.src);
+      if (version.mid) {
+        const mid = await sharp(`public${version.mid}`).metadata();
+        assert.equal(mid.width, 960, version.mid);
+        assert(Math.abs(mid.height! - version.height * 960 / version.width) <= 1, `${version.mid} keeps the aspect ratio`);
+        assert(statSync(`public${version.mid}`).size <= statSync(`public${version.src}`).size, version.mid);
+      }
       if (version.motion) {
         const animation = await sharp(`public${version.motion}`, { animated: true }).metadata();
         const expected = work.id === 'otori' ? { frames: 100, duration: 4000 } : { frames: 31, duration: 1400 };
