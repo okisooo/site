@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2, RotateCcw, Settings } from 'lucide-react';
-import Hls from 'hls.js';
+import type Hls from 'hls.js';
 import { useScrollLock } from '@/motion/useScrollLock';
 import { trapDialogTab } from '@/lib/dialogKeyboard';
 import { captureVideoPlayback, restoreVideoPlayback, watchVideoReturn, type VideoPlaybackSnapshot } from '@/lib/videoRecovery';
@@ -184,13 +184,37 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
     if (!video) return;
 
     const isM3u8 = resolvedSrc.toLowerCase().includes('.m3u8');
+    if (!isM3u8) {
+      // Standard MP4
+      video.src = resolvedSrc;
+      return;
+    }
 
-    if (isM3u8 && Hls.isSupported()) {
+    // hls.js is ~150 KB gzip, so it loads only once a source is actually a playlist.
+    // Attaching used to replace an earlier progressive source at once; stop it now so
+    // it cannot fail while hls.js loads and send the player to its fallback.
+    if (video.getAttribute('src')) {
+      video.removeAttribute('src');
+      video.load();
+    }
+    let cancelled = false;
+    let active: Hls | null = null;
+    const playNatively = () => {
+      // Native Safari HLS
+      if (video.canPlayType('application/vnd.apple.mpegurl')) video.src = resolvedSrc;
+    };
+
+    import('hls.js').then(({ default: HlsPlayer }) => {
+      if (cancelled) return;
+      if (!HlsPlayer.isSupported()) {
+        playNatively();
+        return;
+      }
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
 
-      const hls = new Hls({
+      const hls = new HlsPlayer({
         autoStartLoad: true,
         startFragPrefetch: true,
         enableWorker: true,
@@ -205,12 +229,13 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         nudgeMaxRetry: 8,
         debug: false
       });
+      active = hls;
       hlsRef.current = hls;
 
       hls.loadSource(resolvedSrc);
       hls.attachMedia(video);
 
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      hls.on(HlsPlayer.Events.MANIFEST_PARSED, (event, data) => {
         const availableLevels = data.levels.map((level, index) => ({
           id: index,
           height: level.height,
@@ -240,19 +265,19 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         }
       });
 
-      hls.on(Hls.Events.LEVEL_SWITCHED, () => {
+      hls.on(HlsPlayer.Events.LEVEL_SWITCHED, () => {
         // Just for syncing native state if it auto switches, though we mostly rely on our state.
         // If we want Auto to display something else we can do that here.
       });
 
-      hls.on(Hls.Events.ERROR, (_event, data) => {
+      hls.on(HlsPlayer.Events.ERROR, (_event, data) => {
         if (data.fatal) {
           switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
+            case HlsPlayer.ErrorTypes.NETWORK_ERROR:
               setHlsErrorToast("Stream network error - buffering");
               hls.startLoad();
               break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
+            case HlsPlayer.ErrorTypes.MEDIA_ERROR:
               setHlsErrorToast("Media error - recovering");
               hls.recoverMediaError();
               break;
@@ -269,18 +294,17 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
           setTimeout(() => setHlsErrorToast(null), 4000);
         }
       });
+    }).catch(() => {
+      if (!cancelled) playNatively();
+    });
 
-      return () => {
-        hls.destroy();
+    return () => {
+      cancelled = true;
+      if (active) {
+        active.destroy();
         hlsRef.current = null;
-      };
-    } else if (isM3u8 && video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native Safari HLS
-      video.src = resolvedSrc;
-    } else if (!isM3u8) {
-      // Standard MP4
-      video.src = resolvedSrc;
-    }
+      }
+    };
   }, [resolvedSrc, playbackGeneration]);
 
   useEffect(() => {

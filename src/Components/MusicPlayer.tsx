@@ -6,7 +6,9 @@ import { Play, Pause, X, Disc3, ExternalLink, SkipBack, SkipForward, Repeat, Vol
 import { Archivo, JetBrains_Mono } from "next/font/google"
 
 const tacDisplay = Archivo({ subsets: ["latin"], weight: ["700", "900"], variable: "--font-tac-display" })
-const tacMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-mono" })
+// Not preloaded: only standalone routes render this player, so core pages never fetch it.
+// (Archivo keeps its preload: it shares the layout's preloaded file, and opting out would rename it.)
+const tacMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-tac-mono", preload: false })
 
 export function MusicPlayer() {
   const {
