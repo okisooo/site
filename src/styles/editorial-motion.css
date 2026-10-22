@@ -2,8 +2,9 @@
 .core-site { --ed-ease: cubic-bezier(.16, 1, .3, 1); }
 
 /* Two matching halves make a single composition, then open onto the real page.
-   The root becomes invisible in CSS even if JavaScript never hydrates. */
-.ed-opening { position: fixed; inset: 0; z-index: 250; pointer-events: none; overflow: hidden; animation: ed-opening-finish 1.9s linear both; }
+   The root becomes invisible in CSS even if JavaScript never hydrates. It takes the
+   skipping tap itself, so nothing hidden underneath is activated. */
+.ed-opening { position: fixed; inset: 0; z-index: 250; overflow: hidden; animation: ed-opening-finish 1.9s linear both; }
 .ed-opening-half { position: absolute; inset-inline: 0; height: 50%; overflow: hidden; background: #fafafa; }
 .ed-opening-top { top: 0; animation: ed-opening-top 1.76s cubic-bezier(.76,0,.24,1) both; }
 .ed-opening-bottom { bottom: 0; animation: ed-opening-bottom 1.82s cubic-bezier(.76,0,.24,1) both; }

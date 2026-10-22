@@ -30,21 +30,20 @@ export default function EditorialOpening({ onFinish }: { onFinish: () => void })
     const elapsed = Number(timeline?.currentTime ?? 1900);
     const timeout = window.setTimeout(dismiss, Math.max(0, 1900 - elapsed));
     window.addEventListener("keydown", dismiss, { once: true });
-    window.addEventListener("pointerdown", dismiss, { once: true });
     window.addEventListener("wheel", dismiss, { once: true, passive: true });
     window.addEventListener("touchmove", dismiss, { once: true, passive: true });
     preference.addEventListener("change", dismiss, { once: true });
     return () => {
       window.clearTimeout(timeout);
       window.removeEventListener("keydown", dismiss);
-      window.removeEventListener("pointerdown", dismiss);
       window.removeEventListener("wheel", dismiss);
       window.removeEventListener("touchmove", dismiss);
       preference.removeEventListener("change", dismiss);
     };
   }, []);
 
-  return <div ref={root} className="ed-opening" aria-hidden="true" onAnimationEnd={(event) => {
+  // A tap skips from the layer's own click, so its click never reaches the page underneath.
+  return <div ref={root} className="ed-opening" aria-hidden="true" onClick={() => finish.current()} onAnimationEnd={(event) => {
     if (event.target === event.currentTarget) finish.current();
   }}>
     <div className="ed-opening-half ed-opening-top"><SleeveArtwork /></div>

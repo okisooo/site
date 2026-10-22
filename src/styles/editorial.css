@@ -169,7 +169,9 @@
 .ed-folder-open { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #28282c5c; border-radius: 50%; background: #ffffff24; }
 @media (hover: hover) { .ed-vault-teaser:hover .ed-folder-open { background: var(--ed-accent); color: var(--ed-on-accent); } }
 .ed-cover-bottom { position: absolute; z-index: 7; bottom: 0; left: 0; right: 0; min-height: 36px; padding: 8px 28px; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--ed-surface); border-top: 1px solid var(--ed-edge); }
-.ed-cover-bottom a { display: flex; gap: 14px; align-items: center; }
+.ed-cover-bottom a { position: relative; display: flex; gap: 14px; align-items: center; }
+/* A 44px tap target that leaves the strip height and the focus ring alone. */
+.ed-cover-bottom a::after { content: ''; position: absolute; inset: -15px 0; }
 @media (hover: hover) { .ed-cover-bottom a:hover { color: var(--ed-accent); } }
 
 /* Shared editorial page layout, archive cards and media. */
@@ -464,11 +466,13 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-cover { min-height: 1060px; padding-top: 748px; }
   .ed-cover-kicker { margin-inline: 0; left: 14px; right: 14px; font-size: 10px; flex-wrap: wrap; padding-top: 12px; gap: 2px 14px; }
   .ed-cover-kicker span:last-child { max-width: none; white-space: nowrap; margin-left: auto; text-align: right; }
-  .ed-masthead { top: 69px; left: 10px; right: 14px; }
-  .ed-masthead h1 { font-size: 24vw; }
+  .ed-masthead { top: 84px; left: 10px; right: 14px; }
+  /* Edge to edge up to 430px; capped beyond so the wordmark never runs under the artist note. */
+  .ed-masthead h1 { font-size: min(31.5vw, 136px); }
   .ed-masthead > div { display: none; }
   .ed-character .ed-hero-fallback img { height: calc(var(--hero-base) * 1042px / 740); }
-  .ed-character { --hero-base: 740; width: calc(118% + 4px); height: max(740px, calc(100% - 124px)); left: -2px; top: 126px; }
+  /* His hair crosses the foot of the wordmark; the canvas still reaches the cover's bottom edge. */
+  .ed-character { --hero-base: 860; width: calc(118% + 4px); height: calc(100% + 40px); left: 2%; top: -40px; }
   .ed-latest-card { width: 46%; max-width: 200px; top: 374px; left: 13px; padding-left: 10px; }
   .ed-latest-card::before { left: 3px; width: 3px; }
   .ed-latest-caption h2 { font-size: clamp(21px, 5vw, 28px); }
@@ -497,8 +501,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-vault-teaser-title { font-size: 34px; }
   .ed-vault-teaser-title svg { height: 32px; width: 38px; }
   .ed-cover-bottom { position: relative; margin-top: 20px; font-size: 10px; padding: 8px 13px; min-height: 43px; }
-  .ed-cover-bottom > span { max-width: 15ch; }
-  .ed-cover-bottom a { max-width: 21ch; text-align: right; gap: 6px; }
+  .ed-cover-bottom a { text-align: right; gap: 6px; }
   .ed-section { padding: 34px 8px; }
   .ed-section-heading { gap: 16px; padding-bottom: 20px; margin-bottom: 18px; }
   .ed-section-heading h2 { font-size: 36px; }
@@ -564,7 +567,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-nav-links { display: none; }
   .ed-menu-button { display: flex !important; margin-left: auto; border: 0; }
   .ed-section-heading h2 { font-size: 30px; }
-  .ed-character { left: -2px; width: calc(117% + 4px); }
+  .ed-character { left: 2%; width: calc(117% + 4px); }
   .ed-artist-note p { font-size: 26px; }
   .ed-latest-caption h2 { font-size: 20px; }
   .ed-deck-info h2 { font-size: 17px; }
@@ -572,7 +575,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-player-controls .ed-icon-button { width: 40px; min-width: 40px; }
 }
 /* Commission editions and the on-demand character room share the core materials. */
-.ed-commission-sticker { position: absolute; z-index: 6; left: 25%; bottom: 64px; width: 178px; transform: rotate(5deg); transition: transform .3s; }
+.ed-commission-sticker { position: absolute; z-index: 6; left: calc(26% + 64px); bottom: 64px; width: 178px; transform: rotate(5deg); transition: transform .3s; }
 .ed-commission-sticker img { width: 100%; height: auto; filter: drop-shadow(0 2px 0 white) drop-shadow(0 8px 9px #28282c25); }
 .ed-commission-sticker > span { display: flex; align-items: center; justify-content: center; gap: 5px; font: 8px var(--font-geist-mono); background: var(--ed-white); border: 1px solid var(--ed-line); border-radius: 3px; padding: 6px; margin: 0 12px; }
 @media (hover: hover) { .ed-commission-sticker:hover { transform: rotate(-3deg) translateY(-5px); } }
@@ -661,7 +664,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 @media (max-width: 1050px) {
   .ed-art-room-layout { gap: 24px; grid-template-columns: minmax(0,1fr) minmax(250px,.85fr); }
   .ed-character-studio { grid-template-columns: minmax(0,1fr) 270px; gap: 16px; }
-  .ed-commission-sticker { width: 145px; }
+  .ed-commission-sticker { width: 145px; left: 25%; }
 }
 @media (max-width: 700px) {
   .ed-commission-sticker { left: auto; right: 20px; bottom: auto; top: 602px; width: 100px; }

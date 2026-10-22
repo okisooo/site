@@ -52,12 +52,13 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
       <HeroCommissionWall />
       <AmbientArtwork hero />
       <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
+      {/* The note sits above the latest release on phones, so it comes first in focus order. */}
+      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
       <article className="ed-latest-card">
         <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
-      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
       <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">
