@@ -23,7 +23,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
 
   return <div className="ed-page" data-premid-page="releases" data-premid-view={view}
     {...(pinned ? { "data-premid-release-title": pinned.title, "data-premid-release-cover": pinned.img } : {})}>
-    <header className="ed-page-heading"><div><h1>releases</h1></div><span className="ed-heading-number" aria-label={`${catalog.length} releases`}>{catalog.length}</span></header>
+    <header className="ed-page-heading"><div><h1>releases</h1></div><span className="ed-heading-number" aria-hidden="true">{catalog.length}</span><span className="sr-only">{catalog.length} releases</span></header>
     <div className="ed-toolbar">
       {view === "grid" && <input type="search" aria-label="Search releases" placeholder="search title, year or release type" value={query} onChange={(event) => setQuery(event.target.value)} />}
       <span className="ed-label" role="status">{view === "grid" ? `${releases.length} ${releases.length === 1 ? "release" : "releases"} / newest first` : "drag to explore · select a cover"}</span>
