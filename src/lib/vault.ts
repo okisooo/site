@@ -87,7 +87,7 @@ export async function login(username: string, password: string): Promise<Session
     throw new BackendUnavailable("vault endpoint not deployed");
   }
   if (!res.ok) {
-    throw new Error("Wrong username or password.");
+    throw new Error("wrong username or password.");
   }
   const data = (await res.json()) as { token: string; name: string; level: Level };
   const session: Session = { token: data.token, name: data.name, level: data.level };
@@ -126,7 +126,7 @@ export async function fetchManifest(session: Session | null): Promise<{ projects
     throw new BackendUnavailable("backend not connected");
   }
   if (res.status === 404 || res.status === 501) throw new BackendUnavailable("vault endpoint not deployed");
-  if (!res.ok) throw new Error("Failed to load vault.");
+  if (!res.ok) throw new Error("the vault server returned an error.");
   const data = (await res.json()) as { projects: VaultProject[]; permissions?: VaultPermissions };
   return {
     projects: data.projects ?? [],

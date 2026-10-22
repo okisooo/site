@@ -44,7 +44,7 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError(null);
     try { onAuthed(await login(username.trim(), password)); onClose(); }
-    catch (err) { setError(err instanceof BackendUnavailable ? "Vault backend is unavailable." : err instanceof Error ? err.message : "Login failed."); }
+    catch (err) { setError(err instanceof BackendUnavailable ? "the vault backend is unavailable." : err instanceof Error ? err.message : "login failed."); }
     finally { setBusy(false); }
   }
   return (
@@ -68,10 +68,10 @@ function LoginModal({ onAuthed, onClose }: { onAuthed: (session: Session) => voi
             autoComplete="current-password"
             className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2.5 text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono"
           />
-          {error && <p className="tac-mono text-xs font-bold text-[var(--tac-signal)] uppercase tracking-wider">{error}</p>}
-          <button disabled={busy || !username || !password} className="tac-cta w-full justify-center">{busy && <Loader2 size={15} className="animate-spin" />} ENTER</button>
+          {error && <p className="ed-form-error" role="alert">{error}</p>}
+          <button disabled={busy || !username || !password} className="tac-cta w-full justify-center">{busy && <Loader2 size={15} className="animate-spin" />} enter</button>
         </form>
-        <p className="tac-mono text-[10px] text-[var(--tac-steel)] mt-4 leading-relaxed uppercase tracking-wider">public tracks don’t need a login</p>
+        <p className="ed-label mt-4 text-[var(--tac-steel)]">public tracks don’t need a login</p>
       </div>
     </EditorialDialog>
   );
@@ -98,7 +98,7 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
     try {
       const data = await fetchManifest(session);
       setProjects(data.projects); setPermissions(data.permissions); setMessage(null);
-    } catch (err) { setMessage(err instanceof Error ? err.message : "Failed to load vault."); }
+    } catch (err) { setMessage(err instanceof Error ? err.message : "the vault didn’t load."); }
     finally { setLoading(false); }
   }, [session]);
   useEffect(() => { void refresh(); }, [refresh]);
@@ -154,7 +154,7 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
   async function share(version: Version) {
     try {
       await navigator.clipboard.writeText(shareUrl(version.id));
-      showToast("Link copied — send it anywhere");
+      showToast("link copied — send it anywhere");
     } catch {
       showToast(shareUrl(version.id));
     }
@@ -164,24 +164,24 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
     if (!session) return;
     if (!window.confirm(`Delete ${version.label}? This removes the stored file too.`)) return;
     try { await deleteVaultVersion(session, version.id); await refresh(); }
-    catch (err) { setMessage(err instanceof Error ? err.message : "Delete failed."); }
+    catch (err) { setMessage(err instanceof Error ? err.message : "delete failed."); }
   }
   async function saveVersion(version: Version, changes: Partial<Pick<Version, "label" | "note" | "kind" | "minLevel" | "hidden">>) {
     if (!session) return;
     try { await updateVaultVersion(session, version.id, changes); await refresh(); }
-    catch (err) { setMessage(err instanceof Error ? err.message : "Update failed."); throw err; }
+    catch (err) { setMessage(err instanceof Error ? err.message : "update failed."); throw err; }
   }
   async function snippet(version: Version) {
     if (!session) return;
     if (version.hasSnippet && window.confirm(`Remove the public teaser for ${version.label}?`)) {
-      try { await deleteSnippet(session, version.id); await refresh(); showToast("Teaser removed"); } catch (err) { setMessage(err instanceof Error ? err.message : "Failed."); }
+      try { await deleteSnippet(session, version.id); await refresh(); showToast("teaser removed"); } catch (err) { setMessage(err instanceof Error ? err.message : "that didn’t work."); }
       return;
     }
     const raw = window.prompt("Teaser start (seconds into the track)", "0");
     if (raw === null) return;
     const start = Math.max(0, Number(raw) || 0);
     try { await cutSnippet(session, version.id, start, 30); await refresh(); showToast("30s teaser is live — anyone with the link can hear it"); }
-    catch (err) { setMessage(err instanceof Error ? err.message : "Snippet failed."); }
+    catch (err) { setMessage(err instanceof Error ? err.message : "teaser failed."); }
   }
 
   const trackCount = projects.reduce((acc, p) => acc + p.versions.length, 0);
@@ -200,7 +200,8 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
         </div>
       </header>
       <div className="ed-vault-stats" aria-busy={loading}>
-        {loading ? <span className="ed-label">loading the collection…</span> : !message && <><Stat n={projects.length} label="projects" /><Stat n={trackCount} label="tracks" /><Stat n={openCount} label="open to you" /></>}
+        {loading && <span className="sr-only" role="status">loading the collection…</span>}
+        {(loading || !message) && <><Stat n={loading ? "–" : projects.length} label="projects" /><Stat n={loading ? "–" : trackCount} label="tracks" /><Stat n={loading ? "–" : openCount} label="open to you" /></>}
         {!session && <button onClick={() => setLoginOpen(true)} className="inline-flex gap-2 items-center"><Lock size={13} />log in for shared tracks</button>}
       </div>
 
@@ -208,14 +209,10 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
       {manageOpen && session && <VaultManagerPanel session={session} projects={projects} onSave={saveVersion} onDelete={remove} onSnippet={snippet} onClose={() => setManageOpen(false)} />}
       {message && <div className="ed-empty" role="alert"><h2>couldn’t load the vault</h2><p>{message}</p><button className="ed-button" onClick={() => void refresh()}>try again</button></div>}
 
-      {loading ? (
-        <div className="py-24 flex justify-center text-[var(--tac-steel)]"><Loader2 className="animate-spin" /></div>
-      ) : message ? null : projects.length === 0 ? (
-        <div className="tac-plate border-dashed py-24 text-center">
-          <UploadCloud className="mx-auto text-[var(--tac-steel)] mb-3" />
-          <h2 className="tac-display font-black text-2xl uppercase tracking-tight text-[var(--tac-ink)] dark:text-[var(--tac-bone)]">Nothing here yet</h2>
-          <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-widest mt-2">public tracks will appear here when published</p>
-        </div>
+      {(loading || !message) && <div className="ed-vault-list">{loading ? (
+        <div className="py-24 flex justify-center text-[var(--tac-steel)]"><Loader2 className="animate-spin" aria-hidden="true" /></div>
+      ) : projects.length === 0 ? (
+        <div className="ed-empty"><h2>nothing here yet</h2><p>public tracks will appear here when published.</p></div>
       ) : (
         <div className="space-y-6">
           {projects.map((project) => (
@@ -233,25 +230,15 @@ function VaultBrowser({ session, onAuthed, onLogout }: { session: Session | null
             />
           ))}
         </div>
-      )}
+      )}</div>}
 
-
-      {toast && (
-        <div role="status" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[var(--tac-signal)] text-white tac-mono text-xs uppercase tracking-widest border border-white/30">
-          {toast}
-        </div>
-      )}
+      {toast && <div role="status" className="ed-vault-toast">{toast}</div>}
     </div>
   );
 }
 
-function Stat({ n, label }: { n: number; label: string }) {
-  return (
-    <div className="flex items-baseline gap-2">
-      <span className="tac-display font-black text-2xl text-[var(--tac-ink)] dark:text-[var(--tac-bone)]">{n}</span>
-      <span className="tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-[0.2em]">{label}</span>
-    </div>
-  );
+function Stat({ n, label }: { n: number | string; label: string }) {
+  return <div className="ed-vault-stat"><strong>{n}</strong><span className="ed-label">{label}</span></div>;
 }
 
 // ── Manager panel ────────────────────────────────────────────────────────────
@@ -268,13 +255,13 @@ function VaultManagerPanel({ session, projects, onSave, onDelete, onSnippet, onC
     <section data-lenis-prevent className="tac-plate tac-plate-mark p-6 mb-8">
       <div className="flex items-start justify-between mb-5">
         <div>
-          <p className="tac-mono text-xs text-[var(--tac-signal)] uppercase tracking-[0.2em]">Internal Manager</p>
-          <h2 className="tac-display font-black text-2xl text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase">Manage Files</h2>
-          <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-wider mt-1">Visibility: <b>listed</b> tracks show a lock to outsiders; <b>hidden</b> tracks don&apos;t exist for them. Teasers are public 30s cuts of locked tracks.</p>
+          <p className="ed-label text-[var(--tac-signal)]">internal manager</p>
+          <h2 className="font-semibold text-2xl tracking-tight text-[var(--tac-ink)]">manage files</h2>
+          <p className="text-xs leading-relaxed text-[var(--tac-steel)] mt-1">visibility: <b>listed</b> tracks show a lock to outsiders; <b>hidden</b> tracks don&apos;t exist for them. teasers are public 30s cuts of locked tracks.</p>
         </div>
         <button onClick={onClose} aria-label="Close file manager" className="p-2 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] transition-colors"><X size={18} /></button>
       </div>
-      {manageable.length === 0 ? <p className="tac-mono text-xs text-[var(--tac-steel)] py-10 text-center uppercase tracking-widest">You do not own any manageable files yet.</p> : (
+      {manageable.length === 0 ? <p className="ed-label block text-[var(--tac-steel)] py-10 text-center">you don’t own any manageable files yet.</p> : (
         <div className="space-y-3">
           {manageable.map(({ project, version }) => (
             <VaultManagerRow key={version.id} session={session} project={project} version={version} onSave={onSave} onDelete={onDelete} onSnippet={onSnippet} />
@@ -299,13 +286,13 @@ function VaultManagerRow({ session, project, version, onSave, onDelete, onSnippe
   return (
     <form onSubmit={submit} className="grid gap-3 items-end border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black/5 dark:bg-white/5 p-3 md:grid-cols-[1.3fr_0.6fr_0.6fr_auto_1.2fr_auto]">
       <div className="min-w-0">
-        <p className="tac-mono text-[10px] text-[var(--tac-signal)] uppercase tracking-[0.2em] truncate">{project.title}</p>
+        <p className="tac-mono text-[10px] text-[var(--tac-signal)] truncate">{project.title}</p>
         <input value={label} onChange={(e) => setLabel(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono mt-1" aria-label={`Display name for ${version.label}`} />
       </div>
       <select value={kind} onChange={(e) => setKind(e.target.value as Version["kind"])} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono" aria-label="File type">{["demo", "wip", "master", "preview"].map((item) => <option key={item} className="bg-[#0c0c0e] text-[#f0f0ed]">{item}</option>)}</select>
       <select value={level} onChange={(e) => setLevel(e.target.value as Level)} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono" aria-label="Access level">{allowed.map((item) => <option key={item} className="bg-[#0c0c0e] text-[#f0f0ed]">{item}</option>)}</select>
-      <label className="flex items-center gap-2 px-2 tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-wider cursor-pointer">
-        <input type="checkbox" checked={hidden} onChange={(e) => setHidden(e.target.checked)} className="accent-[var(--tac-signal)]" /> HIDDEN
+      <label className="flex items-center gap-2 px-2 tac-mono text-[10px] text-[var(--tac-steel)] cursor-pointer">
+        <input type="checkbox" checked={hidden} onChange={(e) => setHidden(e.target.checked)} className="accent-[var(--tac-signal)]" /> hidden
       </label>
       <input value={note} onChange={(e) => setNote(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono" placeholder="Note" aria-label={`Note for ${version.label}`} />
       <div className="flex gap-2">
@@ -323,21 +310,21 @@ function VaultUploadPanel({ session, projects, onClose, onUploaded }: { session:
   const [file, setFile] = useState<File | null>(null), [slug, setSlug] = useState(projects[0]?.slug || ""), [title, setTitle] = useState(projects[0]?.title || ""), [label, setLabel] = useState(""), [note, setNote] = useState("");
   const [kind, setKind] = useState<Version["kind"]>("wip"), [level, setLevel] = useState<Level>(session.level), [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const allowed = LEVELS.filter((item) => LEVEL_RANK[item] <= LEVEL_RANK[session.level]);
-  async function submit(event: React.FormEvent) { event.preventDefault(); if (!file) return; setBusy(true); setError(null); try { await uploadVaultFile(session, { file, projectSlug: slug, projectTitle: title, label, kind, minLevel: level, note }); await onUploaded(); } catch (err) { setError(err instanceof Error ? err.message : "Upload failed."); } finally { setBusy(false); } }
+  async function submit(event: React.FormEvent) { event.preventDefault(); if (!file) return; setBusy(true); setError(null); try { await uploadVaultFile(session, { file, projectSlug: slug, projectTitle: title, label, kind, minLevel: level, note }); await onUploaded(); } catch (err) { setError(err instanceof Error ? err.message : "upload failed."); } finally { setBusy(false); } }
   function pickProject(next: string) { setSlug(next); const project = projects.find((item) => item.slug === next); if (project) setTitle(project.title); }
   return (
     <section data-lenis-prevent className="tac-plate tac-plate-mark p-6 mb-8">
       <div className="flex justify-between mb-5">
         <div>
-          <h2 className="tac-display font-black text-2xl text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase">Add to the Vault</h2>
-          <p className="tac-mono text-xs text-[var(--tac-steel)] uppercase tracking-widest mt-1">Files appear immediately</p>
+          <h2 className="font-semibold text-2xl tracking-tight text-[var(--tac-ink)]">add to the vault</h2>
+          <p className="ed-label block text-[var(--tac-steel)] mt-1">files appear immediately</p>
         </div>
         <button onClick={onClose} aria-label="Close upload panel" className="p-2 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 text-[var(--tac-steel)] hover:text-[var(--tac-signal)] hover:border-[var(--tac-signal)] transition-colors"><X size={18} /></button>
       </div>
       <form onSubmit={submit} className="grid md:grid-cols-2 gap-3">
         <label className="md:col-span-2 border border-dashed border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black/5 dark:bg-white/5 p-6 text-center cursor-pointer hover:border-[var(--tac-signal)] transition-colors">
           <UploadCloud className="mx-auto text-[var(--tac-signal)] mb-2" />
-          <span className="tac-mono text-xs font-bold text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase tracking-wider">{file?.name || "CHOOSE AN AUDIO FILE"}</span>
+          <span className="tac-mono text-xs font-medium text-[var(--tac-ink)]">{file?.name || "choose an audio file"}</span>
           <input type="file" accept="audio/*,.wav,.flac,.aiff,.aif,.m4a,.ogg" className="sr-only" onChange={(e) => { const next = e.target.files?.[0] || null; setFile(next); if (next) setLabel(next.name.replace(/\.[^.]+$/, "")); }} />
         </label>
         <select value={slug} onChange={(e) => pickProject(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono"><option value="" className="bg-[#0c0c0e] text-[#f0f0ed]">New project…</option>{projects.map((project) => <option key={project.slug} value={project.slug} className="bg-[#0c0c0e] text-[#f0f0ed]">{project.title}</option>)}</select>
@@ -347,8 +334,8 @@ function VaultUploadPanel({ session, projects, onClose, onUploaded }: { session:
         <select value={kind} onChange={(e) => setKind(e.target.value as Version["kind"])} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono">{["demo", "wip", "master", "preview"].map((item) => <option key={item} className="bg-[#0c0c0e] text-[#f0f0ed]">{item}</option>)}</select>
         <select value={level} onChange={(e) => setLevel(e.target.value as Level)} className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono">{allowed.map((item) => <option key={item} className="bg-[#0c0c0e] text-[#f0f0ed]">{item}</option>)}</select>
         <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note (optional)" className="w-full bg-black/5 dark:bg-white/5 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 px-3 py-2 text-xs text-[var(--tac-ink)] dark:text-[var(--tac-bone)] outline-none focus:border-[var(--tac-signal)] tac-mono md:col-span-2" />
-        {error && <p className="tac-mono text-xs font-bold text-[var(--tac-signal)] md:col-span-2 uppercase tracking-wider">{error}</p>}
-        <button disabled={busy || !file} className="tac-cta md:col-span-2 justify-center">{busy && <Loader2 size={15} className="animate-spin" />} UPLOAD TO VAULT</button>
+        {error && <p className="ed-form-error md:col-span-2" role="alert">{error}</p>}
+        <button disabled={busy || !file} className="tac-cta md:col-span-2 justify-center">{busy && <Loader2 size={15} className="animate-spin" />} upload to vault</button>
       </form>
     </section>
   );
