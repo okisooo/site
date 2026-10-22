@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { getLenis, useLenis } from "./SmoothScrollProvider";
+import { getLenis, useLenis, wakeLenis } from "./SmoothScrollProvider";
 
 export interface ScrollToOptions {
   offset?: number;
@@ -24,6 +24,7 @@ export function useScrollTo() {
           offset: opts?.offset ?? -80,
           duration: 1.1,
         });
+        wakeLenis();
       } else {
         let el: HTMLElement | null = null;
         if (typeof target === "string") {
