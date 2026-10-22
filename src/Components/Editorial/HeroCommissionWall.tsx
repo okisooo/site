@@ -4,7 +4,8 @@ import { galleryWorks } from "@/data/gallery";
 import { useAmbientVisibility } from "./AmbientMotion";
 
 // Curated positions keep the portraits visible around the character and sleeves.
-// Desktop shows a 5x2 wall; phones show the first nine in a 3x3 wall.
+// Desktop shows a 5x2 wall; phones show the first nine in a 3x3 wall. Prints load after the
+// character and latest cover, and the tenth only where it is shown.
 const editions = [
   ["7mmchan", 0], ["obakeno-perutan", 0], ["sobu", 0], ["amaxa", 0], ["suyosuyo", 0],
   ["engawa110", 0], ["kou768", 0], ["ykhs9", 0], ["he-know-lee", 0], ["obakeno-perutan", 5],
@@ -19,7 +20,7 @@ export default function HeroCommissionWall() {
         const art = work.variants[version];
         return <div className="ed-wall-print ed-kinetic-layer" key={`${id}-${version}`}>
           <img src={active && art.motion ? art.motion : id === "7mmchan" ? art.src : art.small ?? work.small}
-            alt="" width={art.width} height={art.height} decoding="async" />
+            alt="" width={art.width} height={art.height} decoding="async" fetchPriority="low" loading={index > 8 ? "lazy" : undefined} />
           <span><span>{work.artist}</span><span>{String(index + 1).padStart(2, "0")} / collection</span></span>
         </div>;
       })}

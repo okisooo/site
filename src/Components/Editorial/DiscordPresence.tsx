@@ -88,12 +88,12 @@ export default function DiscordPresence() {
   const status = data?.discord_status;
   const statusLabel = status === "online" ? "online" : status === "idle" ? "away" : status === "dnd" ? "do not disturb" : status === "offline" ? "offline" : "discord profile";
   const portrait = <span className="ed-discord-avatar">
-    <img className="ed-discord-avatar-image" src={avatar} alt={`${displayName}’s Discord avatar`} width="80" height="80" />
-    {ambient && decoration && <img className="ed-discord-decoration" src={`https://cdn.discordapp.com/avatar-decoration-presets/${decoration}.png`} alt="" width="96" height="96" />}
+    <img className="ed-discord-avatar-image" src={avatar} alt={`${displayName}’s Discord avatar`} width="80" height="80" loading="lazy" decoding="async" />
+    {ambient && decoration && <img className="ed-discord-decoration" src={`https://cdn.discordapp.com/avatar-decoration-presets/${decoration}.png`} alt="" width="96" height="96" loading="lazy" decoding="async" />}
     {status && <span className="ed-discord-status" data-status={status} role="img" aria-label={statusLabel} title={statusLabel} />}
   </span>;
   const profileBadges = badges.length > 0 && <span className="ed-discord-badges">{badges.map((badge) =>
-    <img key={badge.id} src={badge.src} alt={badge.label} title={badge.label} width="20" height="20" />
+    <img key={badge.id} src={badge.src} alt={badge.label} title={badge.label} width="20" height="20" loading="lazy" decoding="async" />
   )}</span>;
   async function copyHandle() {
     try { await navigator.clipboard.writeText(handle); setCopyMessage("handle copied"); }

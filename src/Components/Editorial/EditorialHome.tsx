@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, Disc3, FolderOpen } from "lucide-react";
 import type { Release } from "@/data/releases";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
+import { coverArt, coverSrcSet } from "@/lib/coverArt";
+import { canCreateModelContext } from "@/lib/modelContext";
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { useFeaturedVideos } from "@/hooks/useFeaturedVideos";
 import { useTwitchLive } from "@/hooks/useTwitchLive";
@@ -23,6 +25,12 @@ const CharacterStudio = dynamic(() => import("./CharacterStudio"), {
 });
 const HeroModel = dynamic(() => import("./CharacterStudio"), { ssr: false });
 
+/** Save-Data, slow connections and low-memory devices keep the still instead of a 3 MB model. */
+function heroModelAllowed() {
+  const { connection, deviceMemory } = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number };
+  return !connection?.saveData && !/(^|slow-)2g|3g/.test(connection?.effectiveType ?? "") && (deviceMemory ?? 8) >= 4;
+}
+
 function releaseDate(date: string) {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
 }
@@ -33,13 +41,24 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
   const [heroMounted, setHeroMounted] = useState(false);
   const [heroLimited, setHeroLimited] = useState(false);
   useEffect(() => {
-    // Let the first paint and opening start before loading the hero's shared 3d module.
-    if ("requestIdleCallback" in window) {
-      const idle = window.requestIdleCallback(() => setHeroMounted(true), { timeout: 650 });
-      return () => window.cancelIdleCallback(idle);
-    }
-    const timeout = setTimeout(() => setHeroMounted(true), 100);
-    return () => clearTimeout(timeout);
+    // The hero's 3d module waits for the page to load, the opening to finish and an idle moment.
+    // Devices that would refuse the model's WebGL context never download it.
+    if (!heroModelAllowed()) return;
+    const site = document.querySelector(".core-site");
+    const mount = () => { if (canCreateModelContext()) setHeroMounted(true); };
+    let scheduled = false, cancel = () => {};
+    const schedule = () => {
+      if (scheduled || document.readyState !== "complete" || site?.hasAttribute("data-opening")) return;
+      scheduled = true;
+      observer.disconnect();
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(mount, { timeout: 2000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(mount, 200); cancel = () => clearTimeout(timeout); }
+    };
+    const observer = new MutationObserver(schedule);
+    if (site) observer.observe(site, { attributeFilter: ["data-opening"] });
+    window.addEventListener("load", schedule);
+    schedule();
+    return () => { observer.disconnect(); window.removeEventListener("load", schedule); cancel(); };
   }, []);
   const pick = picks[pickIndex];
   const latest = releases[0];
@@ -59,16 +78,16 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
-      <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
+      <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" fetchPriority="low" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">
-        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" />
+        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" fetchPriority="low" />
         <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-label={`Pick ${pickIndex + 1} of ${picks.length}`}>{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span></div>
-        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={pick.img} alt={`${pick.title} cover`} width="100" height="100" /></Link>
+        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={coverArt(pick.img, 300)} alt={`${pick.title} cover`} width="100" height="100" /></Link>
           <div className="ed-deck-info"><span className="ed-label">{pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
         </div>
         <div className="ed-deck-bottom"><button aria-label="Previous listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index - 1 + picks.length) % picks.length)}><ChevronLeft size={18} /></button>
-          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={release.img} alt="" width="48" height="48" /></button>)}</div>
+          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={coverArt(release.img, 64)} alt="" width="48" height="48" loading="lazy" decoding="async" /></button>)}</div>
           <button aria-label="Next listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index + 1) % picks.length)}><ChevronRight size={18} /></button></div>
       </div>}
       <Link href="/vault" className="ed-vault-teaser"><span className="ed-label">demos & versions</span><span className="ed-vault-teaser-title">vault<FolderOpen strokeWidth={1.25} /></span><span className="ed-vault-teaser-footer">open vault <span className="ed-folder-open"><ArrowUpRight size={17} /></span></span></Link>
@@ -78,7 +97,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
     <section id="archive" className="ed-section">
       <header className="ed-section-heading"><div><h2>latest releases</h2></div><Link href="/releases" className="ed-text-link">all {releaseCount} releases <ArrowUpRight size={18} /></Link></header>
       <div className="ed-release-grid ed-home-releases">{releases.map((release) => <article className="ed-release-card" key={release.id}>
-        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={release.img} alt={`${release.title} cover`} width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
+        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={coverArt(release.img, 300)} srcSet={coverSrcSet(release.img)} sizes="(max-width: 700px) calc(50vw - 40px), (max-width: 1380px) 21vw, 290px" alt={`${release.title} cover`} width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
           <div className="ed-release-meta"><span>{release.albumType}</span><time dateTime={release.releaseDate}>{releaseDate(release.releaseDate)}</time></div><h3>{release.title}</h3></Link>
       </article>)}</div>
     </section>
