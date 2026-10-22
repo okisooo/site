@@ -17,7 +17,7 @@ function Thumbnail({ asset, api, headers }: { asset: DownloadAsset; api: string;
     }).catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => { controller.abort(); if (object) URL.revokeObjectURL(object); };
   }, [asset.id, asset.hasPreview, api, headers]);
-  return url ? <img src={url} alt={asset.filename} loading="lazy" /> : <div className="cd-placeholder">{failed ? "Preview unavailable" : asset.hasPreview ? "Loading preview…" : "No thumbnail"}</div>;
+  return url ? <img src={url} alt={`artwork by ${asset.artist}`} loading="lazy" /> : <div className="cd-placeholder">{failed ? "Preview unavailable" : asset.hasPreview ? "Loading preview…" : "No thumbnail"}</div>;
 }
 export default function CommissionDownloads({ apiBase = DEFAULT_API }: { apiBase?: string }) {
   const api = apiBase.replace(/\/$/, "");

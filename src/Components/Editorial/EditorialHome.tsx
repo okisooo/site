@@ -97,7 +97,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
     <section id="archive" className="ed-section">
       <header className="ed-section-heading"><div><h2>latest releases</h2></div><Link href="/releases" className="ed-text-link">all {releaseCount} releases <ArrowUpRight size={18} /></Link></header>
       <div className="ed-release-grid ed-home-releases">{releases.map((release) => <article className="ed-release-card" key={release.id}>
-        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={coverArt(release.img, 300)} srcSet={coverSrcSet(release.img)} sizes="(max-width: 700px) calc(50vw - 40px), (max-width: 1380px) 21vw, 290px" alt={`${release.title} cover`} width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
+        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={coverArt(release.img, 300)} srcSet={coverSrcSet(release.img)} sizes="(max-width: 700px) calc(50vw - 40px), (max-width: 1380px) 21vw, 290px" alt="" width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
           <div className="ed-release-meta"><span>{release.albumType}</span><time dateTime={release.releaseDate}>{releaseDate(release.releaseDate)}</time></div><h3>{release.title}</h3></Link>
       </article>)}</div>
     </section>

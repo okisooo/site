@@ -23,7 +23,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
 
   return <div className="ed-page" data-premid-page="releases" data-premid-view={view}
     {...(pinned ? { "data-premid-release-title": pinned.title, "data-premid-release-cover": pinned.img } : {})}>
-    <header className="ed-page-heading"><div><h1>releases</h1></div><span className="ed-heading-number" aria-hidden="true">{catalog.length}</span><span className="sr-only">{catalog.length} releases</span></header>
+    <header className="ed-page-heading"><div><span className="ed-label">discography</span><h1>releases</h1></div><div className="ed-gallery-count"><strong>{catalog.length}</strong><span className="ed-label">releases</span></div></header>
     <div className="ed-toolbar">
       {view === "grid" && <input type="search" aria-label="Search releases" placeholder="search title, year or release type" value={query} onChange={(event) => setQuery(event.target.value)} />}
       <span className="ed-label" role="status">{view === "grid" ? `${releases.length} ${releases.length === 1 ? "release" : "releases"} / newest first` : "drag to explore · select a cover"}</span>
@@ -32,7 +32,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
     </div>
     {view === "grid" ? <div className="ed-release-grid">
       {releases.map((release) => <article key={release.id} className="ed-release-card">
-        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={release.img} alt={`${release.title} cover`} width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
+        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={release.img} alt="" width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
           <div className="ed-release-meta"><span>{release.albumType} / {release.year}</span><span>{release.totalTracks || 1} {(release.totalTracks || 1) === 1 ? "track" : "tracks"}</span></div>
           <h2>{release.title}</h2></Link>
         <button className="ed-quick-listen" onClick={() => setPinned(release)} aria-label={`Quick listen to ${release.title}`}><Play size={12} />quick listen</button>

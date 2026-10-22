@@ -125,10 +125,10 @@ export default function CommissionGallery() {
       {column.works.map(({ work, index }) => <article key={work.id} className="ed-gallery-card">
         <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
           <GalleryThumbnail work={work} eager={index < 4} />
-          <div className="ed-gallery-card-caption"><h2>{work.artist}</h2><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
+          <div className="ed-gallery-card-caption"><span className="ed-gallery-card-title">{work.artist}</span><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
         </button>
       </article>)}
-    </div>)}</div> : <div className="ed-gallery-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
+    </div>)}</div> : <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
     {limit < filtered.length && <div className="ed-gallery-more"><button className="ed-button" onClick={() => setLimit(limit + PAGE_SIZE)}>show more <ArrowUpRight size={16} /></button></div>}
     {selected && <ArtworkViewer work={selected} onClose={() => setSelectedId(null)} previous={() => navigate(-1)} next={() => navigate(1)} position={selectedIndex} total={filtered.length} />}
   </div>;

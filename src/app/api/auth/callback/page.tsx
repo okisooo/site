@@ -41,15 +41,15 @@ export default function TooLostCallbackPage() {
         <p className="ed-label">
           release sync // secure handoff
         </p>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
+        <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-8">
           {callback.kind === 'ready' ? 'authorization received.' : callback.kind === 'error' ? 'authorization paused.' : 'authorization.'}
         </h1>
 
         {callback.kind === 'loading' && <p className="font-mono text-sm">checking callback…</p>}
 
         {callback.kind === 'error' && (
-          <div role="alert" className="border-l-4 border-red-500 pl-5 py-2">
-            <p className="font-mono text-sm font-bold">{callback.message}</p>
+          <div role="alert" className="border-l-4 border-[var(--ed-accent)] pl-5 py-2">
+            <p className="ed-form-error">{callback.message}</p>
           </div>
         )}
 
