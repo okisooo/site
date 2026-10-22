@@ -380,7 +380,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 .ed-contact-row small { display: block; font-size: 11px; font-weight: 400; color: var(--ed-muted); }
 .ed-model-view { height: min(60dvh, 560px); position: relative; background: #dedfd8; }
 .ed-loading { display: grid; place-items: center; position: absolute; inset: 0; font-size: 13px; }
-.ed-player { position: fixed; z-index: 80; bottom: 16px; left: 50%; transform: translateX(-50%); width: min(660px, calc(100vw - 24px)); background: var(--ed-shell); color: var(--ed-paper); border: 1px solid #96969f; border-radius: 12px; padding: 10px 14px; box-shadow: inset 0 1px 0 #ffffff4d, 0 12px 44px #18181c60; }
+.ed-player { position: fixed; z-index: 80; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(660px, calc(100vw - 24px)); background: var(--ed-shell); color: var(--ed-paper); border: 1px solid #96969f; border-radius: 12px; padding: 10px 14px; box-shadow: inset 0 1px 0 #ffffff4d, 0 12px 44px #18181c60; }
 .ed-player-main { display: flex; gap: 12px; align-items: center; }
 .ed-player-art { width: 44px; height: 44px; object-fit: cover; border: 3px solid #ffffff26; border-radius: 4px; }
 .ed-player-info { min-width: 0; flex: 1; }
@@ -407,7 +407,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 
 @media (min-width: 1550px) { .ed-masthead h1 { font-size: 266px; } }
 @media (max-width: 1050px) {
-  .core-site { padding: 16px; }
+  .core-site { padding: 16px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left)); }
   .ed-nav { gap: 20px; padding-inline: 18px; }
   .ed-cover { min-height: 900px; padding-top: 425px; }
   .ed-character { --hero-base: 920; width: calc(105% + 4px); left: calc(-5% - 2px); height: max(920px, calc(100% - 30px)); top: 30px; }
@@ -433,7 +433,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 @media (max-width: 1180px) { .ed-nav-caption { display: none; } }
 @media (min-width: 701px) and (max-width: 920px) { .ed-nav { gap: 10px; padding-inline: 12px; } .ed-nav-links { gap: 0; } .ed-nav-links a { padding-inline: 7px; } .ed-nav-watch { gap: 6px; padding-inline: 9px; } }
 @media (max-width: 700px) {
-  .core-site { padding: 8px; }
+  .core-site { padding: 8px max(8px, env(safe-area-inset-right)) 8px max(8px, env(safe-area-inset-left)); }
   .ed-nav { min-height: 54px; padding-inline: 14px; gap: 14px; }
   .ed-logo { font-size: 27px; }
   .ed-nav-links { gap: 0; font-size: 10px; }
@@ -524,12 +524,18 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-footer-note { grid-column: 1 / -1; }
   .ed-dialog { padding: 18px; }
   .ed-dialog-back { padding: 12px; }
-  .ed-player { padding: 10px; bottom: 10px; }
+  .ed-player { padding: 10px; bottom: max(10px, env(safe-area-inset-bottom)); }
   .ed-player-main { flex-wrap: wrap; gap: 8px; }
   .ed-player-info { flex-basis: calc(100% - 60px); }
   .ed-player-controls { display: grid; grid-template-columns: repeat(6, 1fr); justify-items: center; flex-basis: 100%; gap: 2px; }
   .ed-player-volume { width: 100%; height: 24px; grid-column: 1/-1; grid-row: 2; }
   .ed-player-external { display: none; }
+}
+/* Touch screens use hardware volume (iOS ignores HTMLMediaElement.volume); mute stays in the transport row. */
+@media (hover: none) and (pointer: coarse) { .ed-player-volume { display: none; } }
+@media (max-width: 700px) and (hover: none) and (pointer: coarse) {
+  .core-site:has(.ed-player) .ed-footer { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
+  html:has(.core-site .ed-player) { scroll-padding-bottom: 170px; }
 }
 @media (max-width: 370px) {
   .ed-nav-links { display: none; }

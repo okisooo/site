@@ -97,7 +97,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
     </header>
     <div className="ed-content-stage">
       <AmbientArtwork />
-      <main id="main-content" data-editorial-background>{children}</main>
+      <main id="main-content" tabIndex={-1} data-editorial-background>{children}</main>
     </div>
     <footer className="ed-footer" data-editorial-background>
       <AmbientWaves />

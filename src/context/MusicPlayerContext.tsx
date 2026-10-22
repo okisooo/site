@@ -11,6 +11,7 @@ interface MusicPlayerContextType {
   currentTrackLink: string | null
   isPlaying: boolean
   volume: number
+  muted: boolean
   isLooping: boolean
   currentTime: number
   duration: number
@@ -18,6 +19,7 @@ interface MusicPlayerContextType {
   togglePlayPause: () => void
   closePlayer: () => void
   setVolume: (v: number) => void
+  toggleMute: () => void
   toggleLoop: () => void
   playNext: () => void
   playPrev: () => void
@@ -36,6 +38,7 @@ export function MusicPlayerProvider({ children, playlist: globalPlaylist }: { ch
   const [currentTrackLink, setCurrentTrackLink] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolumeState] = useState(100)
+  const [muted, setMuted] = useState(false)
   const [isLooping, setIsLooping] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -169,12 +172,22 @@ export function MusicPlayerProvider({ children, playlist: globalPlaylist }: { ch
     }
   }, [currentTrackTitle, playTrack, globalPlaylist])
 
+  // iOS Safari ignores HTMLMediaElement.volume, so silence always goes through .muted as well.
   const setVolume = useCallback((v: number) => {
     setVolumeState(v)
+    setMuted(v === 0)
     if (audioRef.current) {
       audioRef.current.volume = v / 100
+      audioRef.current.muted = v === 0
     }
   }, [])
+
+  // Mute keeps the chosen level, so unmuting returns to it rather than to full volume.
+  const toggleMute = useCallback(() => {
+    if (muted && volume === 0) return setVolume(100)
+    setMuted(!muted)
+    if (audioRef.current) audioRef.current.muted = !muted
+  }, [muted, volume, setVolume])
 
   const toggleLoop = useCallback(() => {
     setIsLooping(prev => !prev)
@@ -200,6 +213,7 @@ export function MusicPlayerProvider({ children, playlist: globalPlaylist }: { ch
         currentTrackLink,
         isPlaying,
         volume,
+        muted,
         isLooping,
         currentTime,
         duration,
@@ -208,6 +222,7 @@ export function MusicPlayerProvider({ children, playlist: globalPlaylist }: { ch
         togglePlayPause,
         closePlayer,
         setVolume,
+        toggleMute,
         toggleLoop,
         playNext,
         playPrev,

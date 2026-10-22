@@ -65,7 +65,7 @@ function PlaybackProgress({ label, progress, locked, onSeek }: {
   onSeek?: (fraction: number) => void;
 }) {
   return <input className="ed-vault-seek" type="range" aria-label={`Seek ${label}`}
-    min="0" max="1" step="0.001" value={progress} disabled={locked || !onSeek}
+    min="0" max="1" step="0.01" value={progress} aria-valuetext={`${Math.round(progress * 100)}% played`} disabled={locked || !onSeek}
     onChange={(event) => onSeek?.(Number(event.target.value))} />;
 }
 
