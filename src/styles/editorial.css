@@ -341,22 +341,30 @@ span.ed-discord-avatar-image { background: var(--ed-silver); }
 .ed-release-body { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start; gap: 36px; }
 .ed-detail-art { position: relative; background: var(--ed-surface); border: 1px solid var(--ed-edge); padding: 14px 14px 14px 26px; border-radius: 5px 10px 10px 5px; box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-shadow); }
 .ed-detail-art::before { content: ''; position: absolute; top: 14px; bottom: 14px; left: 7px; width: 9px; border-inline: 1px solid var(--ed-edge); background: repeating-linear-gradient(to bottom, transparent 0 3px, #78788025 3px 4px); }
-.ed-detail-art a { display: block; overflow: hidden; }
+.ed-detail-art a { display: block; overflow: hidden; border-radius: 3px; }
 .ed-detail-art img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--ed-edge); border-radius: 3px; }
 .ed-detail-art .ed-panel-label { border: 1px solid var(--ed-edge); background: var(--ed-white); color: var(--ed-accent); margin-top: 14px; border-radius: 3px; }
-.ed-release-credits { padding: 14px 0; color: var(--ed-muted); font-size: 12px; }
+.ed-release-body .ed-quick-actions { margin-top: 0; }
+.ed-release-credits { padding: 14px 0 0; color: var(--ed-muted); font-size: 12px; }
+.ed-release-body > div > .ed-text-link { margin-top: 20px; }
 .ed-tracklist { margin-top: 32px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 8px; box-shadow: inset 0 1px 0 var(--ed-highlight), var(--ed-shadow); }
 .ed-tracklist > h2 { font: 500 11px var(--font-geist-mono); padding: 14px 16px; border-bottom: 1px solid var(--ed-line); background: var(--ed-white); color: var(--ed-accent); border-radius: 7px 7px 0 0; box-shadow: inset 0 1px 0 var(--ed-highlight); }
 .ed-tracklist > details { padding: 0; }
 .ed-tracklist > details:last-child { border-bottom: 0; }
 .ed-tracklist summary, .ed-tracklist > div { padding: 14px 16px; min-height: 64px; }
 .ed-tracklist .tac-display { font-size: 14px; line-height: 1.35; font-weight: 600; letter-spacing: -.015em; text-transform: none; }
+.ed-track-no { flex-shrink: 0; min-width: 2.6ch; font: 500 10px/1 var(--font-geist-mono), monospace; letter-spacing: .045em; color: var(--ed-muted); }
 .ed-tracklist summary > span:first-child { min-width: 0; }
 .ed-tracklist summary svg { flex-shrink: 0; }
 .ed-tracklist summary > span:last-child > svg { width: 26px; height: 26px; padding: 5px; border: 1px solid var(--ed-line); border-radius: 50%; }
-.ed-tracklist details > div { margin: 0 12px 14px; border: 1px solid var(--ed-line); border-radius: 5px; background: var(--ed-white); }
+.ed-tracklist details > div { margin: 0 12px 14px; padding: 14px 16px 16px 18px; border: 1px solid var(--ed-line); border-radius: 5px; background: var(--ed-white); font-size: 15px; line-height: 1.55; }
+/* A lyric line that wraps hangs under its own first word, so only real line breaks start at the edge. */
+.ed-lyric-line { display: block; padding-left: 1.1em; text-indent: -1.1em; }
+.ed-lyric-gap { display: block; height: .9em; }
 .ed-related { margin-top: 48px; }
 .ed-related .ed-release-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Long albums keep the cover in view beside the tracklist (only where the whole mount fits the screen). */
+@media (min-width: 701px) and (min-height: 700px) { .ed-detail-art { position: sticky; top: 24px; } }
 
 /* Existing vault operations keep their behavior and inherit the shared tokens. */
 .core-site .ed-vault { background: transparent; color: var(--ed-ink); }
@@ -568,7 +576,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-toolbar { gap: 8px; }
   .ed-toolbar input[type="search"] { width: 100%; }
   .ed-toolbar .ed-label { font-size: 10px; flex-basis: 100%; }
-  .ed-release-detail .ed-page-heading h1 { font-size: clamp(38px, 10vw, 64px); }
+  .ed-release-detail .ed-page-heading h1 { font-size: clamp(44px, 12vw, 64px); text-wrap: balance; }
   .ed-related .ed-release-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .ed-related .ed-release-card:last-child { display: none; }
   .ed-vault-heading { padding: 18px; display: block; }

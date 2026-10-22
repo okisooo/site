@@ -19,11 +19,13 @@ import { LEVEL_LABEL } from "@/data/vault";
 import type { Session } from "@/lib/vault";
 import { canAccess } from "@/lib/vault";
 
+/** The release-date format used across the core pages, e.g. "02 Mar 2026", whatever the visitor's locale. */
 function fmt(date: string) {
-  return new Date(date).toLocaleDateString(undefined, {
-    year: "numeric",
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
     month: "short",
-    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
   });
 }
 
@@ -103,6 +105,7 @@ function VersionRow({
       {/* Play / teaser / lock */}
       <button
         onClick={onToggle}
+        aria-label={`${isPlaying ? (locked ? "pause teaser of" : "pause") : !locked ? "play" : teasable ? "play 30s teaser of" : "locked, sign in to play"} ${project.title}, ${v.label}`}
         title={
           !locked
             ? (isPlaying ? "Pause" : "Play")

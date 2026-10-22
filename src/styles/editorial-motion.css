@@ -80,6 +80,7 @@
   .ed-detail-art a:hover img, .ed-upcoming-art:hover img { transform: scale(1.015); }
   .ed-logo:hover span, .ed-footer-logo:hover span, .ed-nav-watch:hover svg, .ed-text-link:hover svg, .ed-channels a:hover > svg, .ed-contact-row:hover > svg, .ed-art-artists > button:hover > svg { transform: translate(3px, -3px); }
   .ed-channels a:hover, .ed-contact-row:hover { transform: translateX(3px); }
+  .ed-text-link:hover > .lucide-arrow-left { transform: translateX(-3px); }
 }
 .core-site :is(.ed-button, .ed-icon-button, .ed-menu-button, .ed-art-artists > button):active { scale: .97; transition-duration: 80ms; }
 .ed-footer-bottom > div { flex-wrap: wrap; }
