@@ -42,10 +42,6 @@
 @media (hover: hover) { .ed-gallery-variants button:not([aria-pressed="true"]):hover { background: var(--ed-accent-soft); color: var(--ed-ink); } }
 .ed-gallery-variants img { width: 44px; height: 44px; object-fit: contain; background: white; border: 1px solid var(--ed-line); }
 .ed-gallery-paging { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; border-top: 1px solid var(--ed-line); }
-.ed-gallery-invite { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 35px; border-top: 1px solid var(--ed-line); padding-top: 24px; }
-.ed-gallery-invite small { display: block; color: var(--ed-accent); margin-bottom: 8px; }
-.ed-gallery-invite strong { font-size: clamp(24px, 3vw, 38px); font-weight: 500; letter-spacing: -.045em; line-height: 1.1; }
-.ed-gallery-invite > .ed-text-link { flex-shrink: 0; }
 
 /* Idle movement stays on artwork or decorative layers, never text or controls. */
 .ed-idle-sticker { transform-origin: 50% 80%; animation: ed-sticker-sway 9.4s ease-in-out infinite; }
@@ -91,7 +87,6 @@
   .ed-gallery-artwork { min-height: 180px; }
   .ed-gallery-artwork > img { max-height: 52dvh; }
   .ed-gallery-details { gap: 12px; }
-  .ed-gallery-invite { flex-direction: column; align-items: flex-start; }
   .ed-ambient-band { height: 72px; margin-bottom: 24px; }
 }
 @media (prefers-reduced-motion: reduce) {
