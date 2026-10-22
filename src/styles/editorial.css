@@ -53,17 +53,22 @@
 }
 .ed-label { display: inline-block; line-height: 1.6; }
 .ed-nav { display: flex; align-items: center; min-height: 58px; padding: 0 24px; gap: 28px; background: var(--ed-white); position: relative; z-index: 40; border: 1px solid var(--ed-edge); border-radius: 10px 10px 0 0; box-shadow: inset 0 1px 0 var(--ed-highlight); }
+.core-site:not(:has(.ed-cover)) .ed-nav { border-radius: 10px; box-shadow: inset 0 1px 0 var(--ed-highlight), var(--ed-shadow); }
+.core-site .ed-nav:has(.ed-mobile-nav) { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .ed-logo { font-family: var(--font-editorial), sans-serif; font-size: 29px; letter-spacing: -.07em; font-weight: 900; color: var(--ed-accent); display: flex; align-items: center; gap: 8px; min-height: 52px; }
 .ed-logo span { font-size: 25px; font-weight: 400; }
-.ed-nav-caption { padding-left: 24px; border-left: 1px solid var(--ed-ink); }
+.ed-nav-caption { padding-left: 24px; border-left: 1px solid var(--ed-ink); white-space: nowrap; }
 .ed-nav-links { display: flex; gap: 6px; margin-left: auto; }
-.ed-nav-links a { display: grid; place-items: center; position: relative; min-height: 44px; padding: 0 15px; border-radius: var(--ed-control-radius); transition: background .18s; }
-.ed-nav-links a:hover { background: var(--ed-accent-soft); }
+.ed-nav-links a { display: grid; place-items: center; position: relative; min-height: 44px; padding: 0 15px; border-radius: var(--ed-control-radius); white-space: nowrap; transition: background .18s; }
+@media (hover: hover) { .ed-nav-links a:hover { background: var(--ed-accent-soft); } }
 .ed-nav-links a[aria-current] { background: var(--ed-accent); color: var(--ed-on-accent); box-shadow: inset 0 1px 2px #0006; }
 .ed-nav-watch { background: var(--ed-surface); display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 0 14px; min-height: 44px; border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius); box-shadow: var(--ed-control-shadow); }
+@media (hover: hover) { .ed-nav-watch:hover { background: var(--ed-accent-soft); border-color: #cc000040; } }
 .ed-menu-button { display: none !important; }
-.ed-mobile-nav { position: absolute; top: 100%; left: -1px; right: -1px; background: var(--ed-white); padding: 12px 20px 20px; border: 1px solid var(--ed-ink); }
-.ed-mobile-nav a { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--ed-ink); font-size: 16px; }
+.ed-mobile-nav { position: absolute; top: 100%; left: -1px; right: -1px; max-height: calc(100dvh - 72px); overflow-y: auto; overscroll-behavior: contain; background: var(--ed-white); padding: 6px 20px 12px; border: 1px solid var(--ed-edge); border-top-color: var(--ed-line); border-radius: 0 0 10px 10px; box-shadow: var(--ed-float-shadow); }
+.ed-mobile-nav a { display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0; border-bottom: 1px solid var(--ed-line); font-size: 16px; }
+.ed-mobile-nav a:last-child { border-bottom: 0; }
+.ed-mobile-nav a[aria-current] { color: var(--ed-accent); background: var(--ed-accent-soft); margin-inline: -12px; padding-inline: 12px; border-radius: var(--ed-control-radius); border-bottom-color: transparent; }
 .ed-button, .core-site .tac-cta, .core-site .tac-cta-ghost, .core-site .tac-toggle {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px;
   padding: 10px 18px; border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius);
@@ -395,7 +400,6 @@
 @media (max-width: 1050px) {
   .core-site { padding: 16px; }
   .ed-nav { gap: 20px; padding-inline: 18px; }
-  .ed-nav-caption { display: none; }
   .ed-cover { min-height: 900px; padding-top: 425px; }
   .ed-character { --hero-base: 920; width: calc(105% + 4px); left: calc(-5% - 2px); height: max(920px, calc(100% - 30px)); top: 30px; }
   .ed-cover-kicker, .ed-masthead { margin-inline: 0; left: 20px; right: 20px; }
@@ -417,6 +421,8 @@
   .ed-release-meta { flex-wrap: wrap; gap: 2px 8px; }
   .ed-release-body { gap: 24px; }
 }
+@media (max-width: 1180px) { .ed-nav-caption { display: none; } }
+@media (min-width: 701px) and (max-width: 920px) { .ed-nav { gap: 10px; padding-inline: 12px; } .ed-nav-links { gap: 0; } .ed-nav-links a { padding-inline: 7px; } .ed-nav-watch { gap: 6px; padding-inline: 9px; } }
 @media (max-width: 700px) {
   .core-site { padding: 8px; }
   .ed-nav { min-height: 54px; padding-inline: 14px; gap: 14px; }

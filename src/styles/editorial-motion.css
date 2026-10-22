@@ -41,17 +41,14 @@
 @keyframes ed-cover-rail { 0%, 61% { transform: translate(25px, 16px); } to { transform: none; } }
 
 /* Quick page and panel arrivals. No waiting for route exits or content fetching. */
-.ed-route-line { position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--ed-accent); pointer-events: none; transform-origin: left; animation: ed-route-line .65s var(--ed-ease) both; }
+.ed-route-line { position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--ed-accent); opacity: 0; pointer-events: none; transform-origin: left; animation: ed-route-line .65s var(--ed-ease) both; }
+.core-site:not(:has(.ed-cover)) .ed-route-line { inset-inline: 10px; }
 @keyframes ed-route-line { from { transform: scaleX(0); opacity: 1; } 65% { transform: scaleX(1); opacity: 1; } to { transform: scaleX(1); opacity: 0; } }
 .ed-page-heading > *, .ed-upcoming-empty, .ed-vault-stats { animation: ed-page-arrive .6s var(--ed-ease) backwards; }
 .ed-page-heading > :nth-child(2) { animation-delay: .06s; }
 @keyframes ed-page-arrive { from { opacity: .5; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 .ed-mobile-nav { transform-origin: top; animation: ed-menu-arrive .32s var(--ed-ease) backwards; }
-.ed-mobile-nav a { animation: ed-page-arrive .4s var(--ed-ease) backwards; }
-.ed-mobile-nav a:nth-child(2) { animation-delay: 35ms; }
-.ed-mobile-nav a:nth-child(3) { animation-delay: 70ms; }
-.ed-mobile-nav a:nth-child(4) { animation-delay: 105ms; }
-.ed-mobile-nav a:nth-child(5) { animation-delay: 140ms; }
+.ed-mobile-nav a { animation: ed-page-arrive .4s var(--ed-ease) backwards; animation-delay: calc(var(--i, 0) * 30ms); }
 @keyframes ed-menu-arrive { from { opacity: 0; transform: translateY(-8px) scaleY(.96); } to { opacity: 1; transform: none; } }
 .ed-dialog-back { animation: ed-scrim-in .25s ease-out backwards; }
 .ed-dialog { animation: ed-dialog-in .4s var(--ed-ease) backwards; }
@@ -96,7 +93,7 @@
   .ed-opening-title .ed-opening-arrow { top: 23%; left: 7%; right: auto; font-size: .32em; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ed-opening { display: none; }
+  .ed-opening, .ed-route-line { display: none; }
   .core-site *, .core-site *::before, .core-site *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .core-site :is(.ed-release-image, .ed-vault-teaser, .ed-studio-invite, .ed-channels a, .ed-contact-row) { transform: none !important; }
 }

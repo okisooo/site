@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import "./commission-downloads.css";
 
 import { groupDownloads, type DownloadAsset } from "@/lib/commissionDownloads";
@@ -34,7 +35,7 @@ export default function CommissionDownloads({ apiBase = DEFAULT_API }: { apiBase
   const groups = groupDownloads(assets);
   const artists = [...new Set(assets.map(asset => asset.artist))].sort((a, b) => a.localeCompare(b));
   return <div className="ed-page commission-downloads">
-    <header className="ed-page-heading ed-gallery-heading"><div><h1>commission previews</h1><p>Commissioned artwork, organized by artist.</p><a className="ed-text-link" href="/gallery">back to the gallery ↗</a></div><div className="ed-gallery-count"><strong>{groups.length || "—"}</strong><span className="ed-label">artworks</span></div></header>
+    <header className="ed-page-heading ed-gallery-heading"><div><h1>commission previews</h1><p>Commissioned artwork, organized by artist.</p><Link className="ed-text-link" href="/gallery">back to the gallery ↗</Link></div><div className="ed-gallery-count"><strong>{groups.length || "—"}</strong><span className="ed-label">artworks</span></div></header>
     <p className="cd-rights">You can view the artwork here. Original files and PSDs are kept private.</p>
     {status && <p role="status">{status}</p>}
     {!!assets.length && <><nav aria-label="Artists" className="cd-artists">{artists.map((artist, index) => <a key={artist} href={`#artist-${index}`}>{artist}</a>)}<span>{groups.length} artworks</span></nav>
