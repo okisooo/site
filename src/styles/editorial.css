@@ -273,7 +273,6 @@ span.ed-discord-avatar-image { background: var(--ed-silver); }
 .core-site :is(.ed-about-copy, .ed-page-heading) p a { padding-block: 6px; color: var(--ed-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
 @media (hover: hover) { .core-site :is(.ed-about-copy, .ed-page-heading) p a:hover { text-decoration-thickness: 2px; } }
 .ed-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-bottom: 24px; }
-.ed-toolbar input[type="search"] { background: var(--ed-white); border: 1px solid var(--ed-line); border-radius: var(--ed-control-radius); padding: 12px 14px; min-height: 44px; width: min(330px, 100%); font-size: 13px; box-shadow: inset 0 2px 3px #28282c10, 0 1px 0 var(--ed-white); }
 .ed-toolbar .ed-label { margin-right: auto; }
 .ed-quick-listen { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; min-height: 44px; margin-top: 6px; font-size: 11px; }
 .ed-quick-listen svg { width: 25px; height: 25px; padding: 6px; border: 1px solid var(--ed-line); border-radius: 50%; }
@@ -430,6 +429,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 .ed-dialog-heading h2 { font-size: clamp(25px, 4vw, 36px); font-weight: 600; line-height: 1.05; letter-spacing: -.025em; word-spacing: .04em; overflow-wrap: anywhere; }
 .ed-dialog input:not([type="range"]) { background: var(--ed-white); border: 1px solid var(--ed-line); box-shadow: inset 0 2px 3px #28282c10; }
 .core-site input::placeholder { color: var(--ed-muted); opacity: 1; }
+.core-site input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .ed-dialog-copy { font-size: 15px; line-height: 1.6; }
 .ed-dialog-copy p { margin-bottom: 16px; }
 .ed-dialog-copy p[role="status"]:empty { margin: 0; }
@@ -576,7 +576,6 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-page-heading h1 { font-size: clamp(52px, 12.5vw, 80px); }
   .ed-page-heading p { font-size: 13px; }
   .ed-toolbar { gap: 8px; }
-  .ed-toolbar input[type="search"] { width: 100%; }
   .ed-toolbar .ed-label { font-size: 10px; flex-basis: 100%; }
   .ed-release-detail .ed-page-heading h1 { font-size: clamp(44px, 12vw, 64px); text-wrap: balance; }
   .ed-related .ed-release-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { preconnect } from "react-dom";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight, Play, Search, X } from "lucide-react";
 import type { Release } from "@/data/releases";
 import { coverArt, coverSrcSet } from "@/lib/coverArt";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
@@ -20,6 +20,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
   preconnect("https://i.scdn.co");
   const [view, setView] = useState<"grid" | "orbit">("grid");
   const [query, setQuery] = useState("");
+  const search = useRef<HTMLInputElement>(null);
   const [pinned, setPinned] = useState<Release | null>(null);
   const [hovered, setHovered] = useState<Release | null>(null);
   const selected = pinned ?? hovered;
@@ -29,7 +30,8 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
     {...(pinned ? { "data-premid-release-title": pinned.title, "data-premid-release-cover": pinned.img } : {})}>
     <header className="ed-page-heading"><div><span className="ed-label">discography</span><h1>releases</h1></div><div className="ed-gallery-count"><strong>{catalog.length}</strong><span className="ed-label">releases</span></div></header>
     <div className="ed-toolbar">
-      {view === "grid" && <input type="search" aria-label="Search releases" placeholder="search title, year or release type" value={query} onChange={(event) => setQuery(event.target.value)} />}
+      {view === "grid" && <label className="ed-gallery-search"><Search size={17} /><input ref={search} type="search" aria-label="Search releases" placeholder="search title, year or release type" value={query} onChange={(event) => setQuery(event.target.value)} />
+        {query && <button type="button" aria-label="Clear release search" onClick={() => { setQuery(""); search.current?.focus(); }}><X size={16} /></button>}</label>}
       <span className="ed-label" role="status">{view === "grid" ? `${releases.length} ${releases.length === 1 ? "release" : "releases"} / newest first` : "drag to explore · select a cover"}</span>
       <button className="ed-button" aria-pressed={view === "grid"} onClick={() => { setView("grid"); setPinned(null); }}>cover grid</button>
       <button className="ed-button" aria-pressed={view === "orbit"} onClick={() => { setView("orbit"); setPinned(null); }}>3d archive</button>

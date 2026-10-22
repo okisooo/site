@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Search, X } from "lucide-react";
 import { galleryWorks, type GalleryVariant, type GalleryWork } from "@/data/gallery";
 import { EditorialDialog } from "./EditorialDialog";
@@ -102,6 +102,7 @@ export default function CommissionGallery() {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const columnCount = useColumnCount();
+  const search = useRef<HTMLInputElement>(null);
   const artists = useMemo(() => [...new Set(galleryWorks.map((work) => work.artist))], []);
   const filtered = galleryWorks.filter((work) => (artist === "all" || work.artist === artist)
     && `${work.title} ${work.artist} ${work.description}`.toLowerCase().includes(query.trim().toLowerCase()));
@@ -115,8 +116,8 @@ export default function CommissionGallery() {
       <div className="ed-gallery-count"><strong>{String(galleryWorks.length).padStart(2, "0")}</strong><span className="ed-label">commissions</span></div>
     </header>
     <div className="ed-gallery-tools">
-      <label className="ed-gallery-search"><Search size={17} /><input type="search" aria-label="Search commissioned artwork" placeholder="find an artist or artwork" value={query} onChange={(event) => { setQuery(event.target.value); setLimit(PAGE_SIZE); }} />
-        {query && <button aria-label="Clear artwork search" onClick={() => setQuery("")}><X size={16} /></button>}</label>
+      <label className="ed-gallery-search"><Search size={17} /><input ref={search} type="search" aria-label="Search commissioned artwork" placeholder="find an artist or artwork" value={query} onChange={(event) => { setQuery(event.target.value); setLimit(PAGE_SIZE); }} />
+        {query && <button type="button" aria-label="Clear artwork search" onClick={() => { setQuery(""); search.current?.focus(); }}><X size={16} /></button>}</label>
       <label className="ed-gallery-filter"><span className="ed-label">artist</span><select aria-label="Filter by artist" value={artist} onChange={(event) => { setArtist(event.target.value); setLimit(PAGE_SIZE); }}>
         <option value="all">all artists</option>{artists.map((name) => <option key={name}>{name}</option>)}</select></label>
       <span className="ed-label" role="status">{filtered.length} {filtered.length === 1 ? "work" : "works"}</span>
