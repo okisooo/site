@@ -107,6 +107,7 @@
 .ed-cursors-share { display: flex; align-items: center; gap: 6px; margin-top: 22px; }
 .ed-cursors-share .ed-label { margin-right: 6px; font-size: 9px; color: var(--ed-muted); }
 .ed-cursors-share button, .ed-cursors-share a { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius); background: var(--ed-white); font: 11px var(--font-geist-mono); transition: background .2s, color .2s, border-color .2s; }
+@media (pointer: coarse) { .ed-cursors-share button, .ed-cursors-share a { min-height: 44px; min-width: 44px; justify-content: center; } }
 .ed-cursors-share button:hover, .ed-cursors-share a:hover { background: var(--ed-accent); border-color: var(--ed-accent); color: var(--ed-on-accent); }
 .ed-cursors-stage { position: relative; }
 .ed-cursors-orbit { position: absolute; width: 64px; height: 64px; filter: drop-shadow(0 4px 6px #28282c30); animation: ed-cursor-float 5s ease-in-out infinite alternate; }
@@ -114,9 +115,10 @@
 .ed-cursors-orbit-1 { top: 6%; right: -13%; animation-delay: -1.3s; }
 .ed-cursors-orbit-2 { bottom: 4%; left: -14%; animation-delay: -2.6s; }
 .ed-cursors-orbit-3 { bottom: 16%; right: -12%; animation-delay: -3.9s; }
+/* Up to 1400px the right-hand orbits still overlap the frame but stay inside the page gutter. */
+@media (max-width: 1400px) { .ed-cursors-orbit-1 { right: -4%; } .ed-cursors-orbit-3 { right: -3%; } }
 @keyframes ed-cursor-float { from { transform: translateY(-6px) rotate(-4deg); } to { transform: translateY(6px) rotate(4deg); } }
 .ed-cursors-heading p { max-width: 46ch; font-size: 15px; line-height: 1.6; }
-.ed-cursors-heading p a { border-bottom: 1px solid; }
 .ed-cursors-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 28px; }
 .ed-cursors-download { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 22px; background: var(--ed-accent); color: var(--ed-on-accent); border-color: var(--ed-accent); font-size: 14px; }
 .ed-cursors-download small { font: 10px var(--font-geist-mono); opacity: .8; }
