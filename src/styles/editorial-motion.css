@@ -61,6 +61,8 @@
 @keyframes ed-dialog-out { to { opacity: 0; transform: translateY(12px) scale(.985); } }
 .ed-player { animation: ed-player-in .4s var(--ed-ease) backwards; }
 @keyframes ed-player-in { from { opacity: 0; translate: 0 28px; } to { opacity: 1; translate: 0 0; } }
+.ed-play-in { animation: ed-play-in .3s var(--ed-ease); }
+@keyframes ed-play-in { from { opacity: 0; transform: scale(.8); } }
 .ed-deck-art img { animation: ed-art-arrive .35s var(--ed-ease) backwards; }
 
 /* Surfaces lift toward you; arrows keep a consistent outward direction. */

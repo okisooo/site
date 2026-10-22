@@ -102,7 +102,7 @@ function PresenceCard({ live = false, data, vencordBadges = [] }: { live?: boole
   const displayName = profile?.global_name || "OKISO";
   const handle = profile?.username || ".oxo";
   const avatarFormat = ambient && profile?.avatar?.startsWith("a_") ? "gif" : "png";
-  const avatar = profile?.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${avatarFormat}?size=128` : "/icon.png";
+  const avatar = profile?.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${avatarFormat}?size=128` : "/icon-192.png";
   const decoration = profile?.avatar_decoration_data?.asset;
   const publicBadges = BADGES.filter((badge) => ((profile?.public_flags || 0) & badge.flag) !== 0)
     .map((badge) => ({ id: badge.name, label: badge.label, src: `${BADGE_CDN}/${badge.name}.svg` }));

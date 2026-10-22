@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Maximize, Maximize2, Minimize2, RotateCcw, Settings } from 'lucide-react';
 import type Hls from 'hls.js';
 import { useScrollLock } from '@/motion/useScrollLock';
@@ -518,13 +517,10 @@ export default function CustomVideoPlayer({ src, hlsUrl, streamUrl, sourceUrl, p
         {/* Play/Pause Overlay Centered */}
         {!isPlaying && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 bg-black/30">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="w-16 h-16 bg-[#101014] text-white border border-white/40 flex items-center justify-center transform transition-transform hover:scale-105"
-            >
+            {/* A CSS entrance (ed-play-in), so this player no longer pulls framer-motion onto the homepage. */}
+            <div className="ed-play-in w-16 h-16 bg-[#101014] text-white border border-white/40 flex items-center justify-center transform transition-transform hover:scale-105">
               <Play size={28} className="ml-1" />
-            </motion.div>
+            </div>
           </div>
         )}
 
