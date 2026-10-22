@@ -86,7 +86,11 @@
 @media (hover: hover) { .ed-button:hover, .core-site .tac-cta:hover, .core-site .tac-cta-ghost:hover, .core-site .tac-toggle:hover { background: var(--ed-ink); color: var(--ed-paper); border-color: var(--ed-ink); } }
 .core-site .tac-cta-ghost, .core-site .tac-toggle { background: var(--ed-surface); color: var(--ed-ink); }
 .ed-button:active, .core-site .tac-cta:active, .core-site .tac-cta-ghost:active, .core-site .tac-toggle:active { transform: translateY(1px); box-shadow: inset 0 1px 3px #28282c25; }
-.core-site .tac-toggle[data-on="true"], .ed-button[aria-pressed="true"] { background: var(--ed-ink); color: var(--ed-paper); }
+.core-site .tac-toggle[data-on="true"] { background: var(--ed-ink); color: var(--ed-paper); }
+/* Toggles: the chosen option is a pressed graphite key, the other a raised surface key; neither reads as the red call to action. */
+.core-site .ed-button[aria-pressed="false"] { background: var(--ed-surface); color: var(--ed-ink); }
+.core-site .ed-button[aria-pressed="true"] { background: var(--ed-ink); color: var(--ed-paper); border-color: var(--ed-ink); box-shadow: inset 0 1px 2px #0006; }
+@media (hover: hover) { .core-site .ed-button[aria-pressed="false"]:hover { background: var(--ed-accent-soft); color: var(--ed-ink); border-color: #cc000040; } }
 .ed-icon-button { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--ed-edge); border-radius: var(--ed-control-radius); transition: background .18s, transform .18s; }
 @media (hover: hover) {
   .ed-icon-button:hover { background: var(--ed-accent-soft); color: var(--ed-ink); }
@@ -196,9 +200,13 @@
   .ed-release-card:hover .ed-release-image { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-float-shadow); }
 }
 @media (hover: none) { .ed-release-image .ed-art-arrow { opacity: 1; transform: none; } }
+/* The whole card is one block link, so the focus ring frames the sleeve and title and the sleeve lifts as on hover. */
+.ed-release-card > a { display: block; border-radius: 8px; }
+.ed-release-card > a:focus-visible { outline-offset: 6px; }
+.ed-release-card > a:focus-visible .ed-release-image { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--ed-highlight), var(--ed-float-shadow); }
 .ed-release-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 2px 9px; color: var(--ed-muted); font-size: 9px; }
 .ed-release-meta > span:first-child { display: inline-block; padding: 3px 5px; border: 1px solid var(--ed-line); border-radius: 2px; font-size: inherit; }
-.ed-release-card h3, .ed-release-card h2 { font-weight: 600; font-size: 22px; line-height: 1.12; letter-spacing: -.025em; overflow-wrap: anywhere; padding-inline: 2px; }
+.ed-release-card h3, .ed-release-card h2 { font-weight: 600; font-size: 22px; line-height: 1.12; letter-spacing: -.025em; overflow-wrap: anywhere; text-wrap: balance; padding-inline: 2px; }
 .ed-watch-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 24px; }
 .ed-video-frame { position: relative; aspect-ratio: 16/9; background: var(--ed-ink); color: var(--ed-paper); border: 8px solid var(--ed-ink); border-radius: 10px; outline: 1px solid var(--ed-edge); box-shadow: var(--ed-shadow); }
 .ed-video-frame iframe { width: 100%; height: 100%; }
@@ -267,7 +275,7 @@ span.ed-discord-avatar-image { background: var(--ed-silver); }
 .ed-quick-listen { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; min-height: 44px; margin-top: 6px; font-size: 11px; }
 .ed-quick-listen svg { width: 25px; height: 25px; padding: 6px; border: 1px solid var(--ed-line); border-radius: 50%; }
 @media (hover: hover) { .ed-quick-listen:hover { text-decoration: underline; } }
-.ed-quick-art { width: min(320px, 100%); margin: 0 auto 20px; border: 8px solid var(--ed-white); outline: 1px solid var(--ed-line); }
+.ed-quick-art { width: min(320px, 100%); margin: 0 auto 20px; }
 .ed-quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .ed-orbit { position: relative; height: 72vh; min-height: 500px; background: var(--ed-ink); border: 1px solid; }
 .ed-orbit-selection { position: absolute; bottom: 20px; left: 20px; right: 20px; background: var(--ed-paper); padding: 20px; max-width: 420px; }
@@ -534,7 +542,9 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-section-heading h2 { font-size: 36px; }
   .ed-section-heading .ed-text-link { font-size: 11px; gap: 6px; flex-shrink: 0; }
   .ed-section-heading .ed-label { font-size: 10px; }
-  .ed-release-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; }
+  .ed-release-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+  .ed-release-card { padding-bottom: 4px; }
+  .ed-quick-listen { margin-top: 2px; }
   .ed-release-image { padding: 5px 5px 5px 13px; }
   .ed-release-image::before { left: 3px; width: 5px; }
   .ed-release-card h3, .ed-release-card h2 { font-size: 18px; }
@@ -694,7 +704,6 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 .ed-studio-control-row > .ed-label { margin-bottom: 10px; color: var(--ed-muted); }
 .ed-studio-control-row > div { display: flex; flex-wrap: wrap; gap: 6px; }
 .ed-studio-console .ed-button { padding: 8px 12px; font-size: 11px; background: var(--ed-surface); color: var(--ed-ink); }
-.ed-studio-console .ed-button[aria-pressed="true"] { background: var(--ed-accent); color: var(--ed-on-accent); }
 .ed-studio-transport { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .ed-studio-settings { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 15px; border-top: 1px solid var(--ed-line); }
 @keyframes ed-art-arrive { from { opacity: .35; transform: translateY(12px) scale(1.015); } to { opacity: 1; transform: none; } }

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { preconnect } from "react-dom";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { Release } from "@/data/releases";
+import { coverArt, coverSrcSet } from "@/lib/coverArt";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { EditorialDialog } from "@/Components/Editorial/EditorialDialog";
@@ -14,6 +16,8 @@ const ReleaseOrbit = dynamic(() => import("@/Components/3D/ReleaseOrbit"), {
 });
 
 export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
+  // Covers come from Spotify's image host; open that connection while the page is still parsing.
+  preconnect("https://i.scdn.co");
   const [view, setView] = useState<"grid" | "orbit">("grid");
   const [query, setQuery] = useState("");
   const [pinned, setPinned] = useState<Release | null>(null);
@@ -31,8 +35,8 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
       <button className="ed-button" aria-pressed={view === "orbit"} onClick={() => { setView("orbit"); setPinned(null); }}>3d archive</button>
     </div>
     {view === "grid" ? <div className="ed-release-grid">
-      {releases.map((release) => <article key={release.id} className="ed-release-card">
-        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={release.img} alt="" width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
+      {releases.map((release, index) => <article key={release.id} className="ed-release-card">
+        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={coverArt(release.img, 300)} srcSet={coverSrcSet(release.img)} sizes="(max-width: 700px) calc(50vw - 40px), (max-width: 1380px) 21vw, 290px" alt="" width="360" height="360" loading={index < 4 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : undefined} /><ArrowUpRight className="ed-art-arrow" /></div>
           <div className="ed-release-meta"><span>{release.albumType} / {release.year}</span><span>{release.totalTracks || 1} {(release.totalTracks || 1) === 1 ? "track" : "tracks"}</span></div>
           <h2>{release.title}</h2></Link>
         <button className="ed-quick-listen" onClick={() => setPinned(release)} aria-label={`Quick listen to ${release.title}`}><Play size={12} />quick listen</button>
@@ -41,7 +45,7 @@ export default function ReleasesClient({ catalog }: { catalog: Release[] }) {
       {selected && <div className="ed-orbit-selection"><span className="ed-label">{selected.albumType} / {selected.year}</span><h2>{selected.title}</h2><ReleaseActions release={selected} />{pinned && <button className="ed-quick-listen" onClick={() => setPinned(null)}>clear selection</button>}</div>}
     </div>}
     {view === "grid" && releases.length === 0 && <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => setQuery("")}>clear search</button></div>}
-    {view === "grid" && pinned && <EditorialDialog title={pinned.title} onClose={() => setPinned(null)}><img src={pinned.img} alt={`${pinned.title} cover`} width="320" height="320" className="ed-quick-art" /><span className="ed-label">{pinned.albumType} / {pinned.year}</span><ReleaseActions release={pinned} /></EditorialDialog>}
+    {view === "grid" && pinned && <EditorialDialog title={pinned.title} onClose={() => setPinned(null)}><div className="ed-release-image ed-quick-art"><img src={pinned.img} alt={`${pinned.title} cover`} width="320" height="320" /></div><span className="ed-label">{pinned.albumType} / {pinned.year}</span><ReleaseActions release={pinned} /></EditorialDialog>}
   </div>;
 }
 function ReleaseActions({ release }: { release: Release }) {
