@@ -13,6 +13,8 @@
 .ed-gallery-filter select { min-height: 50px; min-width: 160px; padding: 0 30px 0 12px; background: var(--ed-white); border: 1px solid var(--ed-edge); border-radius: 6px; font-size: 12px; }
 .ed-gallery-tools > [role="status"] { margin-left: auto; white-space: nowrap; }
 .ed-gallery-grid { display: flex; align-items: flex-start; gap: 20px; }
+/* Before hydration the page carries a 2-, 3- and 4-column packing; exactly one shows, at the same breakpoints the script uses. */
+.ed-gallery-grid:is([data-columns="2"], [data-columns="4"]) { display: none; }
 .ed-gallery-column { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 26px; }
 .ed-gallery-card { min-width: 0; }
 .ed-gallery-open { display: block; width: 100%; text-align: left; }
@@ -33,7 +35,7 @@
 .ed-gallery-artwork > img { width: 100%; height: 100%; max-height: 66dvh; object-fit: contain; }
 .ed-gallery-details { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .ed-gallery-details h3 { font-size: 30px; line-height: 1; letter-spacing: -.04em; color: var(--ed-accent); }
-.ed-gallery-details .ed-text-link { font-size: 11px; min-height: 34px; }
+.ed-gallery-details .ed-text-link { font-size: 11px; }
 .ed-gallery-variants { width: 100%; margin-top: 8px; border-top: 1px solid var(--ed-line); padding-top: 14px; }
 .ed-gallery-variants > .ed-label { display: block; margin-bottom: 8px; }
 .ed-gallery-variants button { width: 100%; padding: 7px; min-height: 60px; display: flex; align-items: center; gap: 12px; border: 1px solid transparent; border-radius: 5px; font-size: 11px; text-align: left; }
@@ -60,6 +62,10 @@
   .ed-gallery-open:hover .ed-gallery-mount > img { transform: scale(1.018); }
   .ed-gallery-open:hover .ed-gallery-expand { background: var(--ed-accent); color: white; transform: translate(2px, -2px); }
 }
+@media (min-width: 1180px) {
+  .ed-gallery-grid[data-columns="4"] { display: flex; }
+  .ed-gallery-grid[data-columns="3"] { display: none; }
+}
 @media (max-width: 950px) {
   .ed-gallery-grid, .ed-gallery-column { gap: 16px; }
   .ed-gallery-tools { flex-wrap: wrap; gap: 14px; }
@@ -67,6 +73,8 @@
   .ed-gallery-viewer { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; }
 }
 @media (max-width: 700px) {
+  .ed-gallery-grid[data-columns="2"] { display: flex; }
+  .ed-gallery-grid[data-columns="3"] { display: none; }
   .ed-gallery-heading { grid-template-columns: 1fr; padding-bottom: 24px; }
   .ed-gallery-count { align-items: center; flex-direction: row; gap: 12px; }
   .ed-gallery-count strong { font-size: 44px; }
@@ -79,12 +87,19 @@
   .ed-gallery-expand { width: 32px; height: 32px; right: 8px; bottom: 8px; }
   .ed-gallery-expand svg { width: 16px; }
   .ed-gallery-card-caption { display: flex; flex-direction: column; gap: 7px; }
-  .ed-gallery-card-title { font-size: 22px; }
+  .ed-gallery-card-title { font-size: 19px; text-wrap: balance; overflow-wrap: anywhere; }
   .ed-gallery-badge { left: 8px; top: 8px; bottom: auto; font-size: 10px; padding: 6px; }
   .ed-gallery-viewer { grid-template-columns: minmax(0, 1fr); }
   .ed-gallery-artwork { min-height: 180px; }
   .ed-gallery-artwork > img { max-height: 52dvh; }
   .ed-gallery-details { gap: 12px; }
+  /* Versions become one scrolling strip of chips, so paging and pause stay a short scroll below the art. */
+  .ed-gallery-variants { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
+  .ed-gallery-variants > .ed-label { display: none; }
+  .ed-gallery-variants button { flex: 0 0 auto; width: auto; min-height: 52px; padding: 4px 10px 4px 4px; white-space: nowrap; border-color: var(--ed-line); }
+  /* The strip clips overflow, so the ring sits just inside the chip. */
+  .ed-gallery-variants button:focus-visible { outline-offset: -3px; }
+  .ed-gallery-variants img { width: 40px; height: 40px; }
   .ed-ambient-band { height: 72px; margin-bottom: 24px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -144,14 +159,15 @@
 .ed-cursors-install li { counter-increment: step; padding: 18px; background: var(--ed-surface); border: 1px solid var(--ed-edge); border-radius: 6px; font-size: 13px; line-height: 1.55; }
 .ed-cursors-install li::before { content: counter(step, decimal-leading-zero); display: block; margin-bottom: 14px; font: 400 34px/1 var(--font-editorial); letter-spacing: -.05em; color: var(--ed-accent); }
 .ed-cursors-install li strong { font-weight: 600; }
-.ed-cursors-install details { max-width: 70ch; padding: 14px 0; border-block: 1px solid var(--ed-line); }
-.ed-cursors-install details p { margin-top: 10px; font-size: 13px; line-height: 1.6; }
+.ed-cursors-install details { max-width: 70ch; border-block: 1px solid var(--ed-line); }
+.ed-cursors-install summary { padding-block: 14px; }
+.ed-cursors-install details p { margin: 0 0 14px; font-size: 13px; line-height: 1.6; }
 .ed-cursors-note { margin-top: 16px; font-size: 12px; color: var(--ed-muted); }
 .ed-cursors-credit { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding: 24px; margin-bottom: 24px; background: var(--ed-shell); color: var(--ed-paper); border-radius: 12px 12px 24px 12px; box-shadow: inset 0 1px 0 #ffffff40, var(--ed-shadow); }
 .ed-cursors-credit strong { display: block; font-size: clamp(32px, 4vw, 52px); font-weight: 500; letter-spacing: -.045em; line-height: 1.1; margin: 8px 0 10px; }
 .ed-cursors-credit p { max-width: 48ch; font-size: 13px; line-height: 1.6; color: #d8d8de; }
 .ed-cursors-credit nav { display: flex; gap: 8px; flex-wrap: wrap; }
-.ed-cursors-credit nav a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 1px solid #ffffff40; border-radius: var(--ed-control-radius); font-size: 12px; }
+.ed-cursors-credit nav a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 10px 14px; border: 1px solid #ffffff40; border-radius: var(--ed-control-radius); font-size: 12px; }
 .ed-cursors-credit nav a:hover { background: var(--ed-accent); border-color: var(--ed-accent); }
 @media (min-width: 1150px) { .ed-cursors-grid { grid-template-columns: repeat(9, minmax(0, 1fr)); } }
 @media (max-width: 950px) {

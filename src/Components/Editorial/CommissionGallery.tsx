@@ -10,8 +10,10 @@ const PAGE_SIZE = 12;
 // Caption height relative to column width, so the column balance accounts for it.
 const CAPTION_RATIO = .2;
 
+// Null until measured: the static HTML then carries one packing per breakpoint and CSS shows the
+// matching one, so hydration never re-packs what is already on screen.
 function useColumnCount() {
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
     const phone = window.matchMedia("(max-width: 700px)"), wide = window.matchMedia("(min-width: 1180px)");
     const sync = () => setCount(phone.matches ? 2 : wide.matches ? 4 : 3);
@@ -43,6 +45,17 @@ function GalleryThumbnail({ work, eager }: { work: GalleryWork; eager: boolean }
     <span className="ed-gallery-expand"><ArrowUpRight size={20} /></span>
     {animation && <span className="ed-gallery-badge"><Play size={11} /> animated</span>}
   </div>;
+}
+
+function GalleryCard({ work, eager, onOpen }: { work: GalleryWork; eager: boolean; onOpen: () => void }) {
+  // "name · @handle" credits keep the handle on the mono line, so it never orphans the middot.
+  const [name, handle] = work.artist.split(" · ");
+  return <article className="ed-gallery-card">
+    <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={onOpen}>
+      <GalleryThumbnail work={work} eager={eager} />
+      <div className="ed-gallery-card-caption"><span className="ed-gallery-card-title">{name}</span><span className="ed-gallery-version-count">{handle && <>{handle} · </>}{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
+    </button>
+  </article>;
 }
 
 function Artwork({ work, variant, animate = false }: { work: GalleryWork; variant: GalleryVariant; animate?: boolean }) {
@@ -82,7 +95,8 @@ function ArtworkViewer({ work, onClose, previous, next, position, total }: {
         {work.workUrl && <a className="ed-text-link" href={work.workUrl} target="_blank" rel="noopener noreferrer">original on skeb <ArrowUpRight size={16} /></a>}
         {work.variants.length > 1 && <div className="ed-gallery-variants" role="group" aria-label="Artwork versions">
           <span className="ed-label">versions</span>
-          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(true); }}>
+          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(true); }}
+            onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }); }}>
             <img src={item.small || item.src} alt="" width="48" height="48" loading="lazy" /><span>{item.label}</span>
           </button>)}
         </div>}
@@ -122,14 +136,9 @@ export default function CommissionGallery() {
         <option value="all">all artists</option>{artists.map((name) => <option key={name}>{name}</option>)}</select></label>
       <span className="ed-label" role="status">{filtered.length} {filtered.length === 1 ? "work" : "works"}</span>
     </div>
-    {filtered.length ? <div className="ed-gallery-grid">{packColumns(filtered.slice(0, limit), columnCount).map((column, columnIndex) => <div key={columnIndex} className="ed-gallery-column">
-      {column.works.map(({ work, index }) => <article key={work.id} className="ed-gallery-card">
-        <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
-          <GalleryThumbnail work={work} eager={index < 4} />
-          <div className="ed-gallery-card-caption"><span className="ed-gallery-card-title">{work.artist}</span><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
-        </button>
-      </article>)}
-    </div>)}</div> : <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
+    {filtered.length ? (columnCount ? [columnCount] : [2, 3, 4]).map((count) => <div key={count} className="ed-gallery-grid" data-columns={columnCount ? undefined : count}>{packColumns(filtered.slice(0, limit), count).map((column, columnIndex) => <div key={columnIndex} className="ed-gallery-column">
+      {column.works.map(({ work, index }) => <GalleryCard key={work.id} work={work} eager={index < 4} onOpen={() => setSelectedId(work.id)} />)}
+    </div>)}</div>) : <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
     {limit < filtered.length && <div className="ed-gallery-more"><button className="ed-button" onClick={() => setLimit(limit + PAGE_SIZE)}>show more <ArrowUpRight size={16} /></button></div>}
     {selected && <ArtworkViewer work={selected} onClose={() => setSelectedId(null)} previous={() => navigate(-1)} next={() => navigate(1)} position={selectedIndex} total={filtered.length} />}
   </div>;
