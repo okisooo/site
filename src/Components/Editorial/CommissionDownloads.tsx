@@ -14,7 +14,7 @@ function Thumbnail({ asset, api, widths }: { asset: DownloadAsset; api: string; 
   const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
   const [full, setFull] = useState(false);
   if (!asset.hasPreview || state === "failed") return <div className="cd-placeholder">{asset.hasPreview ? "preview unavailable" : "no thumbnail"}</div>;
-  const source = previewSource(api, asset.id, widths, full);
+  const source = previewSource(api, asset.id, widths, full, asset.thumbnailVersion);
   return <><img key={source.src} {...source} alt={`artwork by ${asset.artist}`} width="480" height="480" loading="lazy" decoding="async" onLoad={() => setState("loaded")} onError={() => source.srcSet ? setFull(true) : setState("failed")} />
     {state === "loading" && <span className="cd-loading ed-label" aria-hidden="true">loading preview…</span>}</>;
 }
