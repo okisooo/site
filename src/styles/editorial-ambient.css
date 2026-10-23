@@ -46,7 +46,7 @@
   .ed-hero-artwork .ed-kinetic-mark { width: 130px; height: 130px; top: 64%; left: 3%; }
   .ed-hero-artwork .ed-kinetic-lines { top: 49%; height: 22%; }
   .ed-hero-artwork .ed-kinetic-stripes { top: 28%; right: -100px; }
-  .ed-page-artwork .ed-kinetic-mark { width: 110px; height: 110px; top: 40px; right: 8px; }
+  .ed-page-artwork .ed-kinetic-mark { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ed-kinetic-layer { animation: none !important; }
