@@ -54,9 +54,13 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
     if (!menuOpen) return;
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setMenuOpen(false); menuButton.current?.focus(); } };
     const outside = (event: PointerEvent) => { if (!header.current?.contains(event.target as Node)) setMenuOpen(false); };
+    // Rotating or widening past the phone layout hides the menu button, so the menu (and its scroll lock) closes.
+    const phone = window.matchMedia("(max-width: 700px)");
+    const leave = () => { if (!phone.matches) setMenuOpen(false); };
     window.addEventListener("keydown", escape);
     document.addEventListener("pointerdown", outside);
-    return () => { window.removeEventListener("keydown", escape); document.removeEventListener("pointerdown", outside); };
+    phone.addEventListener("change", leave);
+    return () => { window.removeEventListener("keydown", escape); document.removeEventListener("pointerdown", outside); phone.removeEventListener("change", leave); };
   }, [menuOpen]);
 
   function replayOpening() {
@@ -104,7 +108,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
       <div className="ed-footer-top"><Link href="/" className="ed-footer-logo">okiso<span>↗</span></Link>
         <a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer" className="ed-button">join the discord <ArrowUpRight size={16} /></a></div>
       <div className="ed-footer-bottom"><span>© {new Date().getFullYear()} okiso</span><span>vocaloid / hyperpop / electronic</span>
-        <div>{ambient.reduced ? <span className="ed-footer-note">motion reduced by your system</span> : <button onClick={() => ambient.setPaused(!ambient.paused)}>{ambient.paused ? "resume ambient motion" : "pause ambient motion"}</button>}{pathname === "/" && <button onClick={replayOpening}>replay opening ↗</button>}<button onClick={() => setDialog("content terms")}>content terms</button><button onClick={() => { setCopyMessage(""); setDialog("contact"); }}>contact ↗</button></div></div>
+        <div>{ambient.reduced ? <span className="ed-footer-note">motion reduced by your system</span> : <button onClick={() => ambient.setPaused(!ambient.paused)}>{ambient.paused ? "resume ambient motion" : "pause ambient motion"}</button>}{pathname === "/" && !ambient.reduced && <button onClick={replayOpening}>replay opening ↗</button>}<button onClick={() => setDialog("content terms")}>content terms</button><button onClick={() => { setCopyMessage(""); setDialog("contact"); }}>contact ↗</button></div></div>
     </footer>
     <EditorialMusicPlayer />
     {dialog && <EditorialDialog title={dialog} onClose={() => setDialog(null)}>
