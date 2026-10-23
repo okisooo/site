@@ -18,3 +18,16 @@ export function groupDownloads(assets: DownloadAsset[]): ArtworkDownloads[] {
     return { id, artist: preview.artist, source: preview.source, files, preview, title: preview.label || preview.filename.replace(/(?:\.output)?\.[^.]+$/, '') };
   });
 }
+// The API lists `thumbnailWidths` once it can serve small WebP thumbnails; an older API omits it.
+export function thumbnailWidths(value: unknown): number[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((w): w is number => Number.isInteger(w) && w > 0 && w <= 4096))].sort((a, b) => a - b);
+}
+export interface PreviewSource { src: string; srcSet?: string; sizes?: string }
+// Thumbnails when the API offers them, else (or after a failed thumbnail) the full display preview. Never an original.
+export function previewSource(api: string, id: string, widths: number[], full = false): PreviewSource {
+  const preview = `${api}/assets/${encodeURIComponent(id)}`;
+  if (full || !widths.length) return { src: `${preview}/preview` };
+  const at = (w: number) => `${preview}/thumbnail?w=${w}`;
+  return { src: at(widths[0]), srcSet: widths.map(w => `${at(w)} ${w}w`).join(', '), sizes: '(max-width: 700px) 46vw, 300px' };
+}
