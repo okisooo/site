@@ -2,6 +2,71 @@
 
 # task
 
+## editorial polish pass — local candidate / 2026-10-23
+
+the user asked for a more polished, faster site on phone and desktop. branch
+`claude/festive-cerf-pvi6u0` adds 28 polish commits on `2dd00a4` (including the
+merged runtime-performance lane, `d933e4c` / `5bac57d`) and 14 `fix(review): …`
+commits from an independent review. this polishes the approved white/red editorial
+system; it is not a new theme. not merged or deployed: deployment needs the owner's
+approval, and visual approval is pending.
+
+- shell: the nav fits 701-920px (roomier from 801px); the inner-page nav floats as a
+  rounded panel; the phone menu closes on escape, an outside tap or leaving the phone
+  layout, and locks page scroll while open; the footer has one rule and no dead space
+  (no 'replay opening' under reduced motion); the player respects safe areas, has
+  touch-safe mute and keyboard seek steps; focus rings are deep red; touch targets are
+  44px; hovers are gated to `(hover: hover)`, the cursor page included; the skip link
+  is editorial and keeps the logo in the tab order.
+- phone cover: the wordmark meets the character, clear cover links, tap-safe opening.
+  the rotating page mark is hidden on phone pages (it sat behind headings).
+- performance: lenis runs on demand without the gsap bridge, and the footer waves idle
+  at 30 fps. hls.js loads only for playlist sources. core routes fetch only archivo and
+  geist mono. favicon resizes (`icon-32/96/180/192.png`) replace the 286 kb icon.
+  spotify covers use their 64/300/640 variants with an `i.scdn.co` preconnect.
+- watch section: the feed, twitch status and discord presence load on an idle moment
+  after page load (or when the section is within two screens), so a jump to #watch
+  lands complete; the player and twitch embed mount only within 400px of the section
+  or on request, so tall screens no longer load hls.js at first paint. on phones the
+  frame and column hold their size until the player mounts. the discord card stays
+  mounted when presence goes live, so an open profile dialog survives.
+- hero 3d: still the deliberate exception. it now waits for load, the end of the
+  opening and an idle moment, and is skipped for save-data, 2g/3g, under 4 gb memory,
+  or refused webgl. the vrm fetch is low priority. studio progress uses
+  `src/data/characterModel.ts` bytes; update it whenever `prepare-vrm.mjs` regenerates
+  the model, or `test:assets` fails.
+- art room: 40 960px `-mid.webp` / `-960.webp` resizes of existing gallery files feed
+  the srcset, made with `npx tsx scripts/prepare-gallery-mids.mts`; `test:assets` fails
+  if a still wider than 1100px has none. no new art. the phone chooser is one swipeable
+  row: keyboard focus scrolls a chip fully into view, chips show the artist name (the
+  full credit stays in the sheet bar, caption and pager). the reel's pause rule no
+  longer depends on `:has()`.
+- pages:
+  - /upcoming: sleeve plus the vault folder.
+  - /about: the channels card (the tablet watch-links grid no longer leaks into it).
+  - 404: a latest-releases row and its own title.
+  - /releases: a red count and the shared search field; card meta fits at 360px.
+  - release detail: actions first, numbered tracks, sticky art, one element per lyric
+    line (still server-rendered; `scripts/audit-seo.ts` compares the markup with tags
+    stripped). a pressed play button scrolls clear of the player bar.
+  - vault: editorial type without framer-motion, a steady loading state, hover tint on
+    project rows, and a clean meta break below 390px.
+  - /downloads: sleeve cards, lazy previews, error and retry with neutral copy.
+  - /gallery: a steady first paint.
+- verified locally: `tsc --noEmit`; test:design 22/22, test:releases 24/24, test:assets
+  4/4, test:deployment 4/4; production export; audit:seo (43 indexable pages, 35 linked
+  releases, 4 noindex routes, 105 local tracks). seo head, json-ld, canonicals,
+  sitemap and robots match the pre-polish export except the 404 title. headless chrome
+  at 360/390/820/1024/1440: no horizontal overflow or page errors; jumping to #watch
+  measures ~0 layout shift at 360, 390, 1024 and 1440, as does a fast phone scroll.
+- for the owner: the 3d hero on capable phones, art-room tour length, a backend
+  thumbnail for /downloads previews, the 'commission previews' h1 wording, release-card
+  arrow chips on touch screens, and whether /upcoming keeps "no release dates are
+  announced right now." under the "nothing announced yet" heading. the deployment
+  workflow must still confirm build, export and seo before release.
+- stale notes, not yet updated: `docs/ART-AND-CHARACTER-REVIEW.md` (hero model timing)
+  and the "local review" numbers in `docs/EDITORIAL-DIRECTION.md`.
+
 ## yoshiRAS888 gallery import — release 2026-10-16
 
 the user authorized deployment of the new commission in `/gallery`. the preview
