@@ -2,7 +2,7 @@
 
 # task
 
-## pen / @pen_117 commission — release candidate, 2026-10-24
+## pen / @pen_117 commission — deployed and verified, 2026-10-24
 
 The user requested downloading the new Skeb delivery, publishing it and updating
 website art assets. Signed-in completed-list reconciliation reaches its explicit
@@ -31,7 +31,33 @@ The local S: build hit the known Windows cross-drive dependency-junction error
 (`./D:/GitHub/site/node_modules/next/dist/client/...`); production CI must pass
 its clean Linux build/export and SEO checks before publishing. The live preview
 catalog now contains 95 records / 87 artwork cards / 12 artists.
-Deployment and live gallery/home verification are still pending at this point.
+Source `040d4749d27ba4d9b11f5758766debd9df057d0f` is deployed. Production workflow
+`40003284459` passed regressions, clean Linux build/typecheck/export and SEO
+(43 indexable pages / 35 releases / 4 noindex routes / 105 local tracks).
+Pages rollout `40003436665` succeeded with asset revision
+`1d695161141604fe9bd33e3779bec73606806b78`, whose commit identifies that source.
+
+The normal live gallery has 13 works / 60 versions. The new thumbnail and all
+three viewer images decode with correct dimensions, labels and observed artist/
+work links; desktop has no horizontal overflow. All eight deployed WebPs match
+candidate SHA-256 hashes. The served homepage contains the same new art-room
+entry. All five new preview-catalog thumbnails decode, with no original links.
+Final verify-only pass checks all six archive records, exact preview pixels and
+anonymous original GET/HEAD 404. No held or failed files. Reproducing the three
+layer exports yields identical decoded RGBA pixels; original bytes are unchanged.
+
+Verified original IDs: `777650733ae57d3002149330136e5429`,
+`b51bab632bcc7b707c8aa28ab67a9d44`, `f211e00035ec9d922f7c29f0ca4cdd11`.
+Export IDs: `155463e32295939fe89ea25c1d53ed39`,
+`5cc2e255e59dcc2d01f0d1c082bf9ea0`, `27d89dacba191047e1bcb8206021ffe1`.
+Import results retain every remote staging path and protected receipt name;
+receipt copies are in the evidence folder's `private-audits/`. Remote inputs
+remain under `/home/fedora/backups/commission-downloads/skeb-*/input`.
+Private signed-link/network scratch was removed after successful archiving.
+The main checkout also has the scoped new data, script and display assets, with
+its prior dirty work preserved; its four asset checks pass. Browser screenshots
+timed out with `os error 10060`; no successful screenshot is claimed. The decoded
+live browser/HTTP evidence above is retained in JSON.
 
 ## /downloads thumbnails — deployed 2026-10-23
 
