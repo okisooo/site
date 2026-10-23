@@ -495,9 +495,9 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 @media (min-width: 701px) and (max-width: 1050px) {
   .ed-watch-grid { grid-template-columns: minmax(0, 1fr); }
   .ed-watch-grid > aside .ed-channels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ed-channels .ed-panel-label { grid-column: 1 / -1; }
-  .ed-channels > a:nth-child(even) { border-right: 1px solid var(--ed-line); }
-  .ed-channels > a:nth-last-child(-n+2) { border-bottom: 0; }
+  .ed-watch-grid > aside .ed-channels .ed-panel-label { grid-column: 1 / -1; }
+  .ed-watch-grid > aside .ed-channels > a:nth-child(even) { border-right: 1px solid var(--ed-line); }
+  .ed-watch-grid > aside .ed-channels > a:nth-last-child(-n+2) { border-bottom: 0; }
 }
 @media (min-width: 701px) and (max-width: 920px) { .ed-nav { gap: 10px; padding-inline: 12px; } .ed-nav-links { gap: 0; } .ed-nav-links a { padding-inline: 7px; } .ed-nav-watch { gap: 6px; padding-inline: 9px; } }
 @media (max-width: 700px) {
