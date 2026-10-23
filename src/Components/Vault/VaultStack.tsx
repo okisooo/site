@@ -240,7 +240,7 @@ export function VaultStack({
             />
           ))}
 
-        <span className="tac-plate relative flex items-center gap-4 p-4 md:p-5 hover:border-[var(--tac-signal)] transition-colors">
+        <span className="tac-plate relative flex items-center gap-4 p-4 md:p-5 [@media(hover:hover)]:hover:border-[var(--tac-signal)] transition-colors">
           <span className="w-12 h-12 overflow-hidden shrink-0 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black flex items-center justify-center">
             {project.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -254,7 +254,7 @@ export function VaultStack({
               {project.title}
             </span>
             <span className="block tac-mono text-[10px] text-[var(--tac-steel)] mt-1">
-              <span className="whitespace-nowrap">{count} version{count > 1 ? "s" : ""}</span> <span className="whitespace-nowrap">· {openCount} open</span>{openCount < count && <> <span className="whitespace-nowrap">· {count - openCount} locked</span></>}
+              <span className="whitespace-nowrap">{count} version{count > 1 ? "s" : ""}</span> <span className="whitespace-nowrap">· {openCount} open</span>{openCount < count && <> <span className="whitespace-nowrap max-[389px]:block"><span className="max-[389px]:hidden">· </span>{count - openCount} locked</span></>}
             </span>
           </span>
           <ChevronDown
