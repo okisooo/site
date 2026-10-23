@@ -625,6 +625,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-deck-info h2 { font-size: 17px; }
   .ed-deck-info .ed-label { font-size: 9px; }
   .ed-player-controls .ed-icon-button { width: 40px; min-width: 40px; }
+  .ed-release-card .ed-release-meta { letter-spacing: 0; column-gap: 6px; }
 }
 /* Commission editions and the on-demand character room share the core materials. */
 .ed-commission-sticker { position: absolute; z-index: 6; left: calc(26% + 64px); bottom: 64px; width: 178px; transform: rotate(5deg); transition: transform .3s; }
