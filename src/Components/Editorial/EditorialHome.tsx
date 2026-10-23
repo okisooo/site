@@ -109,11 +109,15 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
 
 function WatchSection() {
   const watchRef = useRef<HTMLElement>(null);
-  // The player, the video feed, the twitch status and the discord presence all wait until the page has
-  // loaded and the section is within two screens, so none of them compete with the cover.
+  // The feed, the twitch status and the discord presence are small reads: they wait for the page to load and
+  // an idle moment (or the section coming within two screens), so a jump to #watch lands on a complete section.
+  // The player and the twitch embed mount only within 400px of the section, or on request.
+  const [dataReady, setDataReady] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
-  const { videos, isLoading, error } = useFeaturedVideos(nearViewport);
-  const { isLive } = useTwitchLive("okiso", nearViewport);
+  const [playerNear, setPlayerNear] = useState(false);
+  const wantData = dataReady || nearViewport || playerNear;
+  const { videos, isLoading, error } = useFeaturedVideos(wantData);
+  const { isLive } = useTwitchLive("okiso", wantData);
   const [showFeatured, setShowFeatured] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [twitchParent, setTwitchParent] = useState("localhost");
@@ -123,9 +127,18 @@ function WatchSection() {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) { setNearViewport(true); observer.disconnect(); }
     }, { rootMargin: "200% 0px" });
-    const watch = () => observer.observe(section);
+    const player = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setPlayerNear(true); player.disconnect(); }
+    }, { rootMargin: "400px" });
+    player.observe(section);
+    let cancel = () => {};
+    const watch = () => {
+      observer.observe(section);
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(() => setDataReady(true), { timeout: 3000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(() => setDataReady(true), 1500); cancel = () => clearTimeout(timeout); }
+    };
     if (document.readyState === "complete") watch(); else window.addEventListener("load", watch, { once: true });
-    return () => { observer.disconnect(); window.removeEventListener("load", watch); };
+    return () => { observer.disconnect(); player.disconnect(); window.removeEventListener("load", watch); cancel(); };
   }, []);
   useEffect(() => { setTwitchParent(window.location.hostname); }, []);
   useEffect(() => { if (!isLive) setShowFeatured(false); }, [isLive]);
@@ -141,11 +154,11 @@ function WatchSection() {
   ];
   return <section ref={watchRef} id="watch" className="ed-section ed-watch-section">
     <header className="ed-section-heading"><div><h2>{showingLive ? "live now" : "videos"}</h2></div><a className="ed-text-link" href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer">on youtube <ArrowUpRight size={18} /></a></header>
-    <div className="ed-watch-grid"><div>
+    <div className="ed-watch-grid"><div data-pending={!wantData || isLoading || undefined}>
       {isLive && <div className="ed-toolbar"><button className="ed-button" aria-pressed={showingLive} onClick={() => setShowFeatured(false)}>live stream</button><button className="ed-button" aria-pressed={!showingLive} onClick={() => setShowFeatured(true)}>featured videos</button></div>}
-      <div className="ed-video-frame">{!nearViewport ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setNearViewport(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
+      <div className="ed-video-frame">{!playerNear ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setPlayerNear(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
       {!showingLive && video && <p className="ed-video-title">{video.title}</p>}
       {!showingLive && videos.length > 1 && <div className="ed-video-selector">{videos.slice(0, 6).map((item) => <button key={item.id} onClick={() => setActiveId(item.id)} aria-pressed={item.id === video?.id}>{item.poster && <img src={item.poster} alt="" width="100" height="56" loading="lazy" />}<span>{item.title}</span></button>)}</div>}
-    </div><aside><DiscordPresence live={nearViewport} /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
+    </div><aside><DiscordPresence live={wantData} /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
   </section>;
 }

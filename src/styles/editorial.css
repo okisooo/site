@@ -565,6 +565,9 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-upcoming-art { padding: 18px; }
   .ed-watch-grid { gap: 24px; }
   .ed-video-frame { aspect-ratio: auto; }
+  /* Until the player mounts, the frame holds the player's height and the column holds the title and picks. */
+  .ed-watch-grid > [data-pending] { min-height: calc((100vw - 48px) * 9 / 16 + 293px); }
+  .ed-video-frame:not(:has(.ed-video-player, iframe)) { aspect-ratio: auto; height: calc((100vw - 48px) * 9 / 16 + 109px); }
   .core-site .ed-video-player { aspect-ratio: auto; }
   .core-site .ed-video-player video { flex-shrink: 0; }
   .core-site .ed-video-controls { position: relative; opacity: 1; transform: none; padding: 0; background: var(--ed-ink); }
