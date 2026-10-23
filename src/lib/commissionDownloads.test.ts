@@ -14,6 +14,7 @@ test('thumbnails only when the API lists widths; otherwise and on fallback the f
  assert.deepEqual(thumbnailWidths(undefined),[]);assert.deepEqual(thumbnailWidths('480'),[]);assert.deepEqual(thumbnailWidths([960,480,480,0,-1,1.5,'960',null]),[480,960]);
  assert.deepEqual(previewSource(api,'abc',[]),{src:`${api}/assets/abc/preview`});
  assert.deepEqual(previewSource(api,'abc',[480,960]),{src:`${api}/assets/abc/thumbnail?w=480`,srcSet:`${api}/assets/abc/thumbnail?w=480 480w, ${api}/assets/abc/thumbnail?w=960 960w`,sizes:'(max-width: 700px) 46vw, 300px'});
- assert.deepEqual(previewSource(api,'abc',[480,960],true),{src:`${api}/assets/abc/preview`});
+ assert.deepEqual(previewSource(api,'abc',[480,960],false,'0a1b2c'),{src:`${api}/assets/abc/thumbnail?w=480&v=0a1b2c`,srcSet:`${api}/assets/abc/thumbnail?w=480&v=0a1b2c 480w, ${api}/assets/abc/thumbnail?w=960&v=0a1b2c 960w`,sizes:'(max-width: 700px) 46vw, 300px'});
+ assert.deepEqual(previewSource(api,'abc',[480,960],true),{src:`${api}/assets/abc/preview`});assert.deepEqual(previewSource(api,'abc',[480,960],true,'0a1b2c'),{src:`${api}/assets/abc/preview`});
  assert.ok(![previewSource(api,'abc',[480,960]),previewSource(api,'abc',[])].some(s=>JSON.stringify(s).includes('original')));
 });
