@@ -1,5 +1,30 @@
 # commissioned artwork for the site
 
+## pen / @pen_117 / 2026-10-24
+
+Request 4119838 / public work 241 completed October 24. All three delivered
+originals are decoded and hashed: two 1666 x 2500 RGBA PNGs (framed and
+transparent) plus a matching layered PSD. Physical private archive:
+`D:/FOLDERS/Commissions/Bought/OKISO/pen_117@skeb/work-241.manifest.json`.
+
+The PSD has three root layers and 28 total layers, all visible. It supplies
+one expression, a separate frame and complete character/line-art groups; no
+dedication layer or hidden expression variants were found. `converted/` keeps
+the native 1895 x 2758 transparent character, 1414 x 2455 transparent line art
+and 1570 x 2385 transparent frame. All six archive files retain their profiles
+and alpha. The supplied PNGs preserve the artist's intended canvas crop.
+Reproduce with `scripts/export-pen117.py --output-dir <S: scratch>` and archive
+the generated `exports.json` through the skeb-download completion helper.
+
+The credited gallery/home entry offers framed, transparent and line-art views.
+`prepare-gallery-assets.mjs` registers their archive sources; set
+`OKISO_GALLERY_SOURCE_PREFIX=pen117` for a scoped regeneration. Main previews,
+thumbnails and applicable 960px art-room images are physically saved in
+`S:/Codex/outputs/2026-10-24/skeb-import/gallery/`. Main previews are 75-310 kB.
+Originals and PSDs remain private; only resized display derivatives ship.
+Import receipts, pixel/privacy checks and release evidence are under
+`S:/Codex/outputs/2026-10-24/skeb-import/`.
+
 ## lina / @nanashinolina / 2026-10-09
 
 Request 4070361 / public work 32 completed October 8. The signed-in delivery

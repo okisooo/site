@@ -2,6 +2,37 @@
 
 # task
 
+## pen / @pen_117 commission — release candidate, 2026-10-24
+
+The user requested downloading the new Skeb delivery, publishing it and updating
+website art assets. Signed-in completed-list reconciliation reaches its explicit
+end: 12 completed works; pen_117 work 241 is the new delivery. The accepted list
+also reaches its end: 14 unfinished requests, none with a raw delivery button.
+
+Request 4119838 has two 1666 x 2500 PNGs and one PSD. All originals and three
+native-resolution transparent layer exports are saved physically in
+`D:/FOLDERS/Commissions/Bought/OKISO/pen_117@skeb/`. See `COMMISSION-ASSETS.md`
+and `work-241.manifest.json` for the six-file inventory and reproduction steps.
+The original import passed protected audit/replay, preview pixel comparison,
+catalog inclusion and anonymous original GET/HEAD 404 checks. Export publication
+also passed for all six archive files, with no held or failed files.
+Archive/owner-API/SSH offline suites pass
+16/17/9 checks without publishing dummy assets.
+
+The gallery data now puts pen first, with observed creator/work links and framed,
+transparent and line-art views; the homepage art room consumes this data too.
+Eight new display WebPs include the current 960px art-room derivatives. Canonical
+web assets and evidence are physically under
+`S:/Codex/outputs/2026-10-24/skeb-import/`; the clean release checkout is
+`S:/tmp/codex/skeb-import-20261024/site-release/`, based on main `8048c6b5`.
+Unrelated dirty private-page work in `D:/GitHub/site` remains preserved.
+All 55 website regressions pass (23 design / 24 release / 4 asset / 4 deployment).
+The local S: build hit the known Windows cross-drive dependency-junction error
+(`./D:/GitHub/site/node_modules/next/dist/client/...`); production CI must pass
+its clean Linux build/export and SEO checks before publishing. The live preview
+catalog now contains 95 records / 87 artwork cards / 12 artists.
+Deployment and live gallery/home verification are still pending at this point.
+
 ## /downloads thumbnails — deployed 2026-10-23
 
 owner approved merging and deploying ("merge and do whatever"). website #8

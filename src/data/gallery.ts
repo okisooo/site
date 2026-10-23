@@ -32,9 +32,14 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   ...(art.width > 1100 ? { mid: art.src.replace('-1280.webp', '-960.webp') } : {}),
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through October 16, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 24, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'pen117', artist: 'pen · @pen_117', title: 'quiet portrait', medium: 'illustration',
+    description: 'A softly colored portrait of OKISO with a finger to the lips and an orange-to-pink frame, illustrated by pen (@pen_117).',
+    artistUrl: 'https://skeb.jp/@pen_117', workUrl: 'https://skeb.jp/@pen_117/works/241',
+    small: '/art/gallery/pen117-thumb.webp', width: 1200, height: 1800,
+    variants: [variant('pen117', 'framed portrait', 1200, 1800), variant('pen117-transparent', 'transparent portrait', 1200, 1800), variant('pen117-line-art', 'line art', 1037, 1800)] },
   { id: 'yoshi-ras888', artist: 'yoshiRAS888', title: 'painterly portrait & mascot', medium: 'illustration',
     description: 'A softly painted portrait of OKISO holding the red takoling mascot, illustrated by yoshiRAS888.',
     artistUrl: 'https://skeb.jp/@yoshiRAS888',
