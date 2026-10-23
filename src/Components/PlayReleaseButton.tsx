@@ -11,7 +11,8 @@ export function PlayReleaseButton({ release, onClose }: { release: Release, onCl
   const trackTitle = release.tracks?.[0]?.title || release.title
   const trackLink = release.link
 
-  const handlePlay = () => {
+  const handlePlay = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const el = event.currentTarget
     if (currentTrackId === trackTitle) {
       togglePlayPause()
       return
@@ -19,6 +20,8 @@ export function PlayReleaseButton({ release, onClose }: { release: Release, onCl
 
     playTrack(trackTitle, "OKISO", release.img, trackLink)
     if (onClose) onClose()
+    // The player bar opens over the page's bottom band; keep the pressed button above it (not inside dialogs).
+    else if (!el.closest('[role="dialog"]')) requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ block: "nearest" })))
   }
 
   const isActive = currentTrackId === trackTitle
