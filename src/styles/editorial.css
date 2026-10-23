@@ -745,7 +745,7 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
   .ed-art-sheet figcaption > span:first-child { font-size: 18px; }
   .ed-art-intro { padding-top: 0; }
   /* One swipeable row of commissions; the tour keeps the selected one in view. */
-  .ed-art-artists { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 8px; padding: 8px 8px 10px; margin: -8px -8px 0; scrollbar-width: thin; }
+  .ed-art-artists { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 8px; padding: 8px 8px 24px; margin: -8px -8px -14px; scrollbar-width: thin; }
   .ed-art-artists > button { flex: 0 0 30%; scroll-snap-align: start; }
   .ed-art-artists small { font-size: 9px; }
   .ed-art-reel { margin-bottom: 24px; }

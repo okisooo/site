@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type Ref } from "react";
+import { useEffect, useRef, useState, type FocusEvent, type Ref } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Box, Expand, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { galleryWorks, type GalleryVariant, type GalleryWork } from "@/data/gallery";
@@ -15,6 +15,8 @@ const reel = [...pieces].sort((a, b) => a.version - b.version);
 const pad = (value: number) => String(value).padStart(2, "0");
 // Narrow chooser tiles may wrap a handle at its camel-case join ("Obakeno|Perutan") before breaking mid-word.
 const credit = (artist: string) => artist.replace(/([a-z])([A-Z])/g, "$1|$2").split("|").flatMap((part, index) => index ? [<wbr key={index} />, part] : [part]);
+// A chip reached by keyboard scrolls fully into its strip; mouse and touch picks leave the strip where it is.
+const reveal = (event: FocusEvent<HTMLElement>) => { if (event.currentTarget.matches(":focus-visible")) event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }); };
 // Auto-tour every version, then the next commission; a manual pick holds its view longer.
 const AUTO_MS = 3000, HOLD_MS = 10000;
 // The sheet never grows past ~740px wide (1320px column at 1.2fr), so wide screens take the 960w mid.
@@ -110,7 +112,7 @@ export default function ArtRoom({ onOpenModel }: { onOpenModel: () => void }) {
           {touring && <span key={`${selected}-${version}-${holdUntil}`} className="ed-art-timer" style={{ animationDuration: `${wait}ms` }} aria-hidden="true" />}</div>
         <SheetImage work={work} art={art} onExpand={() => { hold(); setExpanded({ work, version }); }} />
         {work.variants.length > 1 && <div ref={versionsRef} className="ed-art-versions" role="group" aria-label={`Versions of ${work.title}`}>
-          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === version} onClick={() => { hold(); setVersion(index); }}>
+          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === version} onFocus={reveal} onClick={() => { hold(); setVersion(index); }}>
             <img src={item.small ?? item.src} alt="" width="44" height="44" loading="lazy" decoding="async" /><span>{item.label}</span>
           </button>)}
         </div>}
@@ -118,9 +120,9 @@ export default function ArtRoom({ onOpenModel }: { onOpenModel: () => void }) {
       </figure>
       <div className="ed-art-room-side">
         <div className="ed-art-intro"><span className="ed-label">every commission</span><span className="ed-label">{pad(selected + 1)} / {pad(works.length)}</span></div>
-        <div ref={artistsRef} className="ed-art-artists" role="group" aria-label="Choose a commission">{works.map((item, index) => <button key={item.id} aria-pressed={selected === index} onClick={() => pick(index)}>
+        <div ref={artistsRef} className="ed-art-artists" role="group" aria-label="Choose a commission">{works.map((item, index) => <button key={item.id} aria-pressed={selected === index} onFocus={reveal} onClick={() => pick(index)}>
           <img src={item.small} alt="" width="96" height="96" loading="lazy" decoding="async" />
-          <span><strong>{credit(item.artist)}</strong><small>{item.variants.some((variant) => variant.motion) ? <><Play size={9} /> animated</> : item.variants.length > 1 ? `${item.variants.length} versions` : item.title}</small></span>
+          <span><strong>{credit(item.artist.split(" · ")[0])}</strong><small>{item.variants.some((variant) => variant.motion) ? <><Play size={9} /> animated</> : item.variants.length > 1 ? `${item.variants.length} versions` : item.title}</small></span>
         </button>)}</div>
         <div className="ed-art-pagination"><button className="ed-icon-button" aria-label="Previous commission" onClick={() => change(-1)}><ChevronLeft size={18} /></button><span className="ed-label">viewing art by {work.artist}</span><button className="ed-icon-button" aria-label="Next commission" onClick={() => change(1)}><ChevronRight size={18} /></button></div>
       </div>
