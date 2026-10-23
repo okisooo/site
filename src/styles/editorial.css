@@ -675,12 +675,11 @@ html:has(.core-site .ed-player) { scroll-padding-bottom: 124px; }
 /* A slow contact-sheet reel of every piece; it pauses off-screen, on hover and with reduced motion. */
 .ed-art-reel { position: relative; overflow: hidden; margin: 0 0 36px; padding: 14px 0 18px; mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
 .ed-art-reel-track { display: flex; width: max-content; gap: 14px; animation: ed-reel 150s linear infinite; }
-.ed-art-reel[data-active="false"] .ed-art-reel-track, .ed-art-reel:has(:focus-visible) .ed-art-reel-track { animation-play-state: paused; }
+.ed-art-reel[data-active="false"] .ed-art-reel-track { animation-play-state: paused; }
 @media (hover: hover) { .ed-art-reel:hover .ed-art-reel-track { animation-play-state: paused; } }
 .ed-art-reel-print { flex: 0 0 auto; display: flex; flex-direction: column; padding: 6px; background: var(--ed-white); border: 1px solid var(--ed-edge); box-shadow: 0 6px 14px #28282c18; transform: rotate(-1.2deg); transition: transform .25s, box-shadow .25s; cursor: zoom-in; }
 .ed-art-reel-print:nth-child(even) { transform: rotate(1deg) translateY(6px); }
 .ed-art-reel-print:nth-child(3n) { transform: rotate(-.4deg) translateY(-4px); }
-.ed-art-reel-print:focus-visible { transform: rotate(0) translateY(-6px) scale(1.03); box-shadow: var(--ed-float-shadow); z-index: 1; }
 @media (hover: hover) { .ed-art-reel-print:hover { transform: rotate(0) translateY(-6px) scale(1.03); box-shadow: var(--ed-float-shadow); z-index: 1; } }
 .ed-art-reel-print img { display: block; height: 210px; width: auto; max-width: 300px; object-fit: cover; object-position: center 25%; }
 .ed-art-reel-print > span { display: flex; justify-content: space-between; gap: 10px; padding: 7px 1px 1px; font: 8px/1 var(--font-geist-mono); color: var(--ed-muted); white-space: nowrap; }
