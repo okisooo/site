@@ -49,4 +49,8 @@ test("youtube uses the current handle without renaming twitch", () => {
   const directory = readFileSync(new URL("../app/links/page.tsx", import.meta.url), "utf8");
   assert.match(directory, /name: 'youtube', detail: '@okiso'/);
   assert.match(directory, /name: 'twitch', detail: '@okiso7', href: 'https:\/\/www\.twitch\.tv\/okiso7\//);
+  // The live check and the embed watch the same channel the links point to.
+  const home = readFileSync(new URL("../Components/Editorial/EditorialHome.tsx", import.meta.url), "utf8");
+  assert.match(home, /useTwitchLive\("okiso7"/);
+  assert.match(home, /player\.twitch\.tv\/\?channel=okiso7&/);
 });

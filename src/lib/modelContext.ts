@@ -15,3 +15,10 @@ export function createModelContext(canvas: HTMLCanvasElement): WebGL2RenderingCo
     return null;
   }
 }
+
+/** Ask for the same guarded context, then release it, so refusing devices never download three.js. */
+export function canCreateModelContext(canvas: HTMLCanvasElement = document.createElement("canvas")) {
+  const context = createModelContext(canvas);
+  context?.getExtension("WEBGL_lose_context")?.loseContext();
+  return context !== null;
+}

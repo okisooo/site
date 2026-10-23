@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, statSync } from "node:fs";
 import test from "node:test";
 import sharp from "sharp";
+import { characterModel } from "../data/characterModel";
 import { commissionArt } from "../data/commissionArt";
 import { galleryWorks } from "../data/gallery";
 
@@ -30,6 +31,12 @@ test("gallery groups credited works and ships every version within image budgets
       assert.equal(info.width, version.width, version.src);
       assert.equal(info.height, version.height, version.src);
       assert(statSync(`public${version.src}`).size < 500 * 1024, version.src);
+      if (version.mid) {
+        const mid = await sharp(`public${version.mid}`).metadata();
+        assert.equal(mid.width, 960, version.mid);
+        assert(Math.abs(mid.height! - version.height * 960 / version.width) <= 1, `${version.mid} keeps the aspect ratio`);
+        assert(statSync(`public${version.mid}`).size <= statSync(`public${version.src}`).size, version.mid);
+      }
       if (version.motion) {
         const animation = await sharp(`public${version.motion}`, { animated: true }).metadata();
         const expected = work.id === 'otori' ? { frames: 100, duration: 4000 } : { frames: 31, duration: 1400 };
@@ -51,8 +58,9 @@ function readModel(path: string) {
 
 test("web VRM preserves original geometry, rig, expressions and metadata", () => {
   const original = readModel("public/model.vrm");
-  const web = readModel("public/character/okiso-web.vrm");
+  const web = readModel(`public${characterModel.src}`);
   assert(web.bytes.length < original.bytes.length * .65, "at least 35% smaller");
+  assert.equal(web.bytes.length, characterModel.bytes, "the studio's progress total matches the shipped model");
   for (const field of ["extensions", "nodes", "skins", "meshes", "accessors", "materials", "textures", "images"]) {
     assert.deepEqual(web.json[field], original.json[field], field);
   }

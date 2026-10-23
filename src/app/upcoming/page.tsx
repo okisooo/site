@@ -1,9 +1,11 @@
+import { preconnect } from "react-dom";
 import { metadata } from "./metadata";
 import UpcomingClient from "./UpcomingClient";
 
 export { metadata };
 
 export default function Page() {
+  preconnect("https://i.scdn.co"); // the latest release cover is the largest image
   const siteUrl = "https://okiso.net";
 
   const breadcrumbLd = {

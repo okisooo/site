@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, Disc3, FolderOpen } from "lucide-react";
 import type { Release } from "@/data/releases";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
+import { coverArt, coverSrcSet } from "@/lib/coverArt";
+import { canCreateModelContext } from "@/lib/modelContext";
 import { PlayReleaseButton } from "@/Components/PlayReleaseButton";
 import { useFeaturedVideos } from "@/hooks/useFeaturedVideos";
 import { useTwitchLive } from "@/hooks/useTwitchLive";
@@ -13,7 +15,7 @@ import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
 import HeroCommissionWall from "./HeroCommissionWall";
-import { AmbientArtwork } from "./AmbientMotion";
+import { AmbientArtwork, prefersLightData } from "./AmbientMotion";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">preparing video…</p>,
@@ -22,6 +24,12 @@ const CharacterStudio = dynamic(() => import("./CharacterStudio"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">loading the interactive model…</p>,
 });
 const HeroModel = dynamic(() => import("./CharacterStudio"), { ssr: false });
+
+/** Save-Data, slow connections and low-memory devices keep the still instead of a 3 MB model. */
+function heroModelAllowed() {
+  const { deviceMemory } = navigator as Navigator & { deviceMemory?: number };
+  return !prefersLightData() && (deviceMemory ?? 8) >= 4;
+}
 
 function releaseDate(date: string) {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
@@ -33,13 +41,24 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
   const [heroMounted, setHeroMounted] = useState(false);
   const [heroLimited, setHeroLimited] = useState(false);
   useEffect(() => {
-    // Let the first paint and opening start before loading the hero's shared 3d module.
-    if ("requestIdleCallback" in window) {
-      const idle = window.requestIdleCallback(() => setHeroMounted(true), { timeout: 650 });
-      return () => window.cancelIdleCallback(idle);
-    }
-    const timeout = setTimeout(() => setHeroMounted(true), 100);
-    return () => clearTimeout(timeout);
+    // The hero's 3d module waits for the page to load, the opening to finish and an idle moment.
+    // Devices that would refuse the model's WebGL context never download it.
+    if (!heroModelAllowed()) return;
+    const site = document.querySelector(".core-site");
+    const mount = () => { if (canCreateModelContext()) setHeroMounted(true); };
+    let scheduled = false, cancel = () => {};
+    const schedule = () => {
+      if (scheduled || document.readyState !== "complete" || site?.hasAttribute("data-opening")) return;
+      scheduled = true;
+      observer.disconnect();
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(mount, { timeout: 2000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(mount, 200); cancel = () => clearTimeout(timeout); }
+    };
+    const observer = new MutationObserver(schedule);
+    if (site) observer.observe(site, { attributeFilter: ["data-opening"] });
+    window.addEventListener("load", schedule);
+    schedule();
+    return () => { observer.disconnect(); window.removeEventListener("load", schedule); cancel(); };
   }, []);
   const pick = picks[pickIndex];
   const latest = releases[0];
@@ -52,22 +71,23 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
       <HeroCommissionWall />
       <AmbientArtwork hero />
       <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
+      {/* The note sits above the latest release on phones, so it comes first in focus order. */}
+      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
       <article className="ed-latest-card">
         <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
         <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
         <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
       </article>
-      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
-      <Link href="/gallery" className="ed-commission-sticker" aria-label="Explore commissioned artwork, featuring ykhs9"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
+      <Link href="/gallery" className="ed-commission-sticker" aria-label="art by ykhs9, explore the commission gallery"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" fetchPriority="low" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
       <div className="ed-cover-rail">
       {pick && <div className="ed-listening-deck">
-        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" />
-        <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-label={`Pick ${pickIndex + 1} of ${picks.length}`}>{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span></div>
-        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={pick.img} alt={`${pick.title} cover`} width="100" height="100" /></Link>
+        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" fetchPriority="low" />
+        <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-hidden="true">{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span><span className="sr-only">pick {pickIndex + 1} of {picks.length}</span></div>
+        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={coverArt(pick.img, 300)} alt={`${pick.title} cover`} width="100" height="100" /></Link>
           <div className="ed-deck-info"><span className="ed-label">{pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
         </div>
         <div className="ed-deck-bottom"><button aria-label="Previous listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index - 1 + picks.length) % picks.length)}><ChevronLeft size={18} /></button>
-          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={release.img} alt="" width="48" height="48" /></button>)}</div>
+          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={coverArt(release.img, 64)} alt="" width="48" height="48" loading="lazy" decoding="async" /></button>)}</div>
           <button aria-label="Next listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index + 1) % picks.length)}><ChevronRight size={18} /></button></div>
       </div>}
       <Link href="/vault" className="ed-vault-teaser"><span className="ed-label">demos & versions</span><span className="ed-vault-teaser-title">vault<FolderOpen strokeWidth={1.25} /></span><span className="ed-vault-teaser-footer">open vault <span className="ed-folder-open"><ArrowUpRight size={17} /></span></span></Link>
@@ -77,7 +97,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
     <section id="archive" className="ed-section">
       <header className="ed-section-heading"><div><h2>latest releases</h2></div><Link href="/releases" className="ed-text-link">all {releaseCount} releases <ArrowUpRight size={18} /></Link></header>
       <div className="ed-release-grid ed-home-releases">{releases.map((release) => <article className="ed-release-card" key={release.id}>
-        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={release.img} alt={`${release.title} cover`} width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
+        <Link href={`/releases/${release.slug}`}><div className="ed-release-image"><img src={coverArt(release.img, 300)} srcSet={coverSrcSet(release.img)} sizes="(max-width: 700px) calc(50vw - 40px), (max-width: 1380px) 21vw, 290px" alt="" width="360" height="360" loading="lazy" /><ArrowUpRight className="ed-art-arrow" /></div>
           <div className="ed-release-meta"><span>{release.albumType}</span><time dateTime={release.releaseDate}>{releaseDate(release.releaseDate)}</time></div><h3>{release.title}</h3></Link>
       </article>)}</div>
     </section>
@@ -89,9 +109,15 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
 
 function WatchSection() {
   const watchRef = useRef<HTMLElement>(null);
+  // The feed, the twitch status and the discord presence are small reads: they wait for the page to load and
+  // an idle moment (or the section coming within two screens), so a jump to #watch lands on a complete section.
+  // The player and the twitch embed mount only within 400px of the section, or on request.
+  const [dataReady, setDataReady] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
-  const { videos, isLoading, error } = useFeaturedVideos();
-  const { isLive } = useTwitchLive("okiso");
+  const [playerNear, setPlayerNear] = useState(false);
+  const wantData = dataReady || nearViewport || playerNear;
+  const { videos, isLoading, error } = useFeaturedVideos(wantData);
+  const { isLive } = useTwitchLive("okiso7", wantData);
   const [showFeatured, setShowFeatured] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [twitchParent, setTwitchParent] = useState("localhost");
@@ -100,9 +126,19 @@ function WatchSection() {
     if (!section) return;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) { setNearViewport(true); observer.disconnect(); }
+    }, { rootMargin: "200% 0px" });
+    const player = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setPlayerNear(true); player.disconnect(); }
     }, { rootMargin: "400px" });
-    observer.observe(section);
-    return () => observer.disconnect();
+    player.observe(section);
+    let cancel = () => {};
+    const watch = () => {
+      observer.observe(section);
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(() => setDataReady(true), { timeout: 3000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(() => setDataReady(true), 1500); cancel = () => clearTimeout(timeout); }
+    };
+    if (document.readyState === "complete") watch(); else window.addEventListener("load", watch, { once: true });
+    return () => { observer.disconnect(); player.disconnect(); window.removeEventListener("load", watch); cancel(); };
   }, []);
   useEffect(() => { setTwitchParent(window.location.hostname); }, []);
   useEffect(() => { if (!isLive) setShowFeatured(false); }, [isLive]);
@@ -118,11 +154,11 @@ function WatchSection() {
   ];
   return <section ref={watchRef} id="watch" className="ed-section ed-watch-section">
     <header className="ed-section-heading"><div><h2>{showingLive ? "live now" : "videos"}</h2></div><a className="ed-text-link" href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer">on youtube <ArrowUpRight size={18} /></a></header>
-    <div className="ed-watch-grid"><div>
+    <div className="ed-watch-grid"><div data-pending={!wantData || isLoading || undefined}>
       {isLive && <div className="ed-toolbar"><button className="ed-button" aria-pressed={showingLive} onClick={() => setShowFeatured(false)}>live stream</button><button className="ed-button" aria-pressed={!showingLive} onClick={() => setShowFeatured(true)}>featured videos</button></div>}
-      <div className="ed-video-frame">{!nearViewport ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setNearViewport(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
+      <div className="ed-video-frame">{!playerNear ? <div className="ed-video-empty"><span className="ed-label">videos</span><button className="ed-button" onClick={() => setPlayerNear(true)}>load the video player</button></div> : showingLive ? <iframe title="OKISO live on Twitch" src={`https://player.twitch.tv/?channel=okiso7&parent=${twitchParent}`} allowFullScreen /> : video ? <CustomVideoPlayer key={video.id} src={video.src} hlsUrl={video.hlsUrl} streamUrl={video.streamUrl} sourceUrl={video.sourceUrl} poster={video.poster} title={video.title} className="w-full h-full" /> : <div className="ed-video-empty"><span className="ed-label">{isLoading ? "loading videos…" : error ? "the video feed couldn’t load" : "no website videos published yet"}</span><a href="https://www.youtube.com/@okiso" target="_blank" rel="noopener noreferrer" className="ed-button">watch on youtube <ArrowUpRight size={16} /></a></div>}</div>
       {!showingLive && video && <p className="ed-video-title">{video.title}</p>}
       {!showingLive && videos.length > 1 && <div className="ed-video-selector">{videos.slice(0, 6).map((item) => <button key={item.id} onClick={() => setActiveId(item.id)} aria-pressed={item.id === video?.id}>{item.poster && <img src={item.poster} alt="" width="100" height="56" loading="lazy" />}<span>{item.title}</span></button>)}</div>}
-    </div><aside><DiscordPresence /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
+    </div><aside><DiscordPresence live={wantData} /><div className="ed-channels"><div className="ed-panel-label"><span>links</span><ArrowUpRight size={16} /></div>{channels.map(([name, description, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{description}</small></span><ArrowUpRight size={20} /></a>)}</div></aside></div>
   </section>;
 }

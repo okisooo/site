@@ -34,7 +34,7 @@ export default function AboutPage() {
   };
   return <article className="ed-page ed-about">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
-    <header className="ed-page-heading"><div><h1>about me</h1></div></header>
+    <header className="ed-page-heading"><div><span className="ed-label">artist profile</span><h1>about me</h1></div></header>
     <div className="ed-about-body">
       <div className="ed-about-copy">
         <section aria-labelledby="about-music"><h2 id="about-music">hey, i’m okiso</h2>
@@ -51,8 +51,8 @@ export default function AboutPage() {
           <p><a href="https://discord.gg/okiso" target="_blank" rel="noopener noreferrer">join the discord</a></p>
         </section>
       </div>
-      <aside className="ed-about-channels" aria-labelledby="about-channels"><h2 id="about-channels">links</h2>
-        {channels.map(([name, detail, href]) => <a key={name} className="ed-contact-row" href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{detail}</small></span><ArrowUpRight size={18} /></a>)}
+      <aside className="ed-channels" aria-labelledby="about-channels"><h2 id="about-channels" className="ed-panel-label"><span>links</span><ArrowUpRight size={16} aria-hidden="true" /></h2>
+        {channels.map(([name, detail, href]) => <a key={name} href={href} target="_blank" rel="noopener noreferrer"><span><strong>{name}</strong><small>{detail}</small></span><ArrowUpRight size={20} aria-hidden="true" /></a>)}
       </aside>
     </div>
   </article>;

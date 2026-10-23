@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { FaDiscord } from "react-icons/fa";
-import { useLanyard } from "react-use-lanyard";
+import { useLanyard, type LanyardData } from "react-use-lanyard";
 import { AmbientMotionContext } from "./AmbientMotion";
 import { EditorialDialog } from "./EditorialDialog";
 
@@ -40,9 +40,36 @@ const MANUAL_BADGES: ProfileBadge[] = [
   { id: "gifting", label: "Gifting · Legend", src: `${PROFILE_BADGE_CDN}/gifting_legend.png` },
 ];
 
-export default function DiscordPresence() {
+// The global Vencord list is ~200 KB; this session keeps our own entries for the refresh interval.
+const BADGE_CACHE = "okiso:vencord-badges", BADGE_REFRESH_MS = 30 * 60 * 1000;
+
+function readVencordBadges(entries: unknown) {
+  const badges: ProfileBadge[] = [];
+  if (!Array.isArray(entries)) return badges;
+  for (const entry of entries) {
+    if (typeof entry?.badge !== "string" || typeof entry?.tooltip !== "string") continue;
+    let url: URL;
+    try { url = new URL(entry.badge, "https://badges.vencord.dev"); } catch { continue; }
+    if (url.origin !== "https://badges.vencord.dev" || !url.pathname.startsWith(`/badges/${DISCORD_USER_ID}/`)) continue;
+    if (badges.some((badge) => badge.src === url.href)) continue;
+    badges.push({ id: `vencord:${url.href}`, src: url.href, label: `Vencord · ${entry.tooltip}` });
+  }
+  return badges;
+}
+
+type PresenceFeed = { data?: LanyardData; badges: ProfileBadge[] };
+
+/** Until the watch section is wanted the card shows the static profile and requests nothing. One card stays
+ *  mounted either way, so a profile dialog opened before the presence goes live keeps its state and focus. */
+export default function DiscordPresence({ live = true }: { live?: boolean }) {
+  const [feed, setFeed] = useState<PresenceFeed>({ badges: [] });
+  return <>{live && <LiveFeed onData={setFeed} />}<PresenceCard live={live} data={feed.data} vencordBadges={feed.badges} /></>;
+}
+
+function LiveFeed({ onData }: { onData: (feed: PresenceFeed) => void }) {
   const { data: response } = useLanyard({ userId: DISCORD_USER_ID });
-  const [vencordBadges, setVencordBadges] = useState<ProfileBadge[]>([]);
+  const [badges, setBadges] = useState<ProfileBadge[]>([]);
+  useEffect(() => { onData({ data: response?.data, badges }); }, [response, badges, onData]);
   useEffect(() => {
     const controller = new AbortController();
     async function refreshBadges() {
@@ -52,32 +79,35 @@ export default function DiscordPresence() {
         const feed = await response.json();
         const entries: unknown = feed?.[DISCORD_USER_ID];
         if (!Array.isArray(entries)) return;
-        const badges: ProfileBadge[] = [];
-        for (const entry of entries) {
-          if (typeof entry?.badge !== "string" || typeof entry?.tooltip !== "string") continue;
-          const url = new URL(entry.badge, "https://badges.vencord.dev");
-          if (url.origin !== "https://badges.vencord.dev" || !url.pathname.startsWith(`/badges/${DISCORD_USER_ID}/`)) continue;
-          if (badges.some((badge) => badge.src === url.href)) continue;
-          badges.push({ id: `vencord:${url.href}`, src: url.href, label: `Vencord · ${entry.tooltip}` });
-        }
-        if (!controller.signal.aborted) setVencordBadges(badges);
+        try { sessionStorage.setItem(BADGE_CACHE, JSON.stringify({ at: Date.now(), entries })); } catch { /* storage is optional */ }
+        if (!controller.signal.aborted) setBadges(readVencordBadges(entries));
       } catch {
         // Keep the last successful set when the optional badge feed is unavailable.
       }
     }
-    void refreshBadges();
-    const interval = window.setInterval(() => { void refreshBadges(); }, 30 * 60 * 1000);
-    return () => { controller.abort(); window.clearInterval(interval); };
+    let cached: { at?: number; entries?: unknown } | null = null;
+    try { cached = JSON.parse(sessionStorage.getItem(BADGE_CACHE) ?? "null"); } catch { /* storage is optional */ }
+    const age = Date.now() - (cached?.at ?? 0), fresh = age >= 0 && age < BADGE_REFRESH_MS;
+    if (fresh) setBadges(readVencordBadges(cached?.entries));
+    let interval = 0;
+    const first = window.setTimeout(() => {
+      void refreshBadges();
+      interval = window.setInterval(() => { void refreshBadges(); }, BADGE_REFRESH_MS);
+    }, fresh ? BADGE_REFRESH_MS - age : 0);
+    return () => { controller.abort(); window.clearTimeout(first); window.clearInterval(interval); };
   }, []);
+  return null;
+}
+
+function PresenceCard({ live = false, data, vencordBadges = [] }: { live?: boolean; data?: LanyardData; vencordBadges?: ProfileBadge[] }) {
   const ambient = useContext(AmbientMotionContext);
   const [open, setOpen] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
-  const data = response?.data;
   const profile = data?.discord_user;
   const displayName = profile?.global_name || "OKISO";
   const handle = profile?.username || ".oxo";
   const avatarFormat = ambient && profile?.avatar?.startsWith("a_") ? "gif" : "png";
-  const avatar = profile?.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${avatarFormat}?size=256` : "/icon.png";
+  const avatar = profile?.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${avatarFormat}?size=128` : "/icon-192.png";
   const decoration = profile?.avatar_decoration_data?.asset;
   const publicBadges = BADGES.filter((badge) => ((profile?.public_flags || 0) & badge.flag) !== 0)
     .map((badge) => ({ id: badge.name, label: badge.label, src: `${BADGE_CDN}/${badge.name}.svg` }));
@@ -88,12 +118,13 @@ export default function DiscordPresence() {
   const status = data?.discord_status;
   const statusLabel = status === "online" ? "online" : status === "idle" ? "away" : status === "dnd" ? "do not disturb" : status === "offline" ? "offline" : "discord profile";
   const portrait = <span className="ed-discord-avatar">
-    <img className="ed-discord-avatar-image" src={avatar} alt={`${displayName}’s Discord avatar`} width="80" height="80" />
-    {ambient && decoration && <img className="ed-discord-decoration" src={`https://cdn.discordapp.com/avatar-decoration-presets/${decoration}.png`} alt="" width="96" height="96" />}
+    {/* Before the presence loads, a blank disc stands in, so the large fallback icon is never fetched just to be replaced. */}
+    {live ? <img className="ed-discord-avatar-image" src={avatar} alt={`${displayName}’s Discord avatar`} width="80" height="80" loading="lazy" decoding="async" /> : <span className="ed-discord-avatar-image" />}
+    {ambient && decoration && <img className="ed-discord-decoration" src={`https://cdn.discordapp.com/avatar-decoration-presets/${decoration}.png`} alt="" width="96" height="96" loading="lazy" decoding="async" />}
     {status && <span className="ed-discord-status" data-status={status} role="img" aria-label={statusLabel} title={statusLabel} />}
   </span>;
   const profileBadges = badges.length > 0 && <span className="ed-discord-badges">{badges.map((badge) =>
-    <img key={badge.id} src={badge.src} alt={badge.label} title={badge.label} width="20" height="20" />
+    <img key={badge.id} src={badge.src} alt={badge.label} title={badge.label} width="20" height="20" loading="lazy" decoding="async" />
   )}</span>;
   async function copyHandle() {
     try { await navigator.clipboard.writeText(handle); setCopyMessage("handle copied"); }

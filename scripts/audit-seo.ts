@@ -66,7 +66,8 @@ for (const route of routes) {
     const lyricTracks = release.tracks?.filter(track => track.lyrics?.trim()) ?? [];
     assert.equal((markup.match(/<details\b/g) ?? []).length, lyricTracks.length, `${route}: native lyrics controls`);
     for (const track of lyricTracks) {
-      assert(decode(markup).includes(track.lyrics!), `${route}: lyrics in initial HTML`);
+      // Each lyric line is its own element (wrapping vs line breaks), so compare the page text without tags.
+      assert(decode(markup.replace(/<[^>]*>/g, '')).includes(track.lyrics!), `${route}: lyrics in initial HTML`);
     }
   }
 }

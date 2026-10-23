@@ -8,7 +8,8 @@ const Waves = dynamic(() => import("@/Backgrounds/Waves/Waves"), { ssr: false })
 
 export function useAmbientPreference(pathname: string) {
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(true);
+  // Unknown until mounted: motion stays off, but the server never renders a "reduced" state for everyone.
+  const [reduced, setReduced] = useState<boolean | null>(null);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -22,7 +23,7 @@ export function useAmbientPreference(pathname: string) {
       document.removeEventListener("visibilitychange", updateVisibility);
     };
   }, []);
-  const enabled = !paused && !reduced && visible;
+  const enabled = !paused && reduced === false && visible;
   useEffect(() => {
     if (!enabled) return;
     const observer = new IntersectionObserver((entries) => {
@@ -32,7 +33,31 @@ export function useAmbientPreference(pathname: string) {
     elements.forEach((element) => observer.observe(element));
     return () => { observer.disconnect(); elements.forEach((element) => element.removeAttribute("data-idle-active")); };
   }, [enabled, pathname]);
-  return { enabled, paused, reduced, setPaused };
+  return { enabled, paused, reduced: reduced === true, setPaused };
+}
+
+/** Save-Data and 2g/3g connections skip optional media: the art-room tour, animated thumbnails, the hero model. */
+export function prefersLightData() {
+  const { connection } = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } };
+  return !!connection?.saveData || /(^|slow-)2g|3g/.test(connection?.effectiveType ?? "");
+}
+
+// Animated thumbnails swap in after the page has loaded and gone idle, never during first paint.
+let motionAssetsReady = false;
+export function useMotionAssetsReady() {
+  const [ready, setReady] = useState(motionAssetsReady);
+  useEffect(() => {
+    if (ready || prefersLightData()) return;
+    let cancel = () => {};
+    const schedule = () => {
+      const done = () => { motionAssetsReady = true; setReady(true); };
+      if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(done, { timeout: 3000 }); cancel = () => window.cancelIdleCallback(idle); }
+      else { const timeout = setTimeout(done, 200); cancel = () => clearTimeout(timeout); }
+    };
+    if (document.readyState === "complete") schedule(); else window.addEventListener("load", schedule, { once: true });
+    return () => { window.removeEventListener("load", schedule); cancel(); };
+  }, [ready]);
+  return ready;
 }
 
 export function useAmbientVisibility() {

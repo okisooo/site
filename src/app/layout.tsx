@@ -84,8 +84,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.okiso.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.okiso.net" />
 
-        <link rel="icon" type="image/png" sizes="48x48 96x96 192x192 512x512" href="/icon.png?v=20260626" />
-        <link rel="apple-touch-icon" href="/icon.png?v=20260626" />
+        {/* Small resizes of the 512px icon, which stays for the manifest and external links. */}
+        <link rel="icon" type="image/png" sizes="96x96" href="/icon-96.png?v=20260626" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png?v=20260626" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png?v=20260626" />
       </head>
       <body suppressHydrationWarning className={`${editorial.variable} ${nunito.variable} ${quicksand.variable} antialiased overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300`}>
         <ThemeProvider
@@ -94,7 +96,7 @@ export default function RootLayout({
           enableSystem={false}
           storageKey="okiso-theme"
         >
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:text-black focus:p-4">Skip to content</a>
+          <a href="#main-content" className="ed-skip-link sr-only">skip to content</a>
           <MusicPlayerProvider playlist={getLocalPlaylist()}>
           <SmoothScrollProvider>
             <SiteFrame>{children}</SiteFrame>

@@ -1,5 +1,10 @@
 import { staticReleases, type Release } from "@/data/releases";
 
+/** One release date format across the core pages, e.g. "19 Sep 2026". */
+export function formatReleaseDate(date: string) {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
+}
+
 /** Only the card and first-track playback fields cross into client components. */
 export function releaseCard(release: Release): Release {
   return {

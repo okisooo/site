@@ -1,9 +1,10 @@
 ﻿import { useState, useEffect } from 'react';
 
-export function useTwitchLive(channel: string) {
+export function useTwitchLive(channel: string, enabled = true) {
   const [isLive, setIsLive] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
     // decapi is a free open API that bypasses Twitch OAuth requirements for simple status queries
     fetch(`https://decapi.me/twitch/uptime/${channel}`)
       .then(res => res.text())
@@ -13,7 +14,7 @@ export function useTwitchLive(channel: string) {
         setIsLive(!isOffline);
       })
       .catch(() => setIsLive(false));
-  }, [channel]);
+  }, [channel, enabled]);
 
   return { isLive };
 }

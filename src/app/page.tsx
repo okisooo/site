@@ -1,3 +1,4 @@
+import { preconnect } from "react-dom";
 import EditorialHome from "@/Components/Editorial/EditorialHome";
 import { artistStructuredData, jsonLd } from "@/lib/seo";
 import { getEditorialHomeData } from "@/lib/releasePresentation";
@@ -7,5 +8,6 @@ const structuredData = {
   "@graph": [artistStructuredData, { "@type": "WebSite", "@id": "https://okiso.net/#website", url: "https://okiso.net", name: "OKISO" }],
 };
 export default function Home() {
+  preconnect("https://i.scdn.co"); // release covers in the first screen
   return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} /><EditorialHome {...getEditorialHomeData()} /></>;
 }

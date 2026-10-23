@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import React, { useState, type CSSProperties } from "react";
 import {
   Play,
   Pause,
@@ -20,19 +19,21 @@ import { LEVEL_LABEL } from "@/data/vault";
 import type { Session } from "@/lib/vault";
 import { canAccess } from "@/lib/vault";
 
+/** The release-date format used across the core pages, e.g. "02 Mar 2026", whatever the visitor's locale. */
 function fmt(date: string) {
-  return new Date(date).toLocaleDateString(undefined, {
-    year: "numeric",
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
     month: "short",
-    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
   });
 }
 
 const KIND_META: Record<VerKind, { label: string; cls: string }> = {
-  demo: { label: "DEMO", cls: "border border-[var(--tac-steel)]/40 text-[var(--tac-steel)]" },
-  wip: { label: "WIP", cls: "border border-[var(--tac-ink)]/40 dark:border-[var(--tac-bone)]/40 text-[var(--tac-ink)] dark:text-[var(--tac-bone)]" },
-  master: { label: "MASTER", cls: "border border-[var(--tac-signal)] text-[var(--tac-signal)]" },
-  preview: { label: "PREVIEW", cls: "border border-[var(--tac-signal)]/60 text-[var(--tac-signal)]" },
+  demo: { label: "demo", cls: "border border-[var(--tac-steel)]/40 text-[var(--tac-steel)]" },
+  wip: { label: "wip", cls: "border border-[var(--tac-ink)]/40 dark:border-[var(--tac-bone)]/40 text-[var(--tac-ink)] dark:text-[var(--tac-bone)]" },
+  master: { label: "master", cls: "border border-[var(--tac-signal)] text-[var(--tac-signal)]" },
+  preview: { label: "preview", cls: "border border-[var(--tac-signal)]/60 text-[var(--tac-signal)]" },
 };
 
 const LEVEL_ICON: Record<Level, React.ReactNode> = {
@@ -46,7 +47,7 @@ function LevelChip({ level, locked }: { level: Level; locked: boolean }) {
   return (
     <span
       title={locked ? `${LEVEL_LABEL[level]} access needed` : LEVEL_LABEL[level]}
-      className={`inline-flex items-center gap-1 px-2 py-0.5 tac-mono text-[10px] uppercase tracking-wider border ${
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[2px] tac-mono text-[10px] lowercase border ${
         locked
           ? "border-[var(--tac-steel)]/30 text-[var(--tac-steel)]"
           : "border-[var(--tac-signal)]/50 text-[var(--tac-signal)]"
@@ -65,7 +66,7 @@ function PlaybackProgress({ label, progress, locked, onSeek }: {
   onSeek?: (fraction: number) => void;
 }) {
   return <input className="ed-vault-seek" type="range" aria-label={`Seek ${label}`}
-    min="0" max="1" step="0.001" value={progress} disabled={locked || !onSeek}
+    min="0" max="1" step="0.01" value={progress} aria-valuetext={`${Math.round(progress * 100)}% played`} disabled={locked || !onSeek}
     onChange={(event) => onSeek?.(Number(event.target.value))} />;
 }
 
@@ -104,6 +105,7 @@ function VersionRow({
       {/* Play / teaser / lock */}
       <button
         onClick={onToggle}
+        aria-label={`${isPlaying ? (locked ? "pause teaser of" : "pause") : !locked ? "play" : teasable ? "play 30s teaser of" : "locked, sign in to play"} ${project.title}, ${v.label}`}
         title={
           !locked
             ? (isPlaying ? "Pause" : "Play")
@@ -135,7 +137,7 @@ function VersionRow({
       {/* Label + meta */}
       <div className="min-w-0 flex-1 sm:flex-none sm:w-40 md:w-52 sm:shrink-0">
         <div className="flex items-center gap-2">
-          <h4 className="tac-display font-black text-sm text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase truncate">{v.label}</h4>
+          <h3 className="font-semibold text-sm text-[var(--tac-ink)] truncate">{v.label}</h3>
           {v.kind === "preview" && (
             <span title={v.range ? `cut ${fmtRange(v.range)} from ${cutSource(project, v)}` : "preview cut"}>
               <Scissors size={12} className="text-[var(--tac-signal)] shrink-0" />
@@ -143,12 +145,12 @@ function VersionRow({
           )}
         </div>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
-          <span className={`px-1.5 py-0.5 tac-mono text-[10px] uppercase ${kind.cls}`}>
+          <span className={`px-1.5 py-0.5 rounded-[2px] tac-mono text-[10px] ${kind.cls}`}>
             {kind.label}
           </span>
           <span className="tac-mono text-[10px] text-[var(--tac-steel)]">{fmt(v.date)}</span>
           {isPlaying && isSnippetPlay && (
-            <span className="tac-mono text-[10px] text-[var(--tac-signal)] uppercase tracking-wider">TEASER · 30S</span>
+            <span className="tac-mono text-[10px] text-[var(--tac-signal)]">teaser · 30s</span>
           )}
         </div>
       </div>
@@ -162,7 +164,7 @@ function VersionRow({
           onSeek={isPlaying ? onSeek : undefined}
         />
         {v.note && (
-          <p className="tac-mono text-[11px] text-[var(--tac-steel)] mt-1 truncate uppercase">{v.note}</p>
+          <p className="tac-mono text-[11px] text-[var(--tac-steel)] mt-1 truncate">{v.note}</p>
         )}
       </div>
 
@@ -213,7 +215,6 @@ export function VaultStack({
   onShare: (v: Version) => void;
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  const reduce = useReducedMotion();
   const count = project.versions.length;
   const openCount = project.versions.filter((v) => !v.locked).length;
 
@@ -221,68 +222,54 @@ export function VaultStack({
 
   return (
     <div className="relative ed-vault-stack">
-      <button
+      <h2><button
         onClick={() => setOpen((o) => !o)}
         className="relative w-full text-left"
         aria-expanded={open}
       >
         {!open &&
           Array.from({ length: Math.min(count - 1, 3) }).map((_, i) => (
-            <div
+            <span
               key={i}
               aria-hidden
               className="absolute inset-0 border border-[var(--tac-ink)]/15 dark:border-[var(--tac-bone)]/15 bg-black/5 dark:bg-white/5"
               style={{
-                transform: reduce
-                  ? undefined
-                  : `translateY(${(i + 1) * 6}px) scale(${1 - (i + 1) * 0.02})`,
+                transform: `translateY(${(i + 1) * 6}px) scale(${1 - (i + 1) * 0.02})`,
                 zIndex: -i - 1,
               }}
             />
           ))}
 
-        <div className="tac-plate relative flex items-center gap-4 p-4 md:p-5 hover:border-[var(--tac-signal)] transition-colors">
-          <div className="w-12 h-12 overflow-hidden shrink-0 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black flex items-center justify-center">
+        <span className="tac-plate relative flex items-center gap-4 p-4 md:p-5 [@media(hover:hover)]:hover:border-[var(--tac-signal)] transition-colors">
+          <span className="w-12 h-12 overflow-hidden shrink-0 border border-[var(--tac-ink)]/22 dark:border-[var(--tac-bone)]/18 bg-black flex items-center justify-center">
             {project.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={project.cover} alt={project.title} className="w-full h-full object-cover" />
+              <img src={project.cover} alt="" className="w-full h-full object-cover" />
             ) : (
               <Disc3 className="text-[var(--tac-steel)]" />
             )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="tac-display font-black text-xl md:text-2xl text-[var(--tac-ink)] dark:text-[var(--tac-bone)] uppercase truncate leading-tight">
+          </span>
+          <span className="flex-1 min-w-0">
+            <span className="ed-vault-project-title block font-semibold text-xl md:text-2xl text-[var(--tac-ink)] truncate leading-tight">
               {project.title}
-            </h3>
-            <p className="tac-mono text-[10px] text-[var(--tac-steel)] uppercase tracking-[0.2em] mt-1">
-              {count} VERSION{count > 1 ? "S" : ""} · {openCount} OPEN{openCount < count ? ` · ${count - openCount} LOCKED` : ""}
-            </p>
-          </div>
+            </span>
+            <span className="block tac-mono text-[10px] text-[var(--tac-steel)] mt-1">
+              <span className="whitespace-nowrap">{count} version{count > 1 ? "s" : ""}</span> <span className="whitespace-nowrap">· {openCount} open</span>{openCount < count && <> <span className="whitespace-nowrap max-[389px]:block"><span className="max-[389px]:hidden">· </span>{count - openCount} locked</span></>}
+            </span>
+          </span>
           <ChevronDown
             size={20}
             className={`text-[var(--tac-steel)] shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
           />
-        </div>
-      </button>
+        </span>
+      </button></h2>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
+      {open && (
+        <div className="ed-vault-disclosure">
+          <div>
             <div className="relative pl-4 mt-3 space-y-2 before:absolute before:left-1 before:top-2 before:bottom-2 before:w-px before:bg-[var(--tac-signal)]">
               {project.versions.map((v, i) => (
-                <motion.div
-                  key={v.id}
-                  initial={reduce ? false : { opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: reduce ? 0 : i * 0.05 }}
-                  className="relative"
-                >
+                <div key={v.id} className="ed-vault-row relative" style={{ "--i": i } as CSSProperties}>
                   <span className="absolute -left-3.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[var(--tac-signal)]" />
                   <VersionRow
                     v={v}
@@ -295,12 +282,12 @@ export function VaultStack({
                     onSeek={(fraction) => onSeek(v, fraction)}
                     onShare={() => onShare(v)}
                   />
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

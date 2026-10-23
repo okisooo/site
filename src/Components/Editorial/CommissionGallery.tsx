@@ -1,17 +1,19 @@
 "use client";
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play, Search, X } from "lucide-react";
 import { galleryWorks, type GalleryVariant, type GalleryWork } from "@/data/gallery";
 import { EditorialDialog } from "./EditorialDialog";
-import { AmbientMotionContext, useAmbientVisibility } from "./AmbientMotion";
+import { AmbientMotionContext, useAmbientVisibility, useMotionAssetsReady } from "./AmbientMotion";
 
 const PAGE_SIZE = 12;
 // Caption height relative to column width, so the column balance accounts for it.
 const CAPTION_RATIO = .2;
 
+// Null until measured: the static HTML then carries one packing per breakpoint and CSS shows the
+// matching one, so hydration never re-packs what is already on screen.
 function useColumnCount() {
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
     const phone = window.matchMedia("(max-width: 700px)"), wide = window.matchMedia("(min-width: 1180px)");
     const sync = () => setCount(phone.matches ? 2 : wide.matches ? 4 : 3);
@@ -35,12 +37,25 @@ function packColumns(works: GalleryWork[], count: number) {
 
 function GalleryThumbnail({ work, eager }: { work: GalleryWork; eager: boolean }) {
   const { ref, active } = useAmbientVisibility();
+  // The still thumb paints first; the animation swaps in after load and idle.
+  const motionReady = useMotionAssetsReady();
   const animation = work.variants.find((variant) => variant.motion)?.motion;
   return <div ref={ref} className={`ed-gallery-mount ${animation ? "ed-gallery-mount-animation" : ""}`}>
-    <img src={active && animation ? animation : work.small} alt={work.description} width={work.width} height={work.height} loading={eager ? "eager" : "lazy"} decoding="async" />
+    <img src={active && motionReady && animation ? animation : work.small} alt={work.description} width={work.width} height={work.height} loading={eager ? "eager" : "lazy"} decoding="async" />
     <span className="ed-gallery-expand"><ArrowUpRight size={20} /></span>
     {animation && <span className="ed-gallery-badge"><Play size={11} /> animated</span>}
   </div>;
+}
+
+function GalleryCard({ work, eager, onOpen }: { work: GalleryWork; eager: boolean; onOpen: () => void }) {
+  // "name · @handle" credits keep the handle on the mono line, so it never orphans the middot.
+  const [name, handle] = work.artist.split(" · ");
+  return <article className="ed-gallery-card">
+    <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={onOpen}>
+      <GalleryThumbnail work={work} eager={eager} />
+      <div className="ed-gallery-card-caption"><span className="ed-gallery-card-title">{name}</span><span className="ed-gallery-version-count">{handle && <>{handle} · </>}{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
+    </button>
+  </article>;
 }
 
 function Artwork({ work, variant, animate = false }: { work: GalleryWork; variant: GalleryVariant; animate?: boolean }) {
@@ -80,7 +95,8 @@ function ArtworkViewer({ work, onClose, previous, next, position, total }: {
         {work.workUrl && <a className="ed-text-link" href={work.workUrl} target="_blank" rel="noopener noreferrer">original on skeb <ArrowUpRight size={16} /></a>}
         {work.variants.length > 1 && <div className="ed-gallery-variants" role="group" aria-label="Artwork versions">
           <span className="ed-label">versions</span>
-          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(true); }}>
+          {work.variants.map((item, index) => <button key={item.src} aria-pressed={index === variantIndex} onClick={() => { setVariantIndex(index); setPlaying(true); }}
+            onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }); }}>
             <img src={item.small || item.src} alt="" width="48" height="48" loading="lazy" /><span>{item.label}</span>
           </button>)}
         </div>}
@@ -100,6 +116,7 @@ export default function CommissionGallery() {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const columnCount = useColumnCount();
+  const search = useRef<HTMLInputElement>(null);
   const artists = useMemo(() => [...new Set(galleryWorks.map((work) => work.artist))], []);
   const filtered = galleryWorks.filter((work) => (artist === "all" || work.artist === artist)
     && `${work.title} ${work.artist} ${work.description}`.toLowerCase().includes(query.trim().toLowerCase()));
@@ -113,20 +130,15 @@ export default function CommissionGallery() {
       <div className="ed-gallery-count"><strong>{String(galleryWorks.length).padStart(2, "0")}</strong><span className="ed-label">commissions</span></div>
     </header>
     <div className="ed-gallery-tools">
-      <label className="ed-gallery-search"><Search size={17} /><input type="search" aria-label="Search commissioned artwork" placeholder="find an artist or artwork" value={query} onChange={(event) => { setQuery(event.target.value); setLimit(PAGE_SIZE); }} />
-        {query && <button aria-label="Clear artwork search" onClick={() => setQuery("")}><X size={16} /></button>}</label>
+      <label className="ed-gallery-search"><Search size={17} /><input ref={search} type="search" aria-label="Search commissioned artwork" placeholder="find an artist or artwork" value={query} onChange={(event) => { setQuery(event.target.value); setLimit(PAGE_SIZE); }} />
+        {query && <button type="button" aria-label="Clear artwork search" onClick={() => { setQuery(""); search.current?.focus(); }}><X size={16} /></button>}</label>
       <label className="ed-gallery-filter"><span className="ed-label">artist</span><select aria-label="Filter by artist" value={artist} onChange={(event) => { setArtist(event.target.value); setLimit(PAGE_SIZE); }}>
         <option value="all">all artists</option>{artists.map((name) => <option key={name}>{name}</option>)}</select></label>
       <span className="ed-label" role="status">{filtered.length} {filtered.length === 1 ? "work" : "works"}</span>
     </div>
-    {filtered.length ? <div className="ed-gallery-grid">{packColumns(filtered.slice(0, limit), columnCount).map((column, columnIndex) => <div key={columnIndex} className="ed-gallery-column">
-      {column.works.map(({ work, index }) => <article key={work.id} className="ed-gallery-card">
-        <button className="ed-gallery-open" aria-label={`View ${work.title} by ${work.artist}`} onClick={() => setSelectedId(work.id)}>
-          <GalleryThumbnail work={work} eager={index < 4} />
-          <div className="ed-gallery-card-caption"><h2>{work.artist}</h2><span className="ed-gallery-version-count">{work.variants.length} {work.variants.length === 1 ? 'version' : 'versions'}</span></div>
-        </button>
-      </article>)}
-    </div>)}</div> : <div className="ed-gallery-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
+    {filtered.length ? (columnCount ? [columnCount] : [2, 3, 4]).map((count) => <div key={count} className="ed-gallery-grid" data-columns={columnCount ? undefined : count}>{packColumns(filtered.slice(0, limit), count).map((column, columnIndex) => <div key={columnIndex} className="ed-gallery-column">
+      {column.works.map(({ work, index }) => <GalleryCard key={work.id} work={work} eager={index < 4} onOpen={() => setSelectedId(work.id)} />)}
+    </div>)}</div>) : <div className="ed-empty"><h2>no matches</h2><button className="ed-button" onClick={() => { setArtist("all"); setQuery(""); }}>clear filters</button></div>}
     {limit < filtered.length && <div className="ed-gallery-more"><button className="ed-button" onClick={() => setLimit(limit + PAGE_SIZE)}>show more <ArrowUpRight size={16} /></button></div>}
     {selected && <ArtworkViewer work={selected} onClose={() => setSelectedId(null)} previous={() => navigate(-1)} next={() => navigate(1)} position={selectedIndex} total={filtered.length} />}
   </div>;

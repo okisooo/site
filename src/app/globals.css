@@ -294,98 +294,7 @@ body.soft-orbit-active [data-okiso-chrome="background"] {
   letter-spacing: 0.05em;
 }
 
-/* Hard Glitch Overlays and Brutalist Cuts */
-.glitch-layer {
-  position: relative;
-}
-
-.glitch-layer::before,
-.glitch-layer::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-}
-
-.glitch-layer::before {
-  color: var(--ba-red);
-  z-index: -1;
-  animation: glitch-anim-1 2s infinite linear alternate-reverse;
-}
-
-.glitch-layer::after {
-  color: var(--ba-mint);
-  z-index: -2;
-  animation: glitch-anim-2 3s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim-1 {
-  0% {
-    clip-path: inset(20% 0 80% 0);
-    transform: translate(-2px, 1px);
-  }
-
-  20% {
-    clip-path: inset(60% 0 10% 0);
-    transform: translate(2px, -1px);
-  }
-
-  40% {
-    clip-path: inset(40% 0 50% 0);
-    transform: translate(-2px, 2px);
-  }
-
-  60% {
-    clip-path: inset(80% 0 5% 0);
-    transform: translate(2px, -2px);
-  }
-
-  80% {
-    clip-path: inset(10% 0 70% 0);
-    transform: translate(-2px, 1px);
-  }
-
-  100% {
-    clip-path: inset(30% 0 50% 0);
-    transform: translate(2px, -1px);
-  }
-}
-
-@keyframes glitch-anim-2 {
-  0% {
-    clip-path: inset(10% 0 60% 0);
-    transform: translate(2px, -1px);
-  }
-
-  20% {
-    clip-path: inset(30% 0 20% 0);
-    transform: translate(-2px, 2px);
-  }
-
-  40% {
-    clip-path: inset(70% 0 10% 0);
-    transform: translate(2px, -2px);
-  }
-
-  60% {
-    clip-path: inset(20% 0 50% 0);
-    transform: translate(-2px, 1px);
-  }
-
-  80% {
-    clip-path: inset(50% 0 30% 0);
-    transform: translate(2px, -1px);
-  }
-
-  100% {
-    clip-path: inset(5% 0 80% 0);
-    transform: translate(-2px, 2px);
-  }
-}
-
+/* Brutalist cuts */
 .brutalist-border {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
 }
@@ -451,3 +360,14 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 
+/* The skip link and route announcer sit outside .core-site; on core pages they use
+   its face too, so Quicksand is never fetched there. Standalone worlds keep theirs. */
+body:has(.core-site) { --font-ui: var(--font-editorial); --font-display: var(--font-editorial); }
+
+/* Skip link: a deep-red editorial control that takes the logo's slot in the nav while
+   focused, so it never half-covers the wordmark or a link. It outranks .sr-only, so
+   focus reveals it without depending on Tailwind's variant order. */
+.ed-skip-link:focus { position: fixed; top: 31px; left: calc(max(20px, (100vw - 1320px) / 2) + 25px); z-index: var(--z-modal); display: inline-flex; align-items: center; width: auto; height: auto; min-height: 44px; margin: 0; overflow: visible; clip: auto; padding: 10px 14px; border: 1px solid #78788070; border-radius: 6px; background: rgb(var(--c-red-deep)); color: #fff; font: 600 12px/1.4 var(--font-editorial), Arial, sans-serif; letter-spacing: .01em; white-space: nowrap; box-shadow: inset 0 1px 0 #ffffffa0, 0 2px 3px #28282c20, 0 12px 24px -10px #28282c60; outline: 3px solid rgb(var(--c-red)); outline-offset: 4px; }
+body:has(.ed-skip-link:focus) .ed-logo { opacity: 0; }
+@media (max-width: 1050px) { .ed-skip-link:focus { top: 23px; left: 35px; } }
+@media (max-width: 700px) { .ed-skip-link:focus { top: 13px; left: 23px; } }

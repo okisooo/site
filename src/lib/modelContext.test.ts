@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createModelContext } from "./modelContext";
+import { canCreateModelContext, createModelContext } from "./modelContext";
 
 test("model contexts reject software fallback without retrying and preserve accepted contexts", () => {
   const accepted = {} as WebGL2RenderingContext;
@@ -23,5 +23,19 @@ test("model contexts reject software fallback without retrying and preserve acce
     assert.equal(requestedAttributes?.alpha, true);
     assert.equal(requestedAttributes?.antialias, true);
     assert.equal(calls, 1, "must not retry with an unrestricted software context");
+  }
+});
+
+test("the hero probe uses the same guard and releases the context it was given", () => {
+  for (const accepted of [true, false]) {
+    let lost = 0;
+    let requestedAttributes: WebGLContextAttributes | undefined;
+    const context = { getExtension: (name: string) => name === "WEBGL_lose_context" ? { loseContext: () => { lost++; } } : null };
+    const canvas = {
+      getContext(_type: string, attributes: WebGLContextAttributes) { requestedAttributes = attributes; return accepted ? context : null; },
+    } as unknown as HTMLCanvasElement;
+    assert.equal(canCreateModelContext(canvas), accepted);
+    assert.equal(requestedAttributes?.failIfMajorPerformanceCaveat, true);
+    assert.equal(lost, accepted ? 1 : 0);
   }
 });
