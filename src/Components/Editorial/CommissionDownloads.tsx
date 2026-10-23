@@ -35,7 +35,7 @@ export default function CommissionDownloads({ apiBase = DEFAULT_API }: { apiBase
   const groups = groupDownloads(assets);
   const artists = [...new Set(assets.map(asset => asset.artist))].sort((a, b) => a.localeCompare(b));
   return <div className="ed-page commission-downloads">
-    <header className="ed-page-heading ed-gallery-heading"><div><h1>commission previews</h1><p>commissioned artwork, organized by artist.</p><Link className="ed-text-link" href="/gallery">back to the gallery <ArrowUpRight size={14} aria-hidden="true" /></Link></div>
+    <header className="ed-page-heading ed-gallery-heading"><div><h1>art previews</h1><p>commissioned artwork, organized by artist.</p><Link className="ed-text-link" href="/gallery">back to the gallery <ArrowUpRight size={14} aria-hidden="true" /></Link></div>
       {/* The count keeps its place while the list loads, so nothing below it moves; a failed load drops it. */}
       {status !== "error" && <div className="ed-gallery-count" style={{ visibility: groups.length ? "visible" : "hidden" }} aria-hidden={!groups.length}><strong>{groups.length || "00"}</strong><span className="ed-label">artworks</span></div>}</header>
     <p className="cd-rights">you can view the artwork here. original files and PSDs stay private.</p>

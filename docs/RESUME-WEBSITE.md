@@ -59,11 +59,12 @@ approval, and visual approval is pending.
   sitemap and robots match the pre-polish export except the 404 title. headless chrome
   at 360/390/820/1024/1440: no horizontal overflow or page errors; jumping to #watch
   measures ~0 layout shift at 360, 390, 1024 and 1440, as does a fast phone scroll.
-- for the owner: the 3d hero on capable phones, art-room tour length, a backend
-  thumbnail for /downloads previews, the 'commission previews' h1 wording, release-card
-  arrow chips on touch screens, and whether /upcoming keeps "no release dates are
-  announced right now." under the "nothing announced yet" heading. the deployment
-  workflow must still confirm build, export and seo before release.
+- owner decisions 2026-10-23: the 3d hero stays on capable phones; the real twitch
+  channel is okiso7 (live check and embed now match the links); /downloads is titled
+  "art previews" like the nav; /upcoming drops its repeated "no release dates" line;
+  backend thumbnails for /downloads previews were approved (api + site branches).
+  still open: art-room tour length and release-card arrow chips on touch screens.
+  the deployment workflow must still confirm build, export and seo before release.
 - stale notes, not yet updated: `docs/ART-AND-CHARACTER-REVIEW.md` (hero model timing)
   and the "local review" numbers in `docs/EDITORIAL-DIRECTION.md`.
 

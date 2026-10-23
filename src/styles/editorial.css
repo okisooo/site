@@ -291,6 +291,8 @@ span.ed-discord-avatar-image { background: var(--ed-silver); }
 .ed-upcoming { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); border: 1px solid var(--ed-edge); border-radius: 12px; overflow: hidden; box-shadow: var(--ed-shadow); }
 .ed-upcoming .ed-empty { border: 0; border-radius: 0; box-shadow: inset 0 1px 0 var(--ed-highlight); background: var(--ed-surface); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
 .ed-upcoming .ed-vault-teaser { width: min(360px, 100%); }
+/* The folder tab rises 11px above the teaser, so it needs more room under the heading than a button. */
+.ed-upcoming .ed-empty .ed-vault-teaser { margin-top: 36px; }
 .ed-upcoming-art { overflow: hidden; background: var(--ed-shell); color: var(--ed-paper); padding: 24px 32px 28px; }
 .ed-upcoming-art .ed-panel-label { color: var(--ed-paper); margin-bottom: 18px; padding-inline: 0; }
 .ed-upcoming-art .ed-release-image { display: block; }
