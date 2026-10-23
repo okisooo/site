@@ -2,14 +2,30 @@
 
 # task
 
-## editorial polish pass — local candidate / 2026-10-23
+## /downloads thumbnails — deployed 2026-10-23
+
+owner approved merging and deploying ("merge and do whatever"). website #8
+(`79d4e59`, the polish pass below) and #9 (`12c653a`, versioned thumbnail urls)
+deployed through the pages workflow. api #11 (`00f84eb`) adds sharp-rendered webp
+thumbnails at `/api/commission-downloads/assets/<id>/thumbnail?w=480|960` with the
+same access rules as `/preview`. okiso-stack #22 (`a0f1b8e`) bumped the okiso-api
+pin and let caddy's public commission matcher reach `thumbnail` (get/head only).
+the stack deploy passed every step through the smoke test; only the pre-existing
+"check live cobalt downloads" step stayed red. live checks: the listing sends
+`thumbnailWidths` and 89 `thumbnailVersion`s; anonymous thumbnails return 200
+webp with `private, max-age=86400`; originals stay 404 and `/manage` still goes
+to authelia. in chrome, /downloads loads all 82 cards from thumbnails: 2.7 mb of
+images instead of ~33 mb, cls 0, no errors at 390 and 1440. the gitguardian pr
+check on okisooo/api stays red for main's fake test passwords until the owner
+adds a dashboard path exclusion; the repo `.gitguardian.yaml` covers ggshield only.
+
+## editorial polish pass — deployed 2026-10-23 as #8
 
 the user asked for a more polished, faster site on phone and desktop. branch
-`claude/festive-cerf-pvi6u0` adds 28 polish commits on `2dd00a4` (including the
+`claude/festive-cerf-pvi6u0` added 28 polish commits on `2dd00a4` (including the
 merged runtime-performance lane, `d933e4c` / `5bac57d`) and 14 `fix(review): …`
 commits from an independent review. this polishes the approved white/red editorial
-system; it is not a new theme. not merged or deployed: deployment needs the owner's
-approval, and visual approval is pending.
+system; it is not a new theme. the owner approved the merge, and it is live.
 
 - shell: the nav fits 701-920px (roomier from 801px); the inner-page nav floats as a
   rounded panel; the phone menu closes on escape, an outside tap or leaving the phone
@@ -62,7 +78,7 @@ approval, and visual approval is pending.
 - owner decisions 2026-10-23: the 3d hero stays on capable phones; the real twitch
   channel is okiso7 (live check and embed now match the links); /downloads is titled
   "art previews" like the nav; /upcoming drops its repeated "no release dates" line;
-  backend thumbnails for /downloads previews were approved (api + site branches).
+  backend thumbnails for /downloads previews were approved and are live.
   still open: art-room tour length and release-card arrow chips on touch screens.
   the deployment workflow must still confirm build, export and seo before release.
 - stale notes, not yet updated: `docs/ART-AND-CHARACTER-REVIEW.md` (hero model timing)
