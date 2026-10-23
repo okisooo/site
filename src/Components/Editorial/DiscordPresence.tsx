@@ -57,14 +57,19 @@ function readVencordBadges(entries: unknown) {
   return badges;
 }
 
-/** Until the watch section nears the viewport the card shows the static profile and requests nothing. */
+type PresenceFeed = { data?: LanyardData; badges: ProfileBadge[] };
+
+/** Until the watch section is wanted the card shows the static profile and requests nothing. One card stays
+ *  mounted either way, so a profile dialog opened before the presence goes live keeps its state and focus. */
 export default function DiscordPresence({ live = true }: { live?: boolean }) {
-  return live ? <LivePresence /> : <PresenceCard />;
+  const [feed, setFeed] = useState<PresenceFeed>({ badges: [] });
+  return <>{live && <LiveFeed onData={setFeed} />}<PresenceCard live={live} data={feed.data} vencordBadges={feed.badges} /></>;
 }
 
-function LivePresence() {
+function LiveFeed({ onData }: { onData: (feed: PresenceFeed) => void }) {
   const { data: response } = useLanyard({ userId: DISCORD_USER_ID });
   const [badges, setBadges] = useState<ProfileBadge[]>([]);
+  useEffect(() => { onData({ data: response?.data, badges }); }, [response, badges, onData]);
   useEffect(() => {
     const controller = new AbortController();
     async function refreshBadges() {
@@ -91,7 +96,7 @@ function LivePresence() {
     }, fresh ? BADGE_REFRESH_MS - age : 0);
     return () => { controller.abort(); window.clearTimeout(first); window.clearInterval(interval); };
   }, []);
-  return <PresenceCard live data={response?.data} vencordBadges={badges} />;
+  return null;
 }
 
 function PresenceCard({ live = false, data, vencordBadges = [] }: { live?: boolean; data?: LanyardData; vencordBadges?: ProfileBadge[] }) {
