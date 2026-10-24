@@ -2,7 +2,7 @@
 
 # task
 
-## kouchanthree commission — release candidate, 2026-10-24
+## kouchanthree commission — deployed and verified, 2026-10-24
 
 The user requested the same full Skeb intake for another new delivery.
 Reconciled the completed list to its explicit end: 13 works; new public work
@@ -25,8 +25,32 @@ Archive/owner-API/SSH offline checks pass 16/17/9 without public dummy assets.
 All 55 website regressions pass (23 design / 24 release / 4 asset / 4 deployment).
 Production CI will run the clean Linux build/export/typecheck and SEO checks;
 the known local Windows cross-drive dependency limitation is not retried.
-Private-original/preview publication, production release and live gallery
-verification are recorded below when complete.
+Private-original/public-preview import passed the protected audits, stable
+replay, exact preview-pixel comparison, catalog inclusion and original GET/HEAD
+404 checks. Final verify-only pass again verifies both originals, with no held
+or failed files. IDs: message `e5cf78fa13ca966ebc73c9f39227cdc8`, clean
+`d53ff892c881d050d02fe7a399d1e225`. The catalog now has 97 private-original/
+preview records / 89 artwork cards / 13 artists. Both new thumbnails decode
+in the public page, with no original links or horizontal overflow.
+
+Deployed source `ca2438e5641935c0329743f18b076ff99d4a04a8`. Production workflow
+`40091907165` passed regressions, clean Linux build/typecheck/export and SEO.
+Pages rollout `40091982991` passed, publishing asset revision
+`032a3bd4794fe3ad9aac9bc245807bc8408b8d86`; its commit identifies that source.
+The normal live gallery has 14 works / 62 versions. Its new thumbnail and both
+viewer images decode, with observed creator/work links, correct labels and no
+horizontal overflow. All four live WebPs match the candidate SHA-256 hashes.
+The live homepage art-room chooser selects this work and loads its credited
+illustration with no overflow. Main-checkout data, mapping and display assets
+also include this scoped import; its four asset checks pass, and preexisting
+dirty files remain untouched.
+
+Evidence and private receipt copies are in the S: output folder above.
+`import-result.json` retains both remote input/audit identities; remote inputs
+remain under `/home/fedora/backups/commission-downloads/skeb-*/input` and local
+protected copies are in `private-audits/`. Signed-link and private request scratch
+was removed after successful archive/publication verification. Originals remain
+on physical D:; no credentials, rights, grants or API code were changed.
 
 ## pen / @pen_117 commission — deployed and verified, 2026-10-24
 
