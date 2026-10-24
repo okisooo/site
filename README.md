@@ -50,5 +50,4 @@ theme preferences and vault sessions use browser storage. vault sign-in contacts
 
 - [japanese practice app](https://nihongo.okiso.net/) · [NihongoRevisionSuite source](https://github.com/okisooo/NihongoRevisionSuite) — another browser app to explore.
 - [OKICRAFT](https://github.com/okisooo/OKICRAFT) — a minecraft modpack for exploration, building, and automation.
-- [DesktopMateController](https://github.com/okisooo/DesktopMateController) — windows tray controls for `DesktopMate`.
 - [more projects by okisooo](https://github.com/okisooo).
