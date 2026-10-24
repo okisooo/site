@@ -8,6 +8,8 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['kouchanthree', 'kouchanthree@skeb/4046160-2.png'],
+  ['kouchanthree-message', 'kouchanthree@skeb/4046160-1.png'],
   ['pen117', 'pen_117@skeb/4119838-1.png'],
   ['pen117-transparent', 'pen_117@skeb/4119838-2.png'],
   ['pen117-line-art', 'pen_117@skeb/converted/4119838-line-art-transparent.png'],

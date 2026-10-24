@@ -35,6 +35,11 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
 // Skeb work/creator identities verified in signed-in deliveries through October 24, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'kouchanthree', artist: 'kouchanthree', title: 'portrait among autumn leaves', medium: 'illustration',
+    description: 'A painterly portrait of OKISO among glowing autumn leaves, illustrated by kouchanthree.',
+    artistUrl: 'https://skeb.jp/@kouchanthree', workUrl: 'https://skeb.jp/@kouchanthree/works/18',
+    small: '/art/gallery/kouchanthree-thumb.webp', width: 1013, height: 1800,
+    variants: [variant('kouchanthree', 'illustration', 1013, 1800), variant('kouchanthree-message', 'artist message', 1013, 1800)] },
   { id: 'pen117', artist: 'pen · @pen_117', title: 'quiet portrait', medium: 'illustration',
     description: 'A softly colored portrait of OKISO with a finger to the lips and an orange-to-pink frame, illustrated by pen (@pen_117).',
     artistUrl: 'https://skeb.jp/@pen_117', workUrl: 'https://skeb.jp/@pen_117/works/241',

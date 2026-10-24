@@ -1,5 +1,24 @@
 # commissioned artwork for the site
 
+## kouchanthree / 2026-10-24
+
+Request 4046160 / public work 18 completed October 24 at 17:34 JST. The delivery
+contains two 2800 x 4977 opaque RGBA PNGs: `4046160-1.png` includes the artist's
+thank-you message; `4046160-2.png` is the artist-supplied clean illustration.
+Both original files are preserved unchanged, decoded and SHA-256 verified in
+`D:/FOLDERS/Commissions/Bought/OKISO/kouchanthree@skeb/work-18.manifest.json`.
+There is no PSD, animation, separate character layer or further delivered version.
+
+The new credited gallery/home entry offers both versions, with the clean
+illustration first. Four display WebPs are physically saved under
+`S:/Codex/outputs/2026-10-24/skeb-import-2/gallery/`; main images are 1013 x 1800
+and thumbnails are 360 x 640. No enlargement, cropping or embedded-message
+removal is used. Reproduce with `scripts/prepare-gallery-assets.mjs`, setting
+`OKISO_GALLERY_SOURCE_PREFIX=kouchanthree` and an S: `OKISO_GALLERY_OUTPUT_DIR`.
+Originals stay private; only resized previews are published. Import receipts,
+archive hashes and release verification are under
+`S:/Codex/outputs/2026-10-24/skeb-import-2/`.
+
 ## pen / @pen_117 / 2026-10-24
 
 Request 4119838 / public work 241 completed October 24. All three delivered

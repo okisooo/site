@@ -2,6 +2,32 @@
 
 # task
 
+## kouchanthree commission — release candidate, 2026-10-24
+
+The user requested the same full Skeb intake for another new delivery.
+Reconciled the completed list to its explicit end: 13 works; new public work
+`https://skeb.jp/@kouchanthree/works/18`, request 4046160, completed 17:34 JST.
+The accepted list also reaches its end: 13 unfinished requests, none with raw
+delivery buttons. The twelve previously completed works were already imported.
+
+Both delivered 2800 x 4977 PNGs are archived unchanged on physical D: in
+`D:/FOLDERS/Commissions/Bought/OKISO/kouchanthree@skeb/`. File 1 contains the
+artist's thank-you message; file 2 is the supplied clean illustration. No PSD
+or further versions are listed. The complete image composition is retained.
+See `COMMISSION-ASSETS.md` and `work-18.manifest.json` for the source inventory.
+
+The gallery/home data adds one credited commission first, with both supplied
+versions and observed artist/work links. Four new display WebPs and evidence
+are physically in `S:/Codex/outputs/2026-10-24/skeb-import-2/`. Scoped release
+checkout: `S:/tmp/codex/skeb-import-20261024-2/site-release/`, based on main
+`846e12ab`. Unrelated dirty work in `D:/GitHub/site` remains preserved.
+Archive/owner-API/SSH offline checks pass 16/17/9 without public dummy assets.
+All 55 website regressions pass (23 design / 24 release / 4 asset / 4 deployment).
+Production CI will run the clean Linux build/export/typecheck and SEO checks;
+the known local Windows cross-drive dependency limitation is not retried.
+Private-original/preview publication, production release and live gallery
+verification are recorded below when complete.
+
 ## pen / @pen_117 commission — deployed and verified, 2026-10-24
 
 The user requested downloading the new Skeb delivery, publishing it and updating
