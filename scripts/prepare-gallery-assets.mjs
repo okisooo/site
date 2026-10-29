@@ -8,6 +8,17 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['3kumini', '3kumini@skeb/converted/4119772-collage-no-message.png'],
+  ['3kumini-message', '3kumini@skeb/converted/4119772-collage-artist-message.png'],
+  ['3kumini-guide', '3kumini@skeb/converted/4119772-artist-asset-guide.png'],
+  ['3kumini-sheet', '3kumini@skeb/converted/4119772-asset-sheet-no-message.png'],
+  ['3kumini-chibi-donut', '3kumini@skeb/converted/4119772-chibi-donut-transparent.png'],
+  ['3kumini-chibi-quiet', '3kumini@skeb/converted/4119772-chibi-quiet-transparent.png'],
+  ['3kumini-chibi-wink', '3kumini@skeb/converted/4119772-chibi-wink-transparent.png'],
+  ['3kumini-chibi-smile', '3kumini@skeb/converted/4119772-chibi-smile-transparent.png'],
+  ['3kumini-phone', '3kumini@skeb/converted/4119772-flip-phone-transparent.png'],
+  ['3kumini-globe', '3kumini@skeb/converted/4119772-snow-globe-transparent.png'],
+  ['3kumini-donuts', '3kumini@skeb/converted/4119772-donuts-transparent.png'],
   ['kouchanthree', 'kouchanthree@skeb/4046160-2.png'],
   ['kouchanthree-message', 'kouchanthree@skeb/4046160-1.png'],
   ['pen117', 'pen_117@skeb/4119838-1.png'],

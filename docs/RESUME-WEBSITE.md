@@ -2,6 +2,34 @@
 
 # task
 
+## 3punkyou / @3kumini commission — release candidate, 2026-10-29
+
+The user requested the usual PC archive and website import for a new delivery.
+Completed-list reconciliation reaches its explicit end: 14 works; the only new
+one is `https://skeb.jp/@3kumini/works/1011`, request 4119772, completed October 29.
+The accepted list also reaches its end: 12 unfinished requests, none with raw
+delivery buttons. All thirteen previously completed works already have imports.
+
+Three PSD originals and 12 native lossless PNG exports are archived physically
+in `D:/FOLDERS/Commissions/Bought/OKISO/3kumini@skeb/`. Every supplied layer was
+inspected. Both collages, artist guide/messages, clean sheet, four chibi views,
+phone, snow globe, donuts and background are retained. See `COMMISSION-ASSETS.md`
+and the work manifest for the inventory and reproducible exporter. Original files
+are unchanged; transparent exports remove only empty alpha margins.
+
+Scoped release checkout `S:/tmp/codex/skeb-import-20261029/site-release/` starts
+from current main `c4cfd797`, preserving unrelated dirty work in `D:/GitHub/site`.
+The credited gallery/home entry offers 11 views; 27 web derivatives and evidence
+are physically in `S:/Codex/outputs/2026-10-29/skeb-import/`. Archive/owner-API/SSH
+offline suites pass 16/17/9 without publishing public dummy assets. The initial
+three-PSD import passed the protected audit/replay, pixel comparison and original
+GET/HEAD 404 checks. Export publication and the scoped website release are being
+verified separately. Clean Linux CI owns production build/export and SEO checks;
+the known local Windows cross-drive dependency limitation is not retried.
+All 55 local website regressions pass (23 design / 24 release / 4 asset /
+4 deployment). All 15 archive hashes and the 12 export pixel regions match their
+original sources. The public candidate ships 27 WebPs totaling 2,195,104 bytes.
+
 ## kouchanthree commission — deployed and verified, 2026-10-24
 
 The user requested the same full Skeb intake for another new delivery.

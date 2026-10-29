@@ -32,9 +32,26 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   ...(art.width > 1100 ? { mid: art.src.replace('-1280.webp', '-960.webp') } : {}),
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through October 24, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 29, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: '3kumini', artist: '3punkyou · @3kumini', title: 'chibis, donuts & little keepsakes', medium: 'illustration',
+    description: 'An OKISO chibi collection with donuts, a flip phone and a snow globe, illustrated by 3punkyou (@3kumini).',
+    artistUrl: 'https://skeb.jp/@3kumini', workUrl: 'https://skeb.jp/@3kumini/works/1011',
+    small: '/art/gallery/3kumini-thumb.webp', width: 1280, height: 1280,
+    variants: [
+      variant('3kumini', 'chibi collage', 1280, 1280),
+      variant('3kumini-message', 'artist message', 1280, 1280),
+      variant('3kumini-guide', 'artist asset guide', 1280, 720),
+      variant('3kumini-sheet', 'asset sheet', 1280, 720),
+      variant('3kumini-chibi-donut', 'chibi with donut', 759, 719),
+      variant('3kumini-chibi-quiet', 'quiet chibi', 759, 719),
+      variant('3kumini-chibi-wink', 'winking chibi', 759, 719),
+      variant('3kumini-chibi-smile', 'smiling chibi', 759, 719),
+      variant('3kumini-phone', 'flip phone', 1038, 1359),
+      variant('3kumini-globe', 'snow globe', 851, 1004),
+      variant('3kumini-donuts', 'donut sticker', 1235, 1068),
+    ] },
   { id: 'kouchanthree', artist: 'kouchanthree', title: 'portrait among autumn leaves', medium: 'illustration',
     description: 'A painterly portrait of OKISO among glowing autumn leaves, illustrated by kouchanthree.',
     artistUrl: 'https://skeb.jp/@kouchanthree', workUrl: 'https://skeb.jp/@kouchanthree/works/18',

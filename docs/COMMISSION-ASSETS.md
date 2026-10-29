@@ -1,5 +1,36 @@
 # commissioned artwork for the site
 
+## 3punkyou / @3kumini / 2026-10-29
+
+Request 4119772 / public work 1011 completed October 29. Three original Procreate
+PSDs are preserved unchanged on physical D: in
+`D:/FOLDERS/Commissions/Bought/OKISO/3kumini@skeb/`: two 2500 x 2500 collages
+(with/without the artist's thank-you header), plus a 3200 x 1800 layered asset
+guide. Byte counts, SHA-256 hashes and decoded dimensions are recorded in
+`work-1011.manifest.json`.
+
+All 16 pixel layers were inspected, including the hidden plain paper layer.
+The separate `sigh` and `ThankYou` layers are the artist's dedication/instructions;
+they remain in complete exports. `converted/` contains 12 lossless native-resolution
+PNGs: both full collages, complete asset guide, message-free asset sheet, four
+transparent chibi views, flip phone, snow globe, donut sticker and background.
+Transparent exports trim only empty alpha margins; the original canvas offsets
+are recorded in the export inventory. No expression was invented and no embedded
+text was painted out. All original bytes, supplied colors and alpha are retained.
+Reproduce with `scripts/export-3kumini.py --output-dir <S: scratch>` and archive
+its `exports.json` through the skeb-download helper. The Procreate files produce
+non-fatal mask-record warnings; cached composites and every supplied pixel layer
+decode successfully. No layer mask or original file is rewritten.
+
+The gallery/home groups 11 selectable views under this one commission, with the
+clean collage first and observed artist/work links. Twenty-seven display WebPs
+(including 960px mids where required) are physically under
+`S:/Codex/outputs/2026-10-29/skeb-import/gallery/`. Reproduce through
+`prepare-gallery-assets.mjs` with `OKISO_GALLERY_SOURCE_PREFIX=3kumini` and an S:
+`OKISO_GALLERY_OUTPUT_DIR`. Originals and full-resolution exports stay private;
+only resized previews are public. Receipts, source-layer evidence and verification:
+`S:/Codex/outputs/2026-10-29/skeb-import/`.
+
 ## kouchanthree / 2026-10-24
 
 Request 4046160 / public work 18 completed October 24 at 17:34 JST. The delivery
