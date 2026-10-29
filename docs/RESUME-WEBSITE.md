@@ -2,7 +2,7 @@
 
 # task
 
-## 3punkyou / @3kumini commission — release candidate, 2026-10-29
+## 3punkyou / @3kumini commission — deployed and verified, 2026-10-29
 
 The user requested the usual PC archive and website import for a new delivery.
 Completed-list reconciliation reaches its explicit end: 14 works; the only new
@@ -23,12 +23,50 @@ The credited gallery/home entry offers 11 views; 27 web derivatives and evidence
 are physically in `S:/Codex/outputs/2026-10-29/skeb-import/`. Archive/owner-API/SSH
 offline suites pass 16/17/9 without publishing public dummy assets. The initial
 three-PSD import passed the protected audit/replay, pixel comparison and original
-GET/HEAD 404 checks. Export publication and the scoped website release are being
-verified separately. Clean Linux CI owns production build/export and SEO checks;
+GET/HEAD 404 checks. Complete publication and live release verification are
+recorded below. Clean Linux CI passed production build/export and SEO checks;
 the known local Windows cross-drive dependency limitation is not retried.
 All 55 local website regressions pass (23 design / 24 release / 4 asset /
 4 deployment). All 15 archive hashes and the 12 export pixel regions match their
-original sources. The public candidate ships 27 WebPs totaling 2,195,104 bytes.
+original sources. Public display uses 27 WebPs totaling 2,195,104 bytes.
+
+The first export publication verified all 15 files but exposed an order-sensitive
+grouping defect in the existing administrator CLI: a later ordinary PNG entry
+overwrites its earlier PSD pairing (`new Map(entries.map(...))`, last entry wins).
+The task-local `reproduce_grouping.py` reproduced all three failures and proved
+image-first order fixes them. `publish_ordered.py` then used the same documented
+SSH wrapper with PNGs before PSDs. All 15 existing IDs were reused; all three
+pairings, protected audit replay, preview pixels and original GET/HEAD 404 checks
+pass. No API code, installed skill, credentials, rights or grants were changed.
+Preserve `exports-import-result.json` as the failed-run evidence and
+`publication-order-fixed.json` as the successful corrected receipt. The ordered
+wrapper and export requests remain in `S:/tmp/codex/skeb-import-20261029/` for a
+reproducible retry. Do not repeat the unmodified helper's PSD-first ordering for
+this manifest. Final verify-only pass also verifies all 15 files, none held/failed.
+
+Raw PSD IDs: `4910be4217ad3980cbc0e2b5f23df0f9`,
+`b1b57bec76ffff9345e6e724b85b0fc0`, `a964a817f4d542a430ff208e1f2aa51f`.
+All 15 IDs and every remote input/receipt path are retained in the import JSONs;
+protected receipt copies are in the output folder's `private-audits/`. Remote
+inputs remain under `/home/fedora/backups/commission-downloads/skeb-*/input`.
+The public catalog is 112 records / 101 artwork cards / 14 artists. Three exact
+PSD/composite pairs share artwork groups; distinct layer exports stay separate.
+All 12 new artwork thumbnails decode in the signed-out website with no original
+links and no horizontal overflow.
+
+Deployed source `1c99e22789b61e3182e0475db40aaa3bf338be09`. Production workflow
+`40836581025` passed regression, clean Linux build/typecheck/export and SEO.
+Pages rollout `40836775184` passed with asset revision
+`22d6c658b39b004bacfb029763d16cec7bd90c40`, whose commit identifies the source.
+Live `/gallery` shows the new credited work first, and all 11 viewer choices
+decode at their declared dimensions with observed artist/work links. All 27 live
+WebPs match candidate SHA-256 hashes. The live home art-room chooser loads the
+new credited collage. No horizontal overflow was observed. Gallery totals are
+15 works / 73 views. The main checkout also has the scoped data, mapping, exporter
+and display assets; its four asset checks pass and prior dirty work is preserved.
+Signed delivery URLs and the private download request were removed from scratch
+after successful archiving. Archive files remain physically on D:; generated
+display assets and all verification evidence are physically on S: as above.
 
 ## kouchanthree commission — deployed and verified, 2026-10-24
 
