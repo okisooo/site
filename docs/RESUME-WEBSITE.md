@@ -1,4 +1,4 @@
-## @Tsumugi0832 work 244 - release prepared 2026-10-31
+## @Tsumugi0832 work 244 - deployed and verified 2026-10-31
 
 Completed-list reconciliation reached its end: 15 completed commissions, only
 @Tsumugi0832 work 244 newly delivered (October 30). Accepted list: 12 unfinished,
@@ -9,7 +9,7 @@ pixel checks; protected replay and anonymous original GET/HEAD 404 passed.
 Archive/owner API/SSH offline suites: 16/17/9 pass. Website regression suites pass.
 Scoped candidate `S:/tmp/codex/skeb-import-20261031/site-candidate/` preserves dirty
 main checkout. Six web derivatives and evidence are physically at
-`S:/Codex/outputs/2026-10-31/skeb-import/`. Gallery publication awaits CI/live checks.
+`S:/Codex/outputs/2026-10-31/skeb-import/`. Source `fb3ddfc2f86893a5cc836843e1b63a576d3241ed` deployed: production workflow `41105919502` and Pages rollout `41106161167` passed. Published asset revision `7d6e967567717d0d35a058dfcc5a292326f82e91` identifies that source. Live gallery card and both 1280 x 1406 viewer versions decode with artist credit; all six live derivative hashes match the candidate. No horizontal overflow. Final preview-catalog verify-only pass confirms both assets, no held/failed files. Evidence is in the output directory. Signed delivery URL scratch was removed after archiving. Gallery now contains 16 works / 75 views.
 > read this entire file, then continue the work described below. you have no prior chat history.
 
 # task
