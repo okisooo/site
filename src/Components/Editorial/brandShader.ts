@@ -193,8 +193,8 @@ float wnoise2(vec2 p) {
     vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(mix(whash2(i + vec2(0.0, 0.0)), whash2(i + vec2(1.0, 0.0)), u.x),
                mix(whash2(i + vec2(0.0, 1.0)), whash2(i + vec2(1.0, 1.0)), u.x), u.y);
-}
-
+}
+
 vec2 warpUV(vec2 uv) {
     return uv;
 }
@@ -207,7 +207,7 @@ float fieldN(vec2 uv, float mzExtra) {
     float mz = morphPhase + mzExtra;
 
     mz += MORPH_DESYNC_AMP * (wnoise2(uv * MORPH_DESYNC_SCALE) - 0.5);
-    
+
     vec2 nsv = vec2(noiseScale);
     return fbm3(vec3(uv * nsv + time * scrollSpeed, mz));
 }
