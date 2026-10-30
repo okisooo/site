@@ -22,7 +22,7 @@ test('a newly synced non-ASCII release receives an authored readable address', (
   assert.equal(assignReleaseSlugs([fixture('\u51b7\u305f\u3044')])[0].slug, 'cold');
 });
 
-test('all current releases have clean, stable, unique addresses and direct legacy aliases', () => {
+test('catalog addresses stay clean and preserve any previously published legacy aliases', () => {
   const migrated = assignReleaseSlugs(staticReleases, staticReleases);
   assert.deepEqual(migrated.map(item => item.slug), staticReleases.map(item => item.slug), 'sync must not rewrite published addresses');
   assert.equal(new Set(migrated.map(item => item.slug)).size, migrated.length);
@@ -30,9 +30,10 @@ test('all current releases have clean, stable, unique addresses and direct legac
     assert.equal(release.slug, releaseTitleSlug(release.title));
     assert.match(release.slug!, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert(!release.slug!.endsWith(`-${release.id!.slice(0, 6)}`));
-    const legacy = Object.entries(releaseRedirects).find(([old, current]) =>
-      old.endsWith(`-${release.id!.slice(0, 6)}`) && current === release.slug);
-    assert(legacy, `${release.title}: retain its previously published address`);
+    const legacy = Object.entries(releaseRedirects).find(([old]) =>
+      old.endsWith(`-${release.id!.slice(0, 6)}`));
+    // New releases have never had an ID-suffixed public URL. Existing aliases must still point directly here.
+    if (legacy) assert.equal(legacy[1], release.slug, `${release.title}: retain its previously published address`);
   }
 });
 
