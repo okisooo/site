@@ -1,3 +1,34 @@
+## approved continuous shader deployment — 2026-10-31
+
+The user approved the continuous-background design and explicitly requested
+publication plus a release-catalog update. Prepared a scoped release from current
+main (6a56b21a), preserving newer navigation, artist-credit, cover-art, model-data
+and accessibility fixes. The original dirty review checkout remains untouched.
+No unpublished private-original/download implementation is included.
+
+A hosted refresh found a new title missing its authored readable slug. Added the
+`cold` mapping and a regression fixture without changing published addresses.
+The catalog test now allows fresh canonical releases without inventing historical
+ID-suffixed routes, while validating all existing aliases.
+
+All four existing font families are self-hosted with their OFL licenses. This
+removes the observed Google CSS loader failure; font family/weight choices remain
+unchanged. The shader algorithm/palette are unchanged, with source formatting
+normalized for Git. The integrated candidate passes 56 tests, type checking,
+production export and SEO audit. Desktop/phone native captures show the approved
+layout, one background field and no overflow. A separate Opus integration review
+found and resolved the cover-size and menu-breakpoint issues.
+
+The next commit intentionally skips the automatic push deployment so the hosted
+catalog refresh can commit current data first and dispatch the normal, fully
+checked deployment once. This does not bypass the production test/build gates.
+Final run IDs, live results and catalog counts will be recorded after rollout.
+
+Physical release source: `S:/tmp/codex/site-deploy-20261031/release/`.
+Independent all-S: install/build checkout: `S:/tmp/codex/site-deploy-20261031/verify/`.
+Evidence: `S:/Codex/outputs/2026-10-31/site-deploy/`.
+Local preview now serves the independent build on http://localhost:3000/.
+
 ## @Tsumugi0832 work 244 - deployed and verified 2026-10-31
 
 Completed-list reconciliation reached its end: 15 completed commissions, only
