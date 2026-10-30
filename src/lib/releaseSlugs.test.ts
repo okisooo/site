@@ -18,6 +18,10 @@ test('readable title slugs retain words and never append provider IDs', () => {
   assert.equal(assignReleaseSlugs([fixture('a song', undefined, { id: 'AbCdEf123', slug: 'a-song-AbCdEf' })])[0].slug, 'a-song');
 });
 
+test('a newly synced non-ASCII release receives an authored readable address', () => {
+  assert.equal(assignReleaseSlugs([fixture('\u51b7\u305f\u3044')])[0].slug, 'cold');
+});
+
 test('all current releases have clean, stable, unique addresses and direct legacy aliases', () => {
   const migrated = assignReleaseSlugs(staticReleases, staticReleases);
   assert.deepEqual(migrated.map(item => item.slug), staticReleases.map(item => item.slug), 'sync must not rewrite published addresses');

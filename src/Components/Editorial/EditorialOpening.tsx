@@ -27,8 +27,8 @@ export default function EditorialOpening({ onFinish }: { onFinish: () => void })
     }
     // If hydration arrives after the CSS finish, remove the already-hidden layer.
     const timeline = root.current?.getAnimations()[0];
-    const elapsed = Number(timeline?.currentTime ?? 1900);
-    const timeout = window.setTimeout(dismiss, Math.max(0, 1900 - elapsed));
+    const elapsed = Number(timeline?.currentTime ?? 1400);
+    const timeout = window.setTimeout(dismiss, Math.max(0, 1400 - elapsed));
     window.addEventListener("keydown", dismiss, { once: true });
     window.addEventListener("wheel", dismiss, { once: true, passive: true });
     window.addEventListener("touchmove", dismiss, { once: true, passive: true });

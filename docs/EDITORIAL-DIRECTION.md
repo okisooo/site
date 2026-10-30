@@ -1,5 +1,43 @@
 # one website, one editorial language
 
+## pressed in red — current candidate, 2026-10-31
+
+### continuous background follow-up
+
+The user liked the composition but found it too simple and the shader too
+confined. The original Kaleidos field is now a continuous viewport background
+shared by the core routes. White paper surfaces protect text, while the cover,
+outer space and a broad break before the art room expose the living field.
+The shader source and palette remain unchanged. There is one renderer, not
+separate hero/page copies. Opus reviewed this follow-up; the display filtering,
+interlude size, clean paper tones and compact-device rendering policy were
+refined from that critique. The original abstract SVG decoration is removed.
+Mobile copy has its own paper backing, independent of content height or shader
+phase. Desktop inner routes retain motion; compact inner routes retain the
+same visual field without continuous drawing behind mostly covered content.
+
+The user requested a substantial responsive redesign with Sol 6.1 orchestrating
+and Opus 5.5 collaborating, using the original Kaleidos brand shader. This is
+the current local design assignment; the history below explains earlier choices.
+It is not a deployment approval.
+
+The cover now gives the name, character and featured release a clear reading
+order. Large red Archivo type sits on white; the original **OKISO crimson current**
+field flows behind the character. A full-width graphite listening deck follows
+the cover, then the vault, releases, credited art room and videos. The former
+hero montage, repeated artist note and extra stickers are removed from that
+composition. Commission data, original artwork and artist credits are preserved.
+
+The original shader and native still are reused unchanged, including the
+authored palette's transitional shades. See `KALEIDOS-BRAND-FIELD.md` for source
+provenance and rendering limits. Phones use the matching character still in the
+cover; the interactive 3d room remains available on demand. Shared navigation,
+release surfaces and type inherit the same editorial system. Motion respects
+reduced motion, page visibility and the existing ambient pause control.
+
+Current verification and any remaining boundaries are recorded at the beginning
+of `RESUME-WEBSITE.md`.
+
 updated 2026-09-11. local implementation; not deployed. the user liked the preview
 and authorized further commissioned-art, animation, and vrm work; final deployment
 approval is still separate.

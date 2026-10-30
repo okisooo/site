@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, Disc3, FolderOpen } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Disc3, FolderOpen } from "lucide-react";
 import type { Release } from "@/data/releases";
 import { getReleaseListenTarget } from "@/lib/releaseLinks";
 import { coverArt, coverSrcSet } from "@/lib/coverArt";
@@ -14,8 +14,7 @@ import { useTwitchLive } from "@/hooks/useTwitchLive";
 import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
-import HeroCommissionWall from "./HeroCommissionWall";
-import { AmbientArtwork, prefersLightData } from "./AmbientMotion";
+import { prefersLightData } from "./AmbientMotion";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">preparing video…</p>,
@@ -41,58 +40,64 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
   const [heroMounted, setHeroMounted] = useState(false);
   const [heroLimited, setHeroLimited] = useState(false);
   useEffect(() => {
-    // The hero's 3d module waits for the page to load, the opening to finish and an idle moment.
-    // Devices that would refuse the model's WebGL context never download it.
-    if (!heroModelAllowed()) return;
+    // Preserve production's data/GPU guards and opening deferral, plus the approved phone still.
     const site = document.querySelector(".core-site");
-    const mount = () => { if (canCreateModelContext()) setHeroMounted(true); };
-    let scheduled = false, cancel = () => {};
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const allowed = () => window.innerWidth > 700 && !coarse.matches && heroModelAllowed();
+    let scheduled = false, mounted = false, cancel = () => {};
+    const mount = () => { scheduled = false; if (allowed() && canCreateModelContext()) { mounted = true; setHeroMounted(true); } };
     const schedule = () => {
+      if (!allowed()) { cancel(); scheduled = false; mounted = false; setHeroMounted(false); return; }
+      if (mounted) return;
       if (scheduled || document.readyState !== "complete" || site?.hasAttribute("data-opening")) return;
       scheduled = true;
-      observer.disconnect();
       if ("requestIdleCallback" in window) { const idle = window.requestIdleCallback(mount, { timeout: 2000 }); cancel = () => window.cancelIdleCallback(idle); }
       else { const timeout = setTimeout(mount, 200); cancel = () => clearTimeout(timeout); }
     };
     const observer = new MutationObserver(schedule);
     if (site) observer.observe(site, { attributeFilter: ["data-opening"] });
     window.addEventListener("load", schedule);
+    window.addEventListener("resize", schedule);
+    coarse.addEventListener("change", schedule);
     schedule();
-    return () => { observer.disconnect(); window.removeEventListener("load", schedule); cancel(); };
+    return () => { observer.disconnect(); window.removeEventListener("load", schedule); window.removeEventListener("resize", schedule); coarse.removeEventListener("change", schedule); cancel(); };
   }, []);
   const pick = picks[pickIndex];
   const latest = releases[0];
   const target = getReleaseListenTarget(latest);
+  const step = (offset: number) => setPickIndex((index) => (index + offset + picks.length) % picks.length);
 
   return <div className="ed-home">
     <section className="ed-cover" aria-label="Meet OKISO">
-      <div className="ed-cover-kicker"><span>VTuber / virtual artist / vocaloid producer</span><span>official website / {latest.year}</span></div>
-      <div className="ed-masthead"><h1>OKISO</h1><div><span>hyperpop<br />electronic<br />vocaloid</span><ArrowDown size={26} /></div></div>
-      <HeroCommissionWall />
-      <AmbientArtwork hero />
-      <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
-      {/* The note sits above the latest release on phones, so it comes first in focus order. */}
-      <div className="ed-artist-note"><span className="ed-label">hey <span aria-hidden="true">↗</span></span><p>i’m<br /><em>OKISO</em></p><button onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button></div>
-      <article className="ed-latest-card">
-        <div className="ed-panel-label"><span><Disc3 size={12} /> new release</span><span>{releaseDate(latest.releaseDate)}</span></div>
-        <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /><ArrowUpRight className="ed-art-arrow" /></Link>
-        <div className="ed-latest-caption"><span className="ed-label ed-sleeve-credit">okiso <span>{latest.albumType}</span></span><h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2><a href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
-      </article>
-      <Link href="/gallery" className="ed-commission-sticker" aria-label="art by ykhs9, explore the commission gallery"><img className="ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-chibi-sticker.webp" alt="Chibi OKISO sticker by ykhs9" width="340" height="365" fetchPriority="low" /><span>art by ykhs9 <ArrowUpRight size={12} /></span></Link>
-      <div className="ed-cover-rail">
-      {pick && <div className="ed-listening-deck">
-        <img className="ed-deck-mascot ed-idle ed-idle-sticker" src="/art/gallery/ykhs9-mascot.webp" alt="" aria-hidden="true" width="370" height="361" decoding="async" fetchPriority="low" />
-        <div className="ed-panel-label"><span><Disc3 size={13} /> listening room</span><span className="ed-deck-position" aria-hidden="true">{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span><span className="sr-only">pick {pickIndex + 1} of {picks.length}</span></div>
-        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={coverArt(pick.img, 300)} alt={`${pick.title} cover`} width="100" height="100" /></Link>
-          <div className="ed-deck-info"><span className="ed-label">{pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
-        </div>
-        <div className="ed-deck-bottom"><button aria-label="Previous listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index - 1 + picks.length) % picks.length)}><ChevronLeft size={18} /></button>
-          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={coverArt(release.img, 64)} alt="" width="48" height="48" loading="lazy" decoding="async" /></button>)}</div>
-          <button aria-label="Next listening pick" className="ed-icon-button" onClick={() => setPickIndex((index) => (index + 1) % picks.length)}><ChevronRight size={18} /></button></div>
-      </div>}
-      <Link href="/vault" className="ed-vault-teaser"><span className="ed-label">demos & versions</span><span className="ed-vault-teaser-title">vault<FolderOpen strokeWidth={1.25} /></span><span className="ed-vault-teaser-footer">open vault <span className="ed-folder-open"><ArrowUpRight size={17} /></span></span></Link>
+      <div className="ed-cover-kicker"><span>VTuber / virtual artist / vocaloid producer</span><Link href="/releases">{releaseCount} releases <ArrowUpRight size={14} /></Link></div>
+      <h1 className="ed-masthead">OKISO</h1>
+      <div className="ed-cover-field">
+        <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
+        <button className="ed-model-button" onClick={() => setModelOpen(true)}>open 3d model <ArrowUpRight size={15} /></button>
       </div>
-      <div className="ed-cover-bottom"><span>music by okiso</span><Link href="/releases">{releaseCount} releases <ArrowUpRight size={14} /></Link></div>
+      <div className="ed-cover-intro">
+        <p className="ed-cover-lede">original <em>hyperpop</em>, electronic and vocaloid music from a virtual artist.</p>
+        <article className="ed-latest">
+          <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /></Link>
+          <div className="ed-latest-copy">
+            <span className="ed-label ed-latest-label">latest {latest.albumType} <time dateTime={latest.releaseDate}>{releaseDate(latest.releaseDate)}</time></span>
+            <h2><Link href={`/releases/${latest.slug}`}>{latest.title}</Link></h2>
+            <div className="ed-latest-actions"><PlayReleaseButton release={latest} /><a className="ed-text-link" href={target.url} target="_blank" rel="noopener noreferrer">{target.label} <ArrowUpRight size={15} /></a></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section className="ed-listen" aria-label="Listening room and vault">
+      {pick && <div className="ed-listening-deck">
+        <div className="ed-panel-label"><span><Disc3 size={14} /> listening room</span><span className="ed-deck-position" aria-hidden="true">{String(pickIndex + 1).padStart(2, "0")} <span>/ {String(picks.length).padStart(2, "0")}</span></span><span className="sr-only">pick {pickIndex + 1} of {picks.length}</span></div>
+        <div className="ed-deck-main"><Link href={`/releases/${pick.slug}`} className="ed-deck-art"><img key={pick.id} src={coverArt(pick.img, 300)} decoding="async" alt={`${pick.title} cover`} width="140" height="140" /></Link>
+          <div className="ed-deck-info"><span className="ed-label">{pick.albumType} / {pick.year}</span><h2><Link href={`/releases/${pick.slug}`}>{pick.title}</Link></h2><PlayReleaseButton release={pick} /></div>
+        </div>
+        <div className="ed-deck-bottom"><button aria-label="Previous listening pick" className="ed-icon-button" onClick={() => step(-1)}><ChevronLeft size={18} /></button>
+          <div className="ed-deck-picks">{picks.map((release, index) => <button key={release.id} onClick={() => setPickIndex(index)} aria-label={`Select ${release.title}`} aria-pressed={index === pickIndex}><img src={coverArt(release.img, 64)} alt="" width="56" height="56" loading="lazy" decoding="async" /></button>)}</div>
+          <button aria-label="Next listening pick" className="ed-icon-button" onClick={() => step(1)}><ChevronRight size={18} /></button></div>
+      </div>}
+      <Link href="/vault" className="ed-vault-teaser"><span className="ed-label">demos & versions</span><span className="ed-vault-teaser-title">the vault<FolderOpen strokeWidth={1.25} /></span><span className="ed-vault-teaser-footer"><span>open the vault</span><span className="ed-folder-open"><ArrowUpRight size={17} /></span></span></Link>
     </section>
     <section id="archive" className="ed-section">
       <header className="ed-section-heading"><div><h2>latest releases</h2></div><Link href="/releases" className="ed-text-link">all {releaseCount} releases <ArrowUpRight size={18} /></Link></header>
@@ -101,6 +106,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
           <div className="ed-release-meta"><span>{release.albumType}</span><time dateTime={release.releaseDate}>{releaseDate(release.releaseDate)}</time></div><h3>{release.title}</h3></Link>
       </article>)}</div>
     </section>
+    <div className="ed-brand-interlude" aria-hidden="true" />
     <ArtRoom onOpenModel={() => setModelOpen(true)} />
     <WatchSection />
     {modelOpen && <EditorialDialog title="3d model" className="ed-studio-dialog" onClose={() => setModelOpen(false)}><CharacterStudio /></EditorialDialog>}

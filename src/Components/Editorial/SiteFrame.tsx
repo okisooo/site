@@ -14,7 +14,8 @@ import { EditorialDialog } from "./EditorialDialog";
 import EditorialMusicPlayer from "./EditorialMusicPlayer";
 import EditorialOpening from "./EditorialOpening";
 import { useEditorialMotion } from "./useEditorialMotion";
-import { AmbientArtwork, AmbientMotionContext, AmbientWaves, useAmbientPreference } from "./AmbientMotion";
+import { AmbientMotionContext, AmbientWaves, useAmbientPreference } from "./AmbientMotion";
+import BrandField from "./BrandField";
 
 const destinations = [
   { href: "/releases", label: "releases" },
@@ -55,7 +56,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setMenuOpen(false); menuButton.current?.focus(); } };
     const outside = (event: PointerEvent) => { if (!header.current?.contains(event.target as Node)) setMenuOpen(false); };
     // Rotating or widening past the phone layout hides the menu button, so the menu (and its scroll lock) closes.
-    const phone = window.matchMedia("(max-width: 700px)");
+    const phone = window.matchMedia("(max-width: 850px)");
     const leave = () => { if (!phone.matches) setMenuOpen(false); };
     window.addEventListener("keydown", escape);
     document.addEventListener("pointerdown", outside);
@@ -81,6 +82,7 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
   </>;
 
   return <AmbientMotionContext.Provider value={ambient.enabled}><div className="core-site" data-opening={opening || undefined} data-ambient-motion={ambient.enabled}>
+    <div className="ed-site-background" aria-hidden="true"><BrandField home={pathname === "/" || pathname === "/lab/soft-orbit"} /></div>
     {opening && <EditorialOpening key={openingTake} onFinish={() => setOpening(false)} />}
     <header ref={header} className="ed-nav" data-editorial-background onBlur={(event) => { if (menuOpen && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false); }}>
       <Link href="/" className="ed-logo" aria-label="OKISO home" onClick={() => setMenuOpen(false)}>okiso<span aria-hidden="true">↗</span></Link>
@@ -100,7 +102,6 @@ export default function SiteFrame({ children }: { children: ReactNode }) {
       </nav>}
     </header>
     <div className="ed-content-stage">
-      <AmbientArtwork />
       <main id="main-content" tabIndex={-1} data-editorial-background>{children}</main>
     </div>
     <footer className="ed-footer" data-editorial-background>

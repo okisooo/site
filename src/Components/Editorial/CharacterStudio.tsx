@@ -92,7 +92,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       return;
     }
     host.appendChild(element);
-    let disposed = false, failed = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0;
+    let disposed = false, failed = false, painted = false, inView = true, frame = 0, last = 0, nextFrame = 0, elapsed = 0;
     let renderer: WebGLRenderer | undefined, controls: OrbitControls | undefined, vrm: VRM | undefined;
     let previousFraming = "", previousPose = "", previousExpression = "";
     let dolly = false, waveStart = 0;
@@ -257,6 +257,9 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
       }
       controls.update();
       renderer.render(scene, camera);
+      // Loading can finish in a background tab, where no frame has been drawn.
+      // Keep the matching still until the canvas actually contains the character.
+      if (vrm && !painted) { painted = true; setState("ready"); }
       if (moving && !frame) frame = requestAnimationFrame(render);
     };
     const invalidate = () => { if (!disposed && !failed && enabled.current && inView && !document.hidden && !frame) frame = requestAnimationFrame(render); };
@@ -361,7 +364,7 @@ export default function CharacterStudio({ hero = false, active = true, onPerform
           vrm = model; scene.add(model.scene);
           if (hero) model.scene.rotation.y -= .08;
           clearTimeout(timeout);
-          setProgress(100); setState("ready"); invalidate();
+          setProgress(100); invalidate();
         } catch (error) {
           if (!disposed) { console.error("Character model load failed", error); setState("error"); }
         } finally { clearTimeout(timeout); }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useScrollLock } from "@/motion/useScrollLock";
 import { trapDialogTab } from "@/lib/dialogKeyboard";
@@ -57,7 +58,9 @@ export function EditorialDialog({ title, children, onClose, className = "" }: {
     };
   }, []);
 
-  return <div className="ed-dialog-back" data-closing={closing || undefined} onClick={requestClose}>
+  if (typeof document === "undefined") return null;
+  // A sibling of main retains the editorial tokens without inheriting main's inert state.
+  return createPortal(<div className="ed-dialog-back" data-closing={closing || undefined} onClick={requestClose}>
     <div ref={dialog} className={`ed-dialog ${className}`} role="dialog" aria-modal="true" aria-label={title}
       onClick={(event) => event.stopPropagation()} onKeyDown={trapDialogTab} data-lenis-prevent>
       <header className="ed-dialog-heading">
@@ -66,5 +69,5 @@ export function EditorialDialog({ title, children, onClose, className = "" }: {
       </header>
       {children}
     </div>
-  </div>;
+  </div>, document.querySelector(".core-site") ?? document.body);
 }

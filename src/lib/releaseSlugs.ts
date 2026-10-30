@@ -3,6 +3,7 @@ import { releaseRedirects } from '../data/releaseRedirects';
 
 // Authored readable equivalents for titles the ASCII formatter cannot retain.
 const titleSlugs: Record<string, string> = {
+  '\u51b7\u305f\u3044': 'cold',
   '\u30ea\uff1a\u30d7\u30ec\u30a4': 're-play',
   'Chronicles of "\u30de\u30c3\u30bf"': 'chronicles-of-matta',
   '\u30b8\u30a7\u30cd\u30b7\u30b9': 'genesis',

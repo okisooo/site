@@ -1,4 +1,4 @@
-import { Archivo, Nunito, Quicksand, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "@/styles/editorial.css";
@@ -18,21 +18,24 @@ import { pageMetadata } from "@/lib/seo";
 // nowhere — so all 28 font-mono call sites silently fell back to system monospace.
 // (The previous Geist *sans* here was downloaded on every page and never rendered:
 // fontFamily.sans was never extended, so `font-sans` resolved to the system stack.)
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
-const editorial = Archivo({ subsets: ["latin"], variable: "--font-editorial", display: "swap" });
+const geistMono = localFont({ src: "../assets/fonts/geist-mono-latin.woff2", weight: "100 900", variable: "--font-geist-mono", display: "swap" });
+const editorial = localFont({ src: "../assets/fonts/archivo-latin.woff2", weight: "100 900", variable: "--font-editorial", display: "swap" });
 
-const nunito = Nunito({
+const nunito = localFont({
+  src: "../assets/fonts/nunito-latin.woff2",
   preload: false,
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
+  weight: "200 1000",
+  display: "swap",
 });
 
-const quicksand = Quicksand({
+// Keep the existing standalone-page font without the failing remote CSS loader.
+const quicksand = localFont({
+  src: "../assets/fonts/quicksand-latin.woff2",
   preload: false,
   variable: "--font-ui",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "300 700",
+  display: "swap",
 });
 
 
