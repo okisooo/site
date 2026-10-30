@@ -41,6 +41,11 @@
 <priority>0.7</priority>
 </url>
 <url>
+<loc>https://okiso.net/releases/cold</loc>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
 <loc>https://okiso.net/releases/onthelow</loc>
 <changefreq>monthly</changefreq>
 <priority>0.8</priority>
