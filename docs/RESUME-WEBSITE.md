@@ -1,3 +1,42 @@
+## continuous Kaleidos design and release refresh - deployed 2026-10-31
+
+The approved continuous-background design is live at https://okiso.net/.
+The original Kaleidos crimson-current field remains visible across the core site,
+including the open band before the art room. One 640 x 360 renderer pauses for
+hidden pages, motion preferences and dialogs, retaining its compiled program.
+The latest catalog refresh contains 36 releases, including the October 29
+release at https://okiso.net/releases/cold with two tracks and its Spotify link.
+
+Deployed source: `9ac11085f37bfb00e3ec49d4eb9b520f5941d21e`.
+Release refresh: https://github.com/okisooo/site/actions/runs/41134467894 (success).
+Production checks/export: https://github.com/okisooo/site/actions/runs/41134591999 (success).
+Pages rollout: https://github.com/okisooo/site/actions/runs/41134750637 (success).
+Published asset revision: `3211fda9454914473b26b1802ed908b2e8b46c7b`.
+
+All 56 scoped regressions pass. Fresh export and SEO audit pass with 44 indexable
+pages, 36 linked releases, four noindex routes and 105 available local tracks.
+Public home, release listing and new detail page return HTTP 200. Live captures
+at 1440 and 390 CSS pixels show no horizontal overflow or broken loaded images.
+The detail page has the correct canonical URL, both tracks and streaming link.
+A live shader probe confirms one renderer, a fixed background while scrolling,
+advancing frames, dialog pause/resume and retained WebGL program. These are
+browser viewport checks, not physical-device frame-rate certification.
+The native poster's live hash matches the original Kaleidos export.
+
+The release was integrated from current main, preserving newer navigation,
+artist-credit, artwork, cover optimization, accessibility and model-data guards.
+All 164 protected original-checkout art/download files still match their saved
+hashes. The dirty original checkout was not reset. Only its previously clean
+release data, slug map and corresponding tests were synchronized to the published
+catalog; unrelated private-original/download work remains unpublished.
+All four existing font families are now self-hosted with their OFL licenses.
+
+Release source: `S:/tmp/codex/site-deploy-20261031/release/`.
+Independent install/build checkout: `S:/tmp/codex/site-deploy-20261031/verify/`.
+Physical screenshots, receipts and checks: `S:/Codex/outputs/2026-10-31/site-deploy/`.
+The existing localhost:3000 preview serves the independent refreshed export.
+The older preparation notes below are historical; this section records rollout.
+
 ## approved continuous shader deployment — 2026-10-31
 
 The user approved the continuous-background design and explicitly requested

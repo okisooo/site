@@ -15,3 +15,14 @@ The field now belongs to `SiteFrame.tsx` as one fixed viewport background across
 The existing ambient-motion preference controls animation. The field stops when the page is hidden, when ambient motion is paused, for reduced motion, and while any editorial dialog is open. The component observes only direct shell-child changes because dialogs portal beside main. Its program stays compiled across these pauses and client-side route changes. On narrow or coarse-pointer devices, inner routes keep a still/frozen field; the homepage remains animated. A fixed viewport field has no offscreen state, so the former intersection observer was removed.
 
 Drawing is capped at 30 fps in the original 640 x 360 coordinate system (230,400 buffer pixels at every display size). Canvas and native still share the same aspect ratio and CSS cover crop, with normal browser interpolation rather than forced nearest-neighbor scaling. The source's motion rate is unchanged. These are rendering limits, not a guarantee of a particular frame rate on a physical device.
+
+## Self-hosted typography
+
+The deployed layout keeps the existing Archivo, Geist Mono, Nunito and Quicksand
+families, variable weight ranges and CSS variables. All four Latin WOFF2 files
+and their OFL licenses live in `src/assets/fonts/` and use `next/font/local`.
+This avoids the reproduced Google CSS loader failure during a fresh production
+build. Font files are bundled locally; no font dependency versions were changed.
+The original review checkout's font/brand asset junctions point to physical S:
+storage. The isolated release and verification checkouts also store their bytes
+physically on S:.
