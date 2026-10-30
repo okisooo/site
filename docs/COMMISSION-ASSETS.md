@@ -211,3 +211,7 @@ the gallery preparation script writes its new derivatives through
 `public/art/gallery` into `S:\Codex\outputs\2026-09-12\site-gallery\assets`.
 the source inventory is outside public assets. artist messages are preserved in
 separate selectable versions, and loose non-skeb files are excluded from this pass.
+
+## @Tsumugi0832 work 244 — 2026-10-31
+
+Two delivered 5000 x 5494 RGBA PNGs, background and transparent versions, archived unchanged in `D:/FOLDERS/Commissions/Bought/OKISO/Tsumugi0832@skeb/`. Both decoded and hashed in `work-244.manifest.json`. No PSD or additional delivered versions listed. Preview-only import passed protected replay, pixel checks and anonymous original GET/HEAD 404. Display derivatives and evidence: `S:/Codex/outputs/2026-10-31/skeb-import/`. Source mapping is registered in `scripts/prepare-gallery-assets.mjs`.

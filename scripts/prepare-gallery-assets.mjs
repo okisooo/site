@@ -8,6 +8,8 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['tsumugi0832', 'Tsumugi0832@skeb/4043265-1.png'],
+  ['tsumugi0832-transparent', 'Tsumugi0832@skeb/4043265-2.png'],
   ['3kumini', '3kumini@skeb/converted/4119772-collage-no-message.png'],
   ['3kumini-message', '3kumini@skeb/converted/4119772-collage-artist-message.png'],
   ['3kumini-guide', '3kumini@skeb/converted/4119772-artist-asset-guide.png'],

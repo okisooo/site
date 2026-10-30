@@ -1,3 +1,15 @@
+## @Tsumugi0832 work 244 - release prepared 2026-10-31
+
+Completed-list reconciliation reached its end: 15 completed commissions, only
+@Tsumugi0832 work 244 newly delivered (October 30). Accepted list: 12 unfinished,
+none with raw downloads. Two 5000 x 5494 PNGs archived unchanged physically at
+`D:/FOLDERS/Commissions/Bought/OKISO/Tsumugi0832@skeb/`: background and transparent.
+Both have verified byte hashes, full decoding, private originals and public preview
+pixel checks; protected replay and anonymous original GET/HEAD 404 passed.
+Archive/owner API/SSH offline suites: 16/17/9 pass. Website regression suites pass.
+Scoped candidate `S:/tmp/codex/skeb-import-20261031/site-candidate/` preserves dirty
+main checkout. Six web derivatives and evidence are physically at
+`S:/Codex/outputs/2026-10-31/skeb-import/`. Gallery publication awaits CI/live checks.
 > read this entire file, then continue the work described below. you have no prior chat history.
 
 # task

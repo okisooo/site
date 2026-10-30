@@ -35,6 +35,11 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
 // Skeb work/creator identities verified in signed-in deliveries through October 29, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'tsumugi0832', artist: '@Tsumugi0832', title: 'a little mascot hug', medium: 'illustration',
+    description: 'A pixel-style chibi of OKISO holding a red mascot, illustrated by @Tsumugi0832.',
+    artistUrl: 'https://skeb.jp/@Tsumugi0832', workUrl: 'https://skeb.jp/@Tsumugi0832/works/244',
+    small: '/art/gallery/tsumugi0832-thumb.webp', width: 1280, height: 1406,
+    variants: [variant('tsumugi0832', 'illustration', 1280, 1406), variant('tsumugi0832-transparent', 'transparent illustration', 1280, 1406)] },
   { id: '3kumini', artist: '3punkyou · @3kumini', title: 'chibis, donuts & little keepsakes', medium: 'illustration',
     description: 'An OKISO chibi collection with donuts, a flip phone and a snow globe, illustrated by 3punkyou (@3kumini).',
     artistUrl: 'https://skeb.jp/@3kumini', workUrl: 'https://skeb.jp/@3kumini/works/1011',
