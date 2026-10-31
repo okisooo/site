@@ -1,4 +1,4 @@
-## @Midori_annte23 work 1538 — release candidate, 2026-10-31
+## @Midori_annte23 work 1538 — deployed and verified, 2026-10-31
 
 The user supplied `https://skeb.jp/requests/4068823` and requested the usual full
 import. The signed-in delivery is complete and identifies public work 1538 by
@@ -19,7 +19,37 @@ uses the existing completion helper/SSH wrapper with PNGs before PSDs, avoiding
 the already reproduced last-entry-wins grouping issue. Installed skill/API code
 and authentication are unchanged. Archive/owner-API/SSH offline checks pass
 16/17/9 without public dummy assets; all five archive hashes and four source
-pixel comparisons pass. Publication and live release results are recorded below.
+pixel comparisons pass. All 56 website regressions pass (23 design / 25 release /
+4 asset / 4 deployment), and the original checkout's four asset checks also pass.
+
+The image-first import passed all five files, protected audit/replay, exact
+preview pixels, catalog inclusion and anonymous original GET/HEAD 404 checks.
+The PSD/cached PNG pair shares one artwork group; no held or failed files remain.
+Final verify-only pass confirms all five assets. IDs: original PSD
+`8967db8f51f3398314e83fc55dc87b3b`, cached message PNG
+`0cda2b41aab224496e5ddc46198c4452`, clean PNG
+`ddde3a56387d0ce8313e823697b353ea`, transparent illustration
+`475c54ae6fb72214cac089590244163d`, transparent character
+`9bd96ca6dd89b40ebb4da8a0d9a90021`. The catalog is now 119 assets / 107 artwork
+cards / 16 artists. Remote staging and protected receipt identities are retained
+in `import-result.json`; local receipt copies are in `private-audits/` in the
+output folder. The original signed-link/download request scratch was removed.
+
+Source `1931e399adc85ed31ecf0d5a73a1d05561a546a2` is deployed. Production workflow
+`41159287060` passed regressions, clean build/typecheck/export and SEO. Pages
+rollout `41159426801` passed, publishing asset revision
+`04e2fa45d19c2b0a86d42aaf6f726a15f79e6e5c`, whose commit identifies that source.
+The normal gallery has 17 works / 79 views. The new card, all four viewer versions
+and correct artist/work links were verified live with no horizontal overflow;
+all 12 deployed WebPs exactly match candidate hashes. The home art room selects
+and loads the credited new portrait. All four art-preview thumbnails decode with
+no original links. Hidden-tab thumbnail checks explicitly requested image loading
+then restored the normal lazy attributes; foreground lazy-scroll performance is
+not claimed. Main-checkout gallery data, source mapping, exporter and S: display
+assets also include the scoped import. The existing design and unrelated dirty
+work remain preserved. No installed skill/API code, credentials, rights or grants
+were modified. Original/full-resolution files are physically on D:; all generated
+display assets and verification evidence are physically on S: as listed above.
 
 ## continuous Kaleidos design and release refresh - deployed 2026-10-31
 
