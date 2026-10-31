@@ -1,3 +1,26 @@
+## @Midori_annte23 work 1538 — release candidate, 2026-10-31
+
+The user supplied `https://skeb.jp/requests/4068823` and requested the usual full
+import. The signed-in delivery is complete and identifies public work 1538 by
+@Midori_annte23. It is distinct from the already published Tsumugi delivery.
+One observed raw attachment, `4068823-1.psd`, is 2000 x 2000 / 19,642,177 bytes.
+It and four native lossless PNG exports are physically archived in
+`D:/FOLDERS/Commissions/Bought/OKISO/Midori_annte23@skeb/`. All supplied layers
+were inspected; complete artist-message, clean illustration and both transparent
+versions are retained. See `COMMISSION-ASSETS.md` and `work-1538.manifest.json`.
+
+Scoped release checkout `S:/tmp/codex/skeb-4068823-20261031/site-release/` starts
+from main `125a571f`, preserving the deployed continuous Kaleidos design, COLD
+release, Tsumugi entry and unrelated dirty original-checkout work. Its dependency
+junction targets the verified S: install with an identical package-lock hash.
+Twelve new web images and evidence are physically under
+`S:/Codex/outputs/2026-10-31/skeb-4068823/`. The task-local `publish_ordered.py`
+uses the existing completion helper/SSH wrapper with PNGs before PSDs, avoiding
+the already reproduced last-entry-wins grouping issue. Installed skill/API code
+and authentication are unchanged. Archive/owner-API/SSH offline checks pass
+16/17/9 without public dummy assets; all five archive hashes and four source
+pixel comparisons pass. Publication and live release results are recorded below.
+
 ## continuous Kaleidos design and release refresh - deployed 2026-10-31
 
 The approved continuous-background design is live at https://okiso.net/.

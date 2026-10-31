@@ -32,9 +32,17 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
   ...(art.width > 1100 ? { mid: art.src.replace('-1280.webp', '-960.webp') } : {}),
 });
 
-// Skeb work/creator identities verified in signed-in deliveries through October 29, 2026.
+// Skeb work/creator identities verified in signed-in deliveries through October 31, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'midori-annte23', artist: '@Midori_annte23', title: 'red glasses & flowing color', medium: 'illustration',
+    description: 'A portrait of OKISO with red glasses and flowing red and violet patterns, illustrated by @Midori_annte23.',
+    artistUrl: 'https://skeb.jp/@Midori_annte23', workUrl: 'https://skeb.jp/@Midori_annte23/works/1538',
+    small: '/art/gallery/midori-annte23-thumb.webp', width: 1280, height: 1280,
+    variants: [variant('midori-annte23', 'illustration', 1280, 1280),
+      variant('midori-annte23-message', 'artist message', 1280, 1280),
+      variant('midori-annte23-transparent', 'transparent illustration', 1280, 1280),
+      variant('midori-annte23-character', 'transparent character', 1280, 1280)] },
   { id: 'tsumugi0832', artist: '@Tsumugi0832', title: 'a little mascot hug', medium: 'illustration',
     description: 'A pixel-style chibi of OKISO holding a red mascot, illustrated by @Tsumugi0832.',
     artistUrl: 'https://skeb.jp/@Tsumugi0832', workUrl: 'https://skeb.jp/@Tsumugi0832/works/244',

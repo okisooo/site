@@ -1,5 +1,33 @@
 # commissioned artwork for the site
 
+## @Midori_annte23 / 2026-10-31
+
+Request 4068823 / public work 1538 completed October 31 at 07:23 JST. Its single
+2000 x 2000 PSD (19,642,177 bytes) is archived unchanged on physical D: at
+`D:/FOLDERS/Commissions/Bought/OKISO/Midori_annte23@skeb/4068823-1.psd`.
+Original SHA-256: `69f1e12b4183c5986d2840677f05c72f410b9067ea08708164d695e1f32adabb`.
+
+All four pixel layers were visually inspected: white paper, transparent character,
+complete illustration with graphic background, and a separate thank-you layer.
+There are no hidden expressions or independently supplied props. `converted/`
+contains four lossless 2000 x 2000 PNGs: the cached full artist-message composite,
+the full composition with only the dedication layer hidden, the supplied
+transparent illustration layer, and the supplied transparent character layer.
+No text was painted out, no expression was invented, and original bytes remain
+unchanged. All five archive hashes and all four exported pixel arrays were
+checked against the cached composite or corresponding source-layer rendering.
+Reproduce using `scripts/export-midori-annte23.py --output-dir <S: scratch>` and
+archive its `exports.json` through the completion helper with image-first ordering.
+
+One credited gallery/home work offers all four views, with the clean illustration
+first and observed profile/work links. Twelve display WebPs (1280px main images,
+480px thumbnails and 960px mids) are physically saved in
+`S:/Codex/outputs/2026-10-31/skeb-4068823/gallery/`. Regenerate with
+`prepare-gallery-assets.mjs`, `OKISO_GALLERY_SOURCE_PREFIX=midori-annte23`, and
+an S: `OKISO_GALLERY_OUTPUT_DIR`. Full-resolution originals/exports stay private;
+only resized display previews ship. Import audits and live verification are in
+`S:/Codex/outputs/2026-10-31/skeb-4068823/`.
+
 ## 3punkyou / @3kumini / 2026-10-29
 
 Request 4119772 / public work 1011 completed October 29. Three original Procreate
