@@ -15,7 +15,7 @@ const sources = [
   ['audit-suyosuyo-expression1', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/suyosuyo@skeb/converted/4046159-expression-1-character-transparent.png'],
   ['audit-suyosuyo-expression2', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/suyosuyo@skeb/converted/4046159-expression-2-character-transparent.png'],
 
-  ['n2m-nk-portrait', 'N2M_nk@skeb/converted/4046164-1-illustration.png'],
+  ['n2m-nk-portrait', 'S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/converted/4046164-1-illustration.png'],
   ['midori-annte23', 'Midori_annte23@skeb/converted/4068823-illustration-no-message.png'],
   ['midori-annte23-message', 'Midori_annte23@skeb/converted/4068823-illustration-artist-message.png'],
   ['midori-annte23-transparent', 'Midori_annte23@skeb/converted/4068823-illustration-transparent.png'],
