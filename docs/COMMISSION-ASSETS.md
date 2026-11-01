@@ -1,3 +1,15 @@
+## 2026-11-02 complete Skeb archive audit
+
+17 completed commissions / 43 current originals / 43 Skeb-converted downloads
+verified in two passes. All 17 PSDs inspected; 123 new native exports and 40 exact
+existing exports verified, with no missing file or failed export. Complete index,
+physical paths, hashes, dimensions and source/layer evidence:
+S:/Codex/outputs/2026-11-02/skeb-full-audit/audit-report.md.
+N2M_nk's second PSD/message version and the current amaxa source are preserved;
+all older originals remain intact. Six added gallery views are deployed and
+verified. Two suyosuyo transparent full-resolution exports remain local under the
+unchanged server import restriction; only allowed display previews are public.
+See RESUME-WEBSITE.md for deployed revision, receipt and verification details.
 # commissioned artwork for the site
 
 ## @Midori_annte23 / 2026-10-31

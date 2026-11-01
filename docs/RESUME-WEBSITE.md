@@ -1,3 +1,49 @@
+## full Skeb audit — verified complete locally and live, 2026-11-02
+
+All request categories were checked to their ends: 17 completed, 8 accepted,
+1 pending, 10 cancelled and an empty draft list. The completed list was reconciled
+twice against 43 individually observed original downloads and 43 separately
+observed converted downloads. All 86 files were fully downloaded and decoded;
+a final pass reopened and hashed the saved copies. Zero missing files remain.
+Forty-two current originals matched existing bytes. The differing current amaxa
+PSD is retained separately; its older D: copy is preserved. N2M_nk's missing
+second PSD and its artist-message PNG are recovered. All 17 PSDs were inspected:
+123 native pixel/group/composite exports added, 40 exact existing exports reused,
+zero failures. Adjustment data stays in the original PSDs. Every underlying layer
+record is indexed; not every native part is a standalone finished illustration.
+
+Physical new archive/conversions/native exports/report:
+S:/Codex/outputs/2026-11-02/skeb-full-audit/.
+N2M_nk originals and full-resolution PNGs:
+S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/.
+The authoritative per-file paths/bytes/SHA-256/dimensions/frames are in
+collection-manifest.json; final-verification.json and audit-report.md record
+completion. Existing D: originals remain intact. Signed URL scratch was removed;
+86 sanitized observed-navigation records remain in the report folder.
+
+Six added gallery views / 18 WebP derivatives are live. Each derivative returned
+200, decoded and matched its candidate hash. All six new viewer selections loaded
+at their expected dimensions with artist credit. Source
+f7749dbc26498ce0937e878ffc5589ab2ba6a44f is deployed: build 41355609785 and Pages
+41355796055 succeeded; published assets 9543bc6aa76479e872c0263420872e3e6efd0cf6
+identify that source. Local website suites, clean build, SEO and original-checkout
+asset checks pass. Only the new data/mappings/assets were synchronized into the
+original checkout; unrelated dirty work is preserved. Preparation maps new S:
+sources explicitly. Clean release checkout:
+S:/tmp/codex/skeb-full-audit-20261102/site-release/.
+
+The permitted server backup/import passed all 8 assets, 3 protected receipts,
+grouping/stable replay, exact preview pixels and anonymous original GET/HEAD 404.
+Receipts are preserved in private-audits/; permitted-import-result.json is complete.
+The existing server policy prohibits importing suyosuyo request 4046159 files.
+Its two recovered full-resolution transparent exports remain safely local; policy
+and metadata were not changed. Their display previews are permitted and verified
+in the gallery. The earlier mixed batch failed preflight because of that policy;
+recovered-import-result.json preserves that failure. No original-file public
+access was enabled. The local download/export audit is fully complete.
+
+Use three-dot > Download(Separated) and verify each expected navigation. Rapid
+clicks can omit alternating files; never infer all attachments from one success.
 ## complete Skeb attachment audit — gallery recovery, 2026-11-02
 
 Live completed-list reconciliation reached its end: 17 commissions / 43 original
