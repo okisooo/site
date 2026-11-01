@@ -1,3 +1,28 @@
+## @N2M_nk work 29 — live gallery verified; second PSD held, 2026-11-02
+
+Saved the first 2304 x 3072 PSD and an identical-pixel lossless PNG physically at
+S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/.
+The PSD is flattened, without layer records. Skeb lists two PSDs, but the raw
+button and browser download history exposed only the first signed attachment;
+the browser download helper timed out. The second PSD is NOT archived. See
+archive-verification.json; do not claim this delivery's full archive complete.
+
+Private import passed for both saved files: protected audit/grouping/replay,
+exact preview pixels and anonymous original GET/HEAD 404. Import-result.json
+and private-audits/ retain evidence. Offline suites passed 16/17/9.
+All website regression suites, production build and SEO passed. Source
+c346e87380ec8e5265c85a71768e554853573ef4 is deployed; build 41337529237 and
+Pages 41337665337 succeeded. Published assets 2f7d095d6180fc506e4996cc5cd1c8214f66d077
+identify that source. Fresh portrait asset paths avoid cached rollout-time 404s.
+Live normal gallery and viewer show the credit and loaded 480 x 640 thumbnail /
+1280 x 1707 main image. All three live WebP hashes match the saved candidates.
+No horizontal overflow; observed creator/work links are correct.
+Evidence/derivatives: S:/Codex/outputs/2026-11-02/skeb-4046164/.
+Scoped source: S:/tmp/codex/skeb-4046164-20261102/site-release/.
+The original checkout has only the new gallery entry/mapping/assets synchronized;
+unrelated dirty changes are preserved. Reproduce new derivatives with
+OKISO_COMMISSION_ROOT=S:/Codex/outputs/2026-11-02/skeb-4046164/originals,
+OKISO_GALLERY_SOURCE_PREFIX=n2m-nk and an S: OKISO_GALLERY_OUTPUT_DIR.
 ## @N2M_nk work 29 — gallery import, 2026-11-02
 
 New completed request 4046164 supplies two 2304 x 3072 PSDs. The first original,
