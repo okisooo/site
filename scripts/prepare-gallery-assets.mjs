@@ -8,6 +8,7 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['n2m-nk', 'N2M_nk@skeb/converted/4046164-1-illustration.png'],
   ['midori-annte23', 'Midori_annte23@skeb/converted/4068823-illustration-no-message.png'],
   ['midori-annte23-message', 'Midori_annte23@skeb/converted/4068823-illustration-artist-message.png'],
   ['midori-annte23-transparent', 'Midori_annte23@skeb/converted/4068823-illustration-transparent.png'],

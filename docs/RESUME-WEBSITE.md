@@ -1,3 +1,19 @@
+## @N2M_nk work 29 — gallery import, 2026-11-02
+
+New completed request 4046164 supplies two 2304 x 3072 PSDs. The first original,
+4046164-1.psd (14,249,492 bytes), and its pixel-preserving full-resolution PNG
+are verified at S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/.
+The PSD has no layer records; no separate expression/transparent exports exist
+in that file. The second PSD is still held: the browser raw action has exposed
+only the first attachment navigation. Do not claim the whole delivery archived.
+
+This scoped release adds the credited portrait/chibi gallery card and three
+WebP derivatives. All website regressions, production build and SEO checks pass.
+Evidence and generated assets: S:/Codex/outputs/2026-11-02/skeb-4046164/.
+Release checkout: S:/tmp/codex/skeb-4046164-20261102/site-release/.
+Archive/import offline suites pass 16/17/9. Private import and deployed gallery
+verification are tracked in the task output receipts; check them before claiming
+completion. Original dirty D:/GitHub/site checkout is preserved.
 ## @Midori_annte23 work 1538 — deployed and verified, 2026-10-31
 
 The user supplied `https://skeb.jp/requests/4068823` and requested the usual full

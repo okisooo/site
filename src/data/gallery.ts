@@ -35,6 +35,11 @@ const original = (art: typeof commissionArt[number]): GalleryVariant => ({
 // Skeb work/creator identities verified in signed-in deliveries through October 31, 2026.
 // Keep private request text, delivery URLs and purchase details out of this catalog.
 export const galleryWorks: GalleryWork[] = [
+  { id: 'n2m-nk', artist: '@N2M_nk', title: 'a little mascot kiss', medium: 'illustration',
+    description: 'OKISO holding a red mascot, with a smiling chibi and a pink backdrop, illustrated by @N2M_nk.',
+    artistUrl: 'https://skeb.jp/@N2M_nk', workUrl: 'https://skeb.jp/@N2M_nk/works/29',
+    small: '/art/gallery/n2m-nk-thumb.webp', width: 1280, height: 1707,
+    variants: [variant('n2m-nk', 'illustration', 1280, 1707)] },
   { id: 'midori-annte23', artist: '@Midori_annte23', title: 'red glasses & flowing color', medium: 'illustration',
     description: 'A portrait of OKISO with red glasses and flowing red and violet patterns, illustrated by @Midori_annte23.',
     artistUrl: 'https://skeb.jp/@Midori_annte23', workUrl: 'https://skeb.jp/@Midori_annte23/works/1538',
