@@ -1,3 +1,34 @@
+## complete Skeb attachment audit — gallery recovery, 2026-11-02
+
+Live completed-list reconciliation reached its end: 17 commissions / 43 original
+attachments. Each original was downloaded fully from an individually observed raw
+button navigation. Forty-two matched existing archived bytes; the differing
+amaxa58700 current 100,171,182-byte PSD is preserved separately on S:, alongside
+the old D: copy. Missing N2M_nk attachment 4046164-2.psd is recovered on S:.
+Both N2M_nk PSDs are flattened; full-resolution lossless PNGs are retained.
+
+All 17 current PSDs were parsed. The exhaustive native pixel/group/composite
+export audit added 123 PNGs and reused 40 exact-pixel existing images, with no
+failed exports. Adjustment data remains in the original PSD. Finished reusable
+exports also include the current amaxa message/clean/transparent versions and
+both suyosuyo transparent expressions. These and N2M_nk's message version add
+six gallery views; originals and working-layer exports remain private.
+Eight accepted requests and one pending request reached their list ends with no
+raw download buttons. Skeb converted-download and final reconciliation evidence
+is kept in the report directory; consult the final report for completion status.
+
+Recovered originals/finished exports, native layer exports and verification:
+S:/Codex/outputs/2026-11-02/skeb-full-audit/.
+N2M_nk archive: S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/.
+Clean release checkout: S:/tmp/codex/skeb-full-audit-20261102/site-release/.
+Gallery additions pass asset/design/release/deployment checks, production build
+and SEO. Deployment and private-import receipts are verified separately before
+claiming overall completion. Unrelated original-checkout dirty work is preserved.
+
+For multi-file downloads, use the actual three-dot menu > Download(Separated),
+then each File entry individually. Confirm that every clicked file appears in
+recorded Document navigation; rapid clicks can omit alternating downloads.
+Never count a single successful raw click as all files being archived.
 ## @N2M_nk work 29 — live gallery verified; second PSD held, 2026-11-02
 
 Saved the first 2304 x 3072 PSD and an identical-pixel lossless PNG physically at

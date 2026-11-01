@@ -8,6 +8,13 @@ const root = process.env.OKISO_COMMISSION_ROOT || 'D:/FOLDERS/Commissions/Bought
 const destination = process.env.OKISO_GALLERY_OUTPUT_DIR;
 if (!destination) throw new Error('Set OKISO_GALLERY_OUTPUT_DIR to the gallery asset directory on S:.');
 const sources = [
+  ['audit-n2m-message', 'S:/Codex/outputs/2026-11-02/skeb-4046164/originals/N2M_nk@skeb/converted/4046164-2-artist-message.png'],
+  ['audit-amaxa-clean', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/amaxa58700@skeb/converted/3836124-current-no-message.png'],
+  ['audit-amaxa-message', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/amaxa58700@skeb/converted/3836124-current-artist-message.png'],
+  ['audit-amaxa-transparent', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/amaxa58700@skeb/converted/3836124-current-character-transparent.png'],
+  ['audit-suyosuyo-expression1', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/suyosuyo@skeb/converted/4046159-expression-1-character-transparent.png'],
+  ['audit-suyosuyo-expression2', 'S:/Codex/outputs/2026-11-02/skeb-full-audit/recovered/suyosuyo@skeb/converted/4046159-expression-2-character-transparent.png'],
+
   ['n2m-nk-portrait', 'N2M_nk@skeb/converted/4046164-1-illustration.png'],
   ['midori-annte23', 'Midori_annte23@skeb/converted/4068823-illustration-no-message.png'],
   ['midori-annte23-message', 'Midori_annte23@skeb/converted/4068823-illustration-artist-message.png'],
