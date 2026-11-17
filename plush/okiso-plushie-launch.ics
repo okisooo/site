@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//okiso.net//plush//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:okiso-plushie-launch-20261118@okiso.net
+DTSTAMP:20261116T160000Z
+DTSTART:20261118T133000Z
+DTEND:20261118T140000Z
+SUMMARY:OKISO Plushie pre-orders open
+DESCRIPTION:Pre-orders for the OKISO Plushie open now. It is only made at 100 pre-orders. https://okiso.net/plush
+URL:https://okiso.net/plush
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:OKISO Plushie pre-orders open in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
