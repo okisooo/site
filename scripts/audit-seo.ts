@@ -17,9 +17,9 @@ const attributes = (tag: string) => Object.fromEntries([...tag.matchAll(/([\w:-]
 const meta = (html: string, name: string) => [...html.matchAll(/<meta\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.name === name || a.property === name).map(a => a.content);
 const canonical = (html: string) => [...html.matchAll(/<link\b[^>]*>/g)].map(match => attributes(match[0])).filter(a => a.rel === 'canonical').map(a => a.href);
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*>/g)].map(match => attributes(match[0]).href);
-const routes = ['/', '/about', '/links', '/releases', '/gallery', '/cursor', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
+const routes = ['/', '/about', '/links', '/releases', '/gallery', '/cursor', '/plush', '/upcoming', '/rouge-noir', ...staticReleases.map(release => `/releases/${release.slug}`)];
 // Core UI must stay unified; standalone work must not inherit that shell.
-for (const route of ['/', '/about', '/links', '/releases', '/gallery', '/cursor', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
+for (const route of ['/', '/about', '/links', '/releases', '/gallery', '/cursor', '/plush', '/upcoming', '/vault', '/lab/releases', '/lab/soft-orbit', '/api/auth/callback', ...staticReleases.map(release => `/releases/${release.slug}`)]) {
   const markup = readPage(route).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
   assert(markup.includes('class="core-site"'), `${route}: shared editorial shell`);
   assert(markup.includes('class="ed-nav"'), `${route}: shared navigation`);
@@ -75,7 +75,7 @@ for (const route of routes) {
 const archiveLinks = links(readPage('/releases'));
 // Assert the exported HTML, not just the helper: layout inheritance can silently
 // replace a route's title, image or URL with the homepage's metadata.
-for (const [route, name] of [['/', 'home'], ['/about', 'about'], ['/releases', 'releases'], ['/upcoming', 'upcoming'], ['/gallery', 'gallery'], ['/vault', 'vault'], ['/rouge-noir', 'rouge-noir']]) {
+for (const [route, name] of [['/', 'home'], ['/about', 'about'], ['/releases', 'releases'], ['/upcoming', 'upcoming'], ['/gallery', 'gallery'], ['/plush', 'plush'], ['/vault', 'vault'], ['/rouge-noir', 'rouge-noir']]) {
   const html = readPage(route);
   const imagePath = `/social/${name}-v1.jpg`;
   assert.deepEqual(meta(html, 'og:image'), [SITE_URL + imagePath], `${route}: dedicated image`);

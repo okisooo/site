@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/styles/editorial.css";
 import "@/styles/editorial-motion.css";
 import "@/styles/gallery.css";
+import "@/styles/plush.css";
 import "@/styles/editorial-ambient.css";
 import SiteFrame from "@/Components/Editorial/SiteFrame";
 import { ThemeProvider } from "@/Components/ThemeProvider";
