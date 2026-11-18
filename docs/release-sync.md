@@ -25,6 +25,8 @@ never add oauth values to `NEXT_PUBLIC_*`, `src/data/releases.ts`, screenshots, 
 
 run `npm run update-releases` locally, or dispatch the `update-releases` github action. the action exchanges `TOOLOST_REFRESH_TOKEN`, saves its rotated replacement with `SITE_PAT`, and passes the short-lived access token only to the sync step.
 
+production token exchanges use `https://api.toolost.com/oauth/token`. the authorization page remains on `toolost.com`.
+
 if the token exchange fails, the action warns and continues with spotify while retaining the existing catalog metadata. the next run retries too lost. check the token response before replacing credentials. an html cloudflare block means the request was blocked before oauth could validate it.
 
 if refresh returns `401`, repeat authorization and replace `TOOLOST_REFRESH_TOKEN`. tokens never enter the repository or action logs.

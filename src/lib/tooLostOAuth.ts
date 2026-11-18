@@ -1,4 +1,4 @@
-const DEFAULT_TOOLOST_TOKEN_URL = 'https://toolost.com/oauth/token';
+const DEFAULT_TOOLOST_TOKEN_URL = 'https://api.toolost.com/oauth/token';
 
 export interface TooLostTokenSet {
   accessToken: string;
