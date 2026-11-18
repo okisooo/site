@@ -45,16 +45,22 @@ jobs:
         run: gh api "repos/${GITHUB_REPOSITORY}/actions/secrets/public-key" > /dev/null
 
       - name: Refresh Too Lost access token
+        id: toolost-refresh
         if: env.TOOLOST_REFRESH_ENABLED == 'true'
+        continue-on-error: true
         env:
           TOOLOST_CLIENT_ID: ${{ secrets.TOOLOST_CLIENT_ID }}
           TOOLOST_CLIENT_SECRET: ${{ secrets.TOOLOST_CLIENT_SECRET }}
           TOOLOST_REFRESH_TOKEN: ${{ secrets.TOOLOST_REFRESH_TOKEN }}
           TOOLOST_REFRESH_TOKEN_FILE: ${{ runner.temp }}/toolost-refresh-token
-        run: npm run refresh-toolost
+        run: |
+          if ! npm run refresh-toolost; then
+            echo "::warning::Too Lost token refresh failed. Syncing from Spotify and retaining existing release metadata."
+            exit 1
+          fi
 
       - name: Save rotated Too Lost refresh token
-        if: env.TOOLOST_REFRESH_ENABLED == 'true'
+        if: steps.toolost-refresh.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.SITE_PAT }}
           TOOLOST_REFRESH_TOKEN_FILE: ${{ runner.temp }}/toolost-refresh-token

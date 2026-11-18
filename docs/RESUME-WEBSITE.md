@@ -1,3 +1,7 @@
+## Release sync incident — 2026-11-19
+
+The Too Lost OAuth token endpoint returned a Cloudflare block during the November credential rotation. The scheduled catalog workflow now warns and continues with Spotify if the token refresh fails, retaining existing release metadata. Full Too Lost enrichment requires a successful token exchange. See [release sync](release-sync.md) for the recovery procedure.
+
 ## full Skeb audit — verified complete locally and live, 2026-11-02
 
 All request categories were checked to their ends: 17 completed, 8 accepted,
