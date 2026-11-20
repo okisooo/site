@@ -45,7 +45,7 @@ export default function PlushPage() {
         <dl className="ed-plush-stats">
           <div><dt>price</dt><dd>{plush.price}</dd></div>
           <div><dt>needs</dt><dd>{plush.goal} pre‑orders</dd></div>
-          <div><dt>ships</dt><dd>spring 2027</dd></div>
+          <div><dt>ships</dt><dd>may–june 2027</dd></div>
         </dl>
       </div>
       <figure className="ed-plush-hero">
@@ -78,7 +78,7 @@ export default function PlushPage() {
         <li><strong>pre-order on gimme swag</strong> between nov 18 and dec 18, 2026.</li>
         <li><strong>at 100 pre-orders</strong> the plushie goes into production.</li>
         <li><strong>under 100, everyone gets a full refund</strong> to their original payment method.</li>
-        <li><strong>it ships worldwide</strong> about 3–5 months after the campaign ends, so around spring 2027.</li>
+        <li><strong>it ships worldwide</strong> after production. gimme swag estimates may 18 to june 18, 2027.</li>
       </ol>
       <div className="ed-plush-faq">
         <details>
@@ -95,7 +95,7 @@ export default function PlushPage() {
         </details>
         <details>
           <summary className="ed-label">will it arrive before christmas?</summary>
-          <p>no. production starts after the campaign, so it ships around spring 2027.</p>
+          <p>no. production starts after the campaign, and gimme swag estimates shipping between may 18 and june 18, 2027.</p>
         </details>
         <details>
           <summary className="ed-label">who makes it?</summary>
