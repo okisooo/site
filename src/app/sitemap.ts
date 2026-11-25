@@ -14,7 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/releases`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE_URL}/gallery`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/cursor`, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${SITE_URL}/plush`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/upcoming`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/rouge-noir`, changeFrequency: 'monthly', priority: 0.7 },
     ...staticReleases.filter(release => release.slug).map(release => ({

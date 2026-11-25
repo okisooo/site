@@ -15,7 +15,6 @@ import { EditorialDialog } from "./EditorialDialog";
 import DiscordPresence from "./DiscordPresence";
 import ArtRoom from "./ArtRoom";
 import { prefersLightData } from "./AmbientMotion";
-import PlushCallout from "./PlushCallout";
 
 const CustomVideoPlayer = dynamic(() => import("@/Components/BA/CustomVideoPlayer"), {
   ssr: false, loading: () => <p className="ed-loading" role="status">preparing video…</p>,
@@ -70,7 +69,7 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
 
   return <div className="ed-home">
     <section className="ed-cover" aria-label="Meet OKISO">
-      <div className="ed-cover-kicker"><span>VTuber / virtual artist / vocaloid producer</span><PlushCallout variant="inline" /><Link href="/releases">{releaseCount} releases <ArrowUpRight size={14} /></Link></div>
+      <div className="ed-cover-kicker"><span>VTuber / virtual artist / vocaloid producer</span><Link href="/releases">{releaseCount} releases <ArrowUpRight size={14} /></Link></div>
       <h1 className="ed-masthead">OKISO</h1>
       <div className="ed-cover-field">
         <div className="ed-character" data-model-performance={heroLimited ? "fallback" : undefined}><picture className="ed-hero-fallback"><source media="(max-width: 700px)" srcSet="/hero-smirk-phone.webp" width="490" height="1042" /><img src="/hero-smirk.webp" alt="OKISO resting his chin on his hand, looking down at you with a smirk" width="1335" height="1040" fetchPriority="high" /></picture>{heroMounted && !heroLimited && <HeroModel hero active={!modelOpen} onPerformanceFallback={setHeroLimited} />}</div>
@@ -78,7 +77,6 @@ export default function EditorialHome({ releases, picks, releaseCount }: { relea
       </div>
       <div className="ed-cover-intro">
         <p className="ed-cover-lede">original <em>hyperpop</em>, electronic and vocaloid music from a virtual artist.</p>
-        <PlushCallout variant="card" />
         <article className="ed-latest">
           <Link href={`/releases/${latest.slug}`} className="ed-latest-art ed-idle"><img src={latest.img} alt={`${latest.title} cover`} width="320" height="320" fetchPriority="high" /></Link>
           <div className="ed-latest-copy">

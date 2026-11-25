@@ -4,7 +4,6 @@ import { ArrowUpRight } from 'lucide-react';
 import { FaBandcamp, FaDiscord, FaGithub, FaInstagram, FaSpotify, FaTwitch, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { pageMetadata } from '@/lib/seo';
 import { commissionArt } from '@/data/commissionArt';
-import PlushCallout from '@/Components/Editorial/PlushCallout';
 
 export const metadata = pageMetadata(
   'OKISO / links & contact',
@@ -31,7 +30,6 @@ export default function LinksPage() {
         width={portrait.width} height={portrait.height} sizes="80px" className="ed-links-portrait" />
       <div><span className="ed-label">oki.so</span><h1>okiso</h1><p>music, videos & keeping in touch.</p></div>
     </header>
-    <PlushCallout variant="card" />
     <nav className="ed-links-features" aria-label="Music and art">
       <Link href="/releases">all my music <ArrowUpRight size={18} aria-hidden="true" /></Link>
       <Link href="/gallery">art gallery <ArrowUpRight size={18} aria-hidden="true" /></Link>
